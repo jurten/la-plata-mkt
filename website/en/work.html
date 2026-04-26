@@ -368,46 +368,28 @@
 </div>
 </footer>
 <script>
-// Dark mode: icon init + toggle with ripple animation
+// Dark mode: icon init + toggle with fade
 (function() {
     var icon = document.querySelector('#dark-mode-toggle .material-symbols-outlined');
     if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
 })();
 document.getElementById('dark-mode-toggle').addEventListener('click', function() {
     var btn = this;
-    var rect = btn.getBoundingClientRect();
-    var x = rect.left + rect.width / 2;
-    var y = rect.top + rect.height / 2;
-    var isDark = document.documentElement.classList.contains('dark');
-    var overlay = document.createElement('div');
-    overlay.style.cssText = [
-        'position:fixed',
-        'inset:0',
-        'z-index:9999',
-        'background:' + (isDark ? '#faf9f9' : '#000000'),
-        'clip-path:circle(0% at ' + x + 'px ' + y + 'px)',
-        'transition:clip-path 600ms cubic-bezier(0.22,1,0.36,1),opacity 300ms ease',
-        'pointer-events:none'
-    ].join(';');
-    document.body.appendChild(overlay);
-    requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-            overlay.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
-        });
-    });
+    var html = document.documentElement;
+    document.body.style.transition = 'opacity 150ms ease';
+    document.body.style.opacity = '0';
     setTimeout(function() {
-        var html = document.documentElement;
         html.classList.toggle('dark');
         html.classList.toggle('light');
         var theme = html.classList.contains('dark') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
         var icon = btn.querySelector('.material-symbols-outlined');
         icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-        overlay.style.opacity = '0';
-    }, 400);
-    setTimeout(function() {
-        overlay.remove();
-    }, 750);
+        document.body.style.opacity = '1';
+        setTimeout(function() {
+            document.body.style.transition = '';
+        }, 150);
+    }, 150);
 });
 // Language toggle
 (function() {
