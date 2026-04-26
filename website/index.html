@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html class="light scroll-smooth" lang="es">
+<head>
+<script>
+  (function() {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = saved === 'dark' || (!saved && prefersDark);
+    var html = document.documentElement;
+    html.classList.remove('light', 'dark');
+    html.classList.add(isDark ? 'dark' : 'light');
+  })();
+</script>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STUDIO | Orden Arquitectónico</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+:root, .light {
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b1b1b;
+  --color-on-primary-container: #848484;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #c6c6c6;
+  --color-secondary: #605e5d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e6e2e0;
+  --color-on-secondary-container: #666463;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #1b1b1b;
+  --color-on-tertiary-container: #848484;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-background: #faf9f9;
+  --color-on-background: #1a1c1c;
+  --color-surface: #faf9f9;
+  --color-on-surface: #1a1c1c;
+  --color-surface-variant: #e3e2e2;
+  --color-on-surface-variant: #4c4546;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container: #efeeee;
+  --color-surface-container-high: #e9e8e8;
+  --color-surface-container-highest: #e3e2e2;
+  --color-surface-dim: #dadada;
+  --color-surface-bright: #faf9f9;
+  --color-surface-tint: #5e5e5e;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f0f0;
+  --color-outline: #7e7576;
+  --color-outline-variant: #cfc4c5;
+}
+.dark {
+  --color-primary: #c6c6c6;
+  --color-on-primary: #303030;
+  --color-primary-container: #474747;
+  --color-on-primary-container: #e2e2e2;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #5e5e5e;
+  --color-secondary: #c9c6c4;
+  --color-on-secondary: #323130;
+  --color-secondary-container: #484645;
+  --color-on-secondary-container: #e6e2e0;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #c6c6c6;
+  --color-on-tertiary: #303030;
+  --color-tertiary-container: #474747;
+  --color-on-tertiary-container: #e2e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #111212;
+  --color-on-background: #e3e2e2;
+  --color-surface: #111212;
+  --color-on-surface: #e3e2e2;
+  --color-surface-variant: #4c4546;
+  --color-on-surface-variant: #cfc4c5;
+  --color-surface-container-lowest: #0c0e0e;
+  --color-surface-container-low: #191b1b;
+  --color-surface-container: #1d1f1f;
+  --color-surface-container-high: #282a2a;
+  --color-surface-container-highest: #333535;
+  --color-surface-dim: #111212;
+  --color-surface-bright: #37393a;
+  --color-surface-tint: #c6c6c6;
+  --color-inverse-surface: #e3e2e2;
+  --color-inverse-on-surface: #2f3131;
+  --color-outline: #998f90;
+  --color-outline-variant: #4c4546;
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+</style>
+<style type="text/tailwindcss">
+    @layer utilities {
+        .transition-standard {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+            transition-duration: 500ms;
+        }
+        .custom-easing {
+            transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    }
+</style>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "primary-fixed": "var(--color-primary-fixed)",
+                    "on-surface": "var(--color-on-surface)",
+                    "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                    "outline-variant": "var(--color-outline-variant)",
+                    "on-background": "var(--color-on-background)",
+                    "background": "var(--color-background)",
+                    "on-surface-variant": "var(--color-on-surface-variant)",
+                    "surface-container": "var(--color-surface-container)",
+                    "on-tertiary": "var(--color-on-tertiary)",
+                    "on-error": "var(--color-on-error)",
+                    "secondary": "var(--color-secondary)",
+                    "secondary-fixed": "var(--color-secondary-fixed)",
+                    "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                    "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                    "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                    "on-secondary": "var(--color-on-secondary)",
+                    "tertiary-container": "var(--color-tertiary-container)",
+                    "surface-tint": "var(--color-surface-tint)",
+                    "surface-container-low": "var(--color-surface-container-low)",
+                    "inverse-surface": "var(--color-inverse-surface)",
+                    "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                    "surface": "var(--color-surface)",
+                    "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                    "primary-container": "var(--color-primary-container)",
+                    "surface-dim": "var(--color-surface-dim)",
+                    "secondary-container": "var(--color-secondary-container)",
+                    "error": "var(--color-error)",
+                    "tertiary": "var(--color-tertiary)",
+                    "outline": "var(--color-outline)",
+                    "on-error-container": "var(--color-on-error-container)",
+                    "tertiary-fixed": "var(--color-tertiary-fixed)",
+                    "inverse-on-surface": "var(--color-inverse-on-surface)",
+                    "on-primary": "var(--color-on-primary)",
+                    "surface-container-high": "var(--color-surface-container-high)",
+                    "surface-container-highest": "var(--color-surface-container-highest)",
+                    "error-container": "var(--color-error-container)",
+                    "on-primary-container": "var(--color-on-primary-container)",
+                    "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                    "on-secondary-container": "var(--color-on-secondary-container)",
+                    "surface-variant": "var(--color-surface-variant)",
+                    "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                    "surface-container-lowest": "var(--color-surface-container-lowest)",
+                    "inverse-primary": "var(--color-inverse-primary)",
+                    "primary": "var(--color-primary)",
+                    "on-primary-fixed": "var(--color-on-primary-fixed)",
+                    "surface-bright": "var(--color-surface-bright)",
+                    "on-tertiary-container": "var(--color-on-tertiary-container)"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "animation-duration-standard": "500ms",
+                    "animation-easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                    "section-gap": "160px",
+                    "container-max": "1440px",
+                    "unit": "8px",
+                    "margin-edge": "64px",
+                    "gutter": "32px",
+                    "animation-duration-fast": "200ms"
+                },
+                "fontFamily": {
+                    "label-caps": ["manrope"],
+                    "display-lg": ["manrope"],
+                    "display-2xl": ["manrope"],
+                    "body-lg": ["manrope"],
+                    "headline-md": ["manrope"],
+                    "body-md": ["manrope"]
+                },
+                "fontSize": {
+                    "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                    "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                    "display-2xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "200" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                    "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                    "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                }
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary selection:text-on-primary">
+
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-neutral-100 dark:border-neutral-900 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+<div class="flex justify-between items-center w-full px-10 py-8 max-w-[1920px] mx-auto">
+<a class="text-xl font-bold tracking-tighter text-black dark:text-white hover:opacity-60 transition-opacity duration-500" href="#home">STUDIO</a>
+<nav class="hidden md:flex gap-8 items-center" id="main-nav">
+<a class="nav-link font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 pb-1" data-section="work" href="#work">Trabajos</a>
+<a class="nav-link font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 pb-1" data-section="services" href="#services">Servicios</a>
+<a class="nav-link font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 pb-1" data-section="about" href="#about">Nosotros</a>
+<a class="nav-link font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 pb-1" data-section="contact" href="#contact">Contacto</a>
+</nav>
+<div class="flex items-center gap-6">
+<button id="lang-toggle" class="flex items-center gap-2 hover:opacity-60 transition-opacity duration-500" aria-label="Cambiar idioma">
+<span id="lang-flag" class="text-xl leading-none">🇺🇸</span>
+</button>
+<button id="dark-mode-toggle" type="button" class="text-black dark:text-white hover:opacity-60 transition-opacity duration-500 flex items-center justify-center" aria-label="Toggle theme">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</header>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN: INICIO                                              -->
+<!-- ============================================================ -->
+<section id="home">
+<!-- Hero Section -->
+<div class="w-full max-w-container-max mx-auto px-margin-edge pt-32 pb-section-gap flex flex-col items-center text-center">
+<h1 class="font-display-2xl text-display-2xl text-primary uppercase max-w-4xl tracking-tighter leading-tight mb-8">
+    Construyendo <br/> Narrativas
+</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-xl mx-auto mb-16">
+    Diseñamos experiencias de marca arquitectónicas que combinan el minimalismo extremo con la elegancia editorial. Construimos orden digital a partir del caos estratégico.
+</p>
+<div class="w-full aspect-[21/9] bg-surface-container-low overflow-hidden relative group">
+<img alt="Estructura arquitectónica minimalista de concreto con sombras marcadas e iluminación natural brillante" class="w-full h-full object-cover grayscale opacity-90 group-hover:scale-105 transition-transform duration-[1.5s] ease-animation-easing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLPdd1_ssOWr35vM2m_tLb1TkaqIDHC6uqKGPCIBEhdPC7nhQ3NEAazHBJmE39bedY03ShowDutRkhF_kDoBWbnR5XE9YjzB2MR66YHXuCrUNM4MCF4FK1anaTtDPAxuHVr-XECJt8dqlDi6cKr96Q3dVz8pd1d6QUiihaPrwfpmq0RMfScl8THT-MpHRmEUkwvpUNG2GVaV2YUpvmUqmiy-PlHB7E6O97O9uyrMo3nNy3Gg7ZjZao5aJlWy1C2VLZsAdxTd24OUTT"/>
+</div>
+</div>
+
+<!-- Mission Statement -->
+<div class="w-full max-w-container-max mx-auto px-margin-edge py-section-gap border-t border-outline-variant/30">
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-12 md:col-span-4">
+<h2 class="font-label-caps text-label-caps text-secondary uppercase">La Filosofía</h2>
+</div>
+<div class="col-span-12 md:col-span-8">
+<p class="font-display-lg text-display-lg text-primary leading-tight">
+    Nuestro propósito es destilar arquitecturas de marca complejas en verdades singulares y poderosas. Creemos en la ausencia del ruido, donde cada elemento restante cumple una función precisa y determinada.
+</p>
+</div>
+</div>
+</div>
+
+<!-- Featured Projects (Asymmetric Bento) -->
+<div class="w-full max-w-container-max mx-auto px-margin-edge py-section-gap">
+<div class="flex justify-between items-end mb-16">
+<h2 class="font-headline-md text-headline-md text-primary">Trabajos Seleccionados</h2>
+<a class="font-label-caps text-label-caps text-primary border-b border-primary pb-1 hover:text-secondary hover:border-secondary transition-colors duration-animation-duration-standard" href="#work">Ver Todos los Proyectos</a>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Project 1 (Large) -->
+<div class="col-span-12 md:col-span-8 group cursor-pointer">
+<div class="w-full aspect-[4/3] bg-surface-container-low mb-6 overflow-hidden">
+<img alt="Interior minimalista de alta gama con mobiliario moderno y tonos neutros" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] transition-transform duration-[1s] ease-animation-easing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ_wE4CBY-A7Ixl2Dt1fsl-xeR2b6ImGV_0mOWOW7sZT0CTb_Ojq-74fuJelTwyzddhpd4OvJQamHsGLUAYvo6PD0qnojZzP1x86d5m7kwM3hnxp8BBtw4wnMHeA5ETigd9tWZpzQ82J5foF1UAzRY-OkCgFl6qxs5AeIM8y_h_Kc0sthlmwLD1brRlJkPzRHDwER9tAi85S5HVPhs2Lme6xHZ25GZxyHfMmeZqckzvj849wdVCyUiBgNM5Uxma79VXfwKl26M-OeO"/>
+</div>
+<div class="flex justify-between items-center">
+<h3 class="font-body-lg text-body-lg text-primary">Aura Residences</h3>
+<span class="font-label-caps text-label-caps text-secondary">2023</span>
+</div>
+</div>
+<!-- Project 2 (Small Vertical) -->
+<div class="col-span-12 md:col-span-4 group cursor-pointer mt-0 md:mt-32">
+<div class="w-full aspect-[3/4] bg-surface-container-low mb-6 overflow-hidden">
+<img alt="Detalle arquitectónico abstracto de vigas estructurales con luz suave" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] transition-transform duration-[1s] ease-animation-easing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvfpP6XAdYAcE9gFVN_rFosi2wO2hIFp9vlTGGi1SiCou-E3FsOCldxI7Oy89Tk3k7bFAWw2AYTkmIk20SoWtOPZLc3sas6VlA7l-sMSH_9k76DHIAOExfr53LGNB_VUcUWYIsfH_rxB_r1sCPbE2cq8NDq7gG0FlzJIlCrnPEHo8vCLEtSwMTm3vekRqbcXThTSewqjDd7D0sWdRUYgBeMt0YwBNoiOFAuJmEHKIX85M7M_nwsUvvZeZ8Ccfgyl6T-xYFwQIOR7TH"/>
+</div>
+<div class="flex justify-between items-center">
+<h3 class="font-body-lg text-body-lg text-primary">Nove Gallery</h3>
+<span class="font-label-caps text-label-caps text-secondary">2024</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN: TRABAJOS                                            -->
+<!-- ============================================================ -->
+<section id="work" class="scroll-mt-24 border-t border-outline-variant/30">
+<!-- Header -->
+<div class="max-w-container-max mx-auto px-margin-edge pt-[160px] pb-[80px]">
+<h1 class="font-display-2xl text-display-2xl text-primary mb-16 max-w-4xl">Trabajos Seleccionados</h1>
+<div class="flex flex-wrap gap-8 items-center border-b border-surface-variant pb-6">
+<button class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 custom-easing transition-all duration-animation-duration-standard">Todos</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Estrategia</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Creatividad</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Digital</button>
+</div>
+</div>
+<!-- Portfolio List -->
+<div class="max-w-container-max mx-auto px-margin-edge pb-section-gap">
+<div class="flex flex-col">
+<!-- Project 1 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Arquitectura y Estrategia</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Concrete Monolith</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Mapeo espacial estratégico y análisis de materiales. Nuestra metodología priorizó la honestidad estructural y la interacción de la luz natural sobre los adornos superficiales, resultando en una base arquitectónica atemporal. Establecimos un marco riguroso para navegar restricciones de zonificación complejas.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">account_tree</span>
+</div>
+</article>
+<!-- Project 2 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 rounded-full border border-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Dirección Creativa</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Form &amp; Light</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Una exploración orientada al proceso de la jerarquía visual. Al sistematizar las decisiones estéticas a través de guías de marca integrales, logramos un lenguaje visual escalable que comunica con claridad en diversos puntos de contacto mediáticos.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">change_history</span>
+</div>
+</article>
+<!-- Project 3 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 bg-primary transform rotate-45"></div>
+<span class="font-label-caps text-label-caps text-outline">Experiencia Digital</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Glass Canopy</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Arquitectura digital centrada en el usuario, formulada a través de una extensa investigación etnográfica y protocolos de pruebas A/B. La estrategia consistió en desacoplar la capa de presentación del frontend de los sistemas backend monolíticos para garantizar un despliegue ágil.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">terminal</span>
+</div>
+</article>
+<!-- Project 4 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-3 h-1 bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Identidad de Marca</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Noir Studio</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Definición del ADN central de la marca a través del análisis del panorama competitivo y entrevistas con las partes interesadas. El resultado estratégico fue un sistema de diseño reductivo que amplifica el posicionamiento único en el mercado del cliente mediante restricciones deliberadas.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">fingerprint</span>
+</div>
+</article>
+<!-- Project 5 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 border border-primary transform rotate-45"></div>
+<span class="font-label-caps text-label-caps text-outline">Estrategia de Producto</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Precision</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Planificación integral del ciclo de vida para un producto de hardware de alta complejidad. Nuestro proceso integró las limitaciones de la cadena de suministro con estudios ergonómicos, creando una hoja de ruta que redujo el riesgo de fabricación mientras preservaba la intención de diseño.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">timeline</span>
+</div>
+</article>
+<!-- Project 6 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 rounded-sm bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Dirección Creativa</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Fluid Dynamics</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">Desarrollo de un enfoque algorítmico generativo para la creación de activos de campaña. Este proceso sistemático permitió al cliente producir miles de variaciones únicas y acordes con la marca de manera dinámica, desplazando el foco de la producción manual hacia la supervisión estratégica.</p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">water_drop</span>
+</div>
+</article>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN: SERVICIOS                                           -->
+<!-- ============================================================ -->
+<section id="services" class="scroll-mt-24 border-t border-outline-variant/30">
+<!-- Hero -->
+<div class="w-full min-h-[716px] flex flex-col justify-end px-margin-edge pb-section-gap max-w-container-max mx-auto">
+<div class="w-full md:w-3/4 lg:w-2/3">
+<h2 class="font-display-2xl text-display-2xl text-primary mb-8 tracking-tighter leading-none">
+    Creatividad disciplinada.<br/>Impacto medible.
+</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+    Operamos en la intersección de la precisión arquitectónica y la innovación digital. Nuestros servicios están diseñados para construir ecosistemas de marca duraderos, no solo campañas efímeras.
+</p>
+</div>
+</div>
+<!-- Services Overview Bento Grid -->
+<div class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Strategy (Large Span) -->
+<div class="md:col-span-12 lg:col-span-8 bg-surface-container-low p-16 group relative overflow-hidden transition-standard hover:bg-surface-container">
+<div class="relative z-10 flex flex-col h-full justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">01</span>
+</div>
+<div>
+<h3 class="font-display-lg text-display-lg text-primary mb-6">Estrategia</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Los cimientos. Definimos el posicionamiento de marca, la arquitectura de audiencia y los marcos de comunicación que proporcionan una hoja de ruta clara para toda la ejecución creativa y digital.</p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Posicionamiento de Marca</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Investigación de Mercado</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Estrategia de Contenido</span>
+</div>
+</div>
+</div>
+<div class="absolute -bottom-20 -right-20 w-96 h-96 bg-surface-variant rounded-full opacity-50 blur-3xl group-hover:scale-110 transition-standard"></div>
+</div>
+<!-- Creative (Vertical Span) -->
+<div class="md:col-span-6 lg:col-span-4 bg-primary text-on-primary p-16 group transition-standard flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-on-primary">palette</span>
+<span class="font-label-caps text-label-caps text-on-primary border-b border-on-primary pb-1">02</span>
+</div>
+<div>
+<h3 class="font-display-lg text-display-lg text-on-primary mb-6">Creatividad</h3>
+<p class="font-body-md text-body-md text-primary-fixed-dim">Identidad visual, diseño editorial y dirección de arte. Creamos sistemas estéticos que son minimalistas, intencionales e inconfundibles.</p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Dirección de Arte</span>
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Diseño de Identidad</span>
+</div>
+</div>
+</div>
+<!-- Digital (Horizontal Span) -->
+<div class="md:col-span-6 lg:col-span-5 bg-surface-container p-16 group transition-standard hover:bg-surface-container-high flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary">terminal</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">03</span>
+</div>
+<div>
+<h3 class="font-display-lg text-display-lg text-primary mb-6">Digital</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Experiencias web de alto rendimiento, diseño de aplicaciones y arquitectura técnica. La forma se encuentra con la función en el espacio digital.</p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Diseño UX/UI</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Desarrollo</span>
+</div>
+</div>
+</div>
+<!-- Image Tile -->
+<div class="md:col-span-12 lg:col-span-7 h-full min-h-[400px] overflow-hidden group">
+<img alt="Interior arquitectónico minimalista abstracto con paredes de concreto, sombras pronunciadas e iluminación natural de tragaluz" class="w-full h-full object-cover grayscale opacity-90 group-hover:scale-[1.02] transition-standard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1cO23NXo13oJ1fzdJilA1hCLToMqsnMJyW7PPj4g4imOJF4uVsZYCkT67YpAkGhHD33rJTBXJnMLJqGMEIhpmWgkTAOTJN4cE9hNQbFAJfbbimKAsckAwipPviv0JmCGNV1el9M99uXpyXvJ8GLLIHwsAbOgRTWautdI2NKfBVVX9xHnR6fLmECxnZFZELokkweN46pDqSwUTDFoBtaRw1ZnEQBJCEnFWHNUzWbHWrkD0b8Ky5yU0RtedDWB6A71xlOfE6gjIK4oj"/>
+</div>
+</div>
+</div>
+<!-- Process Section -->
+<div class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4 lg:col-span-3">
+<h3 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-8 sticky top-32">El Proceso</h3>
+</div>
+<div class="md:col-span-8 lg:col-span-9 flex flex-col">
+<!-- Step 1 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">I.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Descubrimiento y Auditoría</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Comenzamos deconstruyendo su ecosistema actual. Esto implica entrevistas con las partes interesadas, análisis del panorama competitivo y una auditoría rigurosa de los activos existentes para establecer una base de verdad.</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block">search</span>
+</div>
+<!-- Step 2 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">II.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Arquitectura Estratégica</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Sintetizando los conocimientos del descubrimiento en planos de acción concretos. Definimos la narrativa central, el posicionamiento visual y los requisitos técnicos necesarios para sustentar la construcción inminente.</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block">account_tree</span>
+</div>
+<!-- Step 3 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">III.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Ejecución e Iteración</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">La construcción metódica de sistemas de diseño, plataformas digitales y material de marca. Empleamos metodologías ágiles para probar, refinar y perfeccionar el resultado antes del despliegue final.</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block">build</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Call to Action -->
+<div class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap text-center">
+<h3 class="font-display-lg text-display-lg text-primary mb-8">¿Listo para comenzar?</h3>
+<a class="inline-block bg-primary text-on-primary font-label-caps text-label-caps px-12 py-5 hover:bg-surface-tint transition-standard" href="#contact">Iniciar un Proyecto</a>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN: NOSOTROS                                            -->
+<!-- ============================================================ -->
+<section id="about" class="scroll-mt-24 border-t border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<!-- Hero -->
+<div class="pt-40 pb-section-gap grid grid-cols-12 gap-gutter items-end">
+<div class="col-span-12 md:col-span-8 pr-12">
+<h2 class="font-display-2xl text-display-2xl text-on-surface uppercase mb-8">
+    Definiendo orden <br/> dentro del ruido.
+</h2>
+</div>
+<div class="col-span-12 md:col-span-4 h-[600px] overflow-hidden bg-surface-container">
+<img alt="Interior arquitectónico minimalista de concreto con iluminación dramática suave y sombras geométricas pronunciadas" class="w-full h-full object-cover object-center hover:scale-[1.02] transition-transform duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)] grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmwE2tHd2AvEo90sR1nhy-5gNkmY5T22tYRDA_mReURirbJOW7MBea2I4jRclKXiOBUAmU1n9XLRrZ74XzePuNqE7LE9ip5MGLqsHnQCw7J2KqbIYjTRkdbpE-z21Vfxdq1whzvNMxRYQlbeB_3c3x1mvUJzZ9z7Q99uQ6Pq8DH3Owq45o92y3xgoqw81RmVFNhdC_1a0Ut7ydpXJ4nrMoZIV1OTvQwcG9GUgMVExnvJ81TnHzwfIIhVmv_xs-Qugxy5Ih_BKVve8p"/>
+</div>
+</div>
+<!-- Narrative Philosophy -->
+<div class="pb-section-gap grid grid-cols-12 gap-gutter">
+<div class="col-span-12 md:col-span-3">
+<h3 class="font-label-caps text-label-caps text-secondary uppercase border-b border-outline-variant pb-2 inline-block">La Agencia</h3>
+</div>
+<div class="col-span-12 md:col-span-6">
+<p class="font-body-lg text-body-lg text-on-surface mb-8">Fundado en los principios del Estilo Suizo y el minimalismo arquitectónico, STUDIO fue creado para eliminar lo superfluo. Creemos que en un panorama digital saturado, la claridad extrema es el último lujo.</p>
+<p class="font-body-md text-body-md text-secondary">Nuestro enfoque es editorial, deliberado y altamente estructurado. Tratamos las interfaces no meramente como superficies funcionales, sino como espacios curados donde el contenido dicta la forma. Al abrazar el espacio en blanco profundo y una jerarquía tipográfica rigurosa, diseñamos experiencias digitales que evocan confianza silenciosa.</p>
+</div>
+<div class="col-span-12 md:col-span-3 flex justify-end items-start mt-8 md:mt-0">
+<img alt="Primer plano de un espacio interior minimalista blanco con una silla proyectando una larga sombra" class="w-full max-w-[200px] h-auto object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbiT6rYL8h6zCzlgeCQnEuE8TIWIq9oyxcckxa5wyUEUkIqA7so3Qknc1M_aRsT2BvBwiZp-veF-9_6CkyQ2bEp8jJ7bsNe0HMHmZYQgUTPp542Z3uNxBBYujIgLhJ9Bh2FLrNtuzGjZp8AQ0E9TC0zKdM7cvKePtW_dHbtkHBRccissf-Crh7eNT3lcS-LH67oe3ScqrW5_3dvzEGYdA6j5JU_vON6SUgsfaZbyI1AGqR2oA0_Hc7uRse1zDAax2BMo8tslteM6XK"/>
+</div>
+</div>
+<!-- Core Team Bento/Asymmetric Grid -->
+<div class="pb-section-gap">
+<div class="grid grid-cols-12 gap-gutter mb-16">
+<div class="col-span-12">
+<h3 class="font-display-lg text-display-lg text-on-surface uppercase">Equipo Principal</h3>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Team Member 1 -->
+<div class="col-span-12 md:col-span-5 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[3/4] mb-6">
+<img alt="Retrato en blanco y negro de un hombre mirando fuera de cámara en un estudio bien iluminado" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuZPgR2o_SIioiZji2ez4mR51anjX36PQPy-JvkuNxpSqzzVi24_GsnIhZFddkYujL6S3QiL8JwefYMQHE5Kfsd5lOlmbsYAF0DZ8jCg0ruyXY6c7qiNyUoJ7-Tro2dweLV-cTgUXBSWU8G8QQimfyGT5fGWQVjNXMzInqfOO0UKO0Rda6_6x8SsxT7V3UNtAHflLA5xK5KT_b8bsVCCS16tVTPa3wJI5DUKEf2lgCsdDE2F0XKr3FWfKugyKtGVQH7YnXblPBOjz9"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Elias Thorne</h4>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Fundador / Principal</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast">arrow_forward</span>
+</div>
+</div>
+<!-- Team Member 2 -->
+<div class="col-span-12 md:col-span-4 md:col-start-8 md:mt-32 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[4/5] mb-6">
+<img alt="Retrato monocromático de una mujer con cabello corto oscuro en ropa minimalista sobre fondo gris claro" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuHk6QOLUmNXS9EwhMqTp_ZjVpTMda0QHur5MHuEp3--tFpIChYPzKL6PgIEbdxngV6DY7wubBFZG_j7SGfOi_qmfKyi-J49AGDKAMm_zPuTvjVjzhGGbDo2bhwRW3vuOsQTDQYDNC4UGqYWZ22QX63A0isxeqsvxof4yStR9TmKOBeIBnl3JJva5ImUsxuq5u-XDVAGnc-UXpwhEPNWgjy1AP8uBFydheCGoburh86uxU5B3jDaCMMn6YW5VwLCKzt4dKqlQ7YHHW"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Clara Vane</h4>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Directora de Diseño</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast">arrow_forward</span>
+</div>
+</div>
+<!-- Team Member 3 -->
+<div class="col-span-12 md:col-span-4 md:col-start-3 md:mt-16 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[1/1] mb-6">
+<img alt="Fotografía de perfil en alto contraste en blanco y negro de un hombre con estructura arquitectónica de fondo" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN3zzCuMSr5_nNXFaGvCSq61RmPFMMoskHH-lORN6bZfhSrnyABiFM8Dem879W2WFY26kKLpHIt30yF5wkJ2AQWOvSwR1wVb2vxOocSiV35D3WxHKHy6_48Pek3J8VQd5xDNA8QhUUGPhJFSZPxzQzQ6-05wOxKCYhGcdC0fVLBzfULW5PtfD9kBFWMfnROXkHQjsxOVMN1C79hIrVrHJBFX7B1QdFiE0-Ixz8Fp9VtI-icyV5z4D3ijxQSdwuhX-ER7Hjy_tG249g"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface">Julian Reed</h4>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Líder Técnico</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECCIÓN: CONTACTO                                            -->
+<!-- ============================================================ -->
+<section id="contact" class="scroll-mt-24 border-t border-outline-variant/30">
+<div class="w-full max-w-container-max mx-auto px-margin-edge pt-section-gap pb-section-gap">
+<!-- Page Title -->
+<div class="mb-[120px]">
+<h2 class="font-display-2xl text-display-2xl text-on-surface">Construyamos<br/>algo juntos.</h2>
+</div>
+<!-- 12-Column Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Contact Information -->
+<div class="md:col-span-4 flex flex-col gap-[80px]">
+<!-- Direct Contact -->
+<div class="flex flex-col gap-6">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Consultas</h3>
+<div class="flex flex-col gap-2">
+<a class="font-body-lg text-body-lg text-on-surface hover:opacity-60 transition-opacity duration-animation-duration-standard" href="mailto:hello@studio.com">hello@studio.com</a>
+<a class="font-body-lg text-body-lg text-on-surface hover:opacity-60 transition-opacity duration-animation-duration-standard" href="tel:+18005550199">+1 800 555 0199</a>
+</div>
+</div>
+<!-- Office Locations -->
+<div class="flex flex-col gap-6">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Oficinas</h3>
+<div class="flex flex-col gap-8">
+<div>
+<p class="font-body-lg text-body-lg text-on-surface mb-1">Nueva York</p>
+<p class="font-body-md text-body-md text-on-surface-variant">100 Broadway<br/>Suite 1400<br/>NY 10005</p>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface mb-1">Londres</p>
+<p class="font-body-md text-body-md text-on-surface-variant">120 Oxford St<br/>West End<br/>W1D 1LT</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Area -->
+<div class="md:col-span-7 md:col-start-6 mt-16 md:mt-0">
+<form action="#" class="flex flex-col gap-[64px]" method="POST">
+<div class="flex flex-col group relative">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4 transition-colors group-focus-within:text-on-surface" for="name">Nombre</label>
+<input class="bg-transparent border-0 border-b border-outline-variant focus:border-on-surface focus:ring-0 px-0 py-4 font-body-lg text-body-lg text-on-surface w-full transition-colors duration-animation-duration-standard placeholder:text-transparent" id="name" name="name" required type="text"/>
+</div>
+<div class="flex flex-col group relative">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4 transition-colors group-focus-within:text-on-surface" for="email">Correo Electrónico</label>
+<input class="bg-transparent border-0 border-b border-outline-variant focus:border-on-surface focus:ring-0 px-0 py-4 font-body-lg text-body-lg text-on-surface w-full transition-colors duration-animation-duration-standard placeholder:text-transparent" id="email" name="email" required type="email"/>
+</div>
+<div class="flex flex-col group relative">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4 transition-colors group-focus-within:text-on-surface" for="subject">Asunto</label>
+<select class="bg-transparent border-0 border-b border-outline-variant focus:border-on-surface focus:ring-0 px-0 py-4 font-body-lg text-body-lg text-on-surface w-full transition-colors duration-animation-duration-standard appearance-none cursor-pointer" id="subject" name="subject">
+<option value="new_project">Consulta de Nuevo Proyecto</option>
+<option value="careers">Empleos</option>
+<option value="press">Prensa y Medios</option>
+<option value="other">Otro</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 bottom-5 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+<div class="flex flex-col group relative">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4 transition-colors group-focus-within:text-on-surface" for="message">Mensaje</label>
+<textarea class="bg-transparent border-0 border-b border-outline-variant focus:border-on-surface focus:ring-0 px-0 py-4 font-body-lg text-body-lg text-on-surface w-full resize-none transition-colors duration-animation-duration-standard placeholder:text-transparent" id="message" name="message" required rows="4"></textarea>
+</div>
+<div class="pt-8">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps uppercase px-12 py-5 tracking-[0.1em] hover:bg-inverse-surface transition-colors duration-animation-duration-standard flex items-center justify-center gap-4" type="submit">
+    Enviar Consulta
+    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="w-full bg-white dark:bg-black py-20 mt-40 border-t border-neutral-100 dark:border-neutral-900 ease-out duration-300">
+<div class="grid grid-cols-12 gap-8 px-10 w-full max-w-[1920px] mx-auto">
+<div class="col-span-12 md:col-span-6 flex flex-col justify-between">
+<div class="text-lg font-bold text-black dark:text-white mb-16 md:mb-0">STUDIO</div>
+<div class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600">©2024 STUDIO AGENCY. ORDEN ARQUITECTÓNICO.</div>
+</div>
+<div class="col-span-12 md:col-span-6 flex flex-col md:items-end justify-between">
+<nav class="flex flex-col gap-4">
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all hover:text-black dark:hover:text-white" href="#">Instagram</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all hover:text-black dark:hover:text-white" href="#">LinkedIn</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all hover:text-black dark:hover:text-white" href="#">Política de Privacidad</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all hover:text-black dark:hover:text-white" href="#">Términos</a>
+</nav>
+</div>
+</div>
+</footer>
+
+<script>
+// Dark mode: icon init + toggle with ripple animation
+(function() {
+    var icon = document.querySelector('#dark-mode-toggle .material-symbols-outlined');
+    if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+})();
+document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+    var btn = this;
+    var rect = btn.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    var isDark = document.documentElement.classList.contains('dark');
+    var overlay = document.createElement('div');
+    overlay.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'z-index:9999',
+        'background:' + (isDark ? '#faf9f9' : '#000000'),
+        'clip-path:circle(0% at ' + x + 'px ' + y + 'px)',
+        'transition:clip-path 600ms cubic-bezier(0.22,1,0.36,1),opacity 300ms ease',
+        'pointer-events:none'
+    ].join(';');
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            overlay.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
+        });
+    });
+    setTimeout(function() {
+        var html = document.documentElement;
+        html.classList.toggle('dark');
+        html.classList.toggle('light');
+        var theme = html.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        var icon = btn.querySelector('.material-symbols-outlined');
+        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        overlay.style.opacity = '0';
+    }, 400);
+    setTimeout(function() {
+        overlay.remove();
+    }, 750);
+});
+
+// Scroll-spy: highlight active nav link based on visible section
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav .nav-link');
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            navLinks.forEach(function(link) {
+                const isActive = link.getAttribute('data-section') === entry.target.id;
+                link.classList.toggle('text-black', isActive);
+                link.classList.toggle('dark:text-white', isActive);
+                link.classList.toggle('border-b', isActive);
+                link.classList.toggle('border-black', isActive);
+                link.classList.toggle('dark:border-white', isActive);
+                link.classList.toggle('text-neutral-400', !isActive);
+                link.classList.toggle('dark:text-neutral-500', !isActive);
+            });
+        }
+    });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(function(s) { observer.observe(s); });
+
+// Language toggle
+(function() {
+    document.getElementById('lang-toggle').addEventListener('click', function() {
+        window.location.href = '/en/index.html';
+    });
+})();
+</script>
+
+</body>
+</html>

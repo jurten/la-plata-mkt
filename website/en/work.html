@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<script>
+  (function() {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = saved === 'dark' || (!saved && prefersDark);
+    var html = document.documentElement;
+    html.classList.remove('light', 'dark');
+    html.classList.add(isDark ? 'dark' : 'light');
+  })();
+</script>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STUDIO - Selected Works</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+:root, .light {
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b1b1b;
+  --color-on-primary-container: #848484;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #c6c6c6;
+  --color-secondary: #605e5d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e6e2e0;
+  --color-on-secondary-container: #666463;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #1b1b1b;
+  --color-on-tertiary-container: #848484;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-background: #faf9f9;
+  --color-on-background: #1a1c1c;
+  --color-surface: #faf9f9;
+  --color-on-surface: #1a1c1c;
+  --color-surface-variant: #e3e2e2;
+  --color-on-surface-variant: #4c4546;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container: #efeeee;
+  --color-surface-container-high: #e9e8e8;
+  --color-surface-container-highest: #e3e2e2;
+  --color-surface-dim: #dadada;
+  --color-surface-bright: #faf9f9;
+  --color-surface-tint: #5e5e5e;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f0f0;
+  --color-outline: #7e7576;
+  --color-outline-variant: #cfc4c5;
+}
+.dark {
+  --color-primary: #c6c6c6;
+  --color-on-primary: #303030;
+  --color-primary-container: #474747;
+  --color-on-primary-container: #e2e2e2;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #5e5e5e;
+  --color-secondary: #c9c6c4;
+  --color-on-secondary: #323130;
+  --color-secondary-container: #484645;
+  --color-on-secondary-container: #e6e2e0;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #c6c6c6;
+  --color-on-tertiary: #303030;
+  --color-tertiary-container: #474747;
+  --color-on-tertiary-container: #e2e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #111212;
+  --color-on-background: #e3e2e2;
+  --color-surface: #111212;
+  --color-on-surface: #e3e2e2;
+  --color-surface-variant: #4c4546;
+  --color-on-surface-variant: #cfc4c5;
+  --color-surface-container-lowest: #0c0e0e;
+  --color-surface-container-low: #191b1b;
+  --color-surface-container: #1d1f1f;
+  --color-surface-container-high: #282a2a;
+  --color-surface-container-highest: #333535;
+  --color-surface-dim: #111212;
+  --color-surface-bright: #37393a;
+  --color-surface-tint: #c6c6c6;
+  --color-inverse-surface: #e3e2e2;
+  --color-inverse-on-surface: #2f3131;
+  --color-outline: #998f90;
+  --color-outline-variant: #4c4546;
+}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                    "primary-fixed": "var(--color-primary-fixed)",
+                    "on-surface": "var(--color-on-surface)",
+                    "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                    "outline-variant": "var(--color-outline-variant)",
+                    "on-background": "var(--color-on-background)",
+                    "background": "var(--color-background)",
+                    "on-surface-variant": "var(--color-on-surface-variant)",
+                    "surface-container": "var(--color-surface-container)",
+                    "on-tertiary": "var(--color-on-tertiary)",
+                    "on-error": "var(--color-on-error)",
+                    "secondary": "var(--color-secondary)",
+                    "secondary-fixed": "var(--color-secondary-fixed)",
+                    "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                    "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                    "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                    "on-secondary": "var(--color-on-secondary)",
+                    "tertiary-container": "var(--color-tertiary-container)",
+                    "surface-tint": "var(--color-surface-tint)",
+                    "surface-container-low": "var(--color-surface-container-low)",
+                    "inverse-surface": "var(--color-inverse-surface)",
+                    "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                    "surface": "var(--color-surface)",
+                    "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                    "primary-container": "var(--color-primary-container)",
+                    "surface-dim": "var(--color-surface-dim)",
+                    "secondary-container": "var(--color-secondary-container)",
+                    "error": "var(--color-error)",
+                    "tertiary": "var(--color-tertiary)",
+                    "outline": "var(--color-outline)",
+                    "on-error-container": "var(--color-on-error-container)",
+                    "tertiary-fixed": "var(--color-tertiary-fixed)",
+                    "inverse-on-surface": "var(--color-inverse-on-surface)",
+                    "on-primary": "var(--color-on-primary)",
+                    "surface-container-high": "var(--color-surface-container-high)",
+                    "surface-container-highest": "var(--color-surface-container-highest)",
+                    "error-container": "var(--color-error-container)",
+                    "on-primary-container": "var(--color-on-primary-container)",
+                    "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                    "on-secondary-container": "var(--color-on-secondary-container)",
+                    "surface-variant": "var(--color-surface-variant)",
+                    "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                    "surface-container-lowest": "var(--color-surface-container-lowest)",
+                    "inverse-primary": "var(--color-inverse-primary)",
+                    "primary": "var(--color-primary)",
+                    "on-primary-fixed": "var(--color-on-primary-fixed)",
+                    "surface-bright": "var(--color-surface-bright)",
+                    "on-tertiary-container": "var(--color-on-tertiary-container)"
+                },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "animation-duration-standard": "500ms",
+                        "animation-easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                        "section-gap": "160px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "margin-edge": "64px",
+                        "gutter": "32px",
+                        "animation-duration-fast": "200ms"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["manrope"],
+                        "display-lg": ["manrope"],
+                        "display-2xl": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-md": ["manrope"],
+                        "body-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "display-2xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "200" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-easing {
+            transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-tertiary selection:text-on-tertiary">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-neutral-100 dark:border-neutral-900 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+<div class="flex justify-between items-center w-full px-10 py-8 max-w-[1920px] mx-auto">
+<a class="text-xl font-bold tracking-tighter text-black dark:text-white hover:opacity-60 transition-opacity duration-500" href="/en/index.html">STUDIO</a>
+<nav class="hidden md:flex space-x-8">
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-black dark:text-white border-b border-black dark:border-white pb-1 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]" href="/en/work.html">Work</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500" href="/en/services.html">Services</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500" href="/en/about.html">About</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500" href="/en/contact.html">Contact</a>
+</nav>
+<div class="flex items-center space-x-6">
+<button id="lang-toggle" class="flex items-center gap-2 hover:opacity-60 transition-opacity duration-500" aria-label="Switch language">
+<span id="lang-flag" class="text-xl leading-none">🇦🇷</span>
+</button>
+<button id="dark-mode-toggle" type="button" class="text-black dark:text-white hover:opacity-60 transition-opacity duration-500 flex items-center justify-center" aria-label="Toggle theme">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</header>
+<main class="w-full">
+<!-- Header Section -->
+<section class="max-w-container-max mx-auto px-margin-edge pt-[160px] pb-[80px]">
+<h1 class="font-display-2xl text-display-2xl text-primary mb-16 max-w-4xl">Selected Works</h1>
+<div class="flex flex-wrap gap-8 items-center border-b border-surface-variant pb-6">
+<button class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 custom-easing transition-all duration-animation-duration-standard">All</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Strategy</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Creative</button>
+<button class="font-label-caps text-label-caps text-outline hover:text-primary custom-easing transition-all duration-animation-duration-standard">Digital</button>
+</div>
+</section>
+<!-- Portfolio List -->
+<section class="max-w-container-max mx-auto px-margin-edge pb-section-gap">
+<div class="flex flex-col">
+<!-- Project 1 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Architecture &amp; Strategy</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Concrete Monolith</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    Strategic spatial mapping and material analysis. Our methodology prioritized structural honesty and the interplay of natural light over superficial embellishments, resulting in a timeless architectural foundation. We established a rigorous framework for navigating complex zoning constraints.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">account_tree</span>
+</div>
+</article>
+<!-- Project 2 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 rounded-full border border-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Creative Direction</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Form &amp; Light</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    A process-driven exploration of visual hierarchy. By systematizing aesthetic decisions through comprehensive brand guidelines, we achieved a scalable visual language that communicates clearly across diverse media touchpoints.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">change_history</span>
+</div>
+</article>
+<!-- Project 3 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 bg-primary transform rotate-45"></div>
+<span class="font-label-caps text-label-caps text-outline">Digital Experience</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Glass Canopy</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    User-centric digital architecture formulated through extensive ethnographic research and A/B testing protocols. The strategy involved decoupling the frontend presentation layer from monolithic backend systems to ensure agile deployment.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">terminal</span>
+</div>
+</article>
+<!-- Project 4 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-3 h-1 bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Brand Identity</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Noir Studio</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    Defining the core brand DNA through competitive landscape analysis and stakeholder interviews. The strategic outcome was a reductive design system that amplifies the client's unique market positioning through deliberate constraints.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">fingerprint</span>
+</div>
+</article>
+<!-- Project 5 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between border-b border-surface-variant py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 border border-primary transform rotate-45"></div>
+<span class="font-label-caps text-label-caps text-outline">Product Strategy</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Precision</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    End-to-end lifecycle planning for a high-complexity hardware product. Our process integrated supply chain limitations with ergonomic studies, creating a roadmap that de-risked manufacturing while maintaining design intent.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">timeline</span>
+</div>
+</article>
+<!-- Project 6 -->
+<article class="flex flex-col md:flex-row md:items-center justify-between py-12 group cursor-pointer hover:bg-surface-container-low transition-colors duration-500 -mx-8 px-8 rounded-lg">
+<div class="flex-1 md:pr-12">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-2 h-2 rounded-sm bg-primary"></div>
+<span class="font-label-caps text-label-caps text-outline">Creative Direction</span>
+</div>
+<h2 class="font-display-lg text-[40px] md:text-display-lg text-primary mb-4 transition-colors group-hover:text-surface-tint">Fluid Dynamics</h2>
+<p class="font-body-md text-on-surface-variant max-w-3xl">
+                    Developing a generative algorithmic approach to campaign asset creation. This systematic process allowed the client to produce thousands of unique, on-brand variations dynamically, shifting focus from manual production to strategic oversight.
+                </p>
+</div>
+<div class="hidden md:flex flex-shrink-0 items-center justify-center w-24 h-24 border border-outline-variant rounded-full group-hover:scale-110 group-hover:border-primary custom-easing transition-all duration-[600ms]">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-primary transition-colors">water_drop</span>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-20 mt-[160px] bg-white dark:bg-black border-t border-neutral-100 dark:border-neutral-900">
+<div class="grid grid-cols-12 gap-8 px-10 w-full max-w-[1920px] mx-auto">
+<div class="col-span-12 md:col-span-6 flex flex-col justify-between h-full">
+<div class="text-lg font-bold text-black dark:text-white mb-8 md:mb-0">STUDIO</div>
+<div class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600">
+                    ©2024 STUDIO AGENCY. ARCHITECTURAL ORDER.
+                </div>
+</div>
+<div class="col-span-12 md:col-span-6 flex flex-col md:items-end justify-between space-y-4 md:space-y-0">
+<nav class="flex flex-col space-y-4 text-left md:text-right">
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Instagram</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">LinkedIn</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Privacy Policy</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Terms</a>
+</nav>
+</div>
+</div>
+</footer>
+<script>
+// Dark mode: icon init + toggle with ripple animation
+(function() {
+    var icon = document.querySelector('#dark-mode-toggle .material-symbols-outlined');
+    if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+})();
+document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+    var btn = this;
+    var rect = btn.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    var isDark = document.documentElement.classList.contains('dark');
+    var overlay = document.createElement('div');
+    overlay.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'z-index:9999',
+        'background:' + (isDark ? '#faf9f9' : '#000000'),
+        'clip-path:circle(0% at ' + x + 'px ' + y + 'px)',
+        'transition:clip-path 600ms cubic-bezier(0.22,1,0.36,1),opacity 300ms ease',
+        'pointer-events:none'
+    ].join(';');
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            overlay.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
+        });
+    });
+    setTimeout(function() {
+        var html = document.documentElement;
+        html.classList.toggle('dark');
+        html.classList.toggle('light');
+        var theme = html.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        var icon = btn.querySelector('.material-symbols-outlined');
+        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        overlay.style.opacity = '0';
+    }, 400);
+    setTimeout(function() {
+        overlay.remove();
+    }, 750);
+});
+// Language toggle
+(function() {
+    document.getElementById('lang-flag').textContent = '🇦🇷';
+    document.getElementById('lang-toggle').addEventListener('click', function() {
+        window.location.href = '/work.html';
+    });
+})();
+</script>
+</body></html>

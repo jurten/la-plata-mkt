@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<script>
+  (function() {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = saved === 'dark' || (!saved && prefersDark);
+    var html = document.documentElement;
+    html.classList.remove('light', 'dark');
+    html.classList.add(isDark ? 'dark' : 'light');
+  })();
+</script>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STUDIO - About</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+:root, .light {
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b1b1b;
+  --color-on-primary-container: #848484;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #c6c6c6;
+  --color-secondary: #605e5d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e6e2e0;
+  --color-on-secondary-container: #666463;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #1b1b1b;
+  --color-on-tertiary-container: #848484;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-background: #faf9f9;
+  --color-on-background: #1a1c1c;
+  --color-surface: #faf9f9;
+  --color-on-surface: #1a1c1c;
+  --color-surface-variant: #e3e2e2;
+  --color-on-surface-variant: #4c4546;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container: #efeeee;
+  --color-surface-container-high: #e9e8e8;
+  --color-surface-container-highest: #e3e2e2;
+  --color-surface-dim: #dadada;
+  --color-surface-bright: #faf9f9;
+  --color-surface-tint: #5e5e5e;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f0f0;
+  --color-outline: #7e7576;
+  --color-outline-variant: #cfc4c5;
+}
+.dark {
+  --color-primary: #c6c6c6;
+  --color-on-primary: #303030;
+  --color-primary-container: #474747;
+  --color-on-primary-container: #e2e2e2;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #5e5e5e;
+  --color-secondary: #c9c6c4;
+  --color-on-secondary: #323130;
+  --color-secondary-container: #484645;
+  --color-on-secondary-container: #e6e2e0;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #c6c6c6;
+  --color-on-tertiary: #303030;
+  --color-tertiary-container: #474747;
+  --color-on-tertiary-container: #e2e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #111212;
+  --color-on-background: #e3e2e2;
+  --color-surface: #111212;
+  --color-on-surface: #e3e2e2;
+  --color-surface-variant: #4c4546;
+  --color-on-surface-variant: #cfc4c5;
+  --color-surface-container-lowest: #0c0e0e;
+  --color-surface-container-low: #191b1b;
+  --color-surface-container: #1d1f1f;
+  --color-surface-container-high: #282a2a;
+  --color-surface-container-highest: #333535;
+  --color-surface-dim: #111212;
+  --color-surface-bright: #37393a;
+  --color-surface-tint: #c6c6c6;
+  --color-inverse-surface: #e3e2e2;
+  --color-inverse-on-surface: #2f3131;
+  --color-outline: #998f90;
+  --color-outline-variant: #4c4546;
+}
+</style>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                    "primary-fixed": "var(--color-primary-fixed)",
+                    "on-surface": "var(--color-on-surface)",
+                    "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                    "outline-variant": "var(--color-outline-variant)",
+                    "on-background": "var(--color-on-background)",
+                    "background": "var(--color-background)",
+                    "on-surface-variant": "var(--color-on-surface-variant)",
+                    "surface-container": "var(--color-surface-container)",
+                    "on-tertiary": "var(--color-on-tertiary)",
+                    "on-error": "var(--color-on-error)",
+                    "secondary": "var(--color-secondary)",
+                    "secondary-fixed": "var(--color-secondary-fixed)",
+                    "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                    "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                    "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                    "on-secondary": "var(--color-on-secondary)",
+                    "tertiary-container": "var(--color-tertiary-container)",
+                    "surface-tint": "var(--color-surface-tint)",
+                    "surface-container-low": "var(--color-surface-container-low)",
+                    "inverse-surface": "var(--color-inverse-surface)",
+                    "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                    "surface": "var(--color-surface)",
+                    "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                    "primary-container": "var(--color-primary-container)",
+                    "surface-dim": "var(--color-surface-dim)",
+                    "secondary-container": "var(--color-secondary-container)",
+                    "error": "var(--color-error)",
+                    "tertiary": "var(--color-tertiary)",
+                    "outline": "var(--color-outline)",
+                    "on-error-container": "var(--color-on-error-container)",
+                    "tertiary-fixed": "var(--color-tertiary-fixed)",
+                    "inverse-on-surface": "var(--color-inverse-on-surface)",
+                    "on-primary": "var(--color-on-primary)",
+                    "surface-container-high": "var(--color-surface-container-high)",
+                    "surface-container-highest": "var(--color-surface-container-highest)",
+                    "error-container": "var(--color-error-container)",
+                    "on-primary-container": "var(--color-on-primary-container)",
+                    "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                    "on-secondary-container": "var(--color-on-secondary-container)",
+                    "surface-variant": "var(--color-surface-variant)",
+                    "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                    "surface-container-lowest": "var(--color-surface-container-lowest)",
+                    "inverse-primary": "var(--color-inverse-primary)",
+                    "primary": "var(--color-primary)",
+                    "on-primary-fixed": "var(--color-on-primary-fixed)",
+                    "surface-bright": "var(--color-surface-bright)",
+                    "on-tertiary-container": "var(--color-on-tertiary-container)"
+                },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "animation-duration-standard": "500ms",
+                        "animation-easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                        "section-gap": "160px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "margin-edge": "64px",
+                        "gutter": "32px",
+                        "animation-duration-fast": "200ms"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["manrope"],
+                        "display-lg": ["manrope"],
+                        "display-2xl": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-md": ["manrope"],
+                        "body-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "display-2xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "200" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<header class="docked full-width top-0 sticky z-50 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-neutral-100 dark:border-neutral-900 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] flat no shadows">
+<div class="flex justify-between items-center w-full px-10 py-8 max-w-[1920px] mx-auto">
+<a class="text-xl font-bold tracking-tighter text-black dark:text-white uppercase hover:opacity-60 transition-opacity duration-500" href="/en/index.html">STUDIO</a>
+<nav class="hidden md:flex space-x-8 font-manrope uppercase tracking-[0.2em] text-[11px] font-medium">
+<a class="text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="/en/work.html">Work</a>
+<a class="text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="/en/services.html">Services</a>
+<a class="text-black dark:text-white border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity duration-500" href="/en/about.html">About</a>
+<a class="text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="/en/contact.html">Contact</a>
+</nav>
+<div class="flex items-center space-x-6 font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-black dark:text-white">
+<button id="lang-toggle" class="flex items-center gap-2 hover:opacity-60 transition-opacity duration-500" aria-label="Switch language">
+<span id="lang-flag" class="text-xl leading-none">🇦🇷</span>
+</button>
+<button id="dark-mode-toggle" type="button" class="text-black dark:text-white hover:opacity-60 transition-opacity duration-500 flex items-center justify-center" aria-label="Toggle theme">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-edge">
+<!-- Hero Section -->
+<section class="pt-40 pb-section-gap grid grid-cols-12 gap-gutter items-end">
+<div class="col-span-12 md:col-span-8 pr-12">
+<h1 class="font-display-2xl text-display-2xl text-on-surface uppercase mb-8">
+                    Defining order <br/> within noise.
+                </h1>
+</div>
+<div class="col-span-12 md:col-span-4 h-[600px] overflow-hidden bg-surface-container">
+<img alt="Minimalist architectural concrete interior with soft dramatic lighting and sharp geometric shadows" class="w-full h-full object-cover object-center hover:scale-[1.02] transition-transform duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)] grayscale" data-alt="Minimalist architectural concrete interior with soft dramatic lighting and sharp geometric shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmwE2tHd2AvEo90sR1nhy-5gNkmY5T22tYRDA_mReURirbJOW7MBea2I4jRclKXiOBUAmU1n9XLRrZ74XzePuNqE7LE9ip5MGLqsHnQCw7J2KqbIYjTRkdbpE-z21Vfxdq1whzvNMxRYQlbeB_3c3x1mvUJzZ9z7Q99uQ6Pq8DH3Owq45o92y3xgoqw81RmVFNhdC_1a0Ut7ydpXJ4nrMoZIV1OTvQwcG9GUgMVExnvJ81TnHzwfIIhVmv_xs-Qugxy5Ih_BKVve8p"/>
+</div>
+</section>
+<!-- Narrative Philosophy -->
+<section class="pb-section-gap grid grid-cols-12 gap-gutter">
+<div class="col-span-12 md:col-span-3">
+<h2 class="font-label-caps text-label-caps text-secondary uppercase border-b border-outline-variant pb-2 inline-block">
+                    The Agency
+                </h2>
+</div>
+<div class="col-span-12 md:col-span-6">
+<p class="font-body-lg text-body-lg text-on-surface mb-8">
+                    Founded on the principles of the Swiss Style and architectural minimalism, STUDIO was created to strip away the superfluous. We believe that in a saturated digital landscape, extreme clarity is the ultimate luxury.
+                </p>
+<p class="font-body-md text-body-md text-secondary">
+                    Our approach is editorial, deliberate, and highly structured. We treat interfaces not merely as functional surfaces, but as curated spaces where content dictates form. By embracing profound whitespace and a rigorous typographic hierarchy, we engineer digital experiences that evoke quiet confidence.
+                </p>
+</div>
+<div class="col-span-12 md:col-span-3 flex justify-end items-start mt-8 md:mt-0">
+<img alt="Close up of a minimal white interior space with a single chair casting a long shadow" class="w-full max-w-[200px] h-auto object-cover grayscale opacity-80" data-alt="Close up of a minimal white interior space with a single chair casting a long shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbiT6rYL8h6zCzlgeCQnEuE8TIWIq9oyxcckxa5wyUEUkIqA7so3Qknc1M_aRsT2BvBwiZp-veF-9_6CkyQ2bEp8jJ7bsNe0HMHmZYQgUTPp542Z3uNxBBYujIgLhJ9Bh2FLrNtuzGjZp8AQ0E9TC0zKdM7cvKePtW_dHbtkHBRccissf-Crh7eNT3lcS-LH67oe3ScqrW5_3dvzEGYdA6j5JU_vON6SUgsfaZbyI1AGqR2oA0_Hc7uRse1zDAax2BMo8tslteM6XK"/>
+</div>
+</section>
+<!-- Core Team Bento/Asymmetric Grid -->
+<section class="pb-section-gap">
+<div class="grid grid-cols-12 gap-gutter mb-16">
+<div class="col-span-12">
+<h2 class="font-display-lg text-display-lg text-on-surface uppercase">Core Team</h2>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Team Member 1 -->
+<div class="col-span-12 md:col-span-5 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[3/4] mb-6">
+<img alt="Black and white portrait of a man looking off camera in a well lit studio" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" data-alt="Black and white portrait of a man looking off camera in a well lit studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuZPgR2o_SIioiZji2ez4mR51anjX36PQPy-JvkuNxpSqzzVi24_GsnIhZFddkYujL6S3QiL8JwefYMQHE5Kfsd5lOlmbsYAF0DZ8jCg0ruyXY6c7qiNyUoJ7-Tro2dweLV-cTgUXBSWU8G8QQimfyGT5fGWQVjNXMzInqfOO0UKO0Rda6_6x8SsxT7V3UNtAHflLA5xK5KT_b8bsVCCS16tVTPa3wJI5DUKEf2lgCsdDE2F0XKr3FWfKugyKtGVQH7YnXblPBOjz9"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Elias Thorne</h3>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Founder / Principal</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Team Member 2 -->
+<div class="col-span-12 md:col-span-4 md:col-start-8 md:mt-32 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[4/5] mb-6">
+<img alt="Monochrome portrait of a woman with short dark hair in minimalist clothing against a light grey background" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" data-alt="Monochrome portrait of a woman with short dark hair in minimalist clothing against a light grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuHk6QOLUmNXS9EwhMqTp_ZjVpTMda0QHur5MHuEp3--tFpIChYPzKL6PgIEbdxngV6DY7wubBFZG_j7SGfOi_qmfKyi-J49AGDKAMm_zPuTvjVjzhGGbDo2bhwRW3vuOsQTDQYDNC4UGqYWZ22QX63A0isxeqsvxof4yStR9TmKOBeIBnl3JJva5ImUsxuq5u-XDVAGnc-UXpwhEPNWgjy1AP8uBFydheCGoburh86uxU5B3jDaCMMn6YW5VwLCKzt4dKqlQ7YHHW"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Clara Vane</h3>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Design Director</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Team Member 3 -->
+<div class="col-span-12 md:col-span-4 md:col-start-3 md:mt-16 group cursor-pointer">
+<div class="overflow-hidden bg-surface-container aspect-[1/1] mb-6">
+<img alt="High contrast black and white profile shot of a man with architectural structure in background" class="w-full h-full object-cover grayscale group-hover:scale-[1.02] group-hover:opacity-90 transition-all duration-animation-duration-standard ease-[cubic-bezier(0.22,1,0.36,1)]" data-alt="High contrast black and white profile shot of a man with architectural structure in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN3zzCuMSr5_nNXFaGvCSq61RmPFMMoskHH-lORN6bZfhSrnyABiFM8Dem879W2WFY26kKLpHIt30yF5wkJ2AQWOvSwR1wVb2vxOocSiV35D3WxHKHy6_48Pek3J8VQd5xDNA8QhUUGPhJFSZPxzQzQ6-05wOxKCYhGcdC0fVLBzfULW5PtfD9kBFWMfnROXkHQjsxOVMN1C79hIrVrHJBFX7B1QdFiE0-Ixz8Fp9VtI-icyV5z4D3ijxQSdwuhX-ER7Hjy_tG249g"/>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-4">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Julian Reed</h3>
+<p class="font-label-caps text-label-caps text-secondary uppercase mt-2">Technical Lead</p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors duration-animation-duration-fast" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="full-width py-20 mt-40 bg-white dark:bg-black border-t border-neutral-100 dark:border-neutral-900 flat no shadows">
+<div class="grid grid-cols-12 gap-8 px-10 w-full max-w-[1920px] mx-auto items-end">
+<div class="col-span-12 md:col-span-4">
+<div class="text-lg font-bold text-black dark:text-white uppercase mb-4">
+                    STUDIO
+                </div>
+<div class="font-manrope uppercase tracking-widest text-[10px] text-black dark:text-white">
+                    ©2024 STUDIO AGENCY. ARCHITECTURAL ORDER.
+                </div>
+</div>
+<div class="col-span-12 md:col-span-8 flex flex-wrap md:justify-end gap-x-12 gap-y-4">
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Instagram</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">LinkedIn</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Privacy Policy</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all ease-out duration-300" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script>
+// Dark mode: icon init + toggle with ripple animation
+(function() {
+    var icon = document.querySelector('#dark-mode-toggle .material-symbols-outlined');
+    if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+})();
+document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+    var btn = this;
+    var rect = btn.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    var isDark = document.documentElement.classList.contains('dark');
+    var overlay = document.createElement('div');
+    overlay.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'z-index:9999',
+        'background:' + (isDark ? '#faf9f9' : '#000000'),
+        'clip-path:circle(0% at ' + x + 'px ' + y + 'px)',
+        'transition:clip-path 600ms cubic-bezier(0.22,1,0.36,1),opacity 300ms ease',
+        'pointer-events:none'
+    ].join(';');
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            overlay.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
+        });
+    });
+    setTimeout(function() {
+        var html = document.documentElement;
+        html.classList.toggle('dark');
+        html.classList.toggle('light');
+        var theme = html.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        var icon = btn.querySelector('.material-symbols-outlined');
+        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        overlay.style.opacity = '0';
+    }, 400);
+    setTimeout(function() {
+        overlay.remove();
+    }, 750);
+});
+// Language toggle
+(function() {
+    document.getElementById('lang-flag').textContent = '🇦🇷';
+    document.getElementById('lang-toggle').addEventListener('click', function() {
+        window.location.href = '/about.html';
+    });
+})();
+</script>
+</body></html>

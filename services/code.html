@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services - Studio Agency</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e2e2e2",
+                        "on-surface": "#1a1c1c",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "outline-variant": "#cfc4c5",
+                        "on-background": "#1a1c1c",
+                        "background": "#faf9f9",
+                        "on-surface-variant": "#4c4546",
+                        "surface-container": "#efeeee",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary": "#605e5d",
+                        "secondary-fixed": "#e6e2e0",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "on-primary-fixed-variant": "#474747",
+                        "on-secondary-fixed-variant": "#484645",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#1b1b1b",
+                        "surface-tint": "#5e5e5e",
+                        "surface-container-low": "#f4f3f3",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "surface": "#faf9f9",
+                        "on-secondary-fixed": "#1c1b1a",
+                        "primary-container": "#1b1b1b",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#e6e2e0",
+                        "error": "#ba1a1a",
+                        "tertiary": "#000000",
+                        "outline": "#7e7576",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "inverse-on-surface": "#f1f0f0",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e9e8e8",
+                        "surface-container-highest": "#e3e2e2",
+                        "error-container": "#ffdad6",
+                        "on-primary-container": "#848484",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "on-secondary-container": "#666463",
+                        "surface-variant": "#e3e2e2",
+                        "secondary-fixed-dim": "#c9c6c4",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#c6c6c6",
+                        "primary": "#000000",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface-bright": "#faf9f9",
+                        "on-tertiary-container": "#848484"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "animation-duration-standard": "500ms",
+                        "animation-easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                        "section-gap": "160px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "margin-edge": "64px",
+                        "gutter": "32px",
+                        "animation-duration-fast": "200ms"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["manrope"],
+                        "display-lg": ["manrope"],
+                        "display-2xl": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-md": ["manrope"],
+                        "body-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "display-2xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "200" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .transition-standard {
+                transition-property: all;
+                transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+                transition-duration: 500ms;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="bg-white/80 dark:bg-black/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-neutral-100 dark:border-neutral-900 flat no shadows z-50 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+<div class="flex justify-between items-center w-full px-10 py-8 max-w-[1920px] mx-auto">
+<div class="text-xl font-bold tracking-tighter text-black dark:text-white">STUDIO</div>
+<div class="hidden md:flex gap-8">
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="#">Work</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-black dark:text-white border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity duration-500" href="#">Services</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="#">About</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-6">
+<span class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-black dark:text-white">ENG / ESP</span>
+<button aria-label="Toggle Dark Mode" class="hover:opacity-60 transition-opacity duration-500">
+<span class="material-symbols-outlined text-black dark:text-white" data-icon="dark_mode">dark_mode</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="w-full min-h-[716px] flex flex-col justify-end px-margin-edge pb-section-gap max-w-container-max mx-auto">
+<div class="w-full md:w-3/4 lg:w-2/3">
+<h1 class="font-display-2xl text-display-2xl text-primary mb-8 tracking-tighter leading-none">
+                Disciplined creativity.<br/>Measurable impact.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                We operate at the intersection of architectural precision and digital innovation. Our services are designed to construct enduring brand ecosystems, not just fleeting campaigns.
+            </p>
+</div>
+</header>
+<!-- Services Overview Bento Grid -->
+<main class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Strategy (Large Span) -->
+<section class="md:col-span-12 lg:col-span-8 bg-surface-container-low p-16 group relative overflow-hidden transition-standard hover:bg-surface-container">
+<div class="relative z-10 flex flex-col h-full justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="architecture" data-weight="fill" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">01</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-6">Strategy</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                            The foundation. We define brand positioning, audience architecture, and communication frameworks that provide a clear roadmap for all creative and digital execution.
+                        </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Brand Positioning</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Market Research</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Content Strategy</span>
+</div>
+</div>
+</div>
+<!-- Subtle background visual -->
+<div class="absolute -bottom-20 -right-20 w-96 h-96 bg-surface-variant rounded-full opacity-50 blur-3xl group-hover:scale-110 transition-standard"></div>
+</section>
+<!-- Creative (Vertical Span) -->
+<section class="md:col-span-6 lg:col-span-4 bg-primary text-on-primary p-16 group transition-standard flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-on-primary" data-icon="palette">palette</span>
+<span class="font-label-caps text-label-caps text-on-primary border-b border-on-primary pb-1">02</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-on-primary mb-6">Creative</h2>
+<p class="font-body-md text-body-md text-primary-fixed-dim">
+                        Visual identity, editorial design, and art direction. We craft aesthetic systems that are minimalist, purposeful, and unmistakable.
+                    </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Art Direction</span>
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Identity Design</span>
+</div>
+</div>
+</section>
+<!-- Digital (Horizontal Span) -->
+<section class="md:col-span-6 lg:col-span-5 bg-surface-container p-16 group transition-standard hover:bg-surface-container-high flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="terminal">terminal</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">03</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-6">Digital</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        High-performance web experiences, application design, and technical architecture. Form meets function in the digital space.
+                    </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">UX/UI Design</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Development</span>
+</div>
+</div>
+</section>
+<!-- Image Tile -->
+<section class="md:col-span-12 lg:col-span-7 h-full min-h-[400px] overflow-hidden group">
+<img alt="Architectural abstraction" class="w-full h-full object-cover grayscale opacity-90 group-hover:scale-[1.02] transition-standard" data-alt="abstract minimalist architectural interior with concrete walls, sharp shadows, and soft natural lighting from a skylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1cO23NXo13oJ1fzdJilA1hCLToMqsnMJyW7PPj4g4imOJF4uVsZYCkT67YpAkGhHD33rJTBXJnMLJqGMEIhpmWgkTAOTJN4cE9hNQbFAJfbbimKAsckAwipPviv0JmCGNV1el9M99uXpyXvJ8GLLIHwsAbOgRTWautdI2NKfBVVX9xHnR6fLmECxnZFZELokkweN46pDqSwUTDFoBtaRw1ZnEQBJCEnFWHNUzWbHWrkD0b8Ky5yU0RtedDWB6A71xlOfE6gjIK4oj"/>
+</section>
+</div>
+</main>
+<!-- Process Section (List/Editorial Layout) -->
+<section class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4 lg:col-span-3">
+<h3 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-8 sticky top-32">The Process</h3>
+</div>
+<div class="md:col-span-8 lg:col-span-9 flex flex-col">
+<!-- Process Step 1 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">I.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Discovery &amp; Audit</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            We begin by deconstructing your current ecosystem. This involves stakeholder interviews, competitive landscape analysis, and a rigorous audit of existing assets to establish a baseline of truth.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="search">search</span>
+</div>
+<!-- Process Step 2 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">II.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Strategic Architecture</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            Synthesizing discovery insights into actionable blueprints. We define the core narrative, visual positioning, and technical requirements necessary to support the impending build.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="account_tree">account_tree</span>
+</div>
+<!-- Process Step 3 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">III.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Execution &amp; Iteration</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            The methodical construction of design systems, digital platforms, and brand collateral. We employ agile methodologies to test, refine, and perfect the output before final deployment.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="build">build</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Call to Action -->
+<section class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap text-center">
+<h2 class="font-display-lg text-display-lg text-primary mb-8">Ready to initiate?</h2>
+<a class="inline-block bg-primary text-on-primary font-label-caps text-label-caps px-12 py-5 hover:bg-surface-tint transition-standard" href="#">
+            Start a Project
+        </a>
+</section>
+<!-- Footer -->
+<footer class="bg-white dark:bg-black full-width py-20 mt-40 border-t border-neutral-100 dark:border-neutral-900 flat no shadows ease-out duration-300">
+<div class="grid grid-cols-12 gap-8 px-10 w-full max-w-[1920px] mx-auto">
+<div class="col-span-12 md:col-span-6 lg:col-span-4">
+<div class="text-lg font-bold text-black dark:text-white mb-4">STUDIO</div>
+<p class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600">
+                    ©2024 STUDIO AGENCY. ARCHITECTURAL ORDER.
+                </p>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-8 flex flex-wrap gap-8 md:justify-end items-end">
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Instagram</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">LinkedIn</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Privacy Policy</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Terms</a>
+</div>
+</div>
+</footer>
+</body></html>

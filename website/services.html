@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es"><head>
+<script>
+  (function() {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = saved === 'dark' || (!saved && prefersDark);
+    var html = document.documentElement;
+    html.classList.remove('light', 'dark');
+    html.classList.add(isDark ? 'dark' : 'light');
+  })();
+</script>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Servicios - Studio Agency</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+:root, .light {
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1b1b1b;
+  --color-on-primary-container: #848484;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #c6c6c6;
+  --color-secondary: #605e5d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e6e2e0;
+  --color-on-secondary-container: #666463;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #1b1b1b;
+  --color-on-tertiary-container: #848484;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-background: #faf9f9;
+  --color-on-background: #1a1c1c;
+  --color-surface: #faf9f9;
+  --color-on-surface: #1a1c1c;
+  --color-surface-variant: #e3e2e2;
+  --color-on-surface-variant: #4c4546;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f3;
+  --color-surface-container: #efeeee;
+  --color-surface-container-high: #e9e8e8;
+  --color-surface-container-highest: #e3e2e2;
+  --color-surface-dim: #dadada;
+  --color-surface-bright: #faf9f9;
+  --color-surface-tint: #5e5e5e;
+  --color-inverse-surface: #2f3131;
+  --color-inverse-on-surface: #f1f0f0;
+  --color-outline: #7e7576;
+  --color-outline-variant: #cfc4c5;
+}
+.dark {
+  --color-primary: #c6c6c6;
+  --color-on-primary: #303030;
+  --color-primary-container: #474747;
+  --color-on-primary-container: #e2e2e2;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-inverse-primary: #5e5e5e;
+  --color-secondary: #c9c6c4;
+  --color-on-secondary: #323130;
+  --color-secondary-container: #484645;
+  --color-on-secondary-container: #e6e2e0;
+  --color-secondary-fixed: #e6e2e0;
+  --color-secondary-fixed-dim: #c9c6c4;
+  --color-on-secondary-fixed: #1c1b1a;
+  --color-on-secondary-fixed-variant: #484645;
+  --color-tertiary: #c6c6c6;
+  --color-on-tertiary: #303030;
+  --color-tertiary-container: #474747;
+  --color-on-tertiary-container: #e2e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+  --color-background: #111212;
+  --color-on-background: #e3e2e2;
+  --color-surface: #111212;
+  --color-on-surface: #e3e2e2;
+  --color-surface-variant: #4c4546;
+  --color-on-surface-variant: #cfc4c5;
+  --color-surface-container-lowest: #0c0e0e;
+  --color-surface-container-low: #191b1b;
+  --color-surface-container: #1d1f1f;
+  --color-surface-container-high: #282a2a;
+  --color-surface-container-highest: #333535;
+  --color-surface-dim: #111212;
+  --color-surface-bright: #37393a;
+  --color-surface-tint: #c6c6c6;
+  --color-inverse-surface: #e3e2e2;
+  --color-inverse-on-surface: #2f3131;
+  --color-outline: #998f90;
+  --color-outline-variant: #4c4546;
+}
+</style>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                    "primary-fixed": "var(--color-primary-fixed)",
+                    "on-surface": "var(--color-on-surface)",
+                    "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                    "outline-variant": "var(--color-outline-variant)",
+                    "on-background": "var(--color-on-background)",
+                    "background": "var(--color-background)",
+                    "on-surface-variant": "var(--color-on-surface-variant)",
+                    "surface-container": "var(--color-surface-container)",
+                    "on-tertiary": "var(--color-on-tertiary)",
+                    "on-error": "var(--color-on-error)",
+                    "secondary": "var(--color-secondary)",
+                    "secondary-fixed": "var(--color-secondary-fixed)",
+                    "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                    "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                    "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                    "on-secondary": "var(--color-on-secondary)",
+                    "tertiary-container": "var(--color-tertiary-container)",
+                    "surface-tint": "var(--color-surface-tint)",
+                    "surface-container-low": "var(--color-surface-container-low)",
+                    "inverse-surface": "var(--color-inverse-surface)",
+                    "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                    "surface": "var(--color-surface)",
+                    "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                    "primary-container": "var(--color-primary-container)",
+                    "surface-dim": "var(--color-surface-dim)",
+                    "secondary-container": "var(--color-secondary-container)",
+                    "error": "var(--color-error)",
+                    "tertiary": "var(--color-tertiary)",
+                    "outline": "var(--color-outline)",
+                    "on-error-container": "var(--color-on-error-container)",
+                    "tertiary-fixed": "var(--color-tertiary-fixed)",
+                    "inverse-on-surface": "var(--color-inverse-on-surface)",
+                    "on-primary": "var(--color-on-primary)",
+                    "surface-container-high": "var(--color-surface-container-high)",
+                    "surface-container-highest": "var(--color-surface-container-highest)",
+                    "error-container": "var(--color-error-container)",
+                    "on-primary-container": "var(--color-on-primary-container)",
+                    "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                    "on-secondary-container": "var(--color-on-secondary-container)",
+                    "surface-variant": "var(--color-surface-variant)",
+                    "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                    "surface-container-lowest": "var(--color-surface-container-lowest)",
+                    "inverse-primary": "var(--color-inverse-primary)",
+                    "primary": "var(--color-primary)",
+                    "on-primary-fixed": "var(--color-on-primary-fixed)",
+                    "surface-bright": "var(--color-surface-bright)",
+                    "on-tertiary-container": "var(--color-on-tertiary-container)"
+                },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "animation-duration-standard": "500ms",
+                        "animation-easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                        "section-gap": "160px",
+                        "container-max": "1440px",
+                        "unit": "8px",
+                        "margin-edge": "64px",
+                        "gutter": "32px",
+                        "animation-duration-fast": "200ms"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["manrope"],
+                        "display-lg": ["manrope"],
+                        "display-2xl": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-md": ["manrope"],
+                        "body-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "300" }],
+                        "display-2xl": ["80px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "200" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .transition-standard {
+                transition-property: all;
+                transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+                transition-duration: 500ms;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar -->
+<nav class="bg-white/80 dark:bg-black/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-neutral-100 dark:border-neutral-900 flat no shadows z-50 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]">
+<div class="flex justify-between items-center w-full px-10 py-8 max-w-[1920px] mx-auto">
+<a class="text-xl font-bold tracking-tighter text-black dark:text-white hover:opacity-60 transition-opacity duration-500" href="index.html">STUDIO</a>
+<div class="hidden md:flex gap-8">
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="work.html">Trabajos</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-black dark:text-white border-b border-black dark:border-white pb-1 hover:opacity-60 transition-opacity duration-500" href="services.html">Servicios</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="about.html">Nosotros</a>
+<a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500 hover:opacity-60 transition-opacity duration-500" href="contact.html">Contacto</a>
+</div>
+<div class="flex items-center gap-6">
+<button id="lang-toggle" class="flex items-center gap-2 hover:opacity-60 transition-opacity duration-500" aria-label="Cambiar idioma">
+<span id="lang-flag" class="text-xl leading-none">🇺🇸</span>
+</button>
+<button id="dark-mode-toggle" type="button" class="text-black dark:text-white hover:opacity-60 transition-opacity duration-500 flex items-center justify-center" aria-label="Toggle theme">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="w-full min-h-[716px] flex flex-col justify-end px-margin-edge pb-section-gap max-w-container-max mx-auto">
+<div class="w-full md:w-3/4 lg:w-2/3">
+<h1 class="font-display-2xl text-display-2xl text-primary mb-8 tracking-tighter leading-none">
+                Creatividad disciplinada.<br/>Impacto medible.
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                Operamos en la intersección de la precisión arquitectónica y la innovación digital. Nuestros servicios están diseñados para construir ecosistemas de marca duraderos, no solo campañas efímeras.
+            </p>
+</div>
+</header>
+<!-- Services Overview Bento Grid -->
+<main class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Strategy (Large Span) -->
+<section class="md:col-span-12 lg:col-span-8 bg-surface-container-low p-16 group relative overflow-hidden transition-standard hover:bg-surface-container">
+<div class="relative z-10 flex flex-col h-full justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="architecture" data-weight="fill" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">01</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-6">Estrategia</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                            Los cimientos. Definimos el posicionamiento de marca, la arquitectura de audiencia y los marcos de comunicación que proporcionan una hoja de ruta clara para toda la ejecución creativa y digital.
+                        </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Posicionamiento de Marca</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Investigación de Mercado</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Estrategia de Contenido</span>
+</div>
+</div>
+</div>
+<!-- Subtle background visual -->
+<div class="absolute -bottom-20 -right-20 w-96 h-96 bg-surface-variant rounded-full opacity-50 blur-3xl group-hover:scale-110 transition-standard"></div>
+</section>
+<!-- Creative (Vertical Span) -->
+<section class="md:col-span-6 lg:col-span-4 bg-primary text-on-primary p-16 group transition-standard flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-on-primary" data-icon="palette">palette</span>
+<span class="font-label-caps text-label-caps text-on-primary border-b border-on-primary pb-1">02</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-on-primary mb-6">Creatividad</h2>
+<p class="font-body-md text-body-md text-primary-fixed-dim">
+                        Identidad visual, diseño editorial y dirección de arte. Creamos sistemas estéticos que son minimalistas, intencionales e inconfundibles.
+                    </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Dirección de Arte</span>
+<span class="font-label-caps text-label-caps text-primary-fixed-dim border border-on-primary-fixed-variant px-4 py-2">Diseño de Identidad</span>
+</div>
+</div>
+</section>
+<!-- Digital (Horizontal Span) -->
+<section class="md:col-span-6 lg:col-span-5 bg-surface-container p-16 group transition-standard hover:bg-surface-container-high flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start mb-16">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="terminal">terminal</span>
+<span class="font-label-caps text-label-caps text-primary border-b border-primary pb-1">03</span>
+</div>
+<div>
+<h2 class="font-display-lg text-display-lg text-primary mb-6">Digital</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Experiencias web de alto rendimiento, diseño de aplicaciones y arquitectura técnica. La forma se encuentra con la función en el espacio digital.
+                    </p>
+<div class="mt-8 flex flex-wrap gap-4">
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Diseño UX/UI</span>
+<span class="font-label-caps text-label-caps text-secondary border border-outline-variant px-4 py-2">Desarrollo</span>
+</div>
+</div>
+</section>
+<!-- Image Tile -->
+<section class="md:col-span-12 lg:col-span-7 h-full min-h-[400px] overflow-hidden group">
+<img alt="Abstracción arquitectónica" class="w-full h-full object-cover grayscale opacity-90 group-hover:scale-[1.02] transition-standard" data-alt="abstract minimalist architectural interior with concrete walls, sharp shadows, and soft natural lighting from a skylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1cO23NXo13oJ1fzdJilA1hCLToMqsnMJyW7PPj4g4imOJF4uVsZYCkT67YpAkGhHD33rJTBXJnMLJqGMEIhpmWgkTAOTJN4cE9hNQbFAJfbbimKAsckAwipPviv0JmCGNV1el9M99uXpyXvJ8GLLIHwsAbOgRTWautdI2NKfBVVX9xHnR6fLmECxnZFZELokkweN46pDqSwUTDFoBtaRw1ZnEQBJCEnFWHNUzWbHWrkD0b8Ky5yU0RtedDWB6A71xlOfE6gjIK4oj"/>
+</section>
+</div>
+</main>
+<!-- Process Section (List/Editorial Layout) -->
+<section class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-4 lg:col-span-3">
+<h3 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-8 sticky top-32">El Proceso</h3>
+</div>
+<div class="md:col-span-8 lg:col-span-9 flex flex-col">
+<!-- Process Step 1 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">I.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Descubrimiento y Auditoría</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            Comenzamos deconstruyendo su ecosistema actual. Esto implica entrevistas con las partes interesadas, análisis del panorama competitivo y una auditoría rigurosa de los activos existentes para establecer una base de verdad.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="search">search</span>
+</div>
+<!-- Process Step 2 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">II.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Arquitectura Estratégica</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            Sintetizando los conocimientos del descubrimiento en planos de acción concretos. Definimos la narrativa central, el posicionamiento visual y los requisitos técnicos necesarios para sustentar la construcción inminente.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="account_tree">account_tree</span>
+</div>
+<!-- Process Step 3 -->
+<div class="group border-b border-outline-variant py-12 flex flex-col md:flex-row gap-8 items-start hover:border-primary transition-standard">
+<div class="font-display-lg text-display-lg text-surface-tint font-light md:w-24">III.</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Ejecución e Iteración</h4>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                            La construcción metódica de sistemas de diseño, plataformas digitales y material de marca. Empleamos metodologías ágiles para probar, refinar y perfeccionar el resultado antes del despliegue final.
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-standard hidden md:block" data-icon="build">build</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Call to Action -->
+<section class="w-full px-margin-edge max-w-container-max mx-auto pb-section-gap text-center">
+<h2 class="font-display-lg text-display-lg text-primary mb-8">¿Listo para comenzar?</h2>
+<a class="inline-block bg-primary text-on-primary font-label-caps text-label-caps px-12 py-5 hover:bg-surface-tint transition-standard" href="contact.html">
+            Iniciar un Proyecto
+        </a>
+</section>
+<!-- Footer -->
+<footer class="bg-white dark:bg-black full-width py-20 mt-40 border-t border-neutral-100 dark:border-neutral-900 flat no shadows ease-out duration-300">
+<div class="grid grid-cols-12 gap-8 px-10 w-full max-w-[1920px] mx-auto">
+<div class="col-span-12 md:col-span-6 lg:col-span-4">
+<div class="text-lg font-bold text-black dark:text-white mb-4">STUDIO</div>
+<p class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600">
+                    ©2024 STUDIO AGENCY. ORDEN ARQUITECTÓNICO.
+                </p>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-8 flex flex-wrap gap-8 md:justify-end items-end">
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Instagram</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">LinkedIn</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Política de Privacidad</a>
+<a class="font-manrope uppercase tracking-widest text-[10px] text-neutral-400 dark:text-neutral-600 hover:underline decoration-1 underline-offset-4 transition-all" href="#">Términos</a>
+</div>
+</div>
+</footer>
+<script>
+// Dark mode: icon init + toggle with ripple animation
+(function() {
+    var icon = document.querySelector('#dark-mode-toggle .material-symbols-outlined');
+    if (icon) icon.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+})();
+document.getElementById('dark-mode-toggle').addEventListener('click', function() {
+    var btn = this;
+    var rect = btn.getBoundingClientRect();
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    var isDark = document.documentElement.classList.contains('dark');
+    var overlay = document.createElement('div');
+    overlay.style.cssText = [
+        'position:fixed',
+        'inset:0',
+        'z-index:9999',
+        'background:' + (isDark ? '#faf9f9' : '#000000'),
+        'clip-path:circle(0% at ' + x + 'px ' + y + 'px)',
+        'transition:clip-path 600ms cubic-bezier(0.22,1,0.36,1),opacity 300ms ease',
+        'pointer-events:none'
+    ].join(';');
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            overlay.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
+        });
+    });
+    setTimeout(function() {
+        var html = document.documentElement;
+        html.classList.toggle('dark');
+        html.classList.toggle('light');
+        var theme = html.classList.contains('dark') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        var icon = btn.querySelector('.material-symbols-outlined');
+        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        overlay.style.opacity = '0';
+    }, 400);
+    setTimeout(function() {
+        overlay.remove();
+    }, 750);
+});
+// Language toggle
+(function() {
+    document.getElementById('lang-toggle').addEventListener('click', function() {
+        window.location.href = '/en/services.html';
+    });
+})();
+</script>
+</body></html>
