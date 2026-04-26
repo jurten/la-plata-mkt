@@ -714,20 +714,15 @@
 document.getElementById('dark-mode-toggle').addEventListener('click', function() {
     var btn = this;
     var html = document.documentElement;
-    document.body.style.transition = 'opacity 150ms ease';
-    document.body.style.opacity = '0';
-    setTimeout(function() {
+    html.animate([{opacity:1},{opacity:0}], {duration:350, easing:'ease-in', fill:'forwards'}).finished.then(function() {
         html.classList.toggle('dark');
         html.classList.toggle('light');
         var theme = html.classList.contains('dark') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
         var icon = btn.querySelector('.material-symbols-outlined');
         icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-        document.body.style.opacity = '1';
-        setTimeout(function() {
-            document.body.style.transition = '';
-        }, 150);
-    }, 150);
+        html.animate([{opacity:0},{opacity:1}], {duration:450, easing:'ease-out', fill:'forwards'});
+    });
 });
 
 // Scroll-spy: highlight active nav link based on visible section
