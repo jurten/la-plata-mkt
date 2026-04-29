@@ -213,6 +213,19 @@
             transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
         }
     </style>
+<style>
+@media (max-width: 767px) {
+  .px-margin-edge { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+  .py-section-gap { padding-top: 5rem !important; padding-bottom: 5rem !important; }
+  .pb-section-gap { padding-bottom: 5rem !important; }
+  .pt-section-gap { padding-top: 5rem !important; }
+  .text-display-2xl { font-size: 2.5rem !important; letter-spacing: -0.02em !important; }
+  .text-display-lg { font-size: 1.75rem !important; letter-spacing: -0.01em !important; }
+  .text-headline-md { font-size: 1.25rem !important; }
+  .gap-gutter { gap: 1rem !important; }
+  header > div { padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 0.875rem !important; padding-bottom: 0.875rem !important; }
+}
+</style>
 </head>
 <body class="bg-background text-on-background font-body-md antialiased selection:bg-tertiary selection:text-on-tertiary">
 <!-- TopNavBar -->
@@ -226,6 +239,9 @@
 <a class="font-manrope uppercase tracking-[0.2em] text-[11px] font-medium text-neutral-400 dark:text-neutral-500 hover:text-black dark:hover:text-white transition-colors duration-500" href="/en/contact.html">Contact</a>
 </nav>
 <div class="flex items-center space-x-6">
+<button id="mobile-menu-btn" class="flex md:hidden items-center justify-center text-black dark:text-white hover:opacity-60 transition-opacity duration-500" aria-expanded="false" aria-label="Toggle menu">
+<span class="material-symbols-outlined">menu</span>
+</button>
 <button id="lang-toggle" class="flex items-center gap-2 hover:opacity-60 transition-opacity duration-500" aria-label="Switch language">
 <span id="lang-flag" class="text-xl leading-none">🇦🇷</span>
 </button>
@@ -235,6 +251,15 @@
 </div>
 </div>
 </header>
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center transition-opacity duration-500 opacity-0 pointer-events-none" aria-hidden="true">
+  <nav class="flex flex-col items-center gap-10">
+    <a class="font-manrope text-[2rem] font-light tracking-tight text-primary hover:text-secondary transition-colors duration-300" href="work.html">Work</a>
+    <a class="font-manrope text-[2rem] font-light tracking-tight text-primary hover:text-secondary transition-colors duration-300" href="services.html">Services</a>
+    <a class="font-manrope text-[2rem] font-light tracking-tight text-primary hover:text-secondary transition-colors duration-300" href="about.html">About</a>
+    <a class="font-manrope text-[2rem] font-light tracking-tight text-primary hover:text-secondary transition-colors duration-300" href="contact.html">Contact</a>
+  </nav>
+</div>
 <main class="w-full">
 <!-- Header Section -->
 <section class="max-w-container-max mx-auto px-margin-edge pt-[160px] pb-[80px]">
@@ -391,6 +416,31 @@ document.getElementById('dark-mode-toggle').addEventListener('click', function()
     document.getElementById('lang-flag').textContent = '🇦🇷';
     document.getElementById('lang-toggle').addEventListener('click', function() {
         window.location.href = '/work.html';
+    });
+})();
+// Mobile menu toggle
+(function() {
+    var btn = document.getElementById('mobile-menu-btn');
+    var menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    var icon = btn.querySelector('.material-symbols-outlined');
+    function openMenu() {
+        menu.classList.remove('opacity-0', 'pointer-events-none');
+        menu.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        icon.textContent = 'close';
+    }
+    function closeMenu() {
+        menu.classList.add('opacity-0', 'pointer-events-none');
+        menu.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('aria-expanded', 'false');
+        icon.textContent = 'menu';
+    }
+    btn.addEventListener('click', function() {
+        menu.classList.contains('opacity-0') ? openMenu() : closeMenu();
+    });
+    menu.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', closeMenu);
     });
 })();
 </script>
