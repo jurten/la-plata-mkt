@@ -16,6 +16,87 @@
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  var typewriterItems = Array.prototype.slice.call(document.querySelectorAll('[data-studio-typewriter]'));
+
+  function typeLine(item) {
+    if (item.dataset.studioTyped === 'true') return;
+    item.dataset.studioTyped = 'true';
+
+    var fallbackText = item.dataset.studioTypewriterText || item.textContent.replace(/\s+/g, ' ').trim();
+    var phrases = (item.dataset.studioPhrases || fallbackText)
+      .split('|')
+      .map(function(phrase) { return phrase.trim(); })
+      .filter(Boolean);
+    var phraseIndex = 0;
+    var fullText = phrases[phraseIndex] || fallbackText;
+    var longestText = phrases.reduce(function(longest, phrase) {
+      return phrase.length > longest.length ? phrase : longest;
+    }, fullText);
+    var ghost = document.createElement('span');
+    var live = document.createElement('span');
+    var index = 0;
+    var direction = 1;
+
+    item.dataset.studioTypewriterText = fallbackText;
+    item.setAttribute('aria-label', fullText);
+    ghost.className = 'studio-typewriter-ghost';
+    ghost.setAttribute('aria-hidden', 'true');
+    ghost.textContent = longestText;
+    live.className = 'studio-typewriter-live';
+    live.setAttribute('aria-hidden', 'true');
+    item.textContent = '';
+    item.appendChild(ghost);
+    item.appendChild(live);
+    item.classList.add('is-typing');
+
+    function writeNext() {
+      index += direction;
+      live.textContent = fullText.slice(0, index);
+
+      if (direction === 1 && index >= fullText.length) {
+        item.setAttribute('aria-label', fullText);
+        window.setTimeout(function() {
+          direction = -1;
+          writeNext();
+        }, 4200);
+        return;
+      }
+
+      if (direction === -1 && index <= 0) {
+        window.setTimeout(function() {
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          fullText = phrases[phraseIndex];
+          direction = 1;
+          writeNext();
+        }, 1200);
+        return;
+      }
+
+      var delay = direction === 1 ? 118 : 64;
+
+      if (direction === 1 && /[.,;]/.test(fullText.charAt(index - 1))) {
+        delay = 360;
+      }
+
+      window.setTimeout(writeNext, delay);
+    }
+
+    writeNext();
+  }
+
+  var typewriterObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      typeLine(entry.target);
+      typewriterObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.25 });
+
+  typewriterItems.forEach(function(item) {
+    item.dataset.studioTypewriterText = item.textContent.replace(/\s+/g, ' ').trim();
+    typewriterObserver.observe(item);
+  });
+
   var revealItems = document.querySelectorAll('main > *, section > div, footer > div');
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
