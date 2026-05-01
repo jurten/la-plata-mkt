@@ -1,20 +1,24 @@
 :root {
   --studio-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --studio-grid-line: rgba(26, 28, 28, .085);
+  --studio-grid-light: rgba(26, 28, 28, .46);
   --studio-section-number: rgba(26, 28, 28, .46);
   --studio-creative-bg: #000000;
   --studio-creative-fg: #ffffff;
   --studio-creative-muted: #d6d6d6;
   --studio-creative-line: rgba(255, 255, 255, .34);
+  --studio-typewriter-highlight: #7f1d3b;
 }
 
 .dark {
   --studio-grid-line: rgba(227, 226, 226, .075);
+  --studio-grid-light: rgba(227, 226, 226, .5);
   --studio-section-number: rgba(227, 226, 226, .42);
   --studio-creative-bg: #e3e2e2;
   --studio-creative-fg: #111212;
   --studio-creative-muted: #3d3f3f;
   --studio-creative-line: rgba(17, 18, 18, .34);
+  --studio-typewriter-highlight: #ff9db8;
 }
 
 html {
@@ -36,6 +40,75 @@ body::before {
     linear-gradient(90deg, transparent calc(100% - 1px), var(--studio-grid-line) 0) 0 0 / calc((100vw - 128px) / 12) 100%,
     linear-gradient(var(--studio-grid-line) 1px, transparent 1px) 0 0 / 100% 96px;
   mask-image: linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .9;
+  background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+  background-repeat: no-repeat;
+  background-size: 240px 1px;
+  background-position: -280px 192px;
+  filter: drop-shadow(0 0 7px var(--studio-grid-light));
+  mask-image: linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+  animation: studio-grid-light 22s linear infinite;
+}
+
+@keyframes studio-grid-light {
+  0% {
+    background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 240px 1px;
+    background-position: -280px 192px;
+  }
+
+  29% {
+    background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 240px 1px;
+    background-position: calc(100% + 280px) 192px;
+  }
+
+  30%,
+  39% {
+    background-image: linear-gradient(90deg, transparent, transparent);
+    background-size: 1px 1px;
+    background-position: 0 0;
+  }
+
+  40% {
+    background-image: linear-gradient(180deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 1px 240px;
+    background-position: calc((100vw - 128px) / 12 * 7) -280px;
+  }
+
+  69% {
+    background-image: linear-gradient(180deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 1px 240px;
+    background-position: calc((100vw - 128px) / 12 * 7) calc(100% + 280px);
+  }
+
+  70%,
+  79% {
+    background-image: linear-gradient(90deg, transparent, transparent);
+    background-size: 1px 1px;
+    background-position: 0 0;
+  }
+
+  80% {
+    background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 240px 1px;
+    background-position: calc(100% + 280px) 480px;
+  }
+
+  100% {
+    background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+    background-size: 240px 1px;
+    background-position: -280px 480px;
+  }
 }
 
 header,
@@ -225,6 +298,42 @@ main > section:nth-of-type(2) article.group [class*="w-24"] {
   background: var(--color-primary);
 }
 
+.studio-typewriter {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+  padding-right: .52em;
+  color: var(--studio-typewriter-highlight);
+}
+
+.studio-typewriter-ghost {
+  display: inline-block;
+  visibility: hidden;
+}
+
+.studio-typewriter-live {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.studio-typewriter-live::after {
+  content: "";
+  display: inline-block;
+  width: .34em;
+  height: .78em;
+  margin-left: .1em;
+  background: currentColor;
+  transform: translateY(.08em);
+  animation: studio-caret 760ms steps(1, end) infinite;
+}
+
+@keyframes studio-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 [data-studio-reveal] {
   opacity: 0;
   transform: translateY(18px);
@@ -257,8 +366,16 @@ main > section:nth-of-type(2) article.group [class*="w-24"] {
     transform: none;
   }
 
+  .studio-typewriter-live::after {
+    display: none !important;
+  }
+
   img.studio-parallax {
     transform: none;
+  }
+
+  body::after {
+    animation: none;
   }
 
 }
@@ -269,6 +386,65 @@ main > section:nth-of-type(2) article.group [class*="w-24"] {
       linear-gradient(90deg, transparent calc(100% - 1px), var(--studio-grid-line) 0) 0 0 / calc((100vw - 48px) / 4) 100%,
       linear-gradient(var(--studio-grid-line) 1px, transparent 1px) 0 0 / 100% 80px;
     mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+
+  body::after {
+    background-size:
+      168px 1px;
+    mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+
+  @keyframes studio-grid-light {
+    0% {
+      background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 168px 1px;
+      background-position: -200px 160px;
+    }
+
+    29% {
+      background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 168px 1px;
+      background-position: calc(100% + 200px) 160px;
+    }
+
+    30%,
+    39% {
+      background-image: linear-gradient(90deg, transparent, transparent);
+      background-size: 1px 1px;
+      background-position: 0 0;
+    }
+
+    40% {
+      background-image: linear-gradient(180deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 1px 168px;
+      background-position: calc((100vw - 48px) / 4 * 2) -200px;
+    }
+
+    69% {
+      background-image: linear-gradient(180deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 1px 168px;
+      background-position: calc((100vw - 48px) / 4 * 2) calc(100% + 200px);
+    }
+
+    70%,
+    79% {
+      background-image: linear-gradient(90deg, transparent, transparent);
+      background-size: 1px 1px;
+      background-position: 0 0;
+    }
+
+    80% {
+      background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 168px 1px;
+      background-position: calc(100% + 200px) 400px;
+    }
+
+    100% {
+      background-image: linear-gradient(90deg, transparent, var(--studio-grid-light) 48%, transparent);
+      background-size: 168px 1px;
+      background-position: -200px 400px;
+    }
   }
 
   img.studio-parallax {
