@@ -1,0 +1,285 @@
+:root {
+  --studio-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --studio-grid-line: rgba(26, 28, 28, .085);
+  --studio-section-number: rgba(26, 28, 28, .46);
+  --studio-creative-bg: #000000;
+  --studio-creative-fg: #ffffff;
+  --studio-creative-muted: #d6d6d6;
+  --studio-creative-line: rgba(255, 255, 255, .34);
+}
+
+.dark {
+  --studio-grid-line: rgba(227, 226, 226, .075);
+  --studio-section-number: rgba(227, 226, 226, .42);
+  --studio-creative-bg: #e3e2e2;
+  --studio-creative-fg: #111212;
+  --studio-creative-muted: #3d3f3f;
+  --studio-creative-line: rgba(17, 18, 18, .34);
+}
+
+html {
+  scroll-padding-top: 112px;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent calc(100% - 1px), var(--studio-grid-line) 0) 0 0 / calc((100vw - 128px) / 12) 100%,
+    linear-gradient(var(--studio-grid-line) 1px, transparent 1px) 0 0 / 100% 96px;
+  mask-image: linear-gradient(90deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+}
+
+header,
+body > nav {
+  isolation: isolate;
+}
+
+header::after,
+body > nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  transform: scaleX(.18);
+  opacity: .55;
+  transition: transform 700ms var(--studio-ease), opacity 700ms var(--studio-ease);
+}
+
+header:hover::after,
+body > nav:hover::after {
+  transform: scaleX(1);
+  opacity: .9;
+}
+
+a,
+button {
+  text-underline-offset: .35em;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 6px;
+}
+
+.rounded-lg,
+.rounded-full,
+.rounded-sm {
+  border-radius: 0 !important;
+}
+
+.blur-3xl {
+  display: none !important;
+}
+
+section[id] {
+  position: relative;
+  counter-increment: studio-section;
+}
+
+body {
+  counter-reset: studio-section;
+}
+
+section[id]::before {
+  content: "0" counter(studio-section);
+  position: absolute;
+  top: 96px;
+  left: max(24px, calc((100vw - 1440px) / 2 + 64px));
+  z-index: 1;
+  font-family: Manrope, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--studio-section-number);
+  writing-mode: vertical-rl;
+}
+
+img {
+  filter: grayscale(1) contrast(1.04);
+}
+
+.group:hover img {
+  filter: grayscale(1) contrast(1.12);
+}
+
+img.studio-parallax {
+  transform: translate3d(0, var(--studio-parallax-y, 0px), 0) scale(1.06);
+  transform-origin: center;
+  will-change: transform;
+}
+
+article.group {
+  position: relative;
+  isolation: isolate;
+}
+
+article.group::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--color-primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 500ms var(--studio-ease);
+}
+
+article.group:hover::before {
+  transform: scaleY(1);
+}
+
+article.group:hover {
+  padding-left: 2.5rem !important;
+}
+
+[class*="aspect-"] {
+  position: relative;
+}
+
+[class*="aspect-"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 55%, transparent);
+  mix-blend-mode: multiply;
+}
+
+.dark [class*="aspect-"]::after {
+  mix-blend-mode: screen;
+}
+
+.font-display-2xl,
+.font-display-lg {
+  text-wrap: balance;
+}
+
+.font-label-caps {
+  letter-spacing: .12em !important;
+}
+
+:is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] {
+  background: var(--studio-creative-bg) !important;
+  color: var(--studio-creative-fg) !important;
+}
+
+:is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] [class*="text-on-primary"],
+:is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] .material-symbols-outlined {
+  color: var(--studio-creative-fg) !important;
+}
+
+:is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] [class*="text-primary-fixed-dim"] {
+  color: var(--studio-creative-muted) !important;
+}
+
+:is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] [class*="border-on-primary"] {
+  border-color: var(--studio-creative-line) !important;
+}
+
+#work article.group,
+main > section:nth-of-type(2) article.group {
+  transition-duration: 900ms !important;
+}
+
+#work article.group::before,
+main > section:nth-of-type(2) article.group::before {
+  transition-duration: 1100ms;
+}
+
+#work article.group h2,
+main > section:nth-of-type(2) article.group h2,
+#work article.group [class*="w-24"],
+main > section:nth-of-type(2) article.group [class*="w-24"] {
+  transition-duration: 1000ms !important;
+}
+
+#home > div:nth-of-type(3) .group img {
+  transition-duration: 1800ms !important;
+}
+
+.studio-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  width: 100%;
+  height: 2px;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--color-primary);
+}
+
+[data-studio-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 560ms var(--studio-ease),
+    transform 560ms var(--studio-ease);
+}
+
+[data-studio-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.studio-selected-works[data-studio-reveal] {
+  transition-duration: 1000ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+
+  [data-studio-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  img.studio-parallax {
+    transform: none;
+  }
+
+}
+
+@media (max-width: 767px) {
+  body::before {
+    background:
+      linear-gradient(90deg, transparent calc(100% - 1px), var(--studio-grid-line) 0) 0 0 / calc((100vw - 48px) / 4) 100%,
+      linear-gradient(var(--studio-grid-line) 1px, transparent 1px) 0 0 / 100% 80px;
+    mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+
+  img.studio-parallax {
+    transform: none;
+  }
+
+  section[id]::before {
+    display: none;
+  }
+
+  article.group:hover {
+    padding-left: 2rem !important;
+  }
+}
