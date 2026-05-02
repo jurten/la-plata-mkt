@@ -1,22 +1,26 @@
 :root {
   --studio-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --studio-grid-line: rgba(26, 28, 28, .085);
-  --studio-section-number: rgba(26, 28, 28, .46);
+  --studio-krieg-blue: #7ca2b8;
+  --studio-krieg-orange: #ea5505;
+  --studio-grid-line: rgba(124, 162, 184, .18);
+  --studio-section-number: rgba(124, 162, 184, .78);
   --studio-creative-bg: #000000;
   --studio-creative-fg: #ffffff;
   --studio-creative-muted: #d6d6d6;
   --studio-creative-line: rgba(255, 255, 255, .34);
-  --studio-typewriter-highlight: #7f1d3b;
+  --studio-typewriter-highlight: var(--studio-krieg-orange);
 }
 
 .dark {
-  --studio-grid-line: rgba(227, 226, 226, .075);
-  --studio-section-number: rgba(227, 226, 226, .42);
+  --studio-krieg-blue: #9bb9c9;
+  --studio-krieg-orange: #ff8a2a;
+  --studio-grid-line: rgba(155, 185, 201, .14);
+  --studio-section-number: rgba(155, 185, 201, .66);
   --studio-creative-bg: #e3e2e2;
   --studio-creative-fg: #111212;
   --studio-creative-muted: #3d3f3f;
   --studio-creative-line: rgba(17, 18, 18, .34);
-  --studio-typewriter-highlight: #ff9db8;
+  --studio-typewriter-highlight: var(--studio-krieg-orange);
 }
 
 html {
@@ -53,7 +57,7 @@ body > nav::after {
   right: 0;
   bottom: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  background: linear-gradient(90deg, transparent, var(--studio-krieg-orange), transparent);
   transform: scaleX(.18);
   opacity: .55;
   transition: transform 700ms var(--studio-ease), opacity 700ms var(--studio-ease);
@@ -75,7 +79,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 1px solid var(--color-primary);
+  outline: 1px solid var(--studio-krieg-orange);
   outline-offset: 6px;
 }
 
@@ -136,7 +140,7 @@ article.group::before {
   position: absolute;
   inset: 0 auto 0 0;
   width: 2px;
-  background: var(--color-primary);
+  background: var(--studio-krieg-blue);
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 500ms var(--studio-ease);
@@ -174,6 +178,29 @@ article.group:hover {
 
 .font-label-caps {
   letter-spacing: .12em !important;
+}
+
+::selection {
+  background: var(--studio-krieg-orange);
+  color: #ffffff;
+}
+
+a.bg-primary:hover,
+button.bg-primary:hover {
+  background-color: var(--studio-krieg-orange) !important;
+  color: #ffffff !important;
+}
+
+.material-symbols-outlined.text-outline:hover,
+.group:hover .material-symbols-outlined.text-outline {
+  color: var(--studio-krieg-orange) !important;
+}
+
+button.border-primary,
+.nav-link.border-black,
+header nav a.border-b,
+body > nav a.border-b {
+  border-color: var(--studio-krieg-orange) !important;
 }
 
 :is(section, div)[class*="bg-primary"][class*="text-on-primary"][class*="min-h-[400px]"] {
@@ -224,7 +251,7 @@ main > section:nth-of-type(2) article.group [class*="w-24"] {
   height: 2px;
   transform-origin: left;
   transform: scaleX(0);
-  background: var(--color-primary);
+  background: var(--studio-krieg-orange);
 }
 
 .studio-typewriter {

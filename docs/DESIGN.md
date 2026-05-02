@@ -15,16 +15,16 @@ colors:
   inverse-on-surface: '#f1f0f0'
   outline: '#7e7576'
   outline-variant: '#cfc4c5'
-  surface-tint: '#5e5e5e'
+  surface-tint: '#ea5505'
   primary: '#000000'
   on-primary: '#ffffff'
   primary-container: '#1b1b1b'
   on-primary-container: '#848484'
   inverse-primary: '#c6c6c6'
-  secondary: '#605e5d'
+  secondary: '#7ca2b8'
   on-secondary: '#ffffff'
-  secondary-container: '#e6e2e0'
-  on-secondary-container: '#666463'
+  secondary-container: '#dce8ef'
+  on-secondary-container: '#20323b'
   tertiary: '#000000'
   on-tertiary: '#ffffff'
   tertiary-container: '#1b1b1b'
@@ -37,10 +37,10 @@ colors:
   primary-fixed-dim: '#c6c6c6'
   on-primary-fixed: '#1b1b1b'
   on-primary-fixed-variant: '#474747'
-  secondary-fixed: '#e6e2e0'
-  secondary-fixed-dim: '#c9c6c4'
+  secondary-fixed: '#dce8ef'
+  secondary-fixed-dim: '#9bb9c9'
   on-secondary-fixed: '#1c1b1a'
-  on-secondary-fixed-variant: '#484645'
+  on-secondary-fixed-variant: '#314c5b'
   tertiary-fixed: '#e2e2e2'
   tertiary-fixed-dim: '#c6c6c6'
   on-tertiary-fixed: '#1b1b1b'
@@ -48,6 +48,8 @@ colors:
   background: '#faf9f9'
   on-background: '#1a1c1c'
   surface-variant: '#e3e2e2'
+  krieg-blue: '#7ca2b8'
+  krieg-orange: '#ea5505'
 typography:
   display-2xl:
     fontFamily: manrope
@@ -104,13 +106,15 @@ The aesthetic draws from the Swiss Style (International Typographic Style), util
 
 ## Colors
 
-The palette is strictly monochromatic to ensure that the agency's creative work (imagery and video) remains the focal point. 
+The palette is deliberately near-monochrome so typography, spacing, and work imagery remain the focal point. Color is limited to two Krieg-inspired accents: a muted Horizon Blue for quiet structure, and a bright Jokaero Orange for active signals.
 
 - **Primary Black (#000000):** Used for headlines and heavy structural elements in light mode, and as the infinite background in dark mode.
 - **Charcoal (#2A2928):** Acts as a softer alternative to pure black for secondary text or card backgrounds in dark mode to provide subtle depth.
 - **Off-White (#EEEDED):** The primary canvas for light mode. It is softer on the eyes than pure white, providing a premium, "paper-like" quality.
+- **Krieg Blue (#7CA2B8):** A muted Horizon Blue reference for grid lines, section counters, and restrained structural accents.
+- **Krieg Orange (#EA5505):** A bright Jokaero Orange reference for typewriter text, focus states, progress, and CTA hover states.
 
-In dark mode, the roles reverse: the background becomes pure black, and text utilizes the off-white for high legibility and a striking, high-contrast look.
+In dark mode, the roles reverse: the background becomes near black, and text utilizes the off-white for high legibility. Krieg Orange is lifted slightly for contrast, while Krieg Blue stays muted.
 
 ## Typography
 
@@ -145,7 +149,7 @@ Sharp corners reinforce the architectural and professional nature of the agency.
 ## Components
 
 ### Buttons
-Buttons should be rectangular with no radius. Primary buttons are solid black (light mode) or solid off-white (dark mode). The text is always the inverse of the background. Hover states involve a background color swap or a simple underline animation that grows from the center.
+Buttons should be rectangular with no radius. Primary buttons are solid black (light mode) or solid off-white (dark mode). The text is always the inverse of the background. Hover and focus states may use Krieg Orange, but the default button system should stay monochrome.
 
 ### Input Fields
 Inputs are defined by a bottom border only (1px). Focus states should animate the border thickness or color with a smooth transition. Labels are always `label-caps` positioned above the input.
