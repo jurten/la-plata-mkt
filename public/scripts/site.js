@@ -69,7 +69,7 @@ contactForm?.addEventListener('submit', async (event) => {
     if (status) {
       status.textContent = result.delivery === 'demo'
         ? 'Modo demo: la consulta fue validada, pero el email todavía no fue enviado.'
-        : '¡Listo! Recibimos tu consulta. También te enviamos una confirmación por email.';
+        : '¡Listo! Recibimos tu consulta.';
       status.focus();
     }
     contactForm.reset();

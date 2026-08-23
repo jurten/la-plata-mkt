@@ -65,4 +65,13 @@ describe('validateContactPayload', () => {
       validateContactPayload({ ...validPayload, contactName: 'Ana\nX-Test: injected' }).success,
     ).toBe(false);
   });
+
+  it.each([
+    ['company', '\rEmpresa'],
+    ['company', 'Empresa\n'],
+    ['contactName', '\nAna Pérez'],
+    ['contactName', 'Ana Pérez\r'],
+  ] as const)('rechaza CR/LF de borde en %s antes de normalizar', (field, value) => {
+    expect(validateContactPayload({ ...validPayload, [field]: value }).success).toBe(false);
+  });
 });

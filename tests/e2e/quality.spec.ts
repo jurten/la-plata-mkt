@@ -94,6 +94,25 @@ test('la composición también cabe a 320px sin ocultar desborde', async ({ page
   expect(dimensions.processScroll).toBeLessThanOrEqual(dimensions.processClient);
 });
 
+test('privacidad cabe a 320px y 390px sin ocultar desborde', async ({ page }) => {
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/privacidad');
+
+    const dimensions = await page.evaluate(() => ({
+      documentClient: document.documentElement.clientWidth,
+      documentScroll: document.documentElement.scrollWidth,
+      bodyClient: document.body.clientWidth,
+      bodyScroll: document.body.scrollWidth,
+      bodyOverflowX: getComputedStyle(document.body).overflowX,
+    }));
+
+    expect(dimensions.documentScroll).toBeLessThanOrEqual(dimensions.documentClient);
+    expect(dimensions.bodyScroll).toBeLessThanOrEqual(dimensions.bodyClient);
+    expect(dimensions.bodyOverflowX).not.toBe('hidden');
+  }
+});
+
 test('la composición móvil no desborda y el menú funciona con teclado', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });

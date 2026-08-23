@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const singleLineText = z.string().trim().regex(/^[^\r\n]*$/);
+const singleLineText = z.string().regex(/^[^\r\n]*$/).trim();
 
 const contactSchema = z.object({
   company: singleLineText.min(2).max(120),

@@ -364,12 +364,12 @@ const structuredData = {
         <form class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
           <div class="form-row">
             <label for="company">Empresa</label>
-            <input id="company" name="company" type="text" autocomplete="organization" required />
+            <input id="company" name="company" type="text" autocomplete="organization" minlength="2" maxlength="120" required />
             <span class="field-error" id="company-error"></span>
           </div>
           <div class="form-row">
             <label for="contactName">Nombre de contacto</label>
-            <input id="contactName" name="contactName" type="text" autocomplete="name" required />
+            <input id="contactName" name="contactName" type="text" autocomplete="name" minlength="2" maxlength="80" required />
             <span class="field-error" id="contactName-error"></span>
           </div>
           <div class="form-row form-row-full">
@@ -379,7 +379,7 @@ const structuredData = {
           </div>
           <div class="form-row form-row-full">
             <label for="issue">¿Qué problema querés resolver?</label>
-            <textarea id="issue" name="issue" rows="5" required></textarea>
+            <textarea id="issue" name="issue" rows="5" minlength="20" maxlength="2000" required></textarea>
             <span class="field-error" id="issue-error"></span>
           </div>
           <div class="hp-field" aria-hidden="true">

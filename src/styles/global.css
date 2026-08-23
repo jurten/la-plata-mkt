@@ -1888,12 +1888,21 @@ textarea {
   }
 
   .legal-intro {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .legal-intro > * {
+    min-width: 0;
   }
 
   .legal-intro h1,
   .legal-intro-copy {
     grid-column: 1;
+  }
+
+  .legal-intro-copy {
+    width: 100%;
+    margin-inline: 0;
   }
 
   .legal-intro h1 {

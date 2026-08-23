@@ -70,6 +70,22 @@ describe('createResendDelivery', () => {
     expect(warnings).toEqual(['La consulta se recibió, pero no pudo enviarse la autorespuesta.']);
   });
 
+  it('propaga el fallo de la notificación y no intenta la autorespuesta', async () => {
+    let requestCount = 0;
+    const delivery = createResendDelivery({
+      apiKey: fakeCredential,
+      from: 'La Plata Marketing <hola@laplatamarketing.com>',
+      to: 'laplatamarketing@gmail.com',
+      fetchImpl: async () => {
+        requestCount += 1;
+        return new Response('{}', { status: 500 });
+      },
+    });
+
+    await expect(delivery(payload)).rejects.toThrow('Email provider returned 500');
+    expect(requestCount).toBe(1);
+  });
+
   it('elimina CR y LF del asunto aunque el adaptador reciba datos sin validar', async () => {
     const requests: RequestInit[] = [];
     const delivery = createResendDelivery({

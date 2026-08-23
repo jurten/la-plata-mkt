@@ -14,4 +14,14 @@ describe('createRateLimiter', () => {
     now = 1_000;
     expect(limiter.check('client-a')).toEqual({ allowed: true, retryAfterSeconds: 0 });
   });
+
+  it('expulsa la entrada más antigua al alcanzar maxEntries', () => {
+    const limiter = createRateLimiter({ limit: 1, windowMs: 60_000, maxEntries: 2, now: () => 0 });
+
+    expect(limiter.check('client-a').allowed).toBe(true);
+    expect(limiter.check('client-b').allowed).toBe(true);
+    expect(limiter.check('client-c').allowed).toBe(true);
+    expect(limiter.check('client-b').allowed).toBe(false);
+    expect(limiter.check('client-a').allowed).toBe(true);
+  });
 });
