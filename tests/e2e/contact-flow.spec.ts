@@ -118,4 +118,19 @@ test('el navegador aplica los mismos límites básicos que el servidor', async (
 
   expect(await issue.evaluate((element) => (element as HTMLTextAreaElement).validity.tooShort)).toBe(true);
   expect(requestCount).toBe(0);
+
+  await issue.fill(' corto ');
+  await page.getByRole('button', { name: 'Enviar consulta' }).click();
+
+  await expect(issue).toHaveValue('corto');
+  expect(await issue.evaluate((element) => (element as HTMLTextAreaElement).validity.customError)).toBe(true);
+  expect(requestCount).toBe(0);
+
+  await issue.fill('Necesitamos ordenar las consultas y mejorar su seguimiento.');
+  await company.fill('  ');
+  await page.getByRole('button', { name: 'Enviar consulta' }).click();
+
+  expect(await company.evaluate((element) => (element as HTMLInputElement).validity.valueMissing)).toBe(true);
+  await expect(company).toHaveValue('');
+  expect(requestCount).toBe(0);
 });

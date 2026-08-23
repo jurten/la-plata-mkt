@@ -24,13 +24,23 @@ async function post(body: string, contentLength?: number): Promise<Response> {
   return postRequest(contactRequest(body, contentLength));
 }
 
-class ObservableRequest extends Request {
-  bodyAccessCount = 0;
+function observableBodyRequest() {
+  let pullCount = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      pullCount += 1;
+      controller.enqueue(new TextEncoder().encode('{invalid'));
+      controller.close();
+    },
+  }, { highWaterMark: 0 });
+  const request = new Request('http://localhost/api/contact', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body,
+    duplex: 'half',
+  } as RequestInit & { duplex: 'half' });
 
-  override get body(): Request['body'] {
-    this.bodyAccessCount += 1;
-    return super.body;
-  }
+  return { request, getPullCount: () => pullCount };
 }
 
 describe('contact API rate-limit ordering', () => {
@@ -40,16 +50,14 @@ describe('contact API rate-limit ordering', () => {
       expect(response.status).toBe(400);
     }
 
-    const request = new ObservableRequest('http://localhost/api/contact', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: '{invalid',
-    });
+    const { request, getPullCount } = observableBodyRequest();
     const response = await postRequest(request);
 
     expect(response.status).toBe(429);
     await expect(response.json()).resolves.toEqual({ ok: false, error: 'rate_limit' });
-    expect(request.bodyAccessCount).toBe(0);
+    expect(getPullCount()).toBe(0);
+    await expect(request.text()).resolves.toBe('{invalid');
+    expect(getPullCount()).toBeGreaterThan(0);
     const retryAfter = Number(response.headers.get('retry-after'));
     expect(Number.isInteger(retryAfter)).toBe(true);
     expect(retryAfter).toBeGreaterThan(0);

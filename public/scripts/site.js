@@ -27,6 +27,21 @@ const contactForm = document.querySelector('[data-contact-form]');
 contactForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
+  contactForm
+    .querySelectorAll('input[name="company"], input[name="contactName"], input[name="email"], textarea[name="issue"]')
+    .forEach((field) => {
+      const normalizedValue = field.value.trim();
+      field.setCustomValidity('');
+
+      if (field.minLength >= 0 && normalizedValue.length < field.minLength) {
+        field.setCustomValidity(`Ingresá al menos ${field.minLength} caracteres sin contar espacios al principio o al final.`);
+      } else if (field.maxLength >= 0 && normalizedValue.length > field.maxLength) {
+        field.setCustomValidity(`Usá como máximo ${field.maxLength} caracteres.`);
+      }
+
+      field.value = normalizedValue;
+    });
+
   if (!contactForm.checkValidity()) {
     contactForm.reportValidity();
     return;
