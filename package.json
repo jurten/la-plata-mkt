@@ -1,0 +1,34 @@
+{
+  "name": "la-plata-marketing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "check": "astro check",
+    "verify": "npm run test && npm run test:e2e && npm run build",
+    "visual:audit": "node scripts/visual-audit.mjs",
+    "assets:og": "python scripts/generate-og.py",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@astrojs/node": "latest",
+    "@fontsource/barlow-condensed": "latest",
+    "@fontsource-variable/manrope": "latest",
+    "astro": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "@axe-core/playwright": "latest",
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

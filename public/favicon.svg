@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">La Plata Marketing</title>
+  <rect width="64" height="64" fill="#a866e8"/>
+  <rect x="5" y="5" width="54" height="54" fill="#f3f51b" stroke="#111111" stroke-width="4"/>
+  <path d="M16 15h7v27h14v7H16V15Zm24 0h9c8 0 13 4 13 11s-5 12-13 12h-2v11h-7V15Zm7 7v9h2c4 0 6-1 6-5 0-3-2-4-6-4h-2Z" fill="#111111" transform="translate(-3 0)"/>
+</svg>

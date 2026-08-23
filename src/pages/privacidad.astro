@@ -1,0 +1,123 @@
+---
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/barlow-condensed/800.css';
+import { parsePublicSiteUrl } from '../lib/site-origin';
+import '../styles/global.css';
+
+const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
+---
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Cómo La Plata Marketing recibe, utiliza y protege los datos enviados mediante su formulario de contacto."
+    />
+    <meta name="robots" content={publicSite ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#f3f51b" />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Privacidad | La Plata Marketing</title>
+  </head>
+  <body class="legal-body">
+    <a class="skip-link" href="#contenido-legal">Saltar al contenido</a>
+    <header class="legal-header">
+      <a class="brand" href="/" aria-label="La Plata Marketing, volver al inicio">
+        <span class="brand-mark" aria-hidden="true">LP</span>
+        <span>La Plata<br />Marketing</span>
+      </a>
+      <a class="legal-back" href="/#contacto">Volver al formulario <span aria-hidden="true">↙</span></a>
+    </header>
+
+    <main id="contenido-legal" class="legal-main">
+      <section class="legal-intro" aria-labelledby="privacy-title">
+        <p class="section-index">[ PRIVACIDAD ]</p>
+        <h1 id="privacy-title">Privacidad,<br /><em>sin letra chica.</em></h1>
+        <div class="legal-intro-copy">
+          <p class="legal-draft">Borrador pendiente de revisión legal antes del lanzamiento</p>
+          <p>
+            Este aviso describe el tratamiento previsto para la información que compartís en el
+            formulario de La Plata Marketing. Lo redactamos para que sea entendible y para no pedir
+            más datos de los necesarios.
+          </p>
+          <small>Última actualización: agosto de 2026</small>
+        </div>
+      </section>
+
+      <section class="legal-sections" aria-label="Detalles del tratamiento de datos">
+        <article>
+          <span>01</span>
+          <h2>Quién recibe la consulta</h2>
+          <p>
+            La Plata Marketing es responsable de responder las consultas enviadas desde este sitio.
+            El canal de contacto para temas de privacidad es
+            <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>.
+          </p>
+        </article>
+
+        <article>
+          <span>02</span>
+          <h2>Qué datos recibimos</h2>
+          <p>
+            Empresa, nombre de contacto, email y el problema o necesidad que decidas describir.
+            También pueden procesarse datos técnicos mínimos para prevenir spam y proteger el formulario.
+          </p>
+        </article>
+
+        <article>
+          <span>03</span>
+          <h2>Para qué los usamos</h2>
+          <p>
+            Para recibir, analizar y responder tu consulta; mantener la conversación comercial que
+            vos iniciaste; y proteger el sitio contra envíos automatizados o abusivos.
+          </p>
+        </article>
+
+        <article>
+          <span>04</span>
+          <h2>Con quién pueden procesarse</h2>
+          <p>
+            El hosting, la protección antispam y el proveedor de correo transaccional pueden procesar
+            los datos exclusivamente para prestar esos servicios. La configuración final y sus
+            proveedores deben incorporarse a este aviso antes del lanzamiento.
+          </p>
+        </article>
+
+        <article>
+          <span>05</span>
+          <h2>Cuánto tiempo se conservan</h2>
+          <p>
+            Durante el tiempo necesario para responder y gestionar la relación que se origine a partir
+            de la consulta, y luego durante los plazos que correspondan. El plazo operativo concreto
+            debe aprobarse antes de producción.
+          </p>
+        </article>
+
+        <article>
+          <span>06</span>
+          <h2>Tus decisiones y derechos</h2>
+          <p>
+            Podés pedir acceso, corrección o eliminación de tus datos y retirar tu consentimiento
+            escribiendo a <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>.
+            También podés optar por no enviar el formulario y contactarnos directamente por email.
+          </p>
+        </article>
+      </section>
+
+      <section class="legal-cta" aria-labelledby="legal-cta-title">
+        <p class="section-index">[ ¿SEGUIMOS? ]</p>
+        <h2 id="legal-cta-title">Volvé a tu consulta<br />cuando estés <em>listo.</em></h2>
+        <a class="button button-primary" href="/#contacto">Volver al formulario <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="legal-footer">
+      <span>© 2026 La Plata Marketing</span>
+      <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
+    </footer>
+  </body>
+</html>

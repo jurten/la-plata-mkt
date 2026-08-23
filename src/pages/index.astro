@@ -1,0 +1,424 @@
+---
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/barlow-condensed/800.css';
+import '@fontsource-variable/manrope';
+import { getCaseStudies } from '../lib/case-studies';
+import { parsePublicSiteUrl } from '../lib/site-origin';
+import '../styles/global.css';
+
+const services = [
+  {
+    number: '01',
+    slug: 'social',
+    title: 'Social media',
+    kicker: 'Presencia con dirección',
+    description:
+      'Estrategia, planificación y piezas que construyen confianza antes de que llegue la primera consulta.',
+    items: ['Estrategia de contenidos', 'Calendario y piezas', 'Copy y seguimiento'],
+  },
+  {
+    number: '02',
+    slug: 'web',
+    title: 'Sitios web',
+    kicker: 'Interés que se vuelve acción',
+    description:
+      'Experiencias claras y rápidas, pensadas para explicar tu propuesta y convertir visitas en conversaciones.',
+    items: ['Landing e institucionales', 'Diseño responsive', 'Formularios y SEO base'],
+  },
+  {
+    number: '03',
+    slug: 'crm',
+    title: 'CRM',
+    kicker: 'Cada oportunidad, ubicada',
+    description:
+      'Ordenamos contactos, etapas y responsables para que el seguimiento deje de depender de la memoria.',
+    items: ['Diseño del pipeline', 'Campos y responsables', 'Implementación y orden'],
+  },
+  {
+    number: '04',
+    slug: 'automation',
+    title: 'Automatizaciones',
+    kicker: 'Menos repetición. Más foco.',
+    description:
+      'Conectamos formularios, avisos y tareas para que la información avance sin trabajo manual innecesario.',
+    items: ['Ingreso de consultas', 'Avisos y asignaciones', 'Seguimientos automáticos'],
+  },
+];
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+const caseStudiesApproved = import.meta.env.PUBLIC_CASE_STUDIES_APPROVED === 'true';
+const [realEstateCase, legalCase] = getCaseStudies(caseStudiesApproved);
+
+const steps = [
+  ['01', 'Entender', 'Negocio, público, canales y punto de fricción.'],
+  ['02', 'Ordenar', 'Prioridades, recorrido y solución recomendada.'],
+  ['03', 'Implementar', 'Contenido, web, CRM o automatización según alcance.'],
+  ['04', 'Mejorar', 'Revisar el funcionamiento y ajustar con evidencia.'],
+];
+
+const pageTitle = 'Marketing, sitios web, CRM y automatizaciones | La Plata Marketing';
+const pageDescription =
+  'Social media, sitios web, CRM y automatizaciones para inmobiliarias y estudios jurídicos. La Plata Marketing conecta cada consulta con un mejor seguimiento.';
+const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
+const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'La Plata Marketing',
+  ...(canonicalUrl ? { url: canonicalUrl.toString() } : {}),
+  email: 'laplatamarketing@gmail.com',
+  description: pageDescription,
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicios de marketing y tecnología',
+    itemListElement: services.map((service, index) => ({
+      '@type': 'Offer',
+      position: index + 1,
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+      },
+    })),
+  },
+};
+---
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content={publicSite ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#a866e8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="La Plata Marketing" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {ogImageUrl && (
+      <>
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="La Plata Marketing: más consultas, menos tareas manuales" />
+      </>
+    )}
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <title>{pageTitle}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">LP</span>
+        <span>La Plata<br />Marketing</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+        <span>Menú</span>
+        <span class="menu-glyph" aria-hidden="true"></span>
+      </button>
+
+      <nav id="primary-nav" class="primary-nav" aria-label="Navegación principal">
+        <a href="#servicios">Servicios</a>
+        <a href="#casos">Casos</a>
+        <a href="#proceso">Proceso</a>
+        <a class="nav-cta" href="#contacto">Contanos tu problema <span aria-hidden="true">↘</span></a>
+      </nav>
+    </header>
+
+    <main id="contenido">
+      <section id="inicio" class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Marketing + tecnología para inmobiliarias y estudios jurídicos</p>
+          <h1 id="hero-title">Más consultas.<br /><em>Menos tareas</em><br />manuales.</h1>
+          <p class="hero-lede">
+            Conectamos redes sociales, sitios web, CRM y automatizaciones para que cada oportunidad
+            llegue al lugar correcto y tenga seguimiento.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#contacto">Contanos tu problema <span aria-hidden="true">↘</span></a>
+            <a class="text-link" href="#casos">Ver casos <span aria-hidden="true">↓</span></a>
+          </div>
+          <ul class="hero-service-list" aria-label="Servicios principales">
+            <li>Social</li>
+            <li>Web</li>
+            <li>CRM</li>
+            <li>Automatizaciones</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual" role="img" aria-label="Representación conceptual de redes, sitio web, CRM y automatizaciones">
+          <div class="stage-label stage-label-top">UN SISTEMA, NO CUATRO ISLAS</div>
+          <div class="connector connector-a" aria-hidden="true"></div>
+          <div class="connector connector-b" aria-hidden="true"></div>
+
+          <div class="mock-browser" aria-hidden="true">
+            <div class="mock-chrome"><i></i><i></i><i></i><span>tu-sitio.com</span></div>
+            <div class="mock-web-hero">
+              <small>UNA PROPUESTA CLARA</small>
+              <strong>Que te encuentren.<br />Que te entiendan.</strong>
+              <span>HABLEMOS ↗</span>
+            </div>
+            <div class="mock-web-grid"><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="mock-phone" aria-hidden="true">
+            <div class="phone-speaker"></div>
+            <div class="social-head"><b>tu.marca</b><span>•••</span></div>
+            <div class="social-feature"><span>CONTENIDO<br />QUE ABRE<br />CONVERSACIONES</span></div>
+            <div class="social-grid"><i></i><i></i><i></i></div>
+            <div class="social-actions">♡　◯　⌁</div>
+          </div>
+
+          <div class="mock-crm" aria-hidden="true">
+            <div class="crm-title"><span>CRM / OPORTUNIDADES</span><b>ORDEN</b></div>
+            <div class="pipeline">
+              <div><small>NUEVA</small><b>Consulta web</b><span>Asignar →</span></div>
+              <div><small>EN CURSO</small><b>Seguimiento</b><span>Hoy →</span></div>
+              <div><small>PRÓXIMO</small><b>Reunión</b><span>Confirmada</span></div>
+            </div>
+          </div>
+
+          <div class="automation-stamp" aria-hidden="true">
+            <span>FORMULARIO</span><b>→</b><span>CRM</span><b>→</b><span>SEGUIMIENTO</span>
+          </div>
+          <div class="stage-label stage-label-bottom">LA PLATA MARKETING / 2026</div>
+        </div>
+      </section>
+
+      <div class="service-marquee" role="group" aria-label="Social media, sitios web, CRM y automatizaciones">
+        <div class="marquee-track">
+          <span>SOCIAL MEDIA</span><i>✳</i><span>SITIOS WEB</span><i>✳</i><span>CRM</span><i>✳</i><span>AUTOMATIZACIONES</span><i>✳</i>
+          <span aria-hidden="true">SOCIAL MEDIA</span><i aria-hidden="true">✳</i><span aria-hidden="true">SITIOS WEB</span><i aria-hidden="true">✳</i><span aria-hidden="true">CRM</span><i aria-hidden="true">✳</i><span aria-hidden="true">AUTOMATIZACIONES</span><i aria-hidden="true">✳</i>
+        </div>
+      </div>
+
+      <section class="problem section-pad" aria-labelledby="problem-title">
+        <div class="section-index">[ EL PROBLEMA ]</div>
+        <div class="problem-copy">
+          <h2 id="problem-title">Publicar no alcanza.<br />Tener una web <em>tampoco.</em></h2>
+          <p>
+            Si las consultas llegan por distintos canales, el seguimiento vive en una planilla y las
+            tareas se repiten, no falta otra herramienta: falta que todo trabaje en conjunto.
+          </p>
+        </div>
+        <div class="journey-map" role="group" aria-label="Recorrido conectado desde la atención hasta el seguimiento">
+          <div class="journey-node node-attract"><span>01</span><strong>Atraer</strong><small>Contenido</small></div>
+          <div class="journey-arrow" aria-hidden="true">→</div>
+          <div class="journey-node node-capture"><span>02</span><strong>Captar</strong><small>Sitio web</small></div>
+          <div class="journey-arrow" aria-hidden="true">→</div>
+          <div class="journey-node node-organize"><span>03</span><strong>Ordenar</strong><small>CRM</small></div>
+          <div class="journey-arrow" aria-hidden="true">→</div>
+          <div class="journey-node node-follow"><span>04</span><strong>Seguir</strong><small>Automatización</small></div>
+        </div>
+      </section>
+
+      <section id="servicios" class="services section-pad" aria-labelledby="services-title">
+        <header class="section-heading">
+          <div class="section-index">[ SERVICIOS ]</div>
+          <h2 id="services-title">Cuatro servicios.<br /><em>Un mismo sistema.</em></h2>
+          <p>Entramos por donde está el problema y conectamos lo que haga falta para resolverlo.</p>
+        </header>
+
+        <div class="services-grid">
+          {services.map((service) => (
+            <article class:list={['service-card', `service-${service.slug}`]}>
+              <div class="service-topline">
+                <span>{service.number}</span>
+                <span>{service.kicker}</span>
+              </div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+              <ul>
+                {service.items.map((item) => <li>{item}</li>)}
+              </ul>
+              <div class="service-art" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="casos" class="cases" aria-labelledby="cases-title">
+        <header class="cases-heading section-pad">
+          <div class="section-index">[ CASOS ]</div>
+          <h2 id="cases-title">Cuando todo se conecta,<br /><em>el trabajo se nota.</em></h2>
+          <p>{caseStudiesApproved ? 'Casos aprobados presentados con representaciones visuales conceptuales.' : 'Borradores de caso anonimizados y pendientes de aprobación.'}</p>
+        </header>
+
+        <article class="case case-mirta">
+          <div class="case-copy">
+            <div class="case-number">01</div>
+            <p class="case-label">{realEstateCase.label}</p>
+            <h3>{realEstateCase.nameLines[0]} <span>{realEstateCase.nameLines[1]}</span></h3>
+            <div class="tag-row"><span>Social media</span><span>CRM</span><span>Automatizaciones</span></div>
+            <p class="case-summary">{realEstateCase.summary}</p>
+            <div class="case-notes">
+              <div><small>ALCANCE</small><p>{realEstateCase.scope}</p></div>
+              <div><small>RESULTADOS</small><p>La historia y los resultados se publicarán únicamente con información aprobada.</p></div>
+            </div>
+          </div>
+
+          <div class="case-visual mirta-visual" role="img" aria-label={realEstateCase.ariaLabel}>
+            <div class="property-social" aria-hidden="true">
+              <div class="property-brand">{realEstateCase.nameLines[0].toUpperCase()} <span>{realEstateCase.nameLines[1].toUpperCase()}</span></div>
+              <div class="property-photo"><i></i><i></i><i></i><span>ESPACIOS PARA<br /><b>VIVIR MEJOR</b></span></div>
+              <div class="property-footer">LA PLATA · CONSULTAS ABIERTAS</div>
+            </div>
+            <div class="property-crm" aria-hidden="true">
+              <header><b>Oportunidades</b><span>Vista pipeline</span></header>
+              <div class="crm-columns">
+                <div><small>NUEVAS</small><p>Consulta web<br /><span>Hoy</span></p><p>Mensaje social<br /><span>Hoy</span></p></div>
+                <div><small>CONTACTADAS</small><p>Seguimiento<br /><span>En curso</span></p></div>
+                <div><small>REUNIÓN</small><p>Visita<br /><span>Confirmada</span></p></div>
+              </div>
+            </div>
+            <div class="flow-card" aria-hidden="true"><span>ENTRA</span><b>→</b><span>SE ORDENA</span><b>→</b><span>SE SIGUE</span></div>
+          </div>
+        </article>
+
+        <article class="case case-maria">
+          <div class="case-visual maria-visual" role="img" aria-label={legalCase.ariaLabel}>
+            <div class="legal-browser" aria-hidden="true">
+              <div class="legal-nav"><b>{legalCase.mockupBrand}</b><span>Áreas　Nosotros　Contacto</span></div>
+              <div class="legal-hero"><small>CLARIDAD PARA DECIDIR</small><strong>Información directa.<br />Próximos pasos claros.</strong><span>INICIAR CONSULTA ↗</span></div>
+              <div class="legal-grid"><span>01<br /><b>Escuchar</b></span><span>02<br /><b>Analizar</b></span><span>03<br /><b>Acompañar</b></span></div>
+            </div>
+            <div class="legal-phone" aria-hidden="true">
+              <div>{legalCase.shortMark}</div>
+              <strong>UNA IDEA<br />CLARA<br />POR VEZ.</strong>
+              <small>{legalCase.name.toUpperCase()}</small>
+            </div>
+            <div class="legal-post" aria-hidden="true"><small>GUÍA / 01</small><strong>Qué preparar antes de una primera consulta</strong><span>GUARDAR ↗</span></div>
+          </div>
+
+          <div class="case-copy">
+            <div class="case-number">02</div>
+            <p class="case-label">{legalCase.label}</p>
+            <h3>{legalCase.nameLines[0]} <span>{legalCase.nameLines[1]}</span></h3>
+            <div class="tag-row"><span>Social media</span><span>Sitio web</span></div>
+            <p class="case-summary">{legalCase.summary}</p>
+            <div class="case-notes">
+              <div><small>ALCANCE</small><p>{legalCase.scope}</p></div>
+              <div><small>RESULTADOS</small><p>La historia y los resultados se publicarán únicamente con información aprobada.</p></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="proceso" class="process section-pad" aria-labelledby="process-title">
+        <header class="section-heading process-heading">
+          <div class="section-index">[ PROCESO ]</div>
+          <h2 id="process-title">De un problema suelto<br />a un sistema que <em>funciona.</em></h2>
+        </header>
+        <ol class="process-list">
+          {steps.map(([number, title, description]) => (
+            <li>
+              <span>{number}</span>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              <b aria-hidden="true">↘</b>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="team-value section-pad" aria-labelledby="team-title">
+        <div class="team-stamp" aria-hidden="true"><span>UNA</span><span>MISMA</span><span>ESTRATEGIA</span></div>
+        <div class="team-copy">
+          <div class="section-index">[ POR QUÉ NOSOTROS ]</div>
+          <h2 id="team-title">Marketing y tecnología<br /><em>en el mismo equipo.</em></h2>
+          <p>
+            La estrategia no termina en una publicación y la implementación no empieza aislada del
+            negocio. Pensamos el recorrido completo para que las piezas se refuercen entre sí.
+          </p>
+          <ul>
+            <li><span>01</span> Una mirada de punta a punta</li>
+            <li><span>02</span> Implementación conectada</li>
+            <li><span>03</span> Comunicación clara</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="contacto" class="contact section-pad" aria-labelledby="contact-title">
+        <div class="contact-intro">
+          <div class="section-index">[ CONTACTO ]</div>
+          <h2 id="contact-title">Contanos<br /><em>dónde se traba.</em></h2>
+          <p>Explicanos qué querés mejorar y te respondemos para entender el contexto.</p>
+          <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com ↗</a>
+        </div>
+
+        <form class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
+          <div class="form-row">
+            <label for="company">Empresa</label>
+            <input id="company" name="company" type="text" autocomplete="organization" required />
+            <span class="field-error" id="company-error"></span>
+          </div>
+          <div class="form-row">
+            <label for="contactName">Nombre de contacto</label>
+            <input id="contactName" name="contactName" type="text" autocomplete="name" required />
+            <span class="field-error" id="contactName-error"></span>
+          </div>
+          <div class="form-row form-row-full">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required />
+            <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="form-row form-row-full">
+            <label for="issue">¿Qué problema querés resolver?</label>
+            <textarea id="issue" name="issue" rows="5" required></textarea>
+            <span class="field-error" id="issue-error"></span>
+          </div>
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Sitio web</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <label class="consent form-row-full">
+            <input name="privacyAccepted" type="checkbox" value="true" required />
+            <span>Acepto que La Plata Marketing use mis datos para responder esta consulta. <a href="/privacidad">Ver privacidad</a>.</span>
+          </label>
+          {turnstileSiteKey && (
+            <div class="form-row-full turnstile-wrap">
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+            </div>
+          )}
+          <div class="form-status form-row-full" role="status" aria-live="polite" tabindex="-1"></div>
+          <button class="submit-button form-row-full" type="submit">Enviar consulta <span aria-hidden="true">↗</span></button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="footer-brand" href="#inicio">LA PLATA<br /><em>MARKETING</em></a>
+      <div class="footer-links">
+        <a href="#servicios">Servicios</a>
+        <a href="#casos">Casos</a>
+        <a href="#proceso">Proceso</a>
+        <a href="/privacidad">Privacidad</a>
+      </div>
+      <div class="footer-meta">
+        <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
+        <span>© 2026 La Plata Marketing</span>
+      </div>
+      <div class="footer-line" aria-hidden="true">TODO CONECTADO → TODO CONECTADO → TODO CONECTADO</div>
+    </footer>
+
+    <script is:inline src="/scripts/site.js" defer></script>
+    {turnstileSiteKey && (
+      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    )}
+  </body>
+</html>
