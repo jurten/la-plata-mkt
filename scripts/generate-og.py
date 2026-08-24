@@ -4,11 +4,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 WIDTH, HEIGHT = 1200, 630
 INK = "#111111"
-PAPER = "#FFFDF2"
-PURPLE = "#A866E8"
-DARK_PURPLE = "#7937C1"
-ACID = "#F3F51B"
-SKY = "#B9DDF2"
+PAPER = "#FFFDF5"
+PURPLE = "#B70D8A"
+DARK_PURPLE = "#B70D8A"
+ACID = "#F4E600"
+SKY = "#85D2FF"
 ORANGE = "#FF693D"
 
 ROOT = Path(__file__).resolve().parents[1]

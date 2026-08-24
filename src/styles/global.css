@@ -2,12 +2,12 @@
 
 :root {
   --ink: #111111;
-  --paper: #f3efdf;
-  --paper-bright: #fffdf2;
-  --purple: #a866e8;
-  --purple-dark: #7937c1;
-  --acid: #f3f51b;
-  --sky: #b9ddf2;
+  --paper: #fffdf5;
+  --paper-bright: #fffdf5;
+  --purple: #b70d8a;
+  --purple-dark: #b70d8a;
+  --acid: #f4e600;
+  --sky: #85d2ff;
   --orange: #ff693d;
   --green: #0d6b50;
   --line: 2px solid var(--ink);
@@ -98,7 +98,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(15rem, 1.2fr) 3fr;
   min-height: var(--header-height);
-  background: rgba(243, 239, 223, 0.96);
+  background: rgba(255, 253, 245, 0.96);
   border-bottom: var(--line);
   backdrop-filter: blur(10px);
 }
@@ -681,12 +681,13 @@ textarea {
   border-inline: 1px solid var(--ink);
 }
 
-.node-attract { background: var(--purple); }
+.node-attract { color: var(--paper-bright); background: var(--purple); }
 .node-capture { background: var(--acid); }
 .node-organize { background: var(--sky); }
 .node-follow { background: #ffc7dd; }
 
 .services {
+  color: var(--paper-bright);
   background: var(--purple);
   border-bottom: var(--line);
 }
@@ -735,6 +736,12 @@ textarea {
 .service-web { grid-column: span 5; background: var(--acid); }
 .service-crm { grid-column: span 5; background: var(--sky); }
 .service-automation { grid-column: span 7; color: var(--paper-bright); background: var(--ink); }
+
+.service-social,
+.service-web,
+.service-crm {
+  color: var(--ink);
+}
 
 .service-topline {
   display: flex;
@@ -881,8 +888,13 @@ textarea {
   border-left: var(--line);
 }
 
-.case-mirta { background: var(--purple); }
+.case-mirta { color: var(--paper-bright); background: var(--purple); }
 .case-maria { background: var(--acid); }
+
+.case-mirta .case-label,
+.case-mirta .case-visual {
+  color: var(--ink);
+}
 
 .case-number {
   font-family: var(--display);
@@ -1302,7 +1314,7 @@ textarea {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   gap: clamp(3rem, 8vw, 9rem);
-  color: var(--ink);
+  color: var(--paper-bright);
   background: var(--purple);
 }
 
@@ -1380,7 +1392,7 @@ textarea {
 .form-row input:focus,
 .form-row textarea:focus {
   outline: 0;
-  background: #f7f4e8;
+  background: var(--paper);
   border-color: var(--purple-dark);
 }
 
@@ -1702,7 +1714,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(15rem, 1fr) minmax(15rem, 1fr);
   min-height: var(--header-height);
-  background: rgba(243, 239, 223, 0.96);
+  background: rgba(255, 253, 245, 0.96);
   border-bottom: var(--line);
   backdrop-filter: blur(10px);
 }
@@ -1736,6 +1748,7 @@ textarea {
   grid-template-columns: 0.65fr 1.35fr;
   gap: 2rem;
   padding: clamp(4.5rem, 9vw, 9rem) var(--page-pad);
+  color: var(--paper-bright);
   background: var(--purple);
   border-bottom: var(--line);
 }
@@ -1774,6 +1787,7 @@ textarea {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: var(--ink);
   background: var(--paper-bright);
   border: 1px solid var(--ink);
   box-shadow: 0.35rem 0.35rem 0 var(--acid);
