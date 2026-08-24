@@ -9,7 +9,7 @@ PURPLE = "#B70D8A"
 DARK_PURPLE = "#B70D8A"
 ACID = "#F4E600"
 SKY = "#85D2FF"
-ORANGE = "#FF693D"
+SOFT_PINK = "#FFC7DD"
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "public" / "og-la-plata-marketing.png"
@@ -35,7 +35,7 @@ draw.rectangle((75, 72, 735, 555), fill=PAPER, outline=INK, width=5)
 
 # Header marker.
 draw.rectangle((98, 96, 226, 138), fill=ACID, outline=INK, width=3)
-draw.text((113, 102), "LP / 2026", font=font(bold_path, 22), fill=INK)
+draw.text((108, 102), "LA PLATA", font=font(bold_path, 22), fill=INK)
 draw.text((260, 104), "MARKETING + TECNOLOGÍA", font=font(bold_path, 20), fill=INK)
 
 # Main statement.
@@ -53,7 +53,7 @@ draw.text(
 # Browser window.
 draw.rectangle((705, 92, 1112, 309), fill=PAPER, outline=INK, width=5)
 draw.rectangle((705, 92, 1112, 127), fill=SKY, outline=INK, width=3)
-for x, color in ((724, ORANGE), (747, ACID), (770, PURPLE)):
+for x, color in ((724, SOFT_PINK), (747, ACID), (770, PURPLE)):
     draw.ellipse((x, 103, x + 12, 115), fill=color, outline=INK, width=1)
 draw.text((800, 100), "tu-sitio.com", font=font(body_path, 15), fill=INK)
 draw.rectangle((728, 150, 1086, 278), fill=SKY, outline=INK, width=3)
@@ -67,7 +67,7 @@ draw.rectangle((762, 337, 1125, 520), fill=PAPER, outline=INK, width=5)
 draw.text((784, 353), "CRM / OPORTUNIDADES", font=font(bold_path, 17), fill=INK)
 draw.line((784, 381, 1102, 381), fill=INK, width=2)
 for index, (x, color, label) in enumerate(
-    ((785, SKY, "NUEVA"), (889, ACID, "EN CURSO"), (993, ORANGE, "PRÓXIMO"))
+    ((785, SKY, "NUEVA"), (889, ACID, "EN CURSO"), (993, SOFT_PINK, "PRÓXIMO"))
 ):
     draw.rectangle((x, 397, x + 91, 496), fill=color, outline=INK, width=2)
     draw.text((x + 8, 407), label, font=font(bold_path, 12), fill=INK)
