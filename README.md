@@ -34,6 +34,29 @@ npm run dev
 
 El servidor de desarrollo abre por defecto en `http://127.0.0.1:4321`.
 
+## Laboratorio de paletas
+
+La identidad predeterminada no muestra controles adicionales. Para comparar las cuatro direcciones en el sitio real, abrir:
+
+```text
+http://127.0.0.1:4321/?palettes=1
+```
+
+El panel cambia los tokens en vivo, actualiza `theme-color` y conserva la selección en una URL compartible. Las alternativas disponibles son:
+
+- `editorial`: Editorial rosa, la identidad actual.
+- `cobalt`: Cobalto cinético.
+- `petrol`: Petróleo cítrico.
+- `burgundy`: Borgoña botánico.
+
+También puede abrirse una opción directamente, por ejemplo:
+
+```text
+http://127.0.0.1:4321/?palettes=1&palette=petrol
+```
+
+Mientras el laboratorio está activo, los enlaces entre la home y `/privacidad` conservan la paleta. **Salir** elimina los parámetros y vuelve a la identidad predeterminada. No se usa almacenamiento local ni se altera la experiencia pública sin `palettes=1`.
+
 ## Verificación
 
 ```bash

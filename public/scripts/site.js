@@ -1,5 +1,70 @@
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
+const paletteLab = document.querySelector('[data-palette-lab]');
+
+if (paletteLab) {
+  const paletteToggle = paletteLab.querySelector('[data-palette-toggle]');
+  const palettePanel = paletteLab.querySelector('[data-palette-panel]');
+  const paletteOptions = [...paletteLab.querySelectorAll('[data-palette-option]')];
+  const paletteStatus = paletteLab.querySelector('[data-palette-status]');
+  const copyPaletteLink = paletteLab.querySelector('[data-copy-palette-link]');
+  const paletteRouteLinks = [...document.querySelectorAll('[data-palette-route-link]')];
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+
+  const setPanelOpen = (isOpen) => {
+    if (palettePanel) palettePanel.hidden = !isOpen;
+    paletteToggle?.setAttribute('aria-expanded', String(isOpen));
+  };
+
+  paletteToggle?.addEventListener('click', () => {
+    setPanelOpen(paletteToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  paletteOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      const palette = option.dataset.paletteOption;
+      if (!palette) return;
+
+      document.documentElement.dataset.palette = palette;
+      paletteOptions.forEach((candidate) => {
+        candidate.setAttribute('aria-pressed', String(candidate === option));
+      });
+
+      const activeName = option.querySelector('strong')?.textContent?.trim();
+      const toggleName = paletteToggle?.querySelector('small');
+      if (toggleName && activeName) toggleName.textContent = activeName;
+      if (themeColor && option.dataset.themeColor) themeColor.setAttribute('content', option.dataset.themeColor);
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('palettes', '1');
+      url.searchParams.set('palette', palette);
+      window.history.replaceState(null, '', url);
+      paletteRouteLinks.forEach((link) => {
+        const linkUrl = new URL(link.getAttribute('href') ?? '', window.location.origin);
+        linkUrl.searchParams.set('palettes', '1');
+        linkUrl.searchParams.set('palette', palette);
+        link.setAttribute('href', `${linkUrl.pathname}${linkUrl.search}${linkUrl.hash}`);
+      });
+      if (paletteStatus) paletteStatus.textContent = `${activeName ?? 'Paleta'} activa`;
+    });
+  });
+
+  copyPaletteLink?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      if (paletteStatus) paletteStatus.textContent = 'Enlace copiado';
+    } catch {
+      if (paletteStatus) paletteStatus.textContent = 'Copiá el enlace desde la barra del navegador';
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && paletteToggle?.getAttribute('aria-expanded') === 'true') {
+      setPanelOpen(false);
+      paletteToggle.focus();
+    }
+  });
+}
 
 toggle?.addEventListener('click', () => {
   const isOpen = toggle.getAttribute('aria-expanded') === 'true';

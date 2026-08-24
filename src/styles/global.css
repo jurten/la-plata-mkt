@@ -17,6 +17,42 @@
   --header-height: 5.25rem;
 }
 
+:root[data-palette='cobalt'] {
+  --ink: #0b1020;
+  --paper: #fff9ed;
+  --paper-bright: #fffdf7;
+  --purple: #2146d0;
+  --purple-dark: #16309c;
+  --acid: #ffd600;
+  --sky: #78d7ff;
+  --soft-pink: #f2b7d5;
+  --green: #096b57;
+}
+
+:root[data-palette='petrol'] {
+  --ink: #0a1714;
+  --paper: #fff9ec;
+  --paper-bright: #fffdf6;
+  --purple: #00685a;
+  --purple-dark: #005247;
+  --acid: #d8f000;
+  --sky: #80d8e8;
+  --soft-pink: #d8c5ff;
+  --green: #00685a;
+}
+
+:root[data-palette='burgundy'] {
+  --ink: #18100e;
+  --paper: #fff8ef;
+  --paper-bright: #fffdf8;
+  --purple: #8c153f;
+  --purple-dark: #6d0f30;
+  --acid: #e4f04a;
+  --sky: #9ee7d8;
+  --soft-pink: #f2b8c6;
+  --green: #346b52;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -75,6 +111,12 @@ textarea {
   outline-offset: 4px;
 }
 
+:root[data-palette-preview='true'] :focus-visible {
+  outline-color: var(--ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--paper-bright);
+}
+
 .skip-link {
   position: fixed;
   top: 0.75rem;
@@ -98,7 +140,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(15rem, 1.2fr) 3fr;
   min-height: var(--header-height);
-  background: rgba(255, 253, 245, 0.96);
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
   border-bottom: var(--line);
   backdrop-filter: blur(10px);
 }
@@ -1692,6 +1734,158 @@ textarea {
   .footer-meta span { margin-top: 1.5rem; }
 }
 
+.palette-lab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 200;
+  width: min(25rem, calc(100vw - 2rem));
+  color: var(--ink);
+}
+
+.palette-lab-toggle,
+.palette-lab-panel {
+  border: var(--line);
+  box-shadow: 0.45rem 0.45rem 0 var(--ink);
+}
+
+.palette-lab-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 3.7rem;
+  padding: 0.7rem 0.9rem;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ink);
+  background: var(--acid);
+  cursor: pointer;
+}
+
+.palette-lab-toggle > span,
+.palette-lab-panel strong,
+.palette-option strong,
+.palette-lab-panel a,
+.palette-lab-panel footer button {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.palette-lab-toggle > span {
+  font-size: 1.2rem;
+}
+
+.palette-lab-toggle small {
+  font-size: 0.7rem;
+}
+
+.palette-lab-panel {
+  max-height: min(43rem, calc(100vh - 6rem));
+  max-height: min(43rem, calc(100dvh - 6rem));
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--paper-bright);
+}
+
+.palette-lab-panel[hidden] {
+  display: none;
+}
+
+.palette-lab-panel > header,
+.palette-lab-panel > footer {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.palette-lab-panel > header {
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.palette-lab-panel > header div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.palette-lab-panel > header small,
+.palette-option small,
+.palette-lab-panel footer span {
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.palette-lab-panel a {
+  font-size: 0.72rem;
+  text-underline-offset: 0.2rem;
+}
+
+.palette-lab-options {
+  display: grid;
+  gap: 0.6rem;
+  padding-block: 0.9rem;
+}
+
+.palette-option {
+  display: grid;
+  grid-template-columns: 6.2rem 1fr;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.65rem;
+  color: var(--ink);
+  text-align: left;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+}
+
+.palette-option[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.palette-option > span:last-child {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.palette-option-swatches {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  min-height: 3.2rem;
+  border: 1px solid var(--swatch-ink);
+}
+
+.palette-option-swatches i:nth-child(1) { background: var(--swatch-primary); }
+.palette-option-swatches i:nth-child(2) { background: var(--swatch-accent); }
+.palette-option-swatches i:nth-child(3) { background: var(--swatch-sky); }
+.palette-option-swatches i:nth-child(4) { background: var(--swatch-soft); }
+.palette-option-swatches i:nth-child(5) { background: var(--swatch-paper); }
+.palette-option-swatches i:nth-child(6) { background: var(--swatch-ink); }
+
+.palette-lab-panel > footer {
+  min-height: 2.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--ink);
+}
+
+.palette-lab-panel footer button {
+  padding: 0;
+  color: inherit;
+  font-size: 0.72rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.palette-lab-panel footer span {
+  min-height: 1rem;
+  text-align: right;
+}
+
 .legal-body {
   background: var(--paper-bright);
 }
@@ -1703,7 +1897,7 @@ textarea {
   display: grid;
   grid-template-columns: minmax(15rem, 1fr) minmax(15rem, 1fr);
   min-height: var(--header-height);
-  background: rgba(255, 253, 245, 0.96);
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
   border-bottom: var(--line);
   backdrop-filter: blur(10px);
 }
