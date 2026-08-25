@@ -5,14 +5,16 @@ import { paletteOptions, resolvePalette } from '../../src/lib/palettes';
 const globalCss = readFileSync(new URL('../../src/styles/global.css', import.meta.url), 'utf8');
 const cssTokenByColor = {
   ink: '--ink',
+  muted: '--muted',
   paper: '--paper',
-  paperBright: '--paper-bright',
-  primary: '--purple',
-  primaryDark: '--purple-dark',
-  accent: '--acid',
-  sky: '--sky',
-  soft: '--soft-pink',
-  green: '--green',
+  surface: '--surface',
+  primary: '--primary',
+  primaryStrong: '--primary-strong',
+  highlight: '--highlight',
+  secondary: '--secondary',
+  signal: '--signal',
+  success: '--success',
+  error: '--error',
 } as const;
 
 function relativeLuminance(hex: string): number {
@@ -28,17 +30,45 @@ function contrastRatio(foreground: string, background: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-describe('alternative palettes', () => {
-  it.each(paletteOptions)('$name preserves the intended high-contrast pairings', ({ colors }) => {
+describe('reference-derived color system', () => {
+  it('publishes the new production direction and three comparison directions', () => {
+    expect(paletteOptions.map(({ id, name }) => ({ id, name }))).toEqual([
+      { id: 'registro', name: 'Registro activo' },
+      { id: 'manchette', name: 'Manchette rojo' },
+      { id: 'archivo', name: 'Archivo tinta' },
+      { id: 'sobreimpresion', name: 'Sobreimpresión' },
+    ]);
+    expect(paletteOptions[0].colors).toEqual({
+      ink: '#17292D',
+      muted: '#4B5B5E',
+      paper: '#F3EEE6',
+      surface: '#FFF9F0',
+      primary: '#1D62A8',
+      primaryStrong: '#154C86',
+      highlight: '#F2D31B',
+      secondary: '#8EC5E6',
+      signal: '#FC4C5A',
+      success: '#276749',
+      error: '#A62828',
+    });
+  });
+
+  it.each(paletteOptions)('$name preserves every intended semantic pairing', ({ colors }) => {
+    expect(contrastRatio(colors.ink, colors.paper)).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio(colors.ink, colors.surface)).toBeGreaterThanOrEqual(7);
+    expect(contrastRatio(colors.muted, colors.paper)).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(colors.primary, colors.paper)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(colors.primaryDark, colors.paper)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(colors.accent, colors.ink)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(colors.sky, colors.ink)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(colors.soft, colors.ink)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.primary, colors.surface)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.primaryStrong, colors.paper)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.highlight, colors.ink)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.secondary, colors.ink)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.signal, colors.ink)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.success, colors.paper)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.error, colors.paper)).toBeGreaterThanOrEqual(4.5);
   });
 
   it.each(paletteOptions)('$name matches its CSS custom-property block', ({ id, colors }) => {
-    const selector = id === 'editorial' ? ':root' : `:root[data-palette='${id}']`;
+    const selector = id === 'registro' ? ':root' : `:root[data-palette='${id}']`;
     const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const block = globalCss.match(new RegExp(`${escapedSelector}\\s*\\{([^}]*)\\}`))?.[1];
 
@@ -50,7 +80,29 @@ describe('alternative palettes', () => {
     }
   });
 
-  it('falls back to editorial for an unknown palette ID', () => {
-    expect(resolvePalette('not-a-palette')).toBe('editorial');
+  it('contains no legacy color-named variables or hardcoded retired system colors', () => {
+    for (const legacy of [
+      '--purple',
+      '--purple-dark',
+      '--acid',
+      '--sky',
+      '--soft-pink',
+      '--green',
+      '#b70d8a',
+      '#f4e600',
+      '#85d2ff',
+      '#ffc7dd',
+      'rgba(17,17,17',
+      'rgba(17, 17, 17',
+      'background: white',
+      'color: #555',
+      'color: #a21c12',
+    ]) {
+      expect(globalCss.toLowerCase()).not.toContain(legacy);
+    }
+  });
+
+  it('falls back to the new production palette for an unknown palette ID', () => {
+    expect(resolvePalette('not-a-palette')).toBe('registro');
   });
 });

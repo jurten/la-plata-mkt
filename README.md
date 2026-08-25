@@ -2,7 +2,7 @@
 
 Sitio one-page en español para presentar servicios de social media, sitios web, CRM y automatizaciones, mostrar dos casos y recibir consultas.
 
-La dirección visual toma del proyecto de referencia su energía editorial, contraste y composición por capas, pero usa contenido, mockups y recursos originales.
+La dirección visual toma de [Catálogo | ID Visual de Evento](https://www.behance.net/gallery/249259247/Catalogo-ID-Visual-de-Evento) su lógica de tinta editorial: papel cálido, azul institucional, rojo señal, amarillo marcador, fondos oscuros y sobreimpresiones controladas. No copia ilustraciones, piezas, layouts ni recursos del proyecto; todo el contenido, los mockups y la geometría del sitio son originales.
 
 ## Estado
 
@@ -44,15 +44,15 @@ http://127.0.0.1:4321/?palettes=1
 
 El panel cambia los tokens en vivo, actualiza `theme-color` y conserva la selección en una URL compartible. Las alternativas disponibles son:
 
-- `editorial`: Editorial rosa, la identidad actual.
-- `cobalt`: Cobalto cinético.
-- `petrol`: Petróleo cítrico.
-- `burgundy`: Borgoña botánico.
+- `registro`: Registro activo, la nueva identidad predeterminada.
+- `manchette`: Manchette rojo.
+- `archivo`: Archivo tinta.
+- `sobreimpresion`: Sobreimpresión.
 
 También puede abrirse una opción directamente, por ejemplo:
 
 ```text
-http://127.0.0.1:4321/?palettes=1&palette=petrol
+http://127.0.0.1:4321/?palettes=1&palette=manchette
 ```
 
 Mientras el laboratorio está activo, los enlaces entre la home y `/privacidad` conservan la paleta. **Salir** elimina los parámetros y vuelve a la identidad predeterminada. No se usa almacenamiento local ni se altera la experiencia pública sin `palettes=1`.

@@ -24,8 +24,8 @@ const { activePalette, exitHref } = Astro.props;
   <section class="palette-lab-panel" id="palette-lab-panel" hidden data-palette-panel>
     <header>
       <div>
-        <strong>Contraste editorial</strong>
-        <small>Cuatro direcciones para comparar en vivo.</small>
+        <strong>Sistema de tintas</strong>
+        <small>Cuatro jerarquías inspiradas en impresión editorial.</small>
       </div>
       <a href={exitHref}>Salir</a>
     </header>
@@ -38,7 +38,7 @@ const { activePalette, exitHref } = Astro.props;
           data-palette-option={palette.id}
           data-theme-color={palette.colors.primary}
           aria-pressed={palette.id === activePalette ? 'true' : 'false'}
-          style={`--swatch-ink:${palette.colors.ink};--swatch-paper:${palette.colors.paper};--swatch-primary:${palette.colors.primary};--swatch-accent:${palette.colors.accent};--swatch-sky:${palette.colors.sky};--swatch-soft:${palette.colors.soft}`}
+          style={`--swatch-ink:${palette.colors.ink};--swatch-paper:${palette.colors.paper};--swatch-primary:${palette.colors.primary};--swatch-highlight:${palette.colors.highlight};--swatch-secondary:${palette.colors.secondary};--swatch-signal:${palette.colors.signal}`}
         >
           <span class="palette-option-swatches" aria-hidden="true">
             <i></i><i></i><i></i><i></i><i></i><i></i>

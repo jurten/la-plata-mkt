@@ -12,7 +12,7 @@ const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : unde
 const showPaletteLab = Astro.url.searchParams.get('palettes') === '1';
 const activePalette = resolvePalette(showPaletteLab ? Astro.url.searchParams.get('palette') : null);
 const activePaletteDetails = getPalette(activePalette);
-const themeColor = showPaletteLab ? activePaletteDetails.colors.primary : '#F4E600';
+const themeColor = showPaletteLab ? activePaletteDetails.colors.primary : activePaletteDetails.colors.highlight;
 const allowIndexing = Boolean(publicSite) && !showPaletteLab;
 const homeHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}` : '/';
 const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#contacto` : '/#contacto';
