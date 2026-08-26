@@ -41,6 +41,49 @@ test('la ilustración del hero entra en registro sin animar el contenido esencia
   }
 });
 
+test('espera a que la sección entre en la zona útil antes de animarla', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    const target = document.querySelector('.service-social')!;
+    const top = window.scrollY + target.getBoundingClientRect().top - window.innerHeight * 0.72;
+    window.scrollTo(0, top);
+  });
+  await page.waitForTimeout(150);
+
+  const enteringTop = await social.evaluate((element) => element.getBoundingClientRect().top / window.innerHeight);
+  expect(enteringTop).toBeGreaterThan(0.68);
+  expect(enteringTop).toBeLessThan(0.76);
+  await expect(social).not.toHaveClass(/is-in-view/);
+
+  await page.evaluate(() => {
+    const target = document.querySelector('.service-social')!;
+    const top = window.scrollY + target.getBoundingClientRect().top - window.innerHeight * 0.32;
+    window.scrollTo(0, top);
+  });
+
+  await expect(social).toHaveClass(/is-in-view/);
+});
+
+test('la zona útil sigue siendo alcanzable en viewports de poca altura', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 320 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    const target = document.querySelector('.mirta-visual')!;
+    const rect = target.getBoundingClientRect();
+    window.scrollTo(0, window.scrollY + rect.top - (window.innerHeight - rect.height) / 2);
+  });
+
+  await expect(page.locator('.mirta-visual')).toHaveClass(/is-in-view/);
+});
+
 test('las capas ilustrativas del hero entran como una secuencia de impresión', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -135,12 +178,14 @@ test('los acentos de servicios se imprimen sin mover títulos ni texto', async (
     automation: getComputedStyle(document.querySelector('.service-automation .service-art span:nth-child(1)')!).animationName,
   }));
 
-  expect(animationNames.social).toContain('motion-service-shape');
-  expect(animationNames.web).toContain('motion-web-panel');
-  expect(animationNames.crm).toContain('motion-service-block');
-  expect(animationNames.automation).toContain('motion-service-marker');
+  expect(animationNames.social).toContain('motion-social-circuit-in');
+  expect(animationNames.web).toContain('motion-mosaic-panel');
+  expect(animationNames.crm).toContain('motion-mosaic-tile');
+  expect(animationNames.automation).toContain('motion-automation-step');
 
-  const essentialCopy = await page.locator('.service-card h3, .service-card > p, .service-card li').evaluateAll((elements) =>
+  const essentialCopy = await page.locator(
+    '.service-card h3, .service-card > p, .service-social li, .service-automation li',
+  ).evaluateAll((elements) =>
     elements.map((element) => {
       const styles = getComputedStyle(element);
       return {
@@ -166,7 +211,7 @@ test('el recorrido, los casos y el proceso animan solo sus capas gráficas', asy
   await page.goto('/');
 
   const targets = [
-    ['.journey-map', '.journey-arrow', 'journey', 'motion-journey-arrow'],
+    ['.journey-map', '.journey-arrow', 'journey', 'motion-journey-connector'],
     ['.mirta-visual', '.property-social', 'case', 'motion-case-property'],
     ['.maria-visual', '.legal-browser', 'case', 'motion-case-legal'],
     ['.process-list', '.process-list li b', 'process', 'motion-process-arrow'],
@@ -202,6 +247,113 @@ test('el recorrido, los casos y el proceso animan solo sus capas gráficas', asy
   }
 });
 
+test('las referencias 6 a 9 construyen el recorrido y los mosaicos en secuencia', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const journey = page.locator('.journey-map');
+  await journey.scrollIntoViewIfNeeded();
+  await expect(journey).toHaveClass(/is-in-view/);
+  const journeySteps = await journey.locator('.journey-node').evaluateAll((nodes) =>
+    nodes.map((node) => {
+      const styles = getComputedStyle(node);
+      return { name: styles.animationName, delay: Number.parseFloat(styles.animationDelay) };
+    }),
+  );
+  expect(journeySteps.every(({ name }) => name.includes('motion-journey-ink'))).toBe(true);
+  expect(journeySteps.map(({ delay }) => delay)).toEqual([...journeySteps.map(({ delay }) => delay)].sort((a, b) => a - b));
+  expect(journeySteps[3].delay).toBeGreaterThan(journeySteps[0].delay);
+
+  const web = page.locator('.service-web');
+  await web.scrollIntoViewIfNeeded();
+  await expect(web).toHaveClass(/is-in-view/);
+  const webSequence = await web.evaluate((card) => {
+    const panel = card.querySelector('ul')!;
+    return {
+      panelAnimations: getComputedStyle(panel).animationName,
+      rows: [...panel.querySelectorAll('li')].map((row) => ({
+        name: getComputedStyle(row).animationName,
+        delay: Number.parseFloat(getComputedStyle(row).animationDelay),
+      })),
+    };
+  });
+  expect(webSequence.panelAnimations).toContain('motion-mosaic-backdrop');
+  expect(webSequence.panelAnimations).toContain('motion-mosaic-panel');
+  expect(webSequence.rows.every(({ name }) => name.includes('motion-mosaic-text'))).toBe(true);
+  expect(webSequence.rows[0].delay).toBeGreaterThan(0);
+  expect(webSequence.rows[2].delay).toBeGreaterThan(webSequence.rows[0].delay);
+
+  const crm = page.locator('.service-crm');
+  await crm.scrollIntoViewIfNeeded();
+  await expect(crm).toHaveClass(/is-in-view/);
+  const crmSequence = await crm.evaluate((card) => {
+    const tiles = [...card.querySelectorAll('.service-art span')].filter(
+      (tile) => getComputedStyle(tile).display !== 'none',
+    );
+    const panel = card.querySelector('ul')!;
+    return {
+      tiles: tiles.map((tile) => ({
+        name: getComputedStyle(tile).animationName,
+        delay: Number.parseFloat(getComputedStyle(tile).animationDelay),
+      })),
+      panelAnimation: getComputedStyle(panel).animationName,
+      rows: [...panel.querySelectorAll('li')].map((row) => ({
+        name: getComputedStyle(row).animationName,
+        delay: Number.parseFloat(getComputedStyle(row).animationDelay),
+      })),
+    };
+  });
+  expect(crmSequence.tiles.every(({ name }) => name.includes('motion-mosaic-tile'))).toBe(true);
+  expect(crmSequence.tiles[2].delay).toBeGreaterThan(crmSequence.tiles[0].delay);
+  expect(crmSequence.panelAnimation).toContain('motion-mosaic-panel');
+  expect(crmSequence.rows.every(({ name }) => name.includes('motion-mosaic-text'))).toBe(true);
+  expect(crmSequence.rows[0].delay).toBeGreaterThan(crmSequence.tiles[2].delay);
+
+  const automation = page.locator('.service-automation');
+  await expect(automation).toHaveClass(/is-in-view/);
+  const automationSteps = await automation.locator('.service-art span:visible').evaluateAll((markers) =>
+    markers.map((marker) => ({
+      name: getComputedStyle(marker).animationName,
+      delay: Number.parseFloat(getComputedStyle(marker).animationDelay),
+    })),
+  );
+  expect(automationSteps).toHaveLength(3);
+  expect(automationSteps.every(({ name }) => name.includes('motion-automation-step'))).toBe(true);
+  expect(automationSteps[2].delay).toBeGreaterThan(automationSteps[0].delay);
+});
+
+test('los paneles Web y CRM permanecen opacos durante toda la escalera', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  for (const selector of ['.service-web', '.service-crm']) {
+    const card = page.locator(selector);
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toHaveClass(/is-in-view/);
+
+    for (const progress of [0, 0.5, 1]) {
+      const alpha = await card.locator('ul').evaluate((panel, fraction) => {
+        const animation = panel.getAnimations().find(
+          (candidate) => candidate instanceof CSSAnimation && candidate.animationName === 'motion-mosaic-panel',
+        );
+        if (animation) {
+          const timing = animation.effect?.getComputedTiming();
+          if (typeof timing?.duration === 'number') {
+            animation.pause();
+            animation.currentTime = (timing.delay ?? 0) + timing.duration * fraction;
+          }
+        }
+        const color = getComputedStyle(panel).backgroundColor;
+        const parts = color.match(/[\d.]+/g)?.map(Number) ?? [];
+        return parts.length === 4 ? parts[3] : 1;
+      }, progress);
+      expect(alpha).toBe(1);
+    }
+  }
+});
+
 test('respeta cambios de movimiento reducido mientras la página está abierta', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -218,7 +370,7 @@ test('respeta cambios de movimiento reducido mientras la página está abierta',
   }
 
   const animationNames = await page.locator(
-    '.mock-browser, .service-social .service-art span, .property-social, .process-list li b, .team-stamp',
+    '.mock-browser, .service-social .service-art span, .service-web li, .service-crm li, .service-automation .service-art span, .journey-node, .property-social, .process-list li b, .team-stamp',
   ).evaluateAll((elements) => elements.map((element) => getComputedStyle(element).animationName));
   expect(animationNames).toEqual(animationNames.map(() => 'none'));
   await expect(page.locator('.marquee-track')).toHaveCSS('animation-iteration-count', '1');
@@ -287,6 +439,198 @@ test('las microinteracciones dan feedback y permiten pausar el movimiento contin
   expect(glyph.afterTransform).not.toBe('none');
 });
 
+test('las referencias 1 a 5 repiten circuitos y pops contenidos al pasar el puntero', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+  await page.waitForTimeout(750);
+
+  const circleLayout = await social.locator('.service-art span').evaluateAll((circles) => {
+    const card = circles[0].closest('.service-card')!.getBoundingClientRect();
+    const centers = circles.map((circle) => {
+      const rect = circle.getBoundingClientRect();
+      return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    });
+    return { cardWidth: card.width, centers };
+  });
+  expect(circleLayout.centers[3].x).toBeLessThan(circleLayout.centers[2].x);
+  expect(circleLayout.centers[2].x).toBeLessThan(circleLayout.centers[0].x);
+  expect(circleLayout.centers[0].x).toBeLessThan(circleLayout.centers[1].x);
+  expect(circleLayout.centers[1].x - circleLayout.centers[3].x).toBeGreaterThan(circleLayout.cardWidth * 0.24);
+
+  await social.hover({ position: { x: 20, y: 20 } });
+  await expect(social.locator('.service-art span').first()).toHaveCSS(
+    'animation-name',
+    /motion-social-circuit-hover/,
+  );
+
+  const hoverChecks = [
+    ['.hero-visual', '.mock-browser', 'motion-hero-browser-pop'],
+    ['.mirta-visual', '.property-social', 'motion-case-property-pop'],
+    ['.maria-visual', '.legal-browser', 'motion-case-legal-pop'],
+  ] as const;
+
+  for (const [containerSelector, layerSelector, expectedAnimation] of hoverChecks) {
+    const container = page.locator(containerSelector);
+    await container.scrollIntoViewIfNeeded();
+    await expect(container).toHaveClass(/is-in-view/);
+    await container.hover({ position: { x: 20, y: 20 } });
+    await expect(container.locator(layerSelector)).toHaveCSS('animation-name', new RegExp(expectedAnimation));
+    await page.mouse.move(0, 0);
+  }
+
+  const team = page.locator('.team-stamp');
+  await team.scrollIntoViewIfNeeded();
+  await expect(team).toHaveClass(/is-in-view/);
+  const teamBox = await team.boundingBox();
+  expect(teamBox).not.toBeNull();
+  await page.mouse.move(teamBox!.x + teamBox!.width / 2, teamBox!.y + teamBox!.height / 2);
+  const teamMotion = await team.evaluate((element) => ({
+    stamp: getComputedStyle(element).animationName,
+    firstRing: getComputedStyle(element, '::before').animationName,
+    secondRing: getComputedStyle(element, '::after').animationName,
+  }));
+  expect(teamMotion.stamp).toContain('motion-team-pop');
+  expect(teamMotion.firstRing).toContain('motion-team-ring-orbit-a');
+  expect(teamMotion.secondRing).toContain('motion-team-ring-orbit-b');
+});
+
+test('el circuito social permanece fuera del texto y la lista durante toda la órbita', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+
+  const sampleCircuit = async (progress: number) => {
+    await social.locator('.service-art span').evaluateAll((circles, fraction) => {
+      circles.forEach((circle) => {
+        circle.getAnimations().forEach((animation) => {
+          const timing = animation.effect?.getComputedTiming();
+          const duration = timing?.duration;
+          if (typeof duration !== 'number') return;
+          animation.pause();
+          animation.currentTime = (timing?.delay ?? 0) + duration * fraction;
+        });
+      });
+    }, progress);
+
+    return social.evaluate((card) => {
+      const copy = card.querySelector(':scope > p')!.getBoundingClientRect();
+      const list = card.querySelector('ul')!.getBoundingClientRect();
+      const intersects = (a: DOMRect, b: DOMRect) =>
+        a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      return [...card.querySelectorAll('.service-art span')].map((circle) => {
+        const rect = circle.getBoundingClientRect();
+        return { copy: intersects(rect, copy), list: intersects(rect, list) };
+      });
+    });
+  };
+
+  for (const progress of [0.25, 0.5, 0.75]) {
+    expect(await sampleCircuit(progress)).toEqual([
+      { copy: false, list: false },
+      { copy: false, list: false },
+      { copy: false, list: false },
+      { copy: false, list: false },
+    ]);
+  }
+
+  await page.mouse.move(0, 0);
+  await page.waitForTimeout(20);
+  const box = await social.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box!.x + 20, box!.y + 20);
+  await expect(social.locator('.service-art span').first()).toHaveCSS('animation-name', /motion-social-circuit-hover/);
+  for (const progress of [0.25, 0.5, 0.75]) {
+    expect(await sampleCircuit(progress)).toEqual([
+      { copy: false, list: false },
+      { copy: false, list: false },
+      { copy: false, list: false },
+      { copy: false, list: false },
+    ]);
+  }
+});
+
+test('el circuito social conserva su zona de lectura en tablet', async ({ page }) => {
+  await page.setViewportSize({ width: 900, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+  await page.waitForTimeout(1300);
+
+  const geometry = await social.evaluate((card) => {
+    const copy = card.querySelector(':scope > p')!.getBoundingClientRect();
+    const list = card.querySelector('ul')!.getBoundingClientRect();
+    const intersects = (a: DOMRect, b: DOMRect) =>
+      a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    return {
+      cardWidth: card.getBoundingClientRect().width,
+      circles: [...card.querySelectorAll('.service-art span')].map((circle) => {
+        const rect = circle.getBoundingClientRect();
+        return { copy: intersects(rect, copy), list: intersects(rect, list) };
+      }),
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+
+  expect(geometry.cardWidth).toBeGreaterThan(700);
+  expect(geometry.circles).toEqual([
+    { copy: false, list: false },
+    { copy: false, list: false },
+    { copy: false, list: false },
+    { copy: false, list: false },
+  ]);
+  expect(geometry.overflow).toBeLessThanOrEqual(0);
+});
+
+test('el aro inferior del sello permanece debajo de ESTRATEGIA durante el hover', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const team = page.locator('.team-stamp');
+  await team.scrollIntoViewIfNeeded();
+  await expect(team).toHaveClass(/is-in-view/);
+  const box = await team.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await expect(team).toHaveCSS('animation-name', /motion-team-pop/);
+
+  const result = await team.evaluate((element) => {
+    const orbit = element.getAnimations({ subtree: true }).find((animation) => {
+      const effect = animation.effect;
+      return effect instanceof KeyframeEffect && effect.pseudoElement === '::after';
+    });
+    if (orbit) {
+      const timing = orbit.effect?.getComputedTiming();
+      if (typeof timing?.duration === 'number') {
+        orbit.pause();
+        orbit.currentTime = (timing.delay ?? 0) + timing.duration * 0.5;
+      }
+    }
+    const styles = getComputedStyle(element, '::after');
+    const matrix = new DOMMatrixReadOnly(styles.transform === 'none' ? undefined : styles.transform);
+    return {
+      bottom: Number.parseFloat(styles.bottom),
+      height: element.getBoundingClientRect().height,
+      translateY: matrix.m42,
+    };
+  });
+
+  expect(result.bottom).toBeLessThanOrEqual(result.height * 0.04);
+  expect(result.translateY).toBeGreaterThanOrEqual(0);
+});
+
 test('si IntersectionObserver no es utilizable, revela todo sin romper el sitio', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
@@ -341,6 +685,37 @@ test('si matchMedia falta, el movimiento falla abierto y el formulario sigue act
   expect(pageErrors).toEqual([]);
 });
 
+test('si matchMedia lanza una excepción, revela todo y el formulario sigue activo', async ({ page }) => {
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.addInitScript(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: () => {
+        throw new Error('matchMedia unavailable');
+      },
+    });
+  });
+  await page.goto('/#contacto');
+
+  const targets = page.locator('[data-motion]');
+  for (let index = 0; index < await targets.count(); index += 1) {
+    await expect(targets.nth(index)).toHaveClass(/is-in-view/);
+  }
+
+  await page.getByLabel('Empresa').fill('Estudio de prueba');
+  await page.getByLabel('Nombre de contacto').fill('Prueba Motion');
+  await page.getByLabel('Email').fill('motion@example.com');
+  await page.getByLabel('¿Qué problema querés resolver?').fill(
+    'Necesitamos ordenar las consultas y automatizar el seguimiento comercial.',
+  );
+  await page.getByRole('checkbox').check();
+  await page.getByRole('button', { name: 'Enviar consulta' }).click();
+
+  await expect(page.getByRole('status')).toContainText('Modo demo:');
+  expect(pageErrors).toEqual([]);
+});
+
 test('sin JavaScript todo el contenido queda visible y en su estado final', async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
@@ -354,7 +729,9 @@ test('sin JavaScript todo el contenido queda visible y en su estado final', asyn
   await expect(page.locator('.service-card h3')).toHaveCount(4);
   await expect(page.locator('.contact-form')).toBeVisible();
 
-  const styles = await page.locator('#hero-title, .hero-lede, .service-card h3, .case-copy h3, .process-list h3').evaluateAll((elements) =>
+  const styles = await page.locator(
+    '#hero-title, .hero-lede, .service-card h3, .service-web li, .service-crm li, .case-copy h3, .process-list h3',
+  ).evaluateAll((elements) =>
     elements.map((element) => {
       const computed = getComputedStyle(element);
       return {

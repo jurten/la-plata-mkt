@@ -1,71 +1,5 @@
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
-const paletteLab = document.querySelector('[data-palette-lab]');
-
-if (paletteLab) {
-  const paletteToggle = paletteLab.querySelector('[data-palette-toggle]');
-  const palettePanel = paletteLab.querySelector('[data-palette-panel]');
-  const paletteOptions = [...paletteLab.querySelectorAll('[data-palette-option]')];
-  const paletteStatus = paletteLab.querySelector('[data-palette-status]');
-  const copyPaletteLink = paletteLab.querySelector('[data-copy-palette-link]');
-  const paletteRouteLinks = [...document.querySelectorAll('[data-palette-route-link]')];
-  const themeColor = document.querySelector('meta[name="theme-color"]');
-
-  const setPanelOpen = (isOpen) => {
-    if (palettePanel) palettePanel.hidden = !isOpen;
-    paletteToggle?.setAttribute('aria-expanded', String(isOpen));
-  };
-
-  paletteToggle?.addEventListener('click', () => {
-    setPanelOpen(paletteToggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  paletteOptions.forEach((option) => {
-    option.addEventListener('click', () => {
-      const palette = option.dataset.paletteOption;
-      if (!palette) return;
-
-      document.documentElement.dataset.palette = palette;
-      paletteOptions.forEach((candidate) => {
-        candidate.setAttribute('aria-pressed', String(candidate === option));
-      });
-
-      const activeName = option.querySelector('strong')?.textContent?.trim();
-      const toggleName = paletteToggle?.querySelector('small');
-      if (toggleName && activeName) toggleName.textContent = activeName;
-      if (themeColor && option.dataset.themeColor) themeColor.setAttribute('content', option.dataset.themeColor);
-
-      const url = new URL(window.location.href);
-      url.searchParams.set('palettes', '1');
-      url.searchParams.set('palette', palette);
-      window.history.replaceState(null, '', url);
-      paletteRouteLinks.forEach((link) => {
-        const linkUrl = new URL(link.getAttribute('href') ?? '', window.location.origin);
-        linkUrl.searchParams.set('palettes', '1');
-        linkUrl.searchParams.set('palette', palette);
-        link.setAttribute('href', `${linkUrl.pathname}${linkUrl.search}${linkUrl.hash}`);
-      });
-      if (paletteStatus) paletteStatus.textContent = `${activeName ?? 'Paleta'} activa`;
-    });
-  });
-
-  copyPaletteLink?.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      if (paletteStatus) paletteStatus.textContent = 'Enlace copiado';
-    } catch {
-      if (paletteStatus) paletteStatus.textContent = 'Copiá el enlace desde la barra del navegador';
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && paletteToggle?.getAttribute('aria-expanded') === 'true') {
-      setPanelOpen(false);
-      paletteToggle.focus();
-    }
-  });
-}
-
 toggle?.addEventListener('click', () => {
   const isOpen = toggle.getAttribute('aria-expanded') === 'true';
   toggle.setAttribute('aria-expanded', String(!isOpen));
@@ -90,13 +24,25 @@ document.addEventListener('keydown', (event) => {
 const motionTargets = [...document.querySelectorAll('[data-motion]')];
 
 if (motionTargets.length > 0) {
-  const motionPreference = typeof window.matchMedia === 'function'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)')
-    : null;
+  let motionPreference = null;
+  try {
+    motionPreference = typeof window.matchMedia === 'function'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+  } catch {
+    motionPreference = null;
+  }
   let observer;
 
   const revealAllMotionTargets = () => {
     motionTargets.forEach((target) => target.classList.add('is-in-view'));
+  };
+
+  const failOpenMotion = () => {
+    observer?.disconnect();
+    observer = undefined;
+    delete document.documentElement.dataset.motionState;
+    revealAllMotionTargets();
   };
 
   const observeMotionTargets = () => {
@@ -112,7 +58,7 @@ if (motionTargets.length > 0) {
           entry.target.classList.add('is-in-view');
           observer.unobserve(entry.target);
         });
-      }, { rootMargin: '0px 0px -8%', threshold: 0.16 });
+      }, { rootMargin: '-22% 0px -22%', threshold: 0.18 });
 
       motionTargets
         .filter((target) => !target.classList.contains('is-in-view'))
@@ -124,32 +70,46 @@ if (motionTargets.length > 0) {
   };
 
   const syncMotionPreference = () => {
-    if (motionPreference.matches) {
-      document.documentElement.dataset.motionState = 'reduced';
-      observer?.disconnect();
-      revealAllMotionTargets();
-      return;
-    }
+    try {
+      if (typeof motionPreference?.matches !== 'boolean') {
+        failOpenMotion();
+        return false;
+      }
 
-    if (document.documentElement.dataset.motionState === 'reduced') {
-      motionTargets.forEach((target) => target.classList.remove('is-in-view'));
+      if (motionPreference.matches) {
+        document.documentElement.dataset.motionState = 'reduced';
+        observer?.disconnect();
+        revealAllMotionTargets();
+        return true;
+      }
+
+      if (document.documentElement.dataset.motionState === 'reduced') {
+        motionTargets.forEach((target) => target.classList.remove('is-in-view'));
+      }
+      document.documentElement.dataset.motionState = 'ready';
+      observeMotionTargets();
+      return true;
+    } catch {
+      failOpenMotion();
+      return false;
     }
-    document.documentElement.dataset.motionState = 'ready';
-    observeMotionTargets();
   };
 
-  if (motionPreference) {
-    syncMotionPreference();
-    if (typeof motionPreference.addEventListener === 'function') {
-      motionPreference.addEventListener('change', syncMotionPreference);
-    } else {
-      const addLegacyListener = Reflect.get(motionPreference, 'addListener');
-      if (typeof addLegacyListener === 'function') {
-        addLegacyListener.call(motionPreference, syncMotionPreference);
+  if (motionPreference && syncMotionPreference()) {
+    try {
+      if (typeof motionPreference.addEventListener === 'function') {
+        motionPreference.addEventListener('change', syncMotionPreference);
+      } else {
+        const addLegacyListener = Reflect.get(motionPreference, 'addListener');
+        if (typeof addLegacyListener === 'function') {
+          addLegacyListener.call(motionPreference, syncMotionPreference);
+        }
       }
+    } catch {
+      failOpenMotion();
     }
   } else {
-    revealAllMotionTargets();
+    failOpenMotion();
   }
 }
 

@@ -2,23 +2,17 @@
 import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
-import PaletteLab from '../components/PaletteLab.astro';
-import { getPalette, resolvePalette } from '../lib/palettes';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import '../styles/global.css';
 
 const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
 const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
-const showPaletteLab = Astro.url.searchParams.get('palettes') === '1';
-const activePalette = resolvePalette(showPaletteLab ? Astro.url.searchParams.get('palette') : null);
-const activePaletteDetails = getPalette(activePalette);
-const themeColor = showPaletteLab ? activePaletteDetails.colors.primary : activePaletteDetails.colors.highlight;
-const allowIndexing = Boolean(publicSite) && !showPaletteLab;
-const homeHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}` : '/';
-const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#contacto` : '/#contacto';
+const allowIndexing = Boolean(publicSite);
+const homeHref = '/';
+const contactHref = '/#contacto';
 ---
 <!doctype html>
-<html lang="es-AR" data-palette={activePalette} data-palette-preview={showPaletteLab ? 'true' : undefined}>
+<html lang="es-AR" data-palette="registro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +21,7 @@ const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#cont
       content="Cómo La Plata Marketing recibe, utiliza y protege los datos enviados mediante su formulario de contacto."
     />
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content={themeColor} />
+    <meta name="theme-color" content="#F2D31B" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>Privacidad | La Plata Marketing</title>
@@ -35,10 +29,10 @@ const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#cont
   <body class="legal-body">
     <a class="skip-link" href="#contenido-legal">Saltar al contenido</a>
     <header class="legal-header">
-      <a class="brand" href={homeHref} data-palette-route-link aria-label="La Plata Marketing, volver al inicio">
+      <a class="brand" href={homeHref} aria-label="La Plata Marketing, volver al inicio">
         <span>La Plata<br />Marketing</span>
       </a>
-      <a class="legal-back" href={contactHref} data-palette-route-link>Volver al formulario <span aria-hidden="true">↙</span></a>
+      <a class="legal-back" href={contactHref}>Volver al formulario <span aria-hidden="true">↙</span></a>
     </header>
 
     <main id="contenido-legal" class="legal-main">
@@ -119,7 +113,7 @@ const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#cont
       <section class="legal-cta" aria-labelledby="legal-cta-title">
         <p class="section-index">[ ¿SEGUIMOS? ]</p>
         <h2 id="legal-cta-title">Volvé a tu consulta<br />cuando estés <em>listo.</em></h2>
-        <a class="button button-primary" href={contactHref} data-palette-route-link>Volver al formulario <span aria-hidden="true">↗</span></a>
+        <a class="button button-primary" href={contactHref}>Volver al formulario <span aria-hidden="true">↗</span></a>
       </section>
     </main>
 
@@ -128,7 +122,5 @@ const contactHref = showPaletteLab ? `/?palettes=1&palette=${activePalette}#cont
       <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
     </footer>
 
-    {showPaletteLab && <PaletteLab activePalette={activePalette} exitHref={Astro.url.pathname} />}
-    {showPaletteLab && <script is:inline src="/scripts/site.js" defer></script>}
   </body>
 </html>

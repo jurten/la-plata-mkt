@@ -34,28 +34,21 @@ npm run dev
 
 El servidor de desarrollo abre por defecto en `http://127.0.0.1:4321`.
 
-## Laboratorio de paletas
+## Identidad visual de producción
 
-La identidad predeterminada no muestra controles adicionales. Para comparar las cuatro direcciones en el sitio real, abrir:
+El sitio usa una única identidad permanente: **Registro activo**. Los tokens semánticos de producción son:
 
-```text
-http://127.0.0.1:4321/?palettes=1
-```
+- Tinta: `#17292D`
+- Tinta atenuada: `#4B5B5E`
+- Papel cálido: `#F3EEE6`
+- Superficie clara: `#FFF9F0`
+- Azul primario: `#1D62A8`
+- Azul fuerte: `#154C86`
+- Amarillo marcador: `#F2D31B`
+- Azul secundario: `#8EC5E6`
+- Rojo señal: `#FC4C5A`
 
-El panel cambia los tokens en vivo, actualiza `theme-color` y conserva la selección en una URL compartible. Las alternativas disponibles son:
-
-- `registro`: Registro activo, la nueva identidad predeterminada.
-- `manchette`: Manchette rojo.
-- `archivo`: Archivo tinta.
-- `sobreimpresion`: Sobreimpresión.
-
-También puede abrirse una opción directamente, por ejemplo:
-
-```text
-http://127.0.0.1:4321/?palettes=1&palette=manchette
-```
-
-Mientras el laboratorio está activo, los enlaces entre la home y `/privacidad` conservan la paleta. **Salir** elimina los parámetros y vuelve a la identidad predeterminada. No se usa almacenamiento local ni se altera la experiencia pública sin `palettes=1`.
+No hay selector público, modo de comparación ni estado de paleta persistente.
 
 ## Verificación
 

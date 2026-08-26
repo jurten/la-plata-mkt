@@ -59,14 +59,12 @@ test('rechaza un Host no confiable antes de generar URLs públicas', async ({ re
 });
 
 for (const path of ['/', '/privacidad']) {
-  test(`${path} no tiene violaciones serias o críticas detectadas por axe`, async ({ page }) => {
+  test(`${path} no tiene violaciones detectadas por axe`, async ({ page }) => {
     await page.goto(path);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
-    const blocking = results.violations.filter(({ impact }) => impact === 'serious' || impact === 'critical');
-
-    expect(blocking).toEqual([]);
+    expect(results.violations).toEqual([]);
   });
 }
 

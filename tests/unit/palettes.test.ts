@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { paletteOptions, resolvePalette } from '../../src/lib/palettes';
+import { paletteOptions } from '../../src/lib/palettes';
 
 const globalCss = readFileSync(new URL('../../src/styles/global.css', import.meta.url), 'utf8');
 const cssTokenByColor = {
@@ -31,12 +31,9 @@ function contrastRatio(foreground: string, background: string): number {
 }
 
 describe('reference-derived color system', () => {
-  it('publishes the new production direction and three comparison directions', () => {
+  it('publishes Registro activo as the only permanent production direction', () => {
     expect(paletteOptions.map(({ id, name }) => ({ id, name }))).toEqual([
       { id: 'registro', name: 'Registro activo' },
-      { id: 'manchette', name: 'Manchette rojo' },
-      { id: 'archivo', name: 'Archivo tinta' },
-      { id: 'sobreimpresion', name: 'Sobreimpresión' },
     ]);
     expect(paletteOptions[0].colors).toEqual({
       ink: '#17292D',
@@ -102,7 +99,10 @@ describe('reference-derived color system', () => {
     }
   });
 
-  it('falls back to the new production palette for an unknown palette ID', () => {
-    expect(resolvePalette('not-a-palette')).toBe('registro');
+  it('contains no comparison-palette selectors or retired alternative IDs', () => {
+    expect(globalCss).not.toMatch(/data-palette\s*=|data-palette-preview/);
+    for (const retired of ['manchette', 'archivo', 'sobreimpresion']) {
+      expect(globalCss).not.toContain(retired);
+    }
   });
 });

@@ -3,9 +3,7 @@ import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
 import '@fontsource-variable/manrope';
-import PaletteLab from '../components/PaletteLab.astro';
 import { getCaseStudies } from '../lib/case-studies';
-import { getPalette, resolvePalette } from '../lib/palettes';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import '../styles/global.css';
 
@@ -65,11 +63,8 @@ const pageDescription =
 const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
 const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
 const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
-const showPaletteLab = Astro.url.searchParams.get('palettes') === '1';
-const activePalette = resolvePalette(showPaletteLab ? Astro.url.searchParams.get('palette') : null);
-const activePaletteDetails = getPalette(activePalette);
-const allowIndexing = Boolean(publicSite) && !showPaletteLab;
-const privacyHref = showPaletteLab ? `/privacidad?palettes=1&palette=${activePalette}` : '/privacidad';
+const allowIndexing = Boolean(publicSite);
+const privacyHref = '/privacidad';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -93,13 +88,13 @@ const structuredData = {
 };
 ---
 <!doctype html>
-<html lang="es-AR" data-palette={activePalette} data-palette-preview={showPaletteLab ? 'true' : undefined}>
+<html lang="es-AR" data-palette="registro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={pageDescription} />
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content={activePaletteDetails.colors.primary} />
+    <meta name="theme-color" content="#1D62A8" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content="website" />
@@ -394,7 +389,7 @@ const structuredData = {
           </div>
           <label class="consent form-row-full">
             <input name="privacyAccepted" type="checkbox" value="true" required />
-            <span>Acepto que La Plata Marketing use mis datos para responder esta consulta. <a href={privacyHref} data-palette-route-link>Ver privacidad</a>.</span>
+            <span>Acepto que La Plata Marketing use mis datos para responder esta consulta. <a href={privacyHref}>Ver privacidad</a>.</span>
           </label>
           {turnstileSiteKey && (
             <div class="form-row-full turnstile-wrap">
@@ -413,7 +408,7 @@ const structuredData = {
         <a href="#servicios">Servicios</a>
         <a href="#casos">Casos</a>
         <a href="#proceso">Proceso</a>
-        <a href={privacyHref} data-palette-route-link>Privacidad</a>
+        <a href={privacyHref}>Privacidad</a>
       </div>
       <div class="footer-meta">
         <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
@@ -421,8 +416,6 @@ const structuredData = {
       </div>
       <div class="footer-line" aria-hidden="true">TODO CONECTADO → TODO CONECTADO → TODO CONECTADO</div>
     </footer>
-
-    {showPaletteLab && <PaletteLab activePalette={activePalette} exitHref={Astro.url.pathname} />}
 
     <script is:inline src="/scripts/site.js" defer></script>
     {turnstileSiteKey && (
