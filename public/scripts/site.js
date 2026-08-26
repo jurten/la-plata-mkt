@@ -87,6 +87,72 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+const motionTargets = [...document.querySelectorAll('[data-motion]')];
+
+if (motionTargets.length > 0) {
+  const motionPreference = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : null;
+  let observer;
+
+  const revealAllMotionTargets = () => {
+    motionTargets.forEach((target) => target.classList.add('is-in-view'));
+  };
+
+  const observeMotionTargets = () => {
+    if (typeof window.IntersectionObserver !== 'function') {
+      revealAllMotionTargets();
+      return;
+    }
+
+    try {
+      observer ??= new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in-view');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -8%', threshold: 0.16 });
+
+      motionTargets
+        .filter((target) => !target.classList.contains('is-in-view'))
+        .forEach((target) => observer.observe(target));
+    } catch {
+      observer = undefined;
+      revealAllMotionTargets();
+    }
+  };
+
+  const syncMotionPreference = () => {
+    if (motionPreference.matches) {
+      document.documentElement.dataset.motionState = 'reduced';
+      observer?.disconnect();
+      revealAllMotionTargets();
+      return;
+    }
+
+    if (document.documentElement.dataset.motionState === 'reduced') {
+      motionTargets.forEach((target) => target.classList.remove('is-in-view'));
+    }
+    document.documentElement.dataset.motionState = 'ready';
+    observeMotionTargets();
+  };
+
+  if (motionPreference) {
+    syncMotionPreference();
+    if (typeof motionPreference.addEventListener === 'function') {
+      motionPreference.addEventListener('change', syncMotionPreference);
+    } else {
+      const addLegacyListener = Reflect.get(motionPreference, 'addListener');
+      if (typeof addLegacyListener === 'function') {
+        addLegacyListener.call(motionPreference, syncMotionPreference);
+      }
+    }
+  } else {
+    revealAllMotionTargets();
+  }
+}
+
 const contactForm = document.querySelector('[data-contact-form]');
 
 contactForm?.addEventListener('submit', async (event) => {

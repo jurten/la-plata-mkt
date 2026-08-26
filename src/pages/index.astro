@@ -165,7 +165,7 @@ const structuredData = {
           </ul>
         </div>
 
-        <div class="hero-visual" role="img" aria-label="Representación conceptual de redes, sitio web, CRM y automatizaciones">
+        <div class="hero-visual" role="img" aria-label="Representación conceptual de redes, sitio web, CRM y automatizaciones" data-motion="hero">
           <div class="stage-label stage-label-top">UN SISTEMA, NO CUATRO ISLAS</div>
           <div class="connector connector-a" aria-hidden="true"></div>
           <div class="connector connector-b" aria-hidden="true"></div>
@@ -204,7 +204,7 @@ const structuredData = {
         </div>
       </section>
 
-      <div class="service-marquee" role="group" aria-label="Social media, sitios web, CRM y automatizaciones">
+      <div class="service-marquee" role="group" tabindex="0" aria-label="Social media, sitios web, CRM y automatizaciones. Enfocá para pausar el movimiento.">
         <div class="marquee-track">
           <span>SOCIAL MEDIA</span><i>✳</i><span>SITIOS WEB</span><i>✳</i><span>CRM</span><i>✳</i><span>AUTOMATIZACIONES</span><i>✳</i>
           <span aria-hidden="true">SOCIAL MEDIA</span><i aria-hidden="true">✳</i><span aria-hidden="true">SITIOS WEB</span><i aria-hidden="true">✳</i><span aria-hidden="true">CRM</span><i aria-hidden="true">✳</i><span aria-hidden="true">AUTOMATIZACIONES</span><i aria-hidden="true">✳</i>
@@ -220,7 +220,7 @@ const structuredData = {
             tareas se repiten, no falta otra herramienta: falta que todo trabaje en conjunto.
           </p>
         </div>
-        <div class="journey-map" role="group" aria-label="Recorrido conectado desde la atención hasta el seguimiento">
+        <div class="journey-map" role="group" aria-label="Recorrido conectado desde la atención hasta el seguimiento" data-motion="journey">
           <div class="journey-node node-attract"><span>01</span><strong>Atraer</strong><small>Contenido</small></div>
           <div class="journey-arrow" aria-hidden="true">→</div>
           <div class="journey-node node-capture"><span>02</span><strong>Captar</strong><small>Sitio web</small></div>
@@ -240,7 +240,7 @@ const structuredData = {
 
         <div class="services-grid">
           {services.map((service) => (
-            <article class:list={['service-card', `service-${service.slug}`]}>
+            <article class:list={['service-card', `service-${service.slug}`]} data-motion="service">
               <div class="service-topline">
                 <span>{service.number}</span>
                 <span>{service.kicker}</span>
@@ -278,7 +278,7 @@ const structuredData = {
             </div>
           </div>
 
-          <div class="case-visual mirta-visual" role="img" aria-label={realEstateCase.ariaLabel}>
+          <div class="case-visual mirta-visual" role="img" aria-label={realEstateCase.ariaLabel} data-motion="case">
             <div class="property-social" aria-hidden="true">
               <div class="property-brand">{realEstateCase.nameLines[0].toUpperCase()} <span>{realEstateCase.nameLines[1].toUpperCase()}</span></div>
               <div class="property-photo"><i></i><i></i><i></i><span>ESPACIOS PARA<br /><b>VIVIR MEJOR</b></span></div>
@@ -297,7 +297,7 @@ const structuredData = {
         </article>
 
         <article class="case case-maria">
-          <div class="case-visual maria-visual" role="img" aria-label={legalCase.ariaLabel}>
+          <div class="case-visual maria-visual" role="img" aria-label={legalCase.ariaLabel} data-motion="case">
             <div class="legal-browser" aria-hidden="true">
               <div class="legal-nav"><b>{legalCase.mockupBrand}</b><span>Áreas　Nosotros　Contacto</span></div>
               <div class="legal-hero"><small>CLARIDAD PARA DECIDIR</small><strong>Información directa.<br />Próximos pasos claros.</strong><span>INICIAR CONSULTA ↗</span></div>
@@ -330,7 +330,7 @@ const structuredData = {
           <div class="section-index">[ PROCESO ]</div>
           <h2 id="process-title">De un problema suelto<br />a un sistema que <em>funciona.</em></h2>
         </header>
-        <ol class="process-list">
+        <ol class="process-list" data-motion="process">
           {steps.map(([number, title, description]) => (
             <li>
               <span>{number}</span>
@@ -343,7 +343,7 @@ const structuredData = {
       </section>
 
       <section class="team-value section-pad" aria-labelledby="team-title">
-        <div class="team-stamp" aria-hidden="true"><span>UNA</span><span>MISMA</span><span>ESTRATEGIA</span></div>
+        <div class="team-stamp" aria-hidden="true" data-motion="stamp"><span>UNA</span><span>MISMA</span><span>ESTRATEGIA</span></div>
         <div class="team-copy">
           <div class="section-index">[ POR QUÉ NOSOTROS ]</div>
           <h2 id="team-title">Marketing y tecnología<br /><em>en el mismo equipo.</em></h2>

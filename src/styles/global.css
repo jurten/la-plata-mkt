@@ -317,6 +317,21 @@ textarea {
   box-shadow: 5px 5px 0 var(--ink);
 }
 
+.button > span,
+.nav-cta > span,
+.text-link > span,
+.submit-button > span {
+  display: inline-block;
+  transition: transform 160ms ease;
+}
+
+.button:is(:hover, :focus-visible) > span,
+.nav-cta:is(:hover, :focus-visible) > span,
+.text-link:is(:hover, :focus-visible) > span,
+.submit-button:is(:hover, :focus-visible) > span {
+  transform: translate(0.22rem, -0.22rem);
+}
+
 .text-link {
   padding-block: 0.65rem;
   font-family: var(--display);
@@ -626,6 +641,10 @@ textarea {
   animation: marquee 28s linear infinite;
 }
 
+.service-marquee:is(:hover, :focus) .marquee-track {
+  animation-play-state: paused;
+}
+
 .marquee-track span,
 .marquee-track i {
   padding: 0.6rem 1.1rem;
@@ -841,10 +860,10 @@ textarea {
   aspect-ratio: 1;
   border-radius: 50%;
 }
-.service-social .service-art span:nth-child(1) { top: 34%; right: 14%; background: var(--primary); }
+.service-social .service-art span:nth-child(1) { top: 52%; right: 14%; background: var(--primary); }
 .service-social .service-art span:nth-child(2) { top: 46%; right: 5%; background: var(--signal); }
 .service-social .service-art span:nth-child(3) { top: 55%; right: 18%; background: var(--highlight); }
-.service-social .service-art span:nth-child(4) { top: 40%; right: 26%; background: var(--secondary); }
+.service-social .service-art span:nth-child(4) { top: 53%; right: 26%; background: var(--secondary); }
 
 .service-web ul {
   width: min(70%, 24rem);
@@ -1618,11 +1637,16 @@ textarea {
     height: 2px;
     background: var(--ink);
     content: '';
+    transition: transform 180ms ease, background-color 180ms ease;
   }
 
   .menu-glyph { position: relative; }
   .menu-glyph::before { position: absolute; top: -0.38rem; }
   .menu-glyph::after { position: absolute; top: 0.38rem; }
+
+  .menu-toggle[aria-expanded='true'] .menu-glyph { background: transparent; }
+  .menu-toggle[aria-expanded='true'] .menu-glyph::before { transform: translateY(0.38rem) rotate(45deg); }
+  .menu-toggle[aria-expanded='true'] .menu-glyph::after { transform: translateY(-0.38rem) rotate(-45deg); }
 
   .primary-nav {
     position: absolute;
@@ -1728,6 +1752,7 @@ textarea {
   .service-card ul { right: 1rem; bottom: 1rem; left: 1rem; }
   .service-card > p { max-width: 92%; }
   .service-art { opacity: 0.55; }
+  .service-social .service-art { display: none; }
 
   .case-copy { min-height: 43rem; }
   .case-copy h3 { font-size: clamp(4.1rem, 20vw, 6.5rem); }
@@ -2151,6 +2176,273 @@ textarea {
   .legal-footer {
     gap: 1rem;
     flex-direction: column;
+  }
+}
+
+/* Editorial motion is progressive enhancement: only illustrative layers move. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion-state='ready'] [data-motion='hero'].is-in-view::before {
+    animation: motion-hero-frame 620ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='hero'].is-in-view .mock-browser {
+    animation: motion-hero-browser 760ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='hero'].is-in-view .mock-phone {
+    animation: motion-hero-phone 680ms cubic-bezier(0.2, 0.75, 0.25, 1) 80ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='hero'].is-in-view .mock-crm {
+    animation: motion-hero-crm 720ms cubic-bezier(0.2, 0.75, 0.25, 1) 160ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='hero'].is-in-view .automation-stamp {
+    animation: motion-hero-stamp 560ms cubic-bezier(0.2, 0.75, 0.25, 1) 240ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-social.is-in-view .service-art span {
+    transform-origin: center;
+    animation: motion-service-shape 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-social.is-in-view .service-art span:nth-child(2) { animation-delay: 60ms; }
+  html[data-motion-state='ready'] [data-motion='service'].service-social.is-in-view .service-art span:nth-child(3) { animation-delay: 120ms; }
+  html[data-motion-state='ready'] [data-motion='service'].service-social.is-in-view .service-art span:nth-child(4) { animation-delay: 180ms; }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-web.is-in-view ul {
+    animation: motion-web-panel 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-crm.is-in-view .service-art span {
+    transform-origin: right bottom;
+    animation: motion-service-block 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-crm.is-in-view .service-art span:nth-child(2) { animation-delay: 80ms; }
+  html[data-motion-state='ready'] [data-motion='service'].service-crm.is-in-view .service-art span:nth-child(3) { animation-delay: 160ms; }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-automation.is-in-view .service-art span {
+    transform-origin: center;
+    animation: motion-service-marker 460ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='service'].service-automation.is-in-view .service-art span:nth-child(2) { animation-delay: 70ms; }
+  html[data-motion-state='ready'] [data-motion='service'].service-automation.is-in-view .service-art span:nth-child(3) { animation-delay: 140ms; }
+
+  html[data-motion-state='ready'] [data-motion='journey'].is-in-view .journey-arrow {
+    animation: motion-journey-arrow 440ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='journey'].is-in-view .journey-arrow:nth-child(4) { animation-delay: 80ms; }
+  html[data-motion-state='ready'] [data-motion='journey'].is-in-view .journey-arrow:nth-child(6) { animation-delay: 160ms; }
+
+  html[data-motion-state='ready'] [data-motion='case'].mirta-visual.is-in-view .property-social {
+    animation: motion-case-property 640ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='case'].mirta-visual.is-in-view .property-crm {
+    animation: motion-case-crm 680ms cubic-bezier(0.2, 0.75, 0.25, 1) 100ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='case'].mirta-visual.is-in-view .flow-card {
+    animation: motion-case-flow 480ms cubic-bezier(0.2, 0.75, 0.25, 1) 200ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='case'].maria-visual.is-in-view .legal-browser {
+    animation: motion-case-legal 640ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='case'].maria-visual.is-in-view .legal-phone {
+    animation: motion-case-phone 620ms cubic-bezier(0.2, 0.75, 0.25, 1) 100ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='case'].maria-visual.is-in-view .legal-post {
+    animation: motion-case-post 520ms cubic-bezier(0.2, 0.75, 0.25, 1) 200ms both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='process'].is-in-view li b {
+    animation: motion-process-arrow 420ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+
+  html[data-motion-state='ready'] [data-motion='process'].is-in-view li:nth-child(2) b { animation-delay: 60ms; }
+  html[data-motion-state='ready'] [data-motion='process'].is-in-view li:nth-child(3) b { animation-delay: 120ms; }
+  html[data-motion-state='ready'] [data-motion='process'].is-in-view li:nth-child(4) b { animation-delay: 180ms; }
+
+  html[data-motion-state='ready'] [data-motion='stamp'].is-in-view {
+    animation: motion-team-stamp 720ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  }
+}
+
+@keyframes motion-hero-frame {
+  from {
+    opacity: 0.25;
+    transform: rotate(3deg) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes motion-hero-browser {
+  from {
+    transform: translate(-1rem, 0.75rem) rotate(-3deg);
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes motion-hero-phone {
+  from {
+    transform: translate(0.75rem, -0.6rem) rotate(5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes motion-hero-crm {
+  from {
+    transform: translate(1rem, 0.75rem) rotate(-2deg);
+  }
+  to {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes motion-hero-stamp {
+  from {
+    transform: translate(-0.75rem, 0.35rem) rotate(6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes motion-service-shape {
+  from {
+    opacity: 0.2;
+    transform: scale(0.68);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-web-panel {
+  from { box-shadow: 0 0 0 var(--primary); }
+  to { box-shadow: -1rem -1rem 0 var(--primary); }
+}
+
+@keyframes motion-service-block {
+  from {
+    opacity: 0.25;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-service-marker {
+  from {
+    opacity: 0.25;
+    transform: rotate(-8deg) scaleX(0.1);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-8deg) scaleX(1);
+  }
+}
+
+@keyframes motion-journey-arrow {
+  from {
+    opacity: 0.25;
+    transform: translateX(-0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes motion-case-property {
+  from {
+    transform: translate(-0.75rem, 0.6rem) rotate(-5deg) scale(0.985);
+  }
+  to {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes motion-case-crm {
+  from {
+    transform: translate(0.75rem, 0.6rem) rotate(3deg) scale(0.985);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes motion-case-flow {
+  from {
+    transform: translateY(0.5rem) rotate(-3deg);
+  }
+  to {
+    transform: rotate(-3deg);
+  }
+}
+
+@keyframes motion-case-legal {
+  from {
+    transform: translate(-0.75rem, 0.6rem) rotate(-2deg) scale(0.985);
+  }
+  to {
+    transform: rotate(-2deg);
+  }
+}
+
+@keyframes motion-case-phone {
+  from {
+    transform: translate(0.65rem, 0.5rem) rotate(5deg) scale(0.985);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes motion-case-post {
+  from {
+    transform: translate(-0.5rem, 0.5rem) rotate(4deg) scale(0.985);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes motion-process-arrow {
+  from {
+    opacity: 0.2;
+    transform: translate(-0.45rem, -0.45rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes motion-team-stamp {
+  from {
+    box-shadow: 0 0 0 var(--highlight), 0 0 0 2px var(--ink);
+    transform: rotate(-2deg) scale(0.985);
+  }
+  to {
+    box-shadow: 1.2rem 1.2rem 0 var(--highlight), 1.2rem 1.2rem 0 2px var(--ink);
+    transform: rotate(-4deg);
   }
 }
 
