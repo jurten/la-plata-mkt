@@ -8,6 +8,7 @@ const payload: ContactPayload = {
   company: 'Estudio Ejemplo',
   contactName: 'Ana Pérez',
   email: 'ana@example.com',
+  phone: '+54 9 221 555-1234',
   issue: 'Necesitamos ordenar las consultas que llegan desde el sitio institucional.',
   privacyAccepted: true,
   website: '',
@@ -42,6 +43,7 @@ describe('createResendDelivery', () => {
     });
     expect(notification.text).toContain('Nueva consulta desde el sitio de La Plata Marketing');
     expect(notification.text).not.toContain('laplatamarketing.com');
+    expect(notification.text).toContain('Celular: +54 9 221 555-1234');
     expect(notification.text).toContain('Necesitamos ordenar las consultas');
     expect(autoReply).toMatchObject({
       to: ['ana@example.com'],
@@ -49,6 +51,7 @@ describe('createResendDelivery', () => {
       subject: 'Recibimos tu consulta — La Plata Marketing',
     });
     expect(autoReply.text).toContain('Hola, Ana Pérez:');
+    expect(autoReply.text).not.toContain('+54 9 221 555-1234');
   });
 
   it('conserva la consulta recibida si falla solamente la autorespuesta', async () => {

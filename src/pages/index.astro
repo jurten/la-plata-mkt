@@ -373,10 +373,14 @@ const structuredData = {
             <input id="contactName" name="contactName" type="text" autocomplete="name" minlength="2" maxlength="80" required />
             <span class="field-error" id="contactName-error"></span>
           </div>
-          <div class="form-row form-row-full">
+          <div class="form-row">
             <label for="email">Email</label>
             <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required />
             <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="form-row">
+            <label for="phone">Celular (opcional)</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" />
           </div>
           <div class="form-row form-row-full">
             <label for="issue">¿Qué problema querés resolver?</label>

@@ -7,6 +7,7 @@ test('el aviso de privacidad explica el tratamiento y permite volver al formular
   await expect(page.locator('html')).toHaveAttribute('lang', 'es-AR');
   await expect(page.getByRole('heading', { level: 1, name: 'Privacidad, sin letra chica.' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Qué datos recibimos' })).toBeVisible();
+  await expect(page.getByText('celular (si decidís compartirlo)', { exact: false })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Para qué los usamos' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Tus decisiones y derechos' })).toBeVisible();
   await expect(page.getByText('laplatamarketing@gmail.com', { exact: true }).first()).toBeVisible();

@@ -69,6 +69,54 @@ test('espera a que la sección entre en la zona útil antes de animarla', async 
   await expect(social).toHaveClass(/is-in-view/);
 });
 
+test('el recorrido no muestra su estado final antes de entrar en la zona útil', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const journey = page.locator('.journey-map');
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    const target = document.querySelector('.journey-map')!;
+    const top = window.scrollY + target.getBoundingClientRect().top - window.innerHeight * 0.76;
+    window.scrollTo(0, top);
+  });
+  await page.waitForTimeout(150);
+
+  const preTrigger = await journey.evaluate((map) => {
+    const rect = map.getBoundingClientRect();
+    const firstNode = map.querySelector('.journey-node')!;
+    const nodeRect = firstNode.getBoundingClientRect();
+    const styles = getComputedStyle(firstNode);
+    return {
+      left: rect.left,
+      top: rect.top,
+      bottom: rect.bottom,
+      nodeLeft: nodeRect.left,
+      animationName: styles.animationName,
+      playState: styles.animationPlayState,
+      opacity: Number.parseFloat(styles.opacity),
+      transform: styles.transform,
+    };
+  });
+  expect(preTrigger.top).toBeGreaterThan(0);
+  expect(preTrigger.bottom).toBeLessThanOrEqual(900);
+  expect(preTrigger.nodeLeft).toBeGreaterThanOrEqual(preTrigger.left);
+  await expect(journey).not.toHaveClass(/is-in-view/);
+  expect(preTrigger.animationName).toContain('motion-journey-spring-in');
+  expect(preTrigger.playState).toBe('paused');
+  expect(preTrigger.opacity).toBe(1);
+  expect(preTrigger.transform).not.toBe('none');
+
+  await page.evaluate(() => {
+    const target = document.querySelector('.journey-map')!;
+    const top = window.scrollY + target.getBoundingClientRect().top - window.innerHeight * 0.32;
+    window.scrollTo(0, top);
+  });
+  await expect(journey).toHaveClass(/is-in-view/);
+  await expect(journey.locator('.journey-node').first()).toHaveCSS('animation-play-state', 'running');
+});
+
 test('la zona útil sigue siendo alcanzable en viewports de poca altura', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 320 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -178,7 +226,7 @@ test('los acentos de servicios se imprimen sin mover títulos ni texto', async (
     automation: getComputedStyle(document.querySelector('.service-automation .service-art span:nth-child(1)')!).animationName,
   }));
 
-  expect(animationNames.social).toContain('motion-social-circuit-in');
+  expect(animationNames.social).toContain('motion-social-fade-in');
   expect(animationNames.web).toContain('motion-mosaic-panel');
   expect(animationNames.crm).toContain('motion-mosaic-tile');
   expect(animationNames.automation).toContain('motion-automation-step');
@@ -247,6 +295,104 @@ test('el recorrido, los casos y el proceso animan solo sus capas gráficas', asy
   }
 });
 
+test('el recorrido intermedio conserva una secuencia horizontal continua', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  for (const width of [721, 830, 900, 1100, 1101]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+
+    const journey = page.locator('.journey-map');
+    await journey.scrollIntoViewIfNeeded();
+    const geometry = await journey.evaluate((map) => {
+      const mapRect = map.getBoundingClientRect();
+      const children = [...map.children].map((child) => {
+        const rect = child.getBoundingClientRect();
+        return {
+          kind: child.classList.contains('journey-node') ? 'node' : 'arrow',
+          display: getComputedStyle(child).display,
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+          height: rect.height,
+        };
+      });
+      return { map: { top: mapRect.top, bottom: mapRect.bottom }, children };
+    });
+
+    expect(geometry.children).toHaveLength(7);
+    expect(geometry.children.every(({ display }) => display !== 'none')).toBe(true);
+    expect(geometry.children.map(({ kind }) => kind)).toEqual([
+      'node', 'arrow', 'node', 'arrow', 'node', 'arrow', 'node',
+    ]);
+
+    const nodes = geometry.children.filter(({ kind }) => kind === 'node');
+    const nodeWidths = nodes.map(({ width: nodeWidth }) => nodeWidth);
+    expect(Math.max(...nodeWidths) - Math.min(...nodeWidths)).toBeLessThan(2);
+    const firstChild = geometry.children[0];
+    expect(Math.abs(firstChild.top - geometry.map.top)).toBeLessThanOrEqual(2.5);
+    expect(Math.abs(firstChild.bottom - geometry.map.bottom)).toBeLessThanOrEqual(2.5);
+    for (const child of geometry.children) {
+      expect(Math.abs(child.top - firstChild.top)).toBeLessThan(1);
+      expect(Math.abs(child.bottom - firstChild.bottom)).toBeLessThan(1);
+    }
+    for (let index = 1; index < geometry.children.length; index += 1) {
+      expect(Math.abs(geometry.children[index].left - geometry.children[index - 1].right)).toBeLessThan(2);
+    }
+  }
+});
+
+test('las etapas del recorrido saltan como un resorte de izquierda a derecha', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const journey = page.locator('.journey-map');
+  const nodes = journey.locator('.journey-node');
+  await journey.scrollIntoViewIfNeeded();
+  await expect(journey).toHaveClass(/is-in-view/);
+
+  const contracts = await nodes.evaluateAll((elements) => elements.map((node) => {
+    const styles = getComputedStyle(node);
+    return {
+      name: styles.animationName,
+      delay: Number.parseFloat(styles.animationDelay),
+      origin: styles.transformOrigin,
+    };
+  }));
+  expect(contracts.every(({ name }) => name.includes('motion-journey-spring-in'))).toBe(true);
+  expect(contracts.map(({ delay }) => delay)).toEqual([...contracts.map(({ delay }) => delay)].sort((a, b) => a - b));
+  expect(contracts[3].delay).toBeGreaterThan(contracts[0].delay);
+
+  const sample = async (progress: number) => nodes.first().evaluate((node, fraction) => {
+    const animation = node.getAnimations().find(
+      (candidate) => candidate instanceof CSSAnimation && candidate.animationName === 'motion-journey-spring-in',
+    );
+    if (!animation) throw new Error('No se encontró el resorte del recorrido');
+    const timing = animation.effect?.getComputedTiming();
+    if (typeof timing?.duration !== 'number') throw new Error('Duración de animación inválida');
+    animation.pause();
+    animation.currentTime = (timing.delay ?? 0) + timing.duration * fraction;
+    const rect = node.getBoundingClientRect();
+    return {
+      centerX: rect.x + rect.width / 2,
+      width: rect.width,
+      opacity: Number.parseFloat(getComputedStyle(node).opacity),
+    };
+  }, progress);
+
+  const start = await sample(0);
+  const overshoot = await sample(0.58);
+  const end = await sample(1);
+  expect(start.centerX).toBeLessThan(end.centerX - 20);
+  expect(start.width).toBeLessThan(end.width * 0.8);
+  expect(start.opacity).toBe(1);
+  expect(overshoot.width).toBeGreaterThan(end.width * 1.025);
+  expect(end.opacity).toBe(1);
+});
+
 test('las referencias 6 a 9 construyen el recorrido y los mosaicos en secuencia', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -261,7 +407,7 @@ test('las referencias 6 a 9 construyen el recorrido y los mosaicos en secuencia'
       return { name: styles.animationName, delay: Number.parseFloat(styles.animationDelay) };
     }),
   );
-  expect(journeySteps.every(({ name }) => name.includes('motion-journey-ink'))).toBe(true);
+  expect(journeySteps.every(({ name }) => name.includes('motion-journey-spring-in'))).toBe(true);
   expect(journeySteps.map(({ delay }) => delay)).toEqual([...journeySteps.map(({ delay }) => delay)].sort((a, b) => a - b));
   expect(journeySteps[3].delay).toBeGreaterThan(journeySteps[0].delay);
 
@@ -444,30 +590,6 @@ test('las referencias 1 a 5 repiten circuitos y pops contenidos al pasar el punt
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
 
-  const social = page.locator('.service-social');
-  await social.scrollIntoViewIfNeeded();
-  await expect(social).toHaveClass(/is-in-view/);
-  await page.waitForTimeout(750);
-
-  const circleLayout = await social.locator('.service-art span').evaluateAll((circles) => {
-    const card = circles[0].closest('.service-card')!.getBoundingClientRect();
-    const centers = circles.map((circle) => {
-      const rect = circle.getBoundingClientRect();
-      return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
-    });
-    return { cardWidth: card.width, centers };
-  });
-  expect(circleLayout.centers[3].x).toBeLessThan(circleLayout.centers[2].x);
-  expect(circleLayout.centers[2].x).toBeLessThan(circleLayout.centers[0].x);
-  expect(circleLayout.centers[0].x).toBeLessThan(circleLayout.centers[1].x);
-  expect(circleLayout.centers[1].x - circleLayout.centers[3].x).toBeGreaterThan(circleLayout.cardWidth * 0.24);
-
-  await social.hover({ position: { x: 20, y: 20 } });
-  await expect(social.locator('.service-art span').first()).toHaveCSS(
-    'animation-name',
-    /motion-social-circuit-hover/,
-  );
-
   const hoverChecks = [
     ['.hero-visual', '.mock-browser', 'motion-hero-browser-pop'],
     ['.mirta-visual', '.property-social', 'motion-case-property-pop'],
@@ -495,11 +617,207 @@ test('las referencias 1 a 5 repiten circuitos y pops contenidos al pasar el punt
     secondRing: getComputedStyle(element, '::after').animationName,
   }));
   expect(teamMotion.stamp).toContain('motion-team-pop');
-  expect(teamMotion.firstRing).toContain('motion-team-ring-orbit-a');
-  expect(teamMotion.secondRing).toContain('motion-team-ring-orbit-b');
+  expect(teamMotion.firstRing).toBe('none');
+  expect(teamMotion.secondRing).toBe('none');
 });
 
-test('el circuito social permanece fuera del texto y la lista durante toda la órbita', async ({ page }) => {
+test('los círculos sociales terminan en la roseta de cuatro puntos indicada', async ({ page }) => {
+  await page.setViewportSize({ width: 1080, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+  await page.waitForTimeout(1300);
+
+  const layout = await social.evaluate((card) => {
+    const cardRect = card.getBoundingClientRect();
+    const copy = card.querySelector(':scope > p')!.getBoundingClientRect();
+    const list = card.querySelector('ul')!.getBoundingClientRect();
+    const intersects = (a: DOMRect, b: DOMRect) =>
+      a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    const circles = [...card.querySelectorAll('.service-art span')].map((circle) => {
+      const rect = circle.getBoundingClientRect();
+      return {
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2,
+        width: rect.width,
+        inCard: rect.left >= cardRect.left && rect.right <= cardRect.right && rect.top >= cardRect.top && rect.bottom <= cardRect.bottom,
+        copy: intersects(rect, copy),
+        list: intersects(rect, list),
+      };
+    });
+    return circles;
+  });
+
+  const [blue, red, yellow, lightBlue] = layout;
+  expect(Math.abs(lightBlue.x - yellow.x)).toBeLessThan(16);
+  expect(Math.abs(blue.x - red.x)).toBeLessThan(16);
+  expect(blue.x - lightBlue.x).toBeGreaterThan(70);
+  expect(yellow.y - lightBlue.y).toBeGreaterThan(45);
+  expect(red.y - blue.y).toBeGreaterThan(35);
+
+  for (const circle of layout) {
+    expect(circle.inCard).toBe(true);
+    expect(circle.copy).toBe(false);
+    expect(circle.list).toBe(false);
+  }
+});
+
+test('la roseta social aparece con un fade estable desde baja opacidad', async ({ page }) => {
+  await page.setViewportSize({ width: 1080, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  const circles = social.locator('.service-art span');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+  await expect(circles.first()).toHaveCSS('animation-name', /motion-social-fade-in/);
+
+  const sampleFrame = async (progress: number) => circles.evaluateAll((elements, fraction) =>
+    elements.map((circle) => {
+      const animation = circle.getAnimations().find(
+        (candidate) => candidate instanceof CSSAnimation && candidate.animationName === 'motion-social-fade-in',
+      );
+      if (!animation) throw new Error('No se encontró el fade social');
+      const timing = animation.effect?.getComputedTiming();
+      if (typeof timing?.duration !== 'number') throw new Error('Duración de animación inválida');
+      animation.pause();
+      animation.currentTime = (timing.delay ?? 0) + timing.duration * fraction;
+      return Number.parseFloat(getComputedStyle(circle).opacity);
+    }), progress);
+
+  const start = await sampleFrame(0);
+  const middle = await sampleFrame(0.5);
+  const end = await sampleFrame(1);
+  start.forEach((opacity, index) => {
+    expect(opacity).toBeLessThan(0.15);
+    expect(middle[index]).toBeGreaterThan(opacity);
+    expect(middle[index]).toBeLessThan(1);
+    expect(end[index]).toBe(1);
+  });
+});
+
+test('la roseta social permanece quieta al pasar el puntero', async ({ page }) => {
+  await page.setViewportSize({ width: 1080, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  const circles = social.locator('.service-art span');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+  await page.waitForTimeout(1350);
+
+  const resting = await circles.evaluateAll((elements) => elements.map((circle) => {
+    const rect = circle.getBoundingClientRect();
+    return { x: rect.x, y: rect.y };
+  }));
+
+  await social.hover({ position: { x: 20, y: 20 } });
+  const hoverNames = await circles.evaluateAll((elements) => elements.map((circle) => getComputedStyle(circle).animationName));
+  expect(hoverNames.every((name) => name.includes('motion-social-fade-in'))).toBe(true);
+  expect(hoverNames.every((name) => name.includes('motion-social-circle-spin-in'))).toBe(true);
+  expect(hoverNames.every((name) => !name.includes('hover'))).toBe(true);
+  await page.waitForTimeout(500);
+
+  const hovered = await circles.evaluateAll((elements) => elements.map((circle) => {
+    const rect = circle.getBoundingClientRect();
+    return { x: rect.x, y: rect.y };
+  }));
+  hovered.forEach((circle, index) => {
+    expect(Math.abs(circle.x - resting[index].x)).toBeLessThan(0.5);
+    expect(Math.abs(circle.y - resting[index].y)).toBeLessThan(0.5);
+  });
+});
+
+test('cada círculo social recorre su propio giro sin formar un bloque rígido', async ({ page }) => {
+  await page.setViewportSize({ width: 1080, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const social = page.locator('.service-social');
+  const circles = social.locator('.service-art span');
+  await social.scrollIntoViewIfNeeded();
+  await expect(social).toHaveClass(/is-in-view/);
+
+  const contract = await social.evaluate((card) => {
+    const art = card.querySelector('.service-art')!;
+    const circles = [...art.querySelectorAll('span')];
+    return {
+      wrapperTransform: getComputedStyle(art).transform,
+      wrapperAnimations: art.getAnimations().length,
+      circles: circles.map((circle) => {
+        const styles = getComputedStyle(circle);
+        const spin = circle.getAnimations().find(
+          (candidate) => candidate instanceof CSSAnimation
+            && candidate.animationName === 'motion-social-circle-spin-in',
+        );
+        const timing = spin?.effect?.getTiming();
+        return {
+          names: styles.animationName,
+          duration: timing?.duration,
+          delay: timing?.delay,
+          origin: styles.transformOrigin,
+        };
+      }),
+    };
+  });
+  expect(contract.wrapperTransform).toBe('none');
+  expect(contract.wrapperAnimations).toBe(0);
+  expect(contract.circles.every(({ names }) => names.includes('motion-social-circle-spin-in'))).toBe(true);
+  expect(new Set(contract.circles.map(({ duration }) => duration)).size).toBe(4);
+  expect(new Set(contract.circles.map(({ delay }) => delay)).size).toBeGreaterThan(2);
+
+  const sample = async (progress: number) => circles.evaluateAll((elements, fraction) =>
+    elements.map((circle) => {
+      const animation = circle.getAnimations().find(
+        (candidate) => candidate instanceof CSSAnimation
+          && candidate.animationName === 'motion-social-circle-spin-in',
+      );
+      if (!animation) throw new Error('No se encontró el giro individual social');
+      const timing = animation.effect?.getComputedTiming();
+      if (typeof timing?.duration !== 'number') throw new Error('Duración de animación inválida');
+      animation.pause();
+      animation.currentTime = (timing.delay ?? 0) + timing.duration * fraction;
+      const rect = circle.getBoundingClientRect();
+      return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+    }), progress);
+
+  const start = await sample(0);
+  const end = await sample(1);
+  const centroid = (points: Array<{ x: number; y: number }>) => ({
+    x: points.reduce((sum, point) => sum + point.x, 0) / points.length,
+    y: points.reduce((sum, point) => sum + point.y, 0) / points.length,
+  });
+  const distance = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+    Math.hypot(a.x - b.x, a.y - b.y);
+  const startCenter = centroid(start);
+  const endCenter = centroid(end);
+
+  expect(distance(startCenter, endCenter)).toBeGreaterThan(8);
+  const travel = start.map((point, index) => distance(point, end[index]));
+  travel.forEach((amount) => {
+    expect(amount).toBeGreaterThan(10);
+    expect(amount).toBeLessThan(24);
+  });
+
+  const pairDistances = (points: Array<{ x: number; y: number }>) => points.flatMap((point, index) =>
+    points.slice(index + 1).map((other) => distance(point, other)));
+  const startPairs = pairDistances(start);
+  const endPairs = pairDistances(end);
+  const shapeChanges = startPairs.map((amount, index) => Math.abs(amount - endPairs[index]));
+  expect(Math.max(...shapeChanges)).toBeGreaterThan(8);
+  expect(shapeChanges.filter((amount) => amount > 4).length).toBeGreaterThanOrEqual(3);
+
+  const verticalDirections = start.map((point, index) => Math.sign(point.y - end[index].y));
+  expect(verticalDirections).toContain(-1);
+  expect(verticalDirections).toContain(1);
+});
+
+test('el fade social permanece fuera del texto y la lista durante toda la entrada', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
@@ -508,18 +826,15 @@ test('el circuito social permanece fuera del texto y la lista durante toda la ó
   await social.scrollIntoViewIfNeeded();
   await expect(social).toHaveClass(/is-in-view/);
 
-  const sampleCircuit = async (progress: number) => {
-    await social.locator('.service-art span').evaluateAll((circles, fraction) => {
+  const sampleFade = async (time: number) => {
+    await social.locator('.service-art span').evaluateAll((circles, currentTime) => {
       circles.forEach((circle) => {
         circle.getAnimations().forEach((animation) => {
-          const timing = animation.effect?.getComputedTiming();
-          const duration = timing?.duration;
-          if (typeof duration !== 'number') return;
           animation.pause();
-          animation.currentTime = (timing?.delay ?? 0) + duration * fraction;
+          animation.currentTime = currentTime;
         });
       });
-    }, progress);
+    }, time);
 
     return social.evaluate((card) => {
       const copy = card.querySelector(':scope > p')!.getBoundingClientRect();
@@ -533,23 +848,8 @@ test('el circuito social permanece fuera del texto y la lista durante toda la ó
     });
   };
 
-  for (const progress of [0.25, 0.5, 0.75]) {
-    expect(await sampleCircuit(progress)).toEqual([
-      { copy: false, list: false },
-      { copy: false, list: false },
-      { copy: false, list: false },
-      { copy: false, list: false },
-    ]);
-  }
-
-  await page.mouse.move(0, 0);
-  await page.waitForTimeout(20);
-  const box = await social.boundingBox();
-  expect(box).not.toBeNull();
-  await page.mouse.move(box!.x + 20, box!.y + 20);
-  await expect(social.locator('.service-art span').first()).toHaveCSS('animation-name', /motion-social-circuit-hover/);
-  for (const progress of [0.25, 0.5, 0.75]) {
-    expect(await sampleCircuit(progress)).toEqual([
+  for (const time of [0, 250, 500, 750, 1000, 1300]) {
+    expect(await sampleFade(time)).toEqual([
       { copy: false, list: false },
       { copy: false, list: false },
       { copy: false, list: false },
@@ -558,7 +858,56 @@ test('el circuito social permanece fuera del texto y la lista durante toda la ó
   }
 });
 
-test('el circuito social conserva su zona de lectura en tablet', async ({ page }) => {
+test('la roseta social protege el título y los bordes en todo el rango de dos columnas', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+
+  for (const width of [1201, 1280, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+
+    const social = page.locator('.service-social');
+    const circles = social.locator('.service-art span');
+    await social.scrollIntoViewIfNeeded();
+    await expect(social).toHaveClass(/is-in-view/);
+
+    for (const time of [0, 250, 500, 750, 1000, 1300]) {
+      const geometry = await circles.evaluateAll((elements, currentTime) => {
+        elements.forEach((circle) => {
+          const spin = circle.getAnimations().find(
+            (candidate) => candidate instanceof CSSAnimation
+              && candidate.animationName === 'motion-social-circle-spin-in',
+          );
+          if (!spin) throw new Error('No se encontró el giro social');
+          spin.pause();
+          spin.currentTime = currentTime;
+        });
+
+        const card = elements[0].closest('.service-card')!;
+        const cardRect = card.getBoundingClientRect();
+        const titleRange = document.createRange();
+        titleRange.selectNodeContents(card.querySelector('h3')!);
+        const titleRect = titleRange.getBoundingClientRect();
+        const circleRects = elements.map((circle) => circle.getBoundingClientRect());
+        const verticallyOverlaps = (rect: DOMRect) =>
+          Math.min(rect.bottom, titleRect.bottom) > Math.max(rect.top, titleRect.top);
+
+        return {
+          titleGap: Math.min(
+            ...circleRects.filter(verticallyOverlaps).map((rect) => rect.left - titleRect.right),
+          ),
+          inCard: circleRects.every((rect) =>
+            rect.left >= cardRect.left && rect.right <= cardRect.right
+            && rect.top >= cardRect.top && rect.bottom <= cardRect.bottom),
+        };
+      }, time);
+
+      expect(geometry.titleGap, `${width}px @ ${time}ms`).toBeGreaterThanOrEqual(8);
+      expect(geometry.inCard, `${width}px @ ${time}ms`).toBe(true);
+    }
+  }
+});
+
+test('la roseta social conserva su zona de lectura en tablet', async ({ page }) => {
   await page.setViewportSize({ width: 900, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');

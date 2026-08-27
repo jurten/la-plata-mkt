@@ -119,7 +119,7 @@ contactForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   contactForm
-    .querySelectorAll('input[name="company"], input[name="contactName"], input[name="email"], textarea[name="issue"]')
+    .querySelectorAll('input[name="company"], input[name="contactName"], input[name="email"], input[name="phone"], textarea[name="issue"]')
     .forEach((field) => {
       const normalizedValue = field.value.trim();
       field.setCustomValidity('');
@@ -128,6 +128,12 @@ contactForm?.addEventListener('submit', async (event) => {
         field.setCustomValidity(`Ingresá al menos ${field.minLength} caracteres sin contar espacios al principio o al final.`);
       } else if (field.maxLength >= 0 && normalizedValue.length > field.maxLength) {
         field.setCustomValidity(`Usá como máximo ${field.maxLength} caracteres.`);
+      } else if (field.name === 'phone' && normalizedValue !== '') {
+        const digitCount = normalizedValue.replace(/\D/g, '').length;
+        const hasValidPhoneSyntax = /^\+?[\d\s().-]+$/.test(normalizedValue);
+        if (!hasValidPhoneSyntax || digitCount < 7 || digitCount > 15) {
+          field.setCustomValidity('Ingresá un celular válido con código de área (7 a 15 dígitos).');
+        }
       }
 
       field.value = normalizedValue;
@@ -147,6 +153,7 @@ contactForm?.addEventListener('submit', async (event) => {
     company: formData.get('company'),
     contactName: formData.get('contactName'),
     email: formData.get('email'),
+    phone: formData.get('phone') ?? '',
     issue: formData.get('issue'),
     privacyAccepted: formData.get('privacyAccepted') === 'true',
     website: formData.get('website') ?? '',

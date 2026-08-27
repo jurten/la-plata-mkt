@@ -52,6 +52,7 @@ export function createResendDelivery({
         `Empresa: ${payload.company}`,
         `Contacto: ${payload.contactName}`,
         `Email: ${payload.email}`,
+        `Celular: ${payload.phone || 'No informado'}`,
         '',
         'Problema o necesidad:',
         payload.issue,
