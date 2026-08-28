@@ -2,6 +2,13 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "la-plata-mkt",
   "keep_vars": true,
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "laplatamarketing.com",
+      "custom_domain": true
+    }
+  ],
   "compatibility_date": "2026-08-27",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {

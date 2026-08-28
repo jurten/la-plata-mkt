@@ -153,7 +153,7 @@ Para el primer alta manual, publicar primero el Worker en modo demo, cargar los 
 3. En Squarespace Domains → dominio → DNS → Domain Nameservers, elegir nameservers personalizados y cargar exactamente los dos de Cloudflare. Squarespace desactiva su DNSSEC al usar nameservers personalizados.
 4. Esperar a que Cloudflare marque la zona como activa y confirmar que el correo sigue resolviendo antes de eliminar cualquier registro.
 5. Cuando estén confirmados el dominio y la variante canónica, declararla en `wrangler.jsonc` dentro de `routes` con `custom_domain: true` y definir `workers_dev: false`. Wrangler debe ser la fuente de verdad; no dejar la ruta configurada únicamente en el dashboard.
-6. Crear el hostname alternativo (`www` o apex) como DNS proxied y una Redirect Rule permanente hacia la variante canónica; no servir ambas como copias independientes.
+6. Crear `www` como registro `A` proxied hacia la dirección reservada `192.0.2.0` y una Redirect Rule permanente hacia `https://laplatamarketing.com`, conservando ruta y consulta. No servir ambos hostnames como copias independientes.
 7. Configurar Turnstile y el dominio verificado de Resend para los hostnames finales.
 
 Al cambiar nameservers, los registros del panel DNS de Squarespace dejan de aplicarse. No borrar ni reemplazar MX/SPF/DKIM durante la migración. Squarespace sigue siendo el registrador; no se transfiere el dominio.

@@ -30,6 +30,10 @@ describe('Cloudflare Workers deployment contract', () => {
 
     expect(wrangler.name).toBe('la-plata-mkt');
     expect(wrangler.keep_vars).toBe(true);
+    expect(wrangler.workers_dev).toBe(false);
+    expect(wrangler.routes).toEqual([
+      { pattern: 'laplatamarketing.com', custom_domain: true },
+    ]);
     expect(wrangler.compatibility_date).toBe('2026-08-27');
     expect(wrangler.compatibility_flags).toContain('nodejs_compat');
     expect(wrangler.observability).toEqual({ enabled: true });
