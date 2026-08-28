@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "la-plata-marketing",
+  "name": "la-plata-mkt",
   "keep_vars": true,
   "compatibility_date": "2026-08-27",
   "compatibility_flags": ["nodejs_compat"],

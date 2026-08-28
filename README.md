@@ -11,7 +11,7 @@ La dirección visual toma de [Catálogo | ID Visual de Evento](https://www.behan
 - Sin credenciales, el formulario funciona en **modo demo** y declara de forma explícita que no envió el email.
 - Con las cuatro variables requeridas, el formulario usa Turnstile y envía una notificación más una respuesta automática mediante Resend.
 - Los casos se publican anonimizados por defecto. Los nombres y la narrativa suministrados se muestran únicamente con `PUBLIC_CASE_STUDIES_APPROVED=true`; no se incluyen métricas inventadas.
-- El aviso de privacidad está marcado como borrador y necesita revisión legal antes del lanzamiento público.
+- Aviso de privacidad: responsable, proveedores y criterio de conservación completados.
 
 ## Stack
 
@@ -122,7 +122,7 @@ npx wrangler deploy --dry-run
 
 ### Variables de Cloudflare
 
-En **Workers & Pages → la-plata-marketing → Settings → Variables and Secrets**:
+En **Workers & Pages → la-plata-mkt → Settings → Variables and Secrets**:
 
 - Variables: `PUBLIC_SITE_URL`, `PUBLIC_TURNSTILE_SITE_KEY`, `CONTACT_FROM`, `CONTACT_TO`.
 - Secretos cifrados: `RESEND_API_KEY`, `TURNSTILE_SECRET`.
@@ -167,7 +167,6 @@ Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida 
 - Confirmar dominio final, definir `PUBLIC_SITE_URL` y configurar DNS, SPF, DKIM y DMARC.
 - Obtener autorización para publicar los nombres y la narrativa, y recién entonces definir `PUBLIC_CASE_STUDIES_APPROVED=true`.
 - Incorporar resultados cuantitativos únicamente si existen y fueron aprobados.
-- Revisar jurídicamente `/privacidad` y completar datos legales del responsable.
 - Confirmar enlaces sociales, si deben mostrarse.
 - Elegir analítica; no se instaló tracking sin una decisión explícita.
 

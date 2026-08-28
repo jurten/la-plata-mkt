@@ -28,7 +28,7 @@ describe('Cloudflare Workers deployment contract', () => {
   it('delega el entrypoint y los assets al adaptador Cloudflare actual', () => {
     const wrangler = JSON.parse(text('wrangler.jsonc'));
 
-    expect(wrangler.name).toBe('la-plata-marketing');
+    expect(wrangler.name).toBe('la-plata-mkt');
     expect(wrangler.keep_vars).toBe(true);
     expect(wrangler.compatibility_date).toBe('2026-08-27');
     expect(wrangler.compatibility_flags).toContain('nodejs_compat');
@@ -41,6 +41,22 @@ describe('Cloudflare Workers deployment contract', () => {
     expect(text('src/pages/index.astro')).toContain('export const prerender = true;');
     expect(text('src/pages/privacidad.astro')).toContain('export const prerender = true;');
     expect(text('src/pages/api/contact.ts')).not.toContain('export const prerender = true;');
+  });
+
+  it('publica el aviso de privacidad final sin marcadores de borrador', () => {
+    const privacy = text('src/pages/privacidad.astro');
+    const readme = text('README.md');
+
+    expect(privacy).toContain('Justina Rosa Guiñazú');
+    expect(privacy).toContain('Cloudflare, Turnstile, Resend y Google Workspace');
+    expect(privacy).toContain('eliminamos o anonimizamos');
+    expect(privacy).not.toContain('Borrador pendiente');
+    expect(privacy).not.toContain('deben incorporarse a este aviso');
+    expect(privacy).not.toContain('debe aprobarse antes de producción');
+    expect(readme).toContain(
+      'Aviso de privacidad: responsable, proveedores y criterio de conservación completados.',
+    );
+    expect(readme).not.toMatch(/marcado como borrador|completar los datos legales de la persona responsable/);
   });
 
   it('excluye secretos locales y protege los assets estáticos', () => {
