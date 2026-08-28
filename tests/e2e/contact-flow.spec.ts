@@ -18,7 +18,14 @@ test('una consulta válida se procesa sin abandonar la página y declara el modo
     .getByLabel('¿Qué problema querés resolver?')
     .fill('Necesitamos ordenar las consultas que llegan desde la web y mejorar su seguimiento.');
   await page.getByRole('checkbox').check();
+  const contactResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith('/api/contact') && response.request().method() === 'POST',
+    { timeout: 15_000 },
+  );
   await page.getByRole('button', { name: 'Enviar consulta' }).click();
+  const response = await contactResponse;
+  expect(response.status()).toBe(200);
 
   await expect(page).toHaveURL(/#contacto$/);
   await expect(page.getByRole('status')).toContainText(

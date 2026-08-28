@@ -1,7 +1,10 @@
 import type { APIRoute } from 'astro';
+import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 
-const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const publicSite = parsePublicSiteUrl(
+  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
+);
 
 export const GET: APIRoute = () => {
   const lines = ['User-agent: *', 'Allow: /'];

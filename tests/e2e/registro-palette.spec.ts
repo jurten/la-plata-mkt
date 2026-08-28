@@ -7,7 +7,7 @@ test('Registro activo es fija y las antiguas URLs de paleta son inertes', async 
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#1D62A8');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
-  await expect(page.locator('.footer-links a[href^="/privacidad"]')).toHaveAttribute('href', '/privacidad');
+  await expect(page.locator('.footer-links a[href^="/privacidad"]')).toHaveAttribute('href', '/privacidad/');
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--primary').trim())).toBe(
     '#1d62a8',
   );

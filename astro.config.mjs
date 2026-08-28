@@ -1,5 +1,5 @@
+import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
 
 const publicSite = process.env.PUBLIC_SITE_URL ? new URL(process.env.PUBLIC_SITE_URL) : undefined;
 const allowedDomains = publicSite
@@ -12,8 +12,11 @@ const allowedDomains = publicSite
   : [];
 
 export default defineConfig({
+  site: publicSite?.origin,
   output: 'server',
-  adapter: node({ mode: 'standalone' }),
+  adapter: cloudflare({ imageService: 'compile' }),
+  session: false,
+  devToolbar: { enabled: false },
   server: { host: '127.0.0.1' },
   security: { allowedDomains },
 });

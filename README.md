@@ -15,7 +15,7 @@ La dirección visual toma de [Catálogo | ID Visual de Evento](https://www.behan
 
 ## Stack
 
-- Astro con salida de servidor Node
+- Astro sobre Cloudflare Workers; `/` y `/privacidad` se prerenderizan como assets estáticos
 - TypeScript y Zod
 - CSS original, sin framework de componentes
 - Fontsource para tipografías locales
@@ -55,7 +55,7 @@ No hay selector público, modo de comparación ni estado de paleta persistente.
 ```bash
 npm run test          # unitarias e integración
 npm run test:e2e      # recorridos reales en Chromium + axe
-npm run build         # astro check + build standalone
+npm run build         # astro check + build para Cloudflare Workers
 npm run verify        # las tres puertas anteriores, en serie
 ```
 
@@ -63,7 +63,7 @@ Para auditar el build real:
 
 ```bash
 npm run build
-HOST=127.0.0.1 PORT=4322 npm run start
+npm run start -- --host 127.0.0.1 --port 4322
 npm run visual:audit
 ```
 
@@ -92,7 +92,7 @@ Condiciones:
 5. `CONTACT_TO` es el destino interno; si no se define, el código usa `laplatamarketing@gmail.com`.
 6. Si falta cualquiera de los cuatro valores de correo requeridos, el endpoint permanece en modo demo y no simula un envío real.
 
-> **Importante:** esta configuración usa `import.meta.env`, por lo que las variables deben estar disponibles **antes de ejecutar `npm run build`**. Cambiar credenciales requiere volver a construir y reiniciar el servidor; agregarlas únicamente al comando `npm start` no modifica un build existente.
+> **Importante:** `PUBLIC_SITE_URL`, `PUBLIC_CASE_STUDIES_APPROVED` y `PUBLIC_TURNSTILE_SITE_KEY` deben estar disponibles **durante el build**, porque `/` y `/privacidad` se prerenderizan. `PUBLIC_SITE_URL` y `PUBLIC_TURNSTILE_SITE_KEY` también se definen como variables del Worker. `RESEND_API_KEY` y `TURNSTILE_SECRET` son secretos de runtime: no deben estar en el build, Git ni `wrangler.jsonc`.
 
 Flujo live:
 
@@ -105,22 +105,62 @@ Flujo live:
 7. Si la confirmación falla después de que la notificación interna fue aceptada, la consulta se conserva como recibida y se registra una advertencia sin exponer datos en el navegador.
 8. El widget Turnstile se reinicia después de cada intento porque sus tokens son de un solo uso.
 
-## Producción
+## Producción en Cloudflare Workers
 
-El proyecto genera un servidor standalone:
+Squarespace conserva la **registración y renovación** del dominio. Cloudflare administra los DNS autoritativos, HTTPS, assets estáticos, el Worker y Turnstile. Resend conserva el correo transaccional.
+
+### Build y prueba local del runtime real
 
 ```bash
-npm run build
-HOST=0.0.0.0 PORT=4321 npm run start
+cp .dev.vars.example .dev.vars
+PUBLIC_SITE_URL=http://127.0.0.1:4322 npm run build
+npm run start -- --host 127.0.0.1 --port 4322
+npx wrangler deploy --dry-run
 ```
 
-Puede desplegarse en cualquier plataforma que ejecute Node y permita variables de entorno. Debe publicarse detrás de HTTPS. Las cabeceras CSP, anti-framing, referrer policy, permissions policy y MIME protection se agregan desde `src/middleware.ts`.
+`astro preview` usa `workerd`; no simula un servidor Node. `wrangler deploy --dry-run` debe mostrar la configuración redirigida generada en `dist/server/wrangler.json`, el binding `ASSETS` y terminar sin publicar.
 
-`PUBLIC_SITE_URL` fija el origen usado por canonical, Open Graph, `robots.txt` y `sitemap.xml`. El middleware responde 421 a Host no permitidos en páginas y API; los recursos estáticos pueden servirse antes del middleware, por lo que el proxy/CDN también debe rechazar Hosts ajenos.
+### Variables de Cloudflare
 
-El proxy debe preservar o sobrescribir `Host` con el dominio público, sobrescribir `X-Forwarded-For` (sin aceptar una cadena enviada por el cliente) y mantener el servidor Node inaccesible directamente desde Internet. `security.allowedDomains` permite a Astro usar ese IP reenviado solo para el dominio configurado. Configurar HSTS en el borde HTTPS cuando dominio y subdominios funcionen exclusivamente con TLS.
+En **Workers & Pages → la-plata-marketing → Settings → Variables and Secrets**:
 
-El rate limit incluido vive en cada proceso Node. En varias réplicas, o cuando no pueda garantizarse el manejo confiable del IP en el proxy, aplicar además un límite distribuido en el proxy/CDN.
+- Variables: `PUBLIC_SITE_URL`, `PUBLIC_TURNSTILE_SITE_KEY`, `CONTACT_FROM`, `CONTACT_TO`.
+- Secretos cifrados: `RESEND_API_KEY`, `TURNSTILE_SECRET`.
+- Mantener `PUBLIC_CASE_STUDIES_APPROVED=false` salvo autorización editorial expresa.
+
+En **Builds → Settings → Variables and secrets**, repetir como variables de build `PUBLIC_SITE_URL`, `PUBLIC_TURNSTILE_SITE_KEY` y `PUBLIC_CASE_STUDIES_APPROVED`. No agregar las claves secretas al build.
+
+`wrangler.jsonc` mantiene `keep_vars: true`: los despliegues preservan las variables de runtime cargadas en el dashboard. Wrangler también conserva los secretos cifrados salvo que se eliminen explícitamente.
+
+Para una publicación manual:
+
+```bash
+npx wrangler login
+PUBLIC_SITE_URL=https://tu-dominio.example \
+PUBLIC_TURNSTILE_SITE_KEY=tu-clave-publica \
+PUBLIC_CASE_STUDIES_APPROVED=false \
+npm run deploy
+```
+
+Para el primer alta manual, publicar primero el Worker en modo demo, cargar los secretos desde el dashboard o con `npx wrangler secret put NOMBRE`, y volver a desplegar. En un Worker ya creado, cargar los secretos antes del siguiente despliegue. Nunca se pasan en la línea de comandos ni se guardan en `.dev.vars.example`.
+
+### Dominio de Squarespace y DNS de Cloudflare
+
+1. Agregar el dominio al plan Free de Cloudflare y anotar los dos nameservers asignados.
+2. Copiar y comparar **todos** los registros vigentes antes de cambiar nameservers: MX, SPF, DKIM, DMARC, Google Workspace, verificaciones y cualquier subdominio. El escaneo automático no reemplaza esta comparación.
+3. En Squarespace Domains → dominio → DNS → Domain Nameservers, elegir nameservers personalizados y cargar exactamente los dos de Cloudflare. Squarespace desactiva su DNSSEC al usar nameservers personalizados.
+4. Esperar a que Cloudflare marque la zona como activa y confirmar que el correo sigue resolviendo antes de eliminar cualquier registro.
+5. Cuando estén confirmados el dominio y la variante canónica, declararla en `wrangler.jsonc` dentro de `routes` con `custom_domain: true` y definir `workers_dev: false`. Wrangler debe ser la fuente de verdad; no dejar la ruta configurada únicamente en el dashboard.
+6. Crear el hostname alternativo (`www` o apex) como DNS proxied y una Redirect Rule permanente hacia la variante canónica; no servir ambas como copias independientes.
+7. Configurar Turnstile y el dominio verificado de Resend para los hostnames finales.
+
+Al cambiar nameservers, los registros del panel DNS de Squarespace dejan de aplicarse. No borrar ni reemplazar MX/SPF/DKIM durante la migración. Squarespace sigue siendo el registrador; no se transfiere el dominio.
+
+### Seguridad del borde
+
+`PUBLIC_SITE_URL` fija el origen usado por canonical, Open Graph, `robots.txt` y `sitemap.xml`. El middleware responde 421 a Hosts no permitidos en rutas dinámicas; Cloudflare bloquea Hosts que no pertenecen a la zona antes del Worker. Las rutas dinámicas reciben CSP, anti-framing, referrer policy, permissions policy y MIME protection desde `src/middleware.ts`; los assets prerenderizados reciben la política equivalente desde `public/_headers`.
+
+Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida esa cabecera y usa un único bucket `unknown` cuando el runtime local no ofrece una dirección. El rate limit actual vive por isolate y es una defensa complementaria a Turnstile. Si el tráfico exige garantía global, agregar un límite distribuido de Cloudflare o un Durable Object.
 
 ## Contenido pendiente antes del lanzamiento
 

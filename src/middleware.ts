@@ -1,7 +1,10 @@
 import { defineMiddleware } from 'astro:middleware';
+import { readRuntimeEnv } from './lib/runtime-env';
 import { isTrustedHostHeader, parsePublicSiteUrl } from './lib/site-origin';
 
-const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const publicSite = parsePublicSiteUrl(
+  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
+);
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -28,7 +31,10 @@ function secure(response: Response): Response {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (!isTrustedHostHeader(context.request.headers.get('host'), publicSite)) {
+  if (
+    !context.isPrerendered &&
+    !isTrustedHostHeader(context.request.headers.get('host'), publicSite)
+  ) {
     return secure(
       new Response('Misdirected Request\n', {
         status: 421,

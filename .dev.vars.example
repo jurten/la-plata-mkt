@@ -1,0 +1,8 @@
+# Local Cloudflare Worker variables. Copy to .dev.vars and keep real values uncommitted.
+PUBLIC_SITE_URL=http://127.0.0.1:4322
+PUBLIC_CASE_STUDIES_APPROVED=false
+PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET=
+RESEND_API_KEY=
+CONTACT_FROM="La Plata Marketing <contacto@send.your-domain.example>"
+CONTACT_TO=laplatamarketing@gmail.com

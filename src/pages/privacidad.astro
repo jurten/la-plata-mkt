@@ -2,11 +2,16 @@
 import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
+import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import '../styles/global.css';
 
-const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
-const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
+export const prerender = true;
+
+const publicSite = parsePublicSiteUrl(
+  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
+);
+const canonicalUrl = publicSite ? new URL('/privacidad/', publicSite) : undefined;
 const allowIndexing = Boolean(publicSite);
 const homeHref = '/';
 const contactHref = '/#contacto';
