@@ -56,7 +56,19 @@ describe('Cloudflare Workers deployment contract', () => {
     expect(readme).toContain(
       'Aviso de privacidad: responsable, proveedores y criterio de conservación completados.',
     );
-    expect(readme).not.toMatch(/marcado como borrador|completar los datos legales de la persona responsable/);
+    expect(readme).not.toMatch(
+      /marcado como borrador|completar(?: los)? datos legales (?:de la persona responsable|del responsable)/,
+    );
+  });
+
+  it('aplica únicamente valores públicos predeterminados dentro de Workers Builds', () => {
+    const astroConfig = text('astro.config.mjs');
+
+    expect(astroConfig).toContain("process.env.WORKERS_CI === '1'");
+    expect(astroConfig).toContain("PUBLIC_SITE_URL: 'https://laplatamarketing.com'");
+    expect(astroConfig).toContain("PUBLIC_TURNSTILE_SITE_KEY: '0x4AAAAAAEfYYiehIWCSolqV'");
+    expect(astroConfig).toContain("PUBLIC_CASE_STUDIES_APPROVED: 'false'");
+    expect(astroConfig).not.toMatch(/RESEND_API_KEY|TURNSTILE_SECRET|CONTACT_FROM|CONTACT_TO/);
   });
 
   it('excluye secretos locales y protege los assets estáticos', () => {

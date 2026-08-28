@@ -130,6 +130,8 @@ En **Workers & Pages → la-plata-mkt → Settings → Variables and Secrets**:
 
 En **Builds → Settings → Variables and secrets**, repetir como variables de build `PUBLIC_SITE_URL`, `PUBLIC_TURNSTILE_SITE_KEY` y `PUBLIC_CASE_STUDIES_APPROVED`. No agregar las claves secretas al build.
 
+Como resguardo exclusivo de Workers Builds, `astro.config.mjs` aplica esos mismos tres valores públicos cuando `WORKERS_CI=1` y Cloudflare no los inyecta. Una variable de build explícita siempre prevalece sobre el valor predeterminado. Este resguardo no contiene ni aplica credenciales, secretos o destinos de correo.
+
 `wrangler.jsonc` mantiene `keep_vars: true`: los despliegues preservan las variables de runtime cargadas en el dashboard. Wrangler también conserva los secretos cifrados salvo que se eliminen explícitamente.
 
 Para una publicación manual:

@@ -1,6 +1,19 @@
 import cloudflare from '@astrojs/cloudflare';
 import { defineConfig } from 'astro/config';
 
+const workersCiPublicDefaults =
+  process.env.WORKERS_CI === '1'
+    ? {
+        PUBLIC_SITE_URL: 'https://laplatamarketing.com',
+        PUBLIC_TURNSTILE_SITE_KEY: '0x4AAAAAAEfYYiehIWCSolqV',
+        PUBLIC_CASE_STUDIES_APPROVED: 'false',
+      }
+    : {};
+
+for (const [name, value] of Object.entries(workersCiPublicDefaults)) {
+  if (!process.env[name]) process.env[name] = value;
+}
+
 const publicSite = process.env.PUBLIC_SITE_URL ? new URL(process.env.PUBLIC_SITE_URL) : undefined;
 const allowedDomains = publicSite
   ? [
