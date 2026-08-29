@@ -13,6 +13,10 @@ test('el aviso de privacidad explica el tratamiento y permite volver al formular
   await expect(page.getByText('ceo@laplatamarketing.com', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Justina Rosa Guiñazú', { exact: false }).first()).toBeVisible();
   await expect(page.getByText('Cloudflare, Turnstile, Resend y Google Workspace', { exact: false })).toBeVisible();
+  await expect(
+    page.getByText('Si elegís WhatsApp, Meta y WhatsApp procesan', { exact: false }),
+  ).toBeVisible();
+  await expect(page.getByText('por email o WhatsApp', { exact: false })).toBeVisible();
   await expect(page.getByText('los eliminamos o anonimizamos', { exact: false })).toBeVisible();
   await expect(page.getByText('Borrador pendiente', { exact: false })).toHaveCount(0);
 

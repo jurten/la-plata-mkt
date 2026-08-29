@@ -5,7 +5,10 @@ test('la home publica metadata social, canonical y datos estructurados verificab
   await page.goto('/');
 
   await expect(page).toHaveTitle('Marketing, sitios web, CRM y automatizaciones | La Plata Marketing');
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /inmobiliarias y estudios jurídicos/);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    'content',
+    'Social media, sitios web, CRM y automatizaciones para hacer crecer tu negocio, ordenar consultas y mejorar el seguimiento.',
+  );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^http:\/\/127\.0\.0\.1:4321\/$/);
   await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'es_AR');
   const ogImage = page.locator('meta[property="og:image"]');
