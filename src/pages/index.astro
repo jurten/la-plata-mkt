@@ -65,7 +65,7 @@ const steps = [
 
 const pageTitle = 'Marketing, sitios web, CRM y automatizaciones | La Plata Marketing';
 const pageDescription =
-  'Social media, sitios web, CRM y automatizaciones para inmobiliarias y estudios jurídicos. La Plata Marketing conecta cada consulta con un mejor seguimiento.';
+  'Social media, sitios web, CRM y automatizaciones para hacer crecer tu negocio, ordenar consultas y mejorar el seguimiento.';
 const publicSite = parsePublicSiteUrl(
   readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
 );
@@ -73,6 +73,7 @@ const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : unde
 const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
 const allowIndexing = Boolean(publicSite);
 const privacyHref = '/privacidad/';
+const whatsappHref = 'https://wa.me/5491164265551';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -150,7 +151,7 @@ const structuredData = {
     <main id="contenido">
       <section id="inicio" class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Marketing + tecnología para inmobiliarias y estudios jurídicos</p>
+          <p class="eyebrow">Marketing + tecnología para tu negocio</p>
           <h1 id="hero-title">Más consultas.<br /><em>Menos tareas</em><br />manuales.</h1>
           <p class="hero-lede">
             Conectamos redes sociales, sitios web, CRM y automatizaciones para que cada oportunidad
@@ -367,7 +368,22 @@ const structuredData = {
           <div class="section-index">[ CONTACTO ]</div>
           <h2 id="contact-title">Contanos<br /><em>dónde se traba.</em></h2>
           <p>Explicanos qué querés mejorar y te respondemos para entender el contexto.</p>
-          <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com ↗</a>
+          <div class="contact-channels" role="group" aria-label="Canales de contacto directo">
+            <a class="contact-channel contact-channel-email" href="mailto:ceo@laplatamarketing.com">
+              <span>Email</span>
+              <strong>ceo@laplatamarketing.com</strong>
+              <b aria-hidden="true">↗</b>
+            </a>
+            <a
+              class="contact-channel contact-channel-whatsapp"
+              href={whatsappHref}
+              aria-label="Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551"
+            >
+              <span>WhatsApp</span>
+              <strong>+54 9 11 6426-5551</strong>
+              <b aria-hidden="true">↗</b>
+            </a>
+          </div>
         </div>
 
         <form class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
@@ -424,6 +440,10 @@ const structuredData = {
       </div>
       <div class="footer-meta">
         <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
+        <a
+          href={whatsappHref}
+          aria-label="Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551"
+        >WhatsApp</a>
         <span>© 2026 La Plata Marketing</span>
       </div>
       <div class="footer-line" aria-hidden="true">TODO CONECTADO → TODO CONECTADO → TODO CONECTADO</div>
