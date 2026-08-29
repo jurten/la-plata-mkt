@@ -50,6 +50,15 @@ describe('Cloudflare Workers deployment contract', () => {
   it('publica el aviso de privacidad final sin marcadores de borrador', () => {
     const privacy = text('src/pages/privacidad.astro');
     const readme = text('README.md');
+    const expectedContact = 'ceo@laplatamarketing.com';
+    const contactSurfaces = [
+      privacy,
+      readme,
+      text('src/pages/index.astro'),
+      text('src/pages/api/contact.ts'),
+      text('public/scripts/site.js'),
+      text('.dev.vars.example'),
+    ];
 
     expect(privacy).toContain('Justina Rosa Guiñazú');
     expect(privacy).toContain('Cloudflare, Turnstile, Resend y Google Workspace');
@@ -57,6 +66,10 @@ describe('Cloudflare Workers deployment contract', () => {
     expect(privacy).not.toContain('Borrador pendiente');
     expect(privacy).not.toContain('deben incorporarse a este aviso');
     expect(privacy).not.toContain('debe aprobarse antes de producción');
+    for (const surface of contactSurfaces) {
+      expect(surface).toContain(expectedContact);
+    }
+    expect(contactSurfaces.join('\n')).not.toContain('laplatamarketing@gmail.com');
     expect(readme).toContain(
       'Aviso de privacidad: responsable, proveedores y criterio de conservación completados.',
     );

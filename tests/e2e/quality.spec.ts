@@ -21,7 +21,7 @@ test('la home publica metadata social, canonical y datos estructurados verificab
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'La Plata Marketing',
-    email: 'laplatamarketing@gmail.com',
+    email: 'ceo@laplatamarketing.com',
   });
   expect(structuredData.hasOfferCatalog.itemListElement).toHaveLength(4);
 

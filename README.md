@@ -71,14 +71,14 @@ npm run visual:audit
 
 ## Formulario y correo real
 
-Configurar primero el origen público confiable. Para correo live, completar además los **cuatro valores requeridos**; `CONTACT_TO` es opcional porque ya tiene como destino predeterminado `laplatamarketing@gmail.com`:
+Configurar primero el origen público confiable. Para correo live, completar además los **cuatro valores requeridos**; `CONTACT_TO` es opcional porque ya tiene como destino predeterminado `ceo@laplatamarketing.com`:
 
 ```dotenv
 PUBLIC_SITE_URL=https://www.tu-dominio.com
 PUBLIC_CASE_STUDIES_APPROVED=false
 RESEND_API_KEY=
 CONTACT_FROM="La Plata Marketing <hola@tu-dominio.com>"
-CONTACT_TO=laplatamarketing@gmail.com # opcional
+CONTACT_TO=ceo@laplatamarketing.com # opcional
 TURNSTILE_SECRET=
 PUBLIC_TURNSTILE_SITE_KEY=
 ```
@@ -89,7 +89,7 @@ Condiciones:
 2. Mantener `PUBLIC_CASE_STUDIES_APPROVED=false` hasta contar con autorización de nombres y narrativa; cambiarlo a `true` exige reconstruir.
 3. `CONTACT_FROM` debe pertenecer a un dominio verificado en Resend.
 4. Las claves pública y secreta deben corresponder al mismo sitio de Turnstile.
-5. `CONTACT_TO` es el destino interno; si no se define, el código usa `laplatamarketing@gmail.com`.
+5. `CONTACT_TO` es el destino interno; si no se define, el código usa `ceo@laplatamarketing.com`.
 6. Si falta cualquiera de los cuatro valores de correo requeridos, el endpoint permanece en modo demo y no simula un envío real.
 
 > **Importante:** `PUBLIC_SITE_URL`, `PUBLIC_CASE_STUDIES_APPROVED` y `PUBLIC_TURNSTILE_SITE_KEY` deben estar disponibles **durante el build**, porque `/` y `/privacidad` se prerenderizan. `PUBLIC_SITE_URL` y `PUBLIC_TURNSTILE_SITE_KEY` también se definen como variables del Worker. `RESEND_API_KEY` y `TURNSTILE_SECRET` son secretos de runtime: no deben estar en el build, Git ni `wrangler.jsonc`.

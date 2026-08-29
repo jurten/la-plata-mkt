@@ -20,7 +20,7 @@ describe('createResendDelivery', () => {
     const delivery = createResendDelivery({
       apiKey: fakeCredential,
       from: 'La Plata Marketing <hola@laplatamarketing.com>',
-      to: 'laplatamarketing@gmail.com',
+      to: 'ceo@laplatamarketing.com',
       fetchImpl: async (url, init) => {
         requests.push({ url: String(url), init: init ?? {} });
         return new Response(JSON.stringify({ id: `email-${requests.length}` }), { status: 200 });
@@ -37,7 +37,7 @@ describe('createResendDelivery', () => {
     const notification = JSON.parse(String(requests[0].init.body));
     const autoReply = JSON.parse(String(requests[1].init.body));
     expect(notification).toMatchObject({
-      to: ['laplatamarketing@gmail.com'],
+      to: ['ceo@laplatamarketing.com'],
       reply_to: 'ana@example.com',
       subject: 'Nueva consulta — Estudio Ejemplo',
     });
@@ -47,7 +47,7 @@ describe('createResendDelivery', () => {
     expect(notification.text).toContain('Necesitamos ordenar las consultas');
     expect(autoReply).toMatchObject({
       to: ['ana@example.com'],
-      reply_to: 'laplatamarketing@gmail.com',
+      reply_to: 'ceo@laplatamarketing.com',
       subject: 'Recibimos tu consulta — La Plata Marketing',
     });
     expect(autoReply.text).toContain('Hola, Ana Pérez:');
@@ -60,7 +60,7 @@ describe('createResendDelivery', () => {
     const delivery = createResendDelivery({
       apiKey: fakeCredential,
       from: 'La Plata Marketing <hola@laplatamarketing.com>',
-      to: 'laplatamarketing@gmail.com',
+      to: 'ceo@laplatamarketing.com',
       fetchImpl: async () => {
         requestCount += 1;
         return new Response('{}', { status: requestCount === 1 ? 200 : 500 });
@@ -78,7 +78,7 @@ describe('createResendDelivery', () => {
     const delivery = createResendDelivery({
       apiKey: fakeCredential,
       from: 'La Plata Marketing <hola@laplatamarketing.com>',
-      to: 'laplatamarketing@gmail.com',
+      to: 'ceo@laplatamarketing.com',
       fetchImpl: async () => {
         requestCount += 1;
         return new Response('{}', { status: 500 });
@@ -94,7 +94,7 @@ describe('createResendDelivery', () => {
     const delivery = createResendDelivery({
       apiKey: fakeCredential,
       from: 'La Plata Marketing <hola@laplatamarketing.com>',
-      to: 'laplatamarketing@gmail.com',
+      to: 'ceo@laplatamarketing.com',
       fetchImpl: async (_url, init) => {
         requests.push(init ?? {});
         return new Response('{}', { status: 200 });

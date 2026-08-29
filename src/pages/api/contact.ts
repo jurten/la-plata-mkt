@@ -9,7 +9,7 @@ import { createTurnstileVerifier, verifyDemoSubmission } from '../../lib/turnsti
 const apiKey = readRuntimeEnv('RESEND_API_KEY') ?? '';
 const from = readRuntimeEnv('CONTACT_FROM', import.meta.env.CONTACT_FROM) ?? '';
 const to =
-  readRuntimeEnv('CONTACT_TO', import.meta.env.CONTACT_TO) ?? 'laplatamarketing@gmail.com';
+  readRuntimeEnv('CONTACT_TO', import.meta.env.CONTACT_TO) ?? 'ceo@laplatamarketing.com';
 const turnstileSecret = readRuntimeEnv('TURNSTILE_SECRET') ?? '';
 const turnstileSiteKey =
   readRuntimeEnv('PUBLIC_TURNSTILE_SITE_KEY', import.meta.env.PUBLIC_TURNSTILE_SITE_KEY) ?? '';

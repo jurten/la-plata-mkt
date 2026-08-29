@@ -5,4 +5,4 @@ PUBLIC_TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET=
 RESEND_API_KEY=
 CONTACT_FROM="La Plata Marketing <contacto@send.your-domain.example>"
-CONTACT_TO=laplatamarketing@gmail.com
+CONTACT_TO=ceo@laplatamarketing.com
