@@ -4,8 +4,11 @@ import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
 import '@fontsource-variable/manrope';
 import { getCaseStudies } from '../lib/case-studies';
+import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import '../styles/global.css';
+
+export const prerender = true;
 
 const services = [
   {
@@ -46,8 +49,11 @@ const services = [
   },
 ];
 
-const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
-const caseStudiesApproved = import.meta.env.PUBLIC_CASE_STUDIES_APPROVED === 'true';
+const turnstileSiteKey =
+  readRuntimeEnv('PUBLIC_TURNSTILE_SITE_KEY', import.meta.env.PUBLIC_TURNSTILE_SITE_KEY) ?? '';
+const caseStudiesApproved =
+  readRuntimeEnv('PUBLIC_CASE_STUDIES_APPROVED', import.meta.env.PUBLIC_CASE_STUDIES_APPROVED) ===
+  'true';
 const [realEstateCase, legalCase] = getCaseStudies(caseStudiesApproved);
 
 const steps = [
@@ -60,17 +66,19 @@ const steps = [
 const pageTitle = 'Marketing, sitios web, CRM y automatizaciones | La Plata Marketing';
 const pageDescription =
   'Social media, sitios web, CRM y automatizaciones para inmobiliarias y estudios jurídicos. La Plata Marketing conecta cada consulta con un mejor seguimiento.';
-const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const publicSite = parsePublicSiteUrl(
+  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
+);
 const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
 const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
 const allowIndexing = Boolean(publicSite);
-const privacyHref = '/privacidad';
+const privacyHref = '/privacidad/';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'La Plata Marketing',
   ...(canonicalUrl ? { url: canonicalUrl.toString() } : {}),
-  email: 'laplatamarketing@gmail.com',
+  email: 'ceo@laplatamarketing.com',
   description: pageDescription,
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -359,7 +367,7 @@ const structuredData = {
           <div class="section-index">[ CONTACTO ]</div>
           <h2 id="contact-title">Contanos<br /><em>dónde se traba.</em></h2>
           <p>Explicanos qué querés mejorar y te respondemos para entender el contexto.</p>
-          <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com ↗</a>
+          <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com ↗</a>
         </div>
 
         <form class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
@@ -415,7 +423,7 @@ const structuredData = {
         <a href={privacyHref}>Privacidad</a>
       </div>
       <div class="footer-meta">
-        <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
+        <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
         <span>© 2026 La Plata Marketing</span>
       </div>
       <div class="footer-line" aria-hidden="true">TODO CONECTADO → TODO CONECTADO → TODO CONECTADO</div>

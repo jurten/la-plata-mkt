@@ -5,21 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/verify-build.mjs",
     "preview": "astro preview",
-    "start": "node ./dist/server/entry.mjs",
+    "start": "astro preview",
     "check": "astro check",
     "verify": "npm run test && npm run test:e2e && npm run build",
     "visual:audit": "node scripts/visual-audit.mjs",
     "assets:og": "python scripts/generate-og.py",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "cf:types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
-    "@astrojs/node": "latest",
-    "@fontsource/barlow-condensed": "latest",
+    "@astrojs/cloudflare": "^14.2.5",
     "@fontsource-variable/manrope": "latest",
+    "@fontsource/barlow-condensed": "latest",
     "astro": "latest",
     "zod": "latest"
   },
@@ -28,7 +30,14 @@
     "@axe-core/playwright": "latest",
     "@playwright/test": "latest",
     "@types/node": "latest",
+    "parse5": "8.0.1",
     "typescript": "latest",
-    "vitest": "latest"
+    "vitest": "latest",
+    "wrangler": "^4.127.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true,
+    "workerd@1.20260826.1": true
   }
 }

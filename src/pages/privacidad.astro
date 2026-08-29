@@ -2,11 +2,16 @@
 import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/barlow-condensed/800.css';
+import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import '../styles/global.css';
 
-const publicSite = parsePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL);
-const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : undefined;
+export const prerender = true;
+
+const publicSite = parsePublicSiteUrl(
+  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
+);
+const canonicalUrl = publicSite ? new URL('/privacidad/', publicSite) : undefined;
 const allowIndexing = Boolean(publicSite);
 const homeHref = '/';
 const contactHref = '/#contacto';
@@ -40,11 +45,10 @@ const contactHref = '/#contacto';
         <p class="section-index">[ PRIVACIDAD ]</p>
         <h1 id="privacy-title">Privacidad,<br /><em>sin letra chica.</em></h1>
         <div class="legal-intro-copy">
-          <p class="legal-draft">Borrador pendiente de revisión legal antes del lanzamiento</p>
           <p>
-            Este aviso describe el tratamiento previsto para la información que compartís en el
-            formulario de La Plata Marketing. Lo redactamos para que sea entendible y para no pedir
-            más datos de los necesarios.
+            Este aviso explica cómo Justina Rosa Guiñazú, responsable de La Plata Marketing, trata la
+            información que compartís en el formulario. Lo redactamos para que sea entendible y para
+            no pedir más datos de los necesarios.
           </p>
           <small>Última actualización: agosto de 2026</small>
         </div>
@@ -55,9 +59,9 @@ const contactHref = '/#contacto';
           <span>01</span>
           <h2>Quién recibe la consulta</h2>
           <p>
-            La Plata Marketing es responsable de responder las consultas enviadas desde este sitio.
-            El canal de contacto para temas de privacidad es
-            <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>.
+            Justina Rosa Guiñazú, responsable de La Plata Marketing, recibe y responde las consultas
+            enviadas desde este sitio. El canal de contacto para temas de privacidad es
+            <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>.
           </p>
         </article>
 
@@ -83,9 +87,9 @@ const contactHref = '/#contacto';
           <span>04</span>
           <h2>Con quién pueden procesarse</h2>
           <p>
-            El hosting, la protección antispam y el proveedor de correo transaccional pueden procesar
-            los datos exclusivamente para prestar esos servicios. La configuración final y sus
-            proveedores deben incorporarse a este aviso antes del lanzamiento.
+            Cloudflare, Turnstile, Resend y Google Workspace pueden procesar los datos únicamente
+            para alojar y proteger el sitio, prevenir envíos automatizados y entregar los correos
+            relacionados con tu consulta.
           </p>
         </article>
 
@@ -93,9 +97,10 @@ const contactHref = '/#contacto';
           <span>05</span>
           <h2>Cuánto tiempo se conservan</h2>
           <p>
-            Durante el tiempo necesario para responder y gestionar la relación que se origine a partir
-            de la consulta, y luego durante los plazos que correspondan. El plazo operativo concreto
-            debe aprobarse antes de producción.
+            Conservamos los datos mientras resulte necesario para responder y dar seguimiento a tu
+            consulta. Cuando ya no sean necesarios, los eliminamos o anonimizamos, salvo que una
+            obligación legal o la necesidad de ejercer o defender derechos requiera conservarlos por
+            más tiempo.
           </p>
         </article>
 
@@ -104,7 +109,7 @@ const contactHref = '/#contacto';
           <h2>Tus decisiones y derechos</h2>
           <p>
             Podés pedir acceso, corrección o eliminación de tus datos y retirar tu consentimiento
-            escribiendo a <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>.
+            escribiendo a <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>.
             También podés optar por no enviar el formulario y contactarnos directamente por email.
           </p>
         </article>
@@ -119,7 +124,7 @@ const contactHref = '/#contacto';
 
     <footer class="legal-footer">
       <span>© 2026 La Plata Marketing</span>
-      <a href="mailto:laplatamarketing@gmail.com">laplatamarketing@gmail.com</a>
+      <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
     </footer>
 
   </body>

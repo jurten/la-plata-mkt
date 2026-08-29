@@ -21,7 +21,7 @@ test('la home publica metadata social, canonical y datos estructurados verificab
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'La Plata Marketing',
-    email: 'laplatamarketing@gmail.com',
+    email: 'ceo@laplatamarketing.com',
   });
   expect(structuredData.hasOfferCatalog.itemListElement).toHaveLength(4);
 
@@ -34,7 +34,7 @@ test('la home publica metadata social, canonical y datos estructurados verificab
   expect(sitemapResponse.headers()['content-type']).toContain('application/xml');
   const sitemap = await sitemapResponse.text();
   expect(sitemap).toContain('<loc>http://127.0.0.1:4321/</loc>');
-  expect(sitemap).toContain('<loc>http://127.0.0.1:4321/privacidad</loc>');
+  expect(sitemap).toContain('<loc>http://127.0.0.1:4321/privacidad/</loc>');
 });
 
 test('las páginas publican cabeceras de seguridad compatibles con el formulario y Turnstile', async ({ page }) => {
@@ -49,8 +49,21 @@ test('las páginas publican cabeceras de seguridad compatibles con el formulario
   expect(headers['permissions-policy']).toContain('camera=()');
 });
 
-test('rechaza un Host no confiable antes de generar URLs públicas', async ({ request }) => {
-  const response = await request.get('/', { headers: { Host: 'attacker.example' } });
+test('inicia sin errores de consola ni excepciones de página', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('pageerror', (error) => errors.push(error.message));
+
+  await page.goto('/');
+  await page.waitForTimeout(250);
+
+  expect(errors).toEqual([]);
+});
+
+test('rechaza un Host no confiable en rutas dinámicas antes de generar URLs públicas', async ({ request }) => {
+  const response = await request.get('/sitemap.xml', { headers: { Host: 'attacker.example' } });
 
   expect([403, 421]).toContain(response.status());
   const body = await response.text();

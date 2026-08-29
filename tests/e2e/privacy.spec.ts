@@ -10,8 +10,11 @@ test('el aviso de privacidad explica el tratamiento y permite volver al formular
   await expect(page.getByText('celular (si decidís compartirlo)', { exact: false })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Para qué los usamos' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Tus decisiones y derechos' })).toBeVisible();
-  await expect(page.getByText('laplatamarketing@gmail.com', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('Borrador pendiente de revisión legal', { exact: false })).toBeVisible();
+  await expect(page.getByText('ceo@laplatamarketing.com', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Justina Rosa Guiñazú', { exact: false }).first()).toBeVisible();
+  await expect(page.getByText('Cloudflare, Turnstile, Resend y Google Workspace', { exact: false })).toBeVisible();
+  await expect(page.getByText('los eliminamos o anonimizamos', { exact: false })).toBeVisible();
+  await expect(page.getByText('Borrador pendiente', { exact: false })).toHaveCount(0);
 
   const backLinks = page.getByRole('link', { name: 'Volver al formulario' });
   await expect(backLinks).toHaveCount(2);

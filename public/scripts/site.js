@@ -189,7 +189,7 @@ contactForm?.addEventListener('submit', async (event) => {
     window.history.replaceState(null, '', '#contacto');
   } catch {
     if (status) {
-      status.textContent = 'No pudimos enviar la consulta. Probá de nuevo o escribinos a laplatamarketing@gmail.com.';
+      status.textContent = 'No pudimos enviar la consulta. Probá de nuevo o escribinos a ceo@laplatamarketing.com.';
       status.focus();
     }
   } finally {
