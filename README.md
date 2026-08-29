@@ -164,9 +164,9 @@ Al cambiar nameservers, los registros del panel DNS de Squarespace dejan de apli
 
 Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida esa cabecera y usa un único bucket `unknown` cuando el runtime local no ofrece una dirección. El rate limit actual vive por isolate y es una defensa complementaria a Turnstile. Si el tráfico exige garantía global, agregar un límite distribuido de Cloudflare o un Durable Object.
 
-## Contenido pendiente antes del lanzamiento
+## Estado de producción y decisiones pendientes
 
-- Confirmar dominio final, definir `PUBLIC_SITE_URL` y configurar DNS, SPF, DKIM y DMARC.
+- Producción verificada: apex en Cloudflare Workers, redirección de `www`, Turnstile, Resend y DNS de correo con SPF, DKIM y DMARC.
 - Obtener autorización para publicar los nombres y la narrativa, y recién entonces definir `PUBLIC_CASE_STUDIES_APPROVED=true`.
 - Incorporar resultados cuantitativos únicamente si existen y fueron aprobados.
 - Confirmar enlaces sociales, si deben mostrarse.

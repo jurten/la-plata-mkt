@@ -76,6 +76,13 @@ describe('Cloudflare Workers deployment contract', () => {
     expect(readme).not.toMatch(
       /marcado como borrador|completar(?: los)? datos legales (?:de la persona responsable|del responsable)/,
     );
+    expect(readme).not.toContain('## Contenido pendiente antes del lanzamiento');
+    expect(readme).not.toContain(
+      'Confirmar dominio final, definir `PUBLIC_SITE_URL` y configurar DNS, SPF, DKIM y DMARC.',
+    );
+    expect(readme).toContain(
+      'Producción verificada: apex en Cloudflare Workers, redirección de `www`, Turnstile, Resend y DNS de correo con SPF, DKIM y DMARC.',
+    );
   });
 
   it('aplica únicamente valores públicos predeterminados dentro de Workers Builds', () => {
@@ -91,7 +98,9 @@ describe('Cloudflare Workers deployment contract', () => {
   it('excluye secretos locales y protege los assets estáticos', () => {
     expect(text('.gitignore')).toMatch(/^\.dev\.vars$/m);
     expect(text('.gitignore')).toMatch(/^\.wrangler\/$/m);
-    expect(text('public/.assetsignore')).toBe('_worker.js\n_routes.json\n');
+    expect(text('public/.assetsignore').replaceAll('\r\n', '\n')).toBe(
+      '_worker.js\n_routes.json\n',
+    );
 
     const headers = text('public/_headers');
     expect(headers).toContain("Content-Security-Policy: default-src 'self'");
