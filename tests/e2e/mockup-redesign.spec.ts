@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-const whatsappName = 'Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551';
-const whatsappHref = 'https://wa.me/5491164265551';
+const whatsappName = 'Escribir a La Plata Marketing por WhatsApp al +54 9 11 5886-1954';
+const whatsappHref = 'https://wa.me/5491158861954';
 
 test('adopta la arquitectura editorial del mockup sin perder el formulario real', async ({ page }) => {
   await page.goto('/');
