@@ -3,20 +3,20 @@ import { expect, test } from '@playwright/test';
 test('ofrece WhatsApp como canal directo sin escribir texto por el usuario', async ({ page }) => {
   await page.goto('/#contacto');
 
-  const accessibleName = 'Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551';
+  const accessibleName = 'Escribir a La Plata Marketing por WhatsApp al +54 9 11 5886-1954';
   const channels = page
     .locator('#contacto')
     .getByRole('group', { name: 'Canales de contacto directo' });
   const contactLink = channels.getByRole('link', { name: accessibleName });
   await expect(contactLink).toBeVisible();
-  await expect(contactLink).toContainText('+54 9 11 6426-5551');
+  await expect(contactLink).toContainText('+54 9 11 5886-1954');
 
   const href = await contactLink.getAttribute('href');
   expect(href).not.toBeNull();
-  expect(href).toBe('https://wa.me/5491164265551');
+  expect(href).toBe('https://wa.me/5491158861954');
   const whatsappUrl = new URL(href!);
   expect(whatsappUrl.origin).toBe('https://wa.me');
-  expect(whatsappUrl.pathname).toBe('/5491164265551');
+  expect(whatsappUrl.pathname).toBe('/5491158861954');
   expect(whatsappUrl.search).toBe('');
   expect(whatsappUrl.searchParams.get('text')).toBeNull();
 

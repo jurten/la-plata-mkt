@@ -94,7 +94,8 @@ const canonicalUrl = publicSite ? new URL(Astro.url.pathname, publicSite) : unde
 const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
 const allowIndexing = Boolean(publicSite);
 const privacyHref = '/privacidad/';
-const whatsappHref = 'https://wa.me/5491164265551';
+const whatsappDisplay = '+54 9 11 5886-1954';
+const whatsappHref = 'https://wa.me/5491158861954';
 const contactEmail = 'ceo@laplatamarketing.com';
 const structuredData = {
   '@context': 'https://schema.org',
@@ -339,8 +340,8 @@ const structuredData = {
           <div class="contact-side">
             <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
             <div class="actions contact-actions" role="group" aria-label="Canales de contacto directo">
-              <a class="button contact-whatsapp" href={whatsappHref} aria-label="Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551">
-                WhatsApp · +54 9 11 6426-5551 <span aria-hidden="true">↗</span>
+              <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
+                WhatsApp · {whatsappDisplay} <span aria-hidden="true">↗</span>
               </a>
               <a class="button button-outline" href="#contact-form">Enviar una consulta <span aria-hidden="true">↓</span></a>
             </div>
@@ -414,7 +415,7 @@ const structuredData = {
           <a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba">LPM</a>
           <div><h3>Soluciones</h3><a href="#soluciones">Presencia</a><a href="#soluciones">Captación</a><a href="#soluciones">Organización</a></div>
           <div><h3>Explorar</h3><a href="#sistema">Sistema</a><a href="#trabajo">Experiencia</a><a href="#metodo">Método</a><a href={privacyHref}>Privacidad</a></div>
-          <div><h3>Contacto</h3><a href={whatsappHref} aria-label="Escribir a La Plata Marketing por WhatsApp al +54 9 11 6426-5551">WhatsApp</a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="#inicio">Volver arriba ↑</a></div>
+          <div><h3>Contacto</h3><a href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>WhatsApp</a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="#inicio">Volver arriba ↑</a></div>
         </div>
         <div class="footer-bottom"><span>© 2026 LPM / La Plata, Argentina</span><span id="mode-label">Identidad visual / Sistema automático</span></div>
       </div>
