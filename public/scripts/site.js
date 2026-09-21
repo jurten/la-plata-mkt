@@ -1,116 +1,100 @@
+const root = document.documentElement;
+
+const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+const themeLabel = document.querySelector('#mode-label');
+const allowedThemes = new Set(['light', 'auto', 'dark']);
+let colorPreference;
+
+try {
+  colorPreference = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: dark)')
+    : undefined;
+} catch {
+  colorPreference = undefined;
+}
+
+const systemPrefersDark = () => {
+  try {
+    return colorPreference?.matches === true;
+  } catch {
+    return false;
+  }
+};
+
+const applyTheme = (theme, persist = false) => {
+  const safeTheme = allowedThemes.has(theme) ? theme : 'auto';
+  root.dataset.theme = safeTheme;
+
+  if (persist) {
+    try {
+      localStorage.setItem('lpm-theme', safeTheme);
+    } catch {
+      // Theme persistence is optional; the controls still work for this page view.
+    }
+  }
+
+  themeButtons.forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.setTheme === safeTheme));
+  });
+
+  const dark = safeTheme === 'dark' || (safeTheme === 'auto' && systemPrefersDark());
+  if (themeMeta) themeMeta.setAttribute('content', dark ? '#0B1238' : '#F3EFE5');
+  if (themeLabel) {
+    themeLabel.textContent = dark
+      ? 'Identidad visual / Pantalla nocturna'
+      : safeTheme === 'auto'
+        ? 'Identidad visual / Sistema automático'
+        : 'Identidad visual / Señal viva';
+  }
+};
+
+let storedTheme = 'auto';
+try {
+  storedTheme = localStorage.getItem('lpm-theme') || 'auto';
+} catch {
+  storedTheme = 'auto';
+}
+applyTheme(storedTheme);
+
+themeButtons.forEach((button) => {
+  button.addEventListener('click', () => applyTheme(button.dataset.setTheme, true));
+});
+
+try {
+  colorPreference?.addEventListener?.('change', () => {
+    if (root.dataset.theme === 'auto') applyTheme('auto');
+  });
+} catch {
+  // A missing system-preference listener must not block navigation or the form.
+}
+
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
-toggle?.addEventListener('click', () => {
-  const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-  toggle.setAttribute('aria-expanded', String(!isOpen));
-  nav?.classList.toggle('is-open', !isOpen);
-});
 
-nav?.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    toggle?.setAttribute('aria-expanded', 'false');
-    nav.classList.remove('is-open');
+if (toggle && nav) {
+  root.dataset.menuState = 'ready';
+
+  toggle.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    nav.classList.toggle('is-open', !isOpen);
   });
-});
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && nav?.classList.contains('is-open')) {
-    toggle?.setAttribute('aria-expanded', 'false');
-    nav.classList.remove('is-open');
-    toggle?.focus();
-  }
-});
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      toggle.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+    });
+  });
 
-const motionTargets = [...document.querySelectorAll('[data-motion]')];
-
-if (motionTargets.length > 0) {
-  let motionPreference = null;
-  try {
-    motionPreference = typeof window.matchMedia === 'function'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)')
-      : null;
-  } catch {
-    motionPreference = null;
-  }
-  let observer;
-
-  const revealAllMotionTargets = () => {
-    motionTargets.forEach((target) => target.classList.add('is-in-view'));
-  };
-
-  const failOpenMotion = () => {
-    observer?.disconnect();
-    observer = undefined;
-    delete document.documentElement.dataset.motionState;
-    revealAllMotionTargets();
-  };
-
-  const observeMotionTargets = () => {
-    if (typeof window.IntersectionObserver !== 'function') {
-      revealAllMotionTargets();
-      return;
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+      toggle.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+      toggle.focus();
     }
-
-    try {
-      observer ??= new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-in-view');
-          observer.unobserve(entry.target);
-        });
-      }, { rootMargin: '-22% 0px -22%', threshold: 0.18 });
-
-      motionTargets
-        .filter((target) => !target.classList.contains('is-in-view'))
-        .forEach((target) => observer.observe(target));
-    } catch {
-      observer = undefined;
-      revealAllMotionTargets();
-    }
-  };
-
-  const syncMotionPreference = () => {
-    try {
-      if (typeof motionPreference?.matches !== 'boolean') {
-        failOpenMotion();
-        return false;
-      }
-
-      if (motionPreference.matches) {
-        document.documentElement.dataset.motionState = 'reduced';
-        observer?.disconnect();
-        revealAllMotionTargets();
-        return true;
-      }
-
-      if (document.documentElement.dataset.motionState === 'reduced') {
-        motionTargets.forEach((target) => target.classList.remove('is-in-view'));
-      }
-      document.documentElement.dataset.motionState = 'ready';
-      observeMotionTargets();
-      return true;
-    } catch {
-      failOpenMotion();
-      return false;
-    }
-  };
-
-  if (motionPreference && syncMotionPreference()) {
-    try {
-      if (typeof motionPreference.addEventListener === 'function') {
-        motionPreference.addEventListener('change', syncMotionPreference);
-      } else {
-        const addLegacyListener = Reflect.get(motionPreference, 'addListener');
-        if (typeof addLegacyListener === 'function') {
-          addLegacyListener.call(motionPreference, syncMotionPreference);
-        }
-      }
-    } catch {
-      failOpenMotion();
-    }
-  } else {
-    failOpenMotion();
-  }
+  });
 }
 
 const contactForm = document.querySelector('[data-contact-form]');

@@ -1,8 +1,8 @@
 # La Plata Marketing
 
-Sitio one-page en español para presentar servicios de social media, sitios web, CRM y automatizaciones, mostrar dos casos y recibir consultas.
+Sitio one-page en español para conectar marketing, tecnología y ventas, presentar caminos de solución, mostrar experiencia autorizada y recibir consultas.
 
-La dirección visual toma de [Catálogo | ID Visual de Evento](https://www.behance.net/gallery/249259247/Catalogo-ID-Visual-de-Evento) su lógica de tinta editorial: papel cálido, azul institucional, rojo señal, amarillo marcador, fondos oscuros y sobreimpresiones controladas. No copia ilustraciones, piezas, layouts ni recursos del proyecto; todo el contenido, los mockups y la geometría del sitio son originales.
+La dirección visual porta el mockup aprobado `lpm-home-mockup`: papel cálido cuadriculado, cobalto, secciones nocturnas, tipografía grotesca condensada, acentos editoriales y módulos de sistema. El HTML de referencia se reinterpretó como Astro semántico; no se importaron sus placeholders, Google Fonts, formulario decorativo ni enlaces de contacto inseguros.
 
 ## Estado
 
@@ -36,19 +36,19 @@ El servidor de desarrollo abre por defecto en `http://127.0.0.1:4321`.
 
 ## Identidad visual de producción
 
-El sitio usa una única identidad permanente: **Registro activo**. Los tokens semánticos de producción son:
+Los tokens base de la identidad LPM son:
 
-- Tinta: `#17292D`
-- Tinta atenuada: `#4B5B5E`
-- Papel cálido: `#F3EEE6`
-- Superficie clara: `#FFF9F0`
-- Azul primario: `#1D62A8`
-- Azul fuerte: `#154C86`
-- Amarillo marcador: `#F2D31B`
-- Azul secundario: `#8EC5E6`
-- Rojo señal: `#FC4C5A`
+- Tinta: `#111318`
+- Tinta atenuada: `#56595F`
+- Papel cálido: `#F3EFE5`
+- Superficie clara: `#FFFDF7`
+- Azul cobalto: `#1536F1`
+- Azul cielo: `#B7D7EE`
+- Amarillo señal: `#F4C430`
+- Rojo pulso: `#F0442D`
+- Fondo nocturno: `#111318`
 
-No hay selector público, modo de comparación ni estado de paleta persistente.
+La interfaz ofrece modo claro, automático y oscuro. La elección se guarda localmente en `lpm-theme`; el modo automático sigue `prefers-color-scheme`. Las familias Bricolage Grotesque, Newsreader e IBM Plex se sirven desde Fontsource, sin peticiones a Google Fonts.
 
 ## Verificación
 
@@ -182,4 +182,4 @@ Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida 
 npm run assets:og
 ```
 
-El generador usa Pillow y fuentes instaladas en Windows (`Impact` y `Arial`). El PNG final ya está versionado, por lo que Pillow no es necesario para ejecutar el sitio.
+El generador usa Pillow y carga directamente estas fuentes de Windows: `C:\Windows\Fonts\impact.ttf` (Impact), `arial.ttf` y `arialbd.ttf` (Arial regular y negrita), `georgiai.ttf` (Georgia Italic) y `consola.ttf` (Consolas). No implementa fuentes de reemplazo: si alguno de esos archivos no está disponible, Pillow interrumpe la generación. El PNG final ya está versionado, por lo que Pillow y esas fuentes no son necesarios para ejecutar el sitio.
