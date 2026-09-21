@@ -24,27 +24,31 @@ test('ofrece WhatsApp como canal directo sin escribir texto por el usuario', asy
   await expect(footerLink).toHaveAttribute('href', href!);
 });
 
-test('una visita entiende la propuesta, revisa los casos y llega al formulario', async ({ page }) => {
+test('una visita reconoce su problema, elige un camino y llega al formulario', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.locator('html')).toHaveAttribute('lang', 'es-AR');
   await expect(
-    page.getByRole('heading', { level: 1, name: 'Más consultas. Menos tareas manuales.' }),
+    page.getByRole('heading', { level: 1, name: 'Hacemos que todo trabaje como un sistema.' }),
   ).toBeVisible();
-  await expect(page.getByText('Marketing + tecnología para tu negocio', { exact: true })).toBeVisible();
+  await expect(page.getByText('LPM / Marketing × Tecnología × Ventas', { exact: true })).toBeVisible();
 
-  const services = page.locator('#servicios');
-  await expect(services.getByRole('heading', { name: 'Cuatro servicios. Un mismo sistema.' })).toBeVisible();
-  for (const service of ['Social media', 'Sitios web', 'CRM', 'Automatizaciones']) {
-    await expect(services.getByRole('heading', { name: service, exact: true })).toBeVisible();
+  const problems = page.locator('#problemas');
+  await expect(problems.getByRole('heading', { name: 'Tu negocio funciona. ¿Su sistema digital también?' })).toBeVisible();
+  await expect(problems.locator('.problem-item')).toHaveCount(6);
+
+  const solutions = page.locator('#soluciones');
+  await expect(solutions.getByRole('heading', { name: 'Empecemos por lo que necesitás lograr.' })).toBeVisible();
+  for (const path of ['Verse a la altura.', 'Generar consultas.', 'Ordenar la operación.']) {
+    await expect(solutions.getByRole('heading', { name: path, exact: true })).toBeVisible();
   }
 
-  const cases = page.locator('#casos');
-  await expect(cases.getByText('Mirta Libera Propiedades', { exact: true })).toBeVisible();
-  await expect(cases.getByText('María Laumann Asociados', { exact: true })).toBeVisible();
-  await expect(cases.getByText('Caso aprobado · mockup conceptual')).toHaveCount(2);
+  const experience = page.locator('#trabajo');
+  await expect(experience.getByText('Mirta Libera Propiedades', { exact: true })).toBeVisible();
+  await expect(experience.getByText('María Laumann Asociados', { exact: true })).toBeVisible();
+  await expect(experience.getByText('Caso aprobado · mockup conceptual')).toHaveCount(2);
 
-  await page.getByRole('link', { name: 'Contanos tu problema' }).first().click();
+  await page.getByRole('link', { name: 'Contanos tu problema' }).click();
   await expect(page.locator('#contacto')).toBeInViewport();
   await expect(page.getByLabel('Empresa')).toBeVisible();
   await expect(page.getByLabel('Nombre de contacto')).toBeVisible();

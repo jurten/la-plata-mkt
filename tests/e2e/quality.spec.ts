@@ -4,10 +4,10 @@ import { expect, test } from '@playwright/test';
 test('la home publica metadata social, canonical y datos estructurados verificables', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveTitle('Marketing, sitios web, CRM y automatizaciones | La Plata Marketing');
+  await expect(page).toHaveTitle('Marketing, tecnología y ventas como un sistema | La Plata Marketing');
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     'content',
-    'Social media, sitios web, CRM y automatizaciones para hacer crecer tu negocio, ordenar consultas y mejorar el seguimiento.',
+    'La Plata Marketing conecta marketing, tecnología y ventas para que los negocios puedan crecer y organizarse.',
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^http:\/\/127\.0\.0\.1:4321\/$/);
   await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'es_AR');
@@ -25,6 +25,7 @@ test('la home publica metadata social, canonical y datos estructurados verificab
     '@type': 'Organization',
     name: 'La Plata Marketing',
     email: 'ceo@laplatamarketing.com',
+    description: 'La Plata Marketing conecta marketing, tecnología y ventas para que los negocios puedan crecer y organizarse.',
   });
   expect(structuredData.hasOfferCatalog.itemListElement).toHaveLength(4);
 
@@ -84,28 +85,43 @@ for (const path of ['/', '/privacidad']) {
   });
 }
 
+for (const path of ['/', '/privacidad']) {
+  test(`${path} en modo oscuro no introduce violaciones de contraste`, async ({ page }) => {
+    await page.goto(path);
+    await page.getByRole('button', { name: 'Modo oscuro' }).click();
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    expect(results.violations).toEqual([]);
+  });
+}
+
 test('la composición también cabe a 320px sin ocultar desborde', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
 
   const dimensions = await page.evaluate(() => {
-    const processList = document.querySelector<HTMLElement>('.process-list');
+    const method = document.querySelector<HTMLElement>('.method-steps');
+    const system = document.querySelector<HTMLElement>('.system-flow');
     return {
       documentClient: document.documentElement.clientWidth,
       documentScroll: document.documentElement.scrollWidth,
       bodyClient: document.body.clientWidth,
       bodyScroll: document.body.scrollWidth,
       bodyOverflowX: getComputedStyle(document.body).overflowX,
-      processClient: processList?.clientWidth ?? 0,
-      processScroll: processList?.scrollWidth ?? 0,
+      methodClient: method?.clientWidth ?? 0,
+      methodScroll: method?.scrollWidth ?? 0,
+      systemClient: system?.clientWidth ?? 0,
+      systemScroll: system?.scrollWidth ?? 0,
     };
   });
 
   expect(dimensions.documentScroll).toBeLessThanOrEqual(dimensions.documentClient);
   expect(dimensions.bodyScroll).toBeLessThanOrEqual(dimensions.bodyClient);
   expect(dimensions.bodyOverflowX).not.toBe('hidden');
-  expect(dimensions.processScroll).toBeLessThanOrEqual(dimensions.processClient);
+  expect(dimensions.methodScroll).toBeLessThanOrEqual(dimensions.methodClient);
+  expect(dimensions.systemScroll).toBeLessThanOrEqual(dimensions.systemClient);
 });
 
 test('privacidad cabe a 320px y 390px sin ocultar desborde', async ({ page }) => {
@@ -150,12 +166,10 @@ test('la composición móvil no desborda y el menú funciona con teclado', async
   }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
 
-  const automationHeading = page.locator('.service-automation h3');
-  const automationWidth = await automationHeading.evaluate((element) => ({
+  const capabilitiesHeading = page.locator('#capacidades h2');
+  const headingWidth = await capabilitiesHeading.evaluate((element) => ({
     client: element.clientWidth,
     scroll: element.scrollWidth,
   }));
-  expect(automationWidth.scroll).toBeLessThanOrEqual(automationWidth.client);
-
-  await expect(page.locator('.marquee-track')).toHaveCSS('animation-iteration-count', '1');
+  expect(headingWidth.scroll).toBeLessThanOrEqual(headingWidth.client);
 });

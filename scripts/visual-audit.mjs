@@ -29,8 +29,9 @@ for (const view of [
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('requestfailed', (request) => failedRequests.push(`${request.method()} ${request.url()}: ${request.failure()?.errorText}`));
 
-  const response = await page.goto(baseURL, { waitUntil: 'networkidle' });
+  const response = await page.goto(baseURL, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(500);
 
   const metrics = await page.evaluate(() => ({
     title: document.title,
@@ -42,10 +43,18 @@ for (const view of [
 
   await page.screenshot({ path: resolve(outputDir, `home-${view.name}-full.png`), fullPage: true });
   await page.locator('.hero').screenshot({ path: resolve(outputDir, `hero-${view.name}.png`) });
-  await page.locator('#servicios').screenshot({ path: resolve(outputDir, `services-${view.name}.png`) });
+  await page.locator('#soluciones').screenshot({ path: resolve(outputDir, `solutions-${view.name}.png`) });
   await page.locator('#contacto').screenshot({ path: resolve(outputDir, `contact-${view.name}.png`) });
 
   const interactions = {};
+  await page.getByRole('button', { name: 'Modo oscuro' }).click();
+  interactions.darkThemeApplied = await page.locator('html').getAttribute('data-theme') === 'dark';
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(100);
+  await page.screenshot({ path: resolve(outputDir, `home-${view.name}-dark-full.png`), fullPage: true });
+  await page.getByRole('button', { name: 'Usar preferencia del sistema' }).click();
+  interactions.autoThemeRestored = await page.locator('html').getAttribute('data-theme') === 'auto';
+
   if (view.name === 'mobile') {
     const menu = page.locator('.menu-toggle');
     await menu.click();
@@ -86,14 +95,24 @@ await browser.close();
 console.log(JSON.stringify(summary, null, 2));
 
 const interactionFailure = summary.some((entry) =>
-  entry.view === 'desktop'
+  !entry.interactions.darkThemeApplied ||
+  !entry.interactions.autoThemeRestored ||
+  (entry.view === 'desktop'
     ? !entry.interactions.formDemoConfirmed
-    : !entry.interactions.menuOpened || !entry.interactions.mobileNavVisible || !entry.interactions.menuClosed,
+    : !entry.interactions.menuOpened || !entry.interactions.mobileNavVisible || !entry.interactions.menuClosed),
 );
 
 if (
   interactionFailure ||
-  summary.some((entry) => entry.errors.length || entry.failedRequests.length || entry.documentWidth > entry.viewportWidth)
+  summary.some((entry) =>
+    typeof entry.status !== 'number' ||
+    entry.status < 200 ||
+    entry.status >= 300 ||
+    entry.errors.length ||
+    entry.warnings.length ||
+    entry.failedRequests.length ||
+    entry.documentWidth > entry.viewportWidth,
+  )
 ) {
   process.exitCode = 1;
 }

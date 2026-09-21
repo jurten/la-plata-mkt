@@ -1,9 +1,13 @@
 ---
-import '@fontsource/barlow-condensed/600.css';
-import '@fontsource/barlow-condensed/700.css';
-import '@fontsource/barlow-condensed/800.css';
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/newsreader';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
+import { themeChoices } from '../lib/themes';
 import '../styles/global.css';
 
 export const prerender = true;
@@ -17,7 +21,7 @@ const homeHref = '/';
 const contactHref = '/#contacto';
 ---
 <!doctype html>
-<html lang="es-AR" data-palette="registro">
+<html lang="es-AR" data-theme="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,7 +30,7 @@ const contactHref = '/#contacto';
       content="Cómo La Plata Marketing recibe, utiliza y protege los datos enviados mediante su formulario de contacto."
     />
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content="#F2D31B" />
+    <meta name="theme-color" content="#F3EFE5" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>Privacidad | La Plata Marketing</title>
@@ -35,8 +39,16 @@ const contactHref = '/#contacto';
     <a class="skip-link" href="#contenido-legal">Saltar al contenido</a>
     <header class="legal-header">
       <a class="brand" href={homeHref} aria-label="La Plata Marketing, volver al inicio">
-        <span>La Plata<br />Marketing</span>
+        <span class="brand-mark" aria-hidden="true">L/</span>
+        <span>LPM</span>
       </a>
+      <div class="theme-switcher" role="group" aria-label="Apariencia">
+        {themeChoices.map((theme) => (
+          <button type="button" data-set-theme={theme.id} aria-label={theme.accessibleLabel} title={theme.title}>
+            {theme.shortLabel}
+          </button>
+        ))}
+      </div>
       <a class="legal-back" href={contactHref}>Volver al formulario <span aria-hidden="true">↙</span></a>
     </header>
 
@@ -127,6 +139,8 @@ const contactHref = '/#contacto';
       <span>© 2026 La Plata Marketing</span>
       <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
     </footer>
+
+    <script is:inline src="/scripts/site.js" defer></script>
 
   </body>
 </html>

@@ -14,89 +14,131 @@ const boxOf = async (locator: Locator) => {
   return box!;
 };
 
-const openDesktopHome = async (page: Page) => {
-  await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+const openHome = async (page: Page, width = 1440, height = 1000) => {
+  await page.setViewportSize({ width, height });
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
   await page.goto('/');
 };
 
-test('la lista de Web vive dentro de una caja legible', async ({ page }) => {
-  await openDesktopHome(page);
+test('el hero protege la lectura y conserva aire antes de sus resultados', async ({ page }) => {
+  await openHome(page);
 
-  const list = page.locator('.service-web ul');
-  const styles = await list.evaluate((element) => {
-    const computed = getComputedStyle(element);
+  const title = await boxOf(page.locator('#hero-title'));
+  const side = await boxOf(page.locator('.hero-side'));
+  const actions = await boxOf(page.locator('.hero-side .actions'));
+  const ticker = await boxOf(page.locator('.hero-ticker'));
+
+  expect(overlap(title, side)).toBe(false);
+  expect(ticker.y - (actions.y + actions.height)).toBeGreaterThanOrEqual(24);
+});
+
+test('las tres rutas mantienen tarjetas íntegras y títulos dentro de sus bordes', async ({ page }) => {
+  await openHome(page);
+
+  const cards = page.locator('.solution-path');
+  await expect(cards).toHaveCount(3);
+  const geometry = await cards.evaluateAll((elements) => elements.map((card) => {
+    const cardBox = card.getBoundingClientRect();
+    const titleBox = card.querySelector('h3')!.getBoundingClientRect();
+    const actionBox = card.querySelector('a.button')!.getBoundingClientRect();
     return {
-      background: computed.backgroundColor,
-      borderLeft: computed.borderLeftStyle,
-      borderRight: computed.borderRightStyle,
+      card: { x: cardBox.x, y: cardBox.y, width: cardBox.width, height: cardBox.height },
+      title: { x: titleBox.x, y: titleBox.y, width: titleBox.width, height: titleBox.height },
+      action: { x: actionBox.x, y: actionBox.y, width: actionBox.width, height: actionBox.height },
     };
-  });
+  }));
 
-  expect(styles.background).not.toBe('rgba(0, 0, 0, 0)');
-  expect(styles.borderLeft).toBe('solid');
-  expect(styles.borderRight).toBe('solid');
-});
-
-test('el bloque azul de CRM no invade el texto introductorio', async ({ page }) => {
-  await openDesktopHome(page);
-
-  const copy = await boxOf(page.locator('.service-crm > p'));
-  const blueBlock = await boxOf(page.locator('.service-crm .service-art span:nth-child(3)'));
-
-  expect(overlap(copy, blueBlock)).toBe(false);
-});
-
-test('la lista de CRM conserva un panel de lectura opaco', async ({ page }) => {
-  await openDesktopHome(page);
-
-  const list = page.locator('.service-crm ul');
-  const styles = await list.evaluate((element) => {
-    const computed = getComputedStyle(element);
-    return {
-      background: computed.backgroundColor,
-      borderLeft: computed.borderLeftStyle,
-      borderRight: computed.borderRightStyle,
-    };
-  });
-
-  expect(styles.background).not.toBe('rgba(0, 0, 0, 0)');
-  expect(styles.borderLeft).toBe('solid');
-  expect(styles.borderRight).toBe('solid');
-});
-
-test('los marcadores de Automatizaciones quedan fuera del texto', async ({ page }) => {
-  await openDesktopHome(page);
-
-  const copy = await boxOf(page.locator('.service-automation > p'));
-  const markers = page.locator('.service-automation .service-art span:visible');
-  const markerCount = await markers.count();
-  expect(markerCount).toBe(3);
-
-  for (let index = 0; index < markerCount; index += 1) {
-    const marker = await boxOf(markers.nth(index));
-    expect(overlap(copy, marker)).toBe(false);
+  expect(Math.max(...geometry.map(({ card }) => card.height)) - Math.min(...geometry.map(({ card }) => card.height))).toBeLessThan(2);
+  for (const { card, title, action } of geometry) {
+    expect(title.x).toBeGreaterThanOrEqual(card.x);
+    expect(title.x + title.width).toBeLessThanOrEqual(card.x + card.width);
+    expect(action.y + action.height).toBeLessThanOrEqual(card.y + card.height);
   }
 });
 
-test('el título del afiche inmobiliario no pisa los bloques de color', async ({ page }) => {
-  await openDesktopHome(page);
+test('el flujo conserva siete etapas contiguas en escritorio y una columna íntegra en móvil', async ({ page }) => {
+  await openHome(page, 901, 900);
+  let flow = page.locator('.system-flow');
+  await flow.scrollIntoViewIfNeeded();
+  let nodes = flow.locator('.system-node');
+  await expect(nodes).toHaveCount(7);
+  const desktop = await nodes.evaluateAll((elements) => elements.map((element) => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+  }));
+  for (let index = 1; index < desktop.length; index += 1) {
+    expect(Math.abs(desktop[index].left - desktop[index - 1].right)).toBeLessThan(2);
+    expect(Math.abs(desktop[index].top - desktop[0].top)).toBeLessThan(2);
+    expect(Math.abs(desktop[index].bottom - desktop[0].bottom)).toBeLessThan(2);
+  }
 
-  const title = await boxOf(page.locator('.property-photo span'));
-  const bars = page.locator('.property-photo i');
-
-  for (let index = 0; index < await bars.count(); index += 1) {
-    expect(overlap(title, await boxOf(bars.nth(index)))).toBe(false);
+  await openHome(page, 900, 900);
+  flow = page.locator('.system-flow');
+  await flow.scrollIntoViewIfNeeded();
+  nodes = flow.locator('.system-node');
+  const mobile = await nodes.evaluateAll((elements) => elements.map((element) => {
+    const rect = element.getBoundingClientRect();
+    return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+  }));
+  for (let index = 1; index < mobile.length; index += 1) {
+    expect(Math.abs(mobile[index].top - mobile[index - 1].bottom)).toBeLessThan(2);
+    expect(Math.abs(mobile[index].left - mobile[0].left)).toBeLessThan(2);
+    expect(Math.abs(mobile[index].right - mobile[0].right)).toBeLessThan(2);
   }
 });
 
-test('la sombra del CTA conserva aire antes de las pestañas', async ({ page }) => {
-  await openDesktopHome(page);
+test('el diagrama de experiencia nunca invade texto esencial', async ({ page }) => {
+  await openHome(page);
 
-  const button = await boxOf(page.locator('.hero-actions .button-primary'));
-  const tabs = await boxOf(page.locator('.hero-service-list'));
-  const shadowExtent = 5;
-  const shadowClearance = tabs.y - (button.y + button.height + shadowExtent);
+  const card = page.locator('.experience-real-estate');
+  const diagram = await boxOf(card.locator('.case-diagram'));
+  for (const locator of [card.locator('h3'), card.locator(':scope > p:not(.meta)'), card.locator(':scope > small')]) {
+    expect(overlap(diagram, await boxOf(locator))).toBe(false);
+  }
 
-  expect(shadowClearance).toBeGreaterThanOrEqual(8);
+  await openHome(page, 390, 844);
+  const mobileDiagram = page.locator('.experience-real-estate .case-diagram');
+  await expect(mobileDiagram).toHaveCSS('display', 'none');
+  expect(await mobileDiagram.boundingBox()).toBeNull();
 });
+
+test('la sombra del formulario y los canales directos conservan separación', async ({ page }) => {
+  await openHome(page);
+
+  const direct = await boxOf(page.locator('.contact-direct'));
+  const form = await boxOf(page.locator('.contact-form'));
+  expect(overlap(direct, form)).toBe(false);
+  expect(form.x - (direct.x + direct.width)).toBeGreaterThanOrEqual(24);
+});
+
+test('el correo público del footer conserva una línea legible', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await openHome(page, width, 900);
+    const email = page.locator('.site-footer a[href="mailto:ceo@laplatamarketing.com"]');
+    const lineCount = await email.evaluate((element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      return [...range.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0).length;
+    });
+    expect(lineCount, `${width}px`).toBe(1);
+  }
+});
+
+for (const route of ['/', '/privacidad']) {
+  test(`${route} no desborda en anchos críticos`, async ({ page }) => {
+    for (const width of [320, 390, 560, 900, 901, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
+      await page.goto(route);
+      const widths = await page.evaluate(() => ({
+        viewport: document.documentElement.clientWidth,
+        document: document.documentElement.scrollWidth,
+        body: document.body.scrollWidth,
+        bodyOverflow: getComputedStyle(document.body).overflowX,
+      }));
+      expect(widths.document, `${route} @ ${width}px`).toBeLessThanOrEqual(widths.viewport);
+      expect(widths.body, `${route} body @ ${width}px`).toBeLessThanOrEqual(widths.viewport);
+      expect(widths.bodyOverflow).not.toBe('hidden');
+    }
+  });
+}

@@ -3,15 +3,15 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 WIDTH, HEIGHT = 1200, 630
-INK = "#17292D"
-MUTED = "#4B5B5E"
-PAPER = "#F3EEE6"
-SURFACE = "#FFF9F0"
-PRIMARY = "#1D62A8"
-PRIMARY_STRONG = "#154C86"
-HIGHLIGHT = "#F2D31B"
-SECONDARY = "#8EC5E6"
-SIGNAL = "#FC4C5A"
+BG = "#F3EFE5"
+SURFACE = "#FFFDF7"
+INK = "#111318"
+MUTED = "#56595F"
+BLUE = "#1536F1"
+SKY = "#B7D7EE"
+SIGNAL = "#F4C430"
+PULSE = "#F0442D"
+GRID = "#DED9CF"
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "public" / "og-la-plata-marketing.png"
@@ -21,79 +21,70 @@ font_dir = Path("C:/Windows/Fonts")
 display_path = font_dir / "impact.ttf"
 body_path = font_dir / "arial.ttf"
 bold_path = font_dir / "arialbd.ttf"
+editorial_path = font_dir / "georgiai.ttf"
+mono_path = font_dir / "consola.ttf"
 
 
 def font(path: Path, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(path), size=size)
 
 
-image = Image.new("RGB", (WIDTH, HEIGHT), INK)
+image = Image.new("RGB", (WIDTH, HEIGHT), BG)
 draw = ImageDraw.Draw(image)
 
-# Original editorial frame: warm stock with offset signal and marker rules.
-draw.rectangle((20, 20, WIDTH - 20, HEIGHT - 20), outline=SURFACE, width=7)
-draw.line((46, 45, WIDTH - 46, 45), fill=PRIMARY, width=18)
-draw.line((46, HEIGHT - 45, 430, HEIGHT - 45), fill=PRIMARY, width=18)
-draw.line((430, HEIGHT - 45, 800, HEIGHT - 45), fill=SIGNAL, width=18)
-draw.line((800, HEIGHT - 45, WIDTH - 46, HEIGHT - 45), fill=HIGHLIGHT, width=18)
-draw.rectangle((74, 72, 734, 555), fill=PAPER, outline=INK, width=5)
+# Quiet graph-paper field from the production background.
+for x in range(0, WIDTH, 48):
+    draw.line((x, 0, x, HEIGHT), fill=GRID, width=1)
+for y in range(0, HEIGHT, 48):
+    draw.line((0, y, WIDTH, y), fill=GRID, width=1)
 
-# Header marker.
-draw.rectangle((98, 96, 226, 138), fill=HIGHLIGHT, outline=INK, width=3)
-draw.text((108, 102), "LA PLATA", font=font(bold_path, 22), fill=INK)
-draw.text((260, 104), "MARKETING + TECNOLOGÍA", font=font(bold_path, 20), fill=INK)
+# Header signature.
+draw.rounded_rectangle((46, 38, 90, 82), radius=5, fill=BLUE)
+draw.text((56, 46), "L/", font=font(mono_path, 18), fill="white")
+draw.text((104, 42), "LPM", font=font(bold_path, 29), fill=INK)
+draw.text((46, 102), "MARKETING × TECNOLOGÍA × VENTAS", font=font(mono_path, 17), fill=INK)
+draw.rectangle((46, 129, 56, 139), fill=SIGNAL, outline=INK, width=1)
 
-# Main statement with a deliberate registration offset.
-draw.text((96, 167), "MÁS", font=font(display_path, 116), fill=INK, stroke_width=1)
-draw.text((96, 276), "CONSULTAS.", font=font(display_path, 102), fill=PRIMARY_STRONG)
-draw.line((98, 379, 642, 379), fill=SIGNAL, width=10)
-draw.text((99, 399), "MENOS TAREAS MANUALES.", font=font(display_path, 43), fill=INK)
-draw.line((98, 462, 707, 462), fill=INK, width=3)
-draw.text(
-    (99, 480),
-    "SOCIAL  /  WEB  /  CRM  /  AUTOMATIZACIONES",
-    font=font(bold_path, 21),
-    fill=INK,
-)
+# Main proposition.
+draw.text((44, 164), "HACEMOS QUE", font=font(display_path, 92), fill=INK)
+draw.text((44, 251), "TODO TRABAJE COMO", font=font(display_path, 80), fill=INK)
+draw.text((45, 345), "UN SISTEMA.", font=font(editorial_path, 92), fill=BLUE)
 
-# Browser window.
-draw.rectangle((705, 92, 1112, 309), fill=SURFACE, outline=INK, width=5)
-draw.rectangle((705, 92, 1112, 127), fill=SECONDARY, outline=INK, width=3)
-for x, color in ((724, SIGNAL), (747, HIGHLIGHT), (770, PRIMARY)):
-    draw.ellipse((x, 103, x + 12, 115), fill=color, outline=INK, width=1)
-draw.text((800, 100), "tu-sitio.com", font=font(body_path, 15), fill=INK)
-draw.rectangle((728, 150, 1086, 278), fill=SECONDARY, outline=INK, width=3)
-draw.text((750, 166), "UNA PROPUESTA", font=font(bold_path, 16), fill=INK)
-draw.text((750, 196), "CLARA.", font=font(display_path, 58), fill=INK)
-draw.rectangle((944, 223, 1071, 261), fill=HIGHLIGHT, outline=INK, width=2)
-draw.text((961, 231), "HABLEMOS +", font=font(bold_path, 15), fill=INK)
-draw.rectangle((1038, 140, 1098, 202), fill=SIGNAL, outline=INK, width=2)
-draw.text((1054, 152), "+", font=font(display_path, 38), fill=INK)
+# Compact system diagram on the right.
+draw.rounded_rectangle((820, 145, 1152, 460), radius=8, fill=SURFACE, outline=INK, width=3)
+draw.text((846, 170), "UN RECORRIDO CONECTADO", font=font(mono_path, 15), fill=INK)
+flow = [
+    ("01", "ATRAER", SKY),
+    ("02", "CONVERTIR", BLUE),
+    ("03", "SEGUIR", SIGNAL),
+    ("04", "CRECER", PULSE),
+]
+for index, (number, label, color) in enumerate(flow):
+    top = 210 + index * 57
+    text_color = "white" if color == BLUE else INK
+    draw.rounded_rectangle((846, top, 1126, top + 43), radius=4, fill=color, outline=INK, width=2)
+    draw.text((859, top + 11), number, font=font(mono_path, 13), fill=text_color)
+    draw.text((908, top + 8), label, font=font(bold_path, 18), fill=text_color)
+    if index < len(flow) - 1:
+        draw.text((975, top + 42), "↓", font=font(mono_path, 15), fill=INK)
 
-# CRM board.
-draw.rectangle((762, 337, 1125, 520), fill=SURFACE, outline=INK, width=5)
-draw.text((784, 353), "CRM / OPORTUNIDADES", font=font(bold_path, 17), fill=INK)
-draw.line((784, 381, 1102, 381), fill=INK, width=2)
-for x, color, label in (
-    (785, SECONDARY, "NUEVA"),
-    (889, HIGHLIGHT, "EN CURSO"),
-    (993, SIGNAL, "PRÓXIMO"),
-):
-    draw.rectangle((x, 397, x + 91, 496), fill=color, outline=INK, width=2)
-    draw.text((x + 8, 407), label, font=font(bold_path, 12), fill=INK)
-    draw.rectangle((x + 8, 435, x + 83, 484), fill=PAPER, outline=INK, width=1)
-    draw.text((x + 15, 447), "Consulta", font=font(body_path, 12), fill=INK)
+# Outcome band and location signature.
+draw.line((46, 493, 1152, 493), fill=INK, width=2)
+outcomes = [
+    "PRESENCIA QUE REPRESENTA",
+    "CONSULTAS QUE SE MIDEN",
+    "PROCESOS QUE SE ORDENAN",
+]
+cell_width = 1106 // 3
+for index, outcome in enumerate(outcomes):
+    left = 46 + index * cell_width
+    if index:
+        draw.line((left, 493, left, 558), fill=INK, width=1)
+    draw.text((left + 12, 512), f"0{index + 1}", font=font(mono_path, 13), fill=BLUE)
+    draw.text((left + 45, 512), outcome, font=font(bold_path, 14), fill=INK)
 
-# Connector stamp.
-stamp = Image.new("RGBA", (430, 62), (0, 0, 0, 0))
-stamp_draw = ImageDraw.Draw(stamp)
-stamp_draw.rectangle((2, 2, 428, 60), fill=HIGHLIGHT, outline=INK, width=4)
-stamp_draw.text((24, 17), "CONTENIDO  →  CONSULTA  →  SEGUIMIENTO", font=font(bold_path, 16), fill=INK)
-stamp = stamp.rotate(-3, expand=True, resample=Image.Resampling.BICUBIC)
-image.paste(stamp, (688, 518), stamp)
-
-# Footer signature.
-draw.text((99, 526), "LA PLATA MARKETING", font=font(bold_path, 16), fill=INK)
+draw.text((46, 586), "LA PLATA MARKETING / 2026", font=font(mono_path, 14), fill=MUTED)
+draw.text((878, 584), "LAPLATAMARKETING.COM", font=font(mono_path, 14), fill=MUTED)
 
 image.save(OUTPUT, format="PNG", optimize=True)
 print(OUTPUT)
