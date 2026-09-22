@@ -102,6 +102,19 @@ test('el diagrama de experiencia nunca invade texto esencial', async ({ page }) 
   expect(await mobileDiagram.boundingBox()).toBeNull();
 });
 
+test('el CTA de contacto se acerca al titular sin invadir su zona de lectura', async ({ page }) => {
+  await openHome(page, 1440, 900);
+
+  const heading = await boxOf(page.locator('.contact-heading'));
+  const title = await boxOf(page.locator('.contact-heading h2'));
+  const side = await boxOf(page.locator('.contact-side'));
+  const normalizedStart = (side.x - heading.x) / heading.width;
+
+  expect(normalizedStart).toBeLessThanOrEqual(0.64);
+  expect(side.x - (title.x + title.width)).toBeGreaterThanOrEqual(24);
+  expect(side.x + side.width).toBeLessThanOrEqual(heading.x + heading.width + 1);
+});
+
 test('la sombra del formulario y los canales directos conservan separación', async ({ page }) => {
   await openHome(page);
 
