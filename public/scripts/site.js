@@ -3,7 +3,7 @@ const root = document.documentElement;
 const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
 const themeMeta = document.querySelector('meta[name="theme-color"]');
 const themeLabel = document.querySelector('#mode-label');
-const allowedThemes = new Set(['light', 'auto', 'dark']);
+const explicitThemes = new Set(['light', 'dark']);
 let colorPreference;
 
 try {
@@ -23,7 +23,10 @@ const systemPrefersDark = () => {
 };
 
 const applyTheme = (theme, persist = false) => {
-  const safeTheme = allowedThemes.has(theme) ? theme : 'auto';
+  const safeTheme = explicitThemes.has(theme) ? theme : 'auto';
+  const resolvedTheme = safeTheme === 'auto'
+    ? (systemPrefersDark() ? 'dark' : 'light')
+    : safeTheme;
   root.dataset.theme = safeTheme;
 
   if (persist) {
@@ -35,16 +38,17 @@ const applyTheme = (theme, persist = false) => {
   }
 
   themeButtons.forEach((button) => {
-    button.setAttribute('aria-pressed', String(button.dataset.setTheme === safeTheme));
+    button.removeAttribute('disabled');
+    button.setAttribute('aria-pressed', String(button.dataset.setTheme === resolvedTheme));
   });
 
-  const dark = safeTheme === 'dark' || (safeTheme === 'auto' && systemPrefersDark());
+  const dark = resolvedTheme === 'dark';
   if (themeMeta) themeMeta.setAttribute('content', dark ? '#0B1238' : '#F3EFE5');
   if (themeLabel) {
-    themeLabel.textContent = dark
-      ? 'Identidad visual / Pantalla nocturna'
-      : safeTheme === 'auto'
-        ? 'Identidad visual / Sistema automático'
+    themeLabel.textContent = safeTheme === 'auto'
+      ? `Identidad visual / Sistema ${dark ? 'oscuro' : 'claro'}`
+      : dark
+        ? 'Identidad visual / Pantalla nocturna'
         : 'Identidad visual / Señal viva';
   }
 };

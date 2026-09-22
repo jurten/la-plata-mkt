@@ -33,14 +33,15 @@ test('el modo automático sigue los cambios de apariencia del sistema', async ({
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0B1238');
-  await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
+  await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Modo oscuro' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Modo claro' })).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(11, 18, 56)');
 
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
+  await expect(page.getByRole('button', { name: 'Modo claro' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Modo oscuro' })).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(243, 239, 229)');
 });
 
@@ -87,6 +88,8 @@ for (const scenario of ['missing', 'throwing'] as const) {
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
     await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
+    await expect(page.getByRole('button', { name: 'Modo claro' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'Modo oscuro' })).toHaveAttribute('aria-pressed', 'false');
 
     const menu = page.getByRole('button', { name: 'Menú' });
     await menu.click();

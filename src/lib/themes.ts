@@ -1,7 +1,6 @@
 export const themeChoices = [
-  { id: 'light', shortLabel: 'L', accessibleLabel: 'Modo claro', title: 'Modo claro' },
-  { id: 'auto', shortLabel: 'A', accessibleLabel: 'Usar preferencia del sistema', title: 'Automático' },
-  { id: 'dark', shortLabel: 'D', accessibleLabel: 'Modo oscuro', title: 'Modo oscuro' },
+  { id: 'light', icon: 'sun', accessibleLabel: 'Modo claro', title: 'Modo claro' },
+  { id: 'dark', icon: 'moon', accessibleLabel: 'Modo oscuro', title: 'Modo oscuro' },
 ] as const;
 
 export const colorThemes = {

@@ -48,7 +48,7 @@ Los tokens base de la identidad LPM son:
 - Rojo pulso: `#F0442D`
 - Fondo nocturno: `#111318`
 
-La interfaz ofrece modo claro, automático y oscuro. La elección se guarda localmente en `lpm-theme`; el modo automático sigue `prefers-color-scheme`. Las familias Bricolage Grotesque, Newsreader e IBM Plex se sirven desde Fontsource, sin peticiones a Google Fonts.
+Sin una elección guardada, la interfaz sigue automáticamente `prefers-color-scheme`. El selector visible ofrece únicamente los íconos de sol y luna para fijar modo claro u oscuro; esa elección explícita se guarda localmente en `lpm-theme`. Las familias Bricolage Grotesque, Newsreader e IBM Plex se sirven desde Fontsource, sin peticiones a Google Fonts.
 
 ## Verificación
 
@@ -174,12 +174,15 @@ Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida 
 
 ## Recursos
 
-- Favicon: `public/favicon.svg`
+- Favicon vectorial y fallback ICO: `public/favicon.svg`, `public/favicon.ico`
 - Open Graph: `public/og-la-plata-marketing.png`
-- Regenerar Open Graph:
+- Regenerar los recursos de marca:
 
 ```bash
+npm run assets:favicon
 npm run assets:og
+# o ambos en serie:
+npm run assets:brand
 ```
 
-El generador usa Pillow y carga directamente estas fuentes de Windows: `C:\Windows\Fonts\impact.ttf` (Impact), `arial.ttf` y `arialbd.ttf` (Arial regular y negrita), `georgiai.ttf` (Georgia Italic) y `consola.ttf` (Consolas). No implementa fuentes de reemplazo: si alguno de esos archivos no está disponible, Pillow interrumpe la generación. El PNG final ya está versionado, por lo que Pillow y esas fuentes no son necesarios para ejecutar el sitio.
+Ambos generadores usan Pillow. El generador Open Graph carga directamente estas fuentes de Windows: `C:\Windows\Fonts\impact.ttf` (Impact), `arial.ttf` y `arialbd.ttf` (Arial regular y negrita), `georgiai.ttf` (Georgia Italic) y `consola.ttf` (Consolas). No implementa fuentes de reemplazo: si alguno de esos archivos no está disponible, Pillow interrumpe la generación. Los archivos finales ya están versionados, por lo que Pillow y esas fuentes no son necesarios para ejecutar el sitio.

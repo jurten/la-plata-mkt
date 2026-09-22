@@ -60,7 +60,7 @@ test('conserva destinos aprobados y no importa placeholders ni dependencias del 
   expect(layout.blue).toBe('#1536f1');
 });
 
-test('publica la nueva marca LPM sin depender de un favicon externo', async ({ request }) => {
+test('publica la marca LPM como favicon vectorial e ICO local', async ({ page, request }) => {
   const response = await request.get('/favicon.svg');
   expect(response.status()).toBe(200);
   expect(response.headers()['content-type']).toContain('image/svg+xml');
@@ -68,25 +68,47 @@ test('publica la nueva marca LPM sin depender de un favicon externo', async ({ r
   expect(favicon).toContain('#1536f1');
   expect(favicon).toContain('La Plata Marketing');
   expect(favicon).not.toContain('#1d62a8');
+
+  const icoResponse = await request.get('/favicon.ico');
+  expect(icoResponse.status()).toBe(200);
+  expect(icoResponse.headers()['content-type']).toMatch(/image\/(?:x-icon|vnd\.microsoft\.icon)/);
+  const ico = await icoResponse.body();
+  expect([...ico.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
+  expect(ico.readUInt16LE(4)).toBe(4);
+
+  await page.goto('/');
+  await expect(page.locator('link[rel="icon"][href="/favicon.ico"]')).toHaveCount(1);
 });
 
 test('permite elegir apariencia y conserva la preferencia sin romper el menú móvil', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
 
   const appearance = page.getByRole('group', { name: 'Apariencia' });
-  await expect(appearance.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
-  await appearance.getByRole('button', { name: 'Modo oscuro' }).click();
+  await expect(appearance.getByRole('button')).toHaveCount(2);
+  await expect(appearance.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
+  const lightButton = appearance.getByRole('button', { name: 'Modo claro' });
+  const darkButton = appearance.getByRole('button', { name: 'Modo oscuro' });
+  await expect(lightButton.locator('svg[data-theme-icon="sun"]')).toHaveAttribute('aria-hidden', 'true');
+  await expect(darkButton.locator('svg[data-theme-icon="moon"]')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
+  await expect(darkButton).toHaveAttribute('aria-pressed', 'true');
+  await expect(lightButton).toHaveAttribute('aria-pressed', 'false');
+
+  await lightButton.click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
+  expect(await page.evaluate(() => localStorage.getItem('lpm-theme'))).toBe('light');
+
+  await darkButton.click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0B1238');
   expect(await page.evaluate(() => localStorage.getItem('lpm-theme'))).toBe('dark');
 
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(appearance.getByRole('button', { name: 'Modo oscuro' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(darkButton).toHaveAttribute('aria-pressed', 'true');
 
   const menu = page.getByRole('button', { name: 'Menú' });
   const nav = page.getByRole('navigation', { name: 'Navegación principal' });

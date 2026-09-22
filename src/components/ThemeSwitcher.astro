@@ -1,0 +1,26 @@
+---
+import { themeChoices } from '../lib/themes';
+---
+<div class="theme-switcher" role="group" aria-label="Apariencia">
+  {themeChoices.map((theme) => (
+    <button
+      type="button"
+      data-set-theme={theme.id}
+      aria-label={theme.accessibleLabel}
+      title={theme.title}
+      aria-pressed="false"
+      disabled
+    >
+      {theme.icon === 'sun' ? (
+        <svg data-theme-icon="sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="3.5"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+        </svg>
+      ) : (
+        <svg data-theme-icon="moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20.4 15.1A8.5 8.5 0 0 1 8.9 3.6a8.5 8.5 0 1 0 11.5 11.5Z"></path>
+        </svg>
+      )}
+    </button>
+  ))}
+</div>

@@ -52,8 +52,10 @@ for (const view of [
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(100);
   await page.screenshot({ path: resolve(outputDir, `home-${view.name}-dark-full.png`), fullPage: true });
-  await page.getByRole('button', { name: 'Usar preferencia del sistema' }).click();
-  interactions.autoThemeRestored = await page.locator('html').getAttribute('data-theme') === 'auto';
+  await page.evaluate(() => localStorage.removeItem('lpm-theme'));
+  await page.reload({ waitUntil: 'load' });
+  await page.evaluate(() => document.fonts.ready);
+  interactions.systemThemeRestored = await page.locator('html').getAttribute('data-theme') === 'auto';
 
   if (view.name === 'mobile') {
     const menu = page.locator('.menu-toggle');
@@ -96,7 +98,7 @@ console.log(JSON.stringify(summary, null, 2));
 
 const interactionFailure = summary.some((entry) =>
   !entry.interactions.darkThemeApplied ||
-  !entry.interactions.autoThemeRestored ||
+  !entry.interactions.systemThemeRestored ||
   (entry.view === 'desktop'
     ? !entry.interactions.formDemoConfirmed
     : !entry.interactions.menuOpened || !entry.interactions.mobileNavVisible || !entry.interactions.menuClosed),

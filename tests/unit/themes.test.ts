@@ -47,11 +47,10 @@ function colorFromBlock(block: string, token: string): string {
 }
 
 describe('LPM theme system', () => {
-  it('publishes only the light, automatic and dark controls used by both pages', () => {
+  it('publishes only icon-based light and dark controls while system mode stays implicit', () => {
     expect(themeChoices).toEqual([
-      { id: 'light', shortLabel: 'L', accessibleLabel: 'Modo claro', title: 'Modo claro' },
-      { id: 'auto', shortLabel: 'A', accessibleLabel: 'Usar preferencia del sistema', title: 'Automático' },
-      { id: 'dark', shortLabel: 'D', accessibleLabel: 'Modo oscuro', title: 'Modo oscuro' },
+      { id: 'light', icon: 'sun', accessibleLabel: 'Modo claro', title: 'Modo claro' },
+      { id: 'dark', icon: 'moon', accessibleLabel: 'Modo oscuro', title: 'Modo oscuro' },
     ]);
   });
 
