@@ -873,7 +873,7 @@ main > section {
 
 .contact-heading {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
   gap: clamp(2rem, 5vw, 4rem);
   align-items: end;
 }
