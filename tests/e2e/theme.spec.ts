@@ -4,6 +4,9 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await page.goto('/?palettes=1&palette=manchette');
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
+  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('button')).toHaveCount(2);
+  await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
+  await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
@@ -15,6 +18,9 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await page.goto('/privacidad?palettes=1&palette=sobreimpresion');
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
+  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('button')).toHaveCount(2);
+  await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
+  await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
@@ -47,6 +53,27 @@ test('la nueva identidad conserva foco visible en navegación, tema y formulario
   };
 
   await assertKeyboardFocus(page.getByRole('link', { name: 'Soluciones' }).first());
-  await assertKeyboardFocus(page.getByRole('button', { name: 'Modo oscuro' }));
+  const darkThemeButton = page.getByRole('button', { name: 'Modo oscuro' });
+  await assertKeyboardFocus(darkThemeButton);
+
+  const focusPaint = await darkThemeButton.evaluate((element) => {
+    const container = element.closest('.theme-switcher');
+    if (!container) throw new Error('No se encontró el contenedor del selector de apariencia.');
+    const buttonBox = element.getBoundingClientRect();
+    const containerBox = container.getBoundingClientRect();
+    const buttonStyles = getComputedStyle(element);
+    const containerStyles = getComputedStyle(container);
+    const focusExtension = Number.parseFloat(buttonStyles.outlineWidth)
+      + Number.parseFloat(buttonStyles.outlineOffset);
+    const extendsOutside =
+      buttonBox.left - focusExtension < containerBox.left
+      || buttonBox.right + focusExtension > containerBox.right
+      || buttonBox.top - focusExtension < containerBox.top
+      || buttonBox.bottom + focusExtension > containerBox.bottom;
+    const clipsOverflow = containerStyles.overflowX !== 'visible' || containerStyles.overflowY !== 'visible';
+    return { clipped: clipsOverflow && extendsOutside };
+  });
+  expect(focusPaint.clipped).toBe(false);
+
   await assertKeyboardFocus(page.getByLabel('Email'));
 });

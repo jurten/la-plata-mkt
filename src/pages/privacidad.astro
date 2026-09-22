@@ -7,7 +7,7 @@ import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
-import { themeChoices } from '../lib/themes';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import '../styles/global.css';
 
 export const prerender = true;
@@ -33,6 +33,7 @@ const contactHref = '/#contacto';
     <meta name="theme-color" content="#F3EFE5" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
     <title>Privacidad | La Plata Marketing</title>
   </head>
   <body class="legal-body">
@@ -42,13 +43,7 @@ const contactHref = '/#contacto';
         <span class="brand-mark" aria-hidden="true">L/</span>
         <span>LPM</span>
       </a>
-      <div class="theme-switcher" role="group" aria-label="Apariencia">
-        {themeChoices.map((theme) => (
-          <button type="button" data-set-theme={theme.id} aria-label={theme.accessibleLabel} title={theme.title}>
-            {theme.shortLabel}
-          </button>
-        ))}
-      </div>
+      <ThemeSwitcher />
       <a class="legal-back" href={contactHref}>Volver al formulario <span aria-hidden="true">↙</span></a>
     </header>
 

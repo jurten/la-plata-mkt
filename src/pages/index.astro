@@ -9,7 +9,7 @@ import '@fontsource/ibm-plex-mono/500.css';
 import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
-import { themeChoices } from '../lib/themes';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import '../styles/global.css';
 
 export const prerender = true;
@@ -128,6 +128,7 @@ const structuredData = {
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
     <meta name="theme-color" content="#F3EFE5" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
@@ -169,13 +170,7 @@ const structuredData = {
           <a href="#capacidades">Capacidades</a>
           <a class="button nav-cta" href="#contacto">Contanos qué necesitás <span aria-hidden="true">↗</span></a>
         </nav>
-        <div class="theme-switcher" role="group" aria-label="Apariencia">
-          {themeChoices.map((theme) => (
-            <button type="button" data-set-theme={theme.id} aria-label={theme.accessibleLabel} title={theme.title}>
-              {theme.shortLabel}
-            </button>
-          ))}
-        </div>
+        <ThemeSwitcher />
       </div>
     </header>
 
