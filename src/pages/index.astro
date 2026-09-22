@@ -330,26 +330,29 @@ const structuredData = {
       </section>
 
       <section class="contact-section" id="contacto" aria-labelledby="contact-title">
-        <div class="wrap contact-heading">
-          <div><p class="eyebrow">07 / Empecemos</p><h2 id="contact-title" class="display">Contanos qué necesitás resolver.</h2></div>
-          <div class="contact-side">
-            <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
-            <div class="actions contact-actions" role="group" aria-label="Canales de contacto directo">
-              <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
-                WhatsApp · {whatsappDisplay} <span aria-hidden="true">↗</span>
-              </a>
-              <a class="button button-outline" href="#contact-form">Enviar una consulta <span aria-hidden="true">↓</span></a>
+        <div class="wrap contact-layout">
+          <div class="contact-intro">
+            <div class="contact-title">
+              <p class="eyebrow">07 / Empecemos</p>
+              <h2 id="contact-title" class="display">Contanos qué necesitás <em>resolver.</em></h2>
             </div>
-          </div>
-        </div>
-
-        <div class="wrap contact-workspace">
-          <div class="contact-direct">
-            <p class="meta">También podés escribirnos directamente</p>
-            <a href={`mailto:${contactEmail}`}><span>Email</span><strong>{contactEmail}</strong><b aria-hidden="true">↗</b></a>
+            <div class="contact-side">
+              <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
+              <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
+                <span>Escribir por WhatsApp</span><strong>{whatsappDisplay}</strong><b aria-hidden="true">↗</b>
+              </a>
+            </div>
+            <div class="contact-direct">
+              <span class="meta">O escribinos por email</span>
+              <a href={`mailto:${contactEmail}`}>{contactEmail} <b aria-hidden="true">↗</b></a>
+            </div>
           </div>
 
           <form id="contact-form" class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
+            <div class="contact-form-heading form-row-full">
+              <p class="meta">Formulario de contacto</p>
+              <h3>Tu consulta</h3>
+            </div>
             <div class="form-row">
               <label for="company">Empresa</label>
               <input id="company" name="company" type="text" autocomplete="organization" minlength="2" maxlength="120" required />

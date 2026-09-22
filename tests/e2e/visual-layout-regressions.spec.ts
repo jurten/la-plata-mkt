@@ -102,26 +102,28 @@ test('el diagrama de experiencia nunca invade texto esencial', async ({ page }) 
   expect(await mobileDiagram.boundingBox()).toBeNull();
 });
 
-test('el CTA de contacto se acerca al titular sin invadir su zona de lectura', async ({ page }) => {
+test('el contacto presenta la decisión a la izquierda y el formulario a la derecha', async ({ page }) => {
   await openHome(page, 1440, 900);
 
-  const heading = await boxOf(page.locator('.contact-heading'));
-  const title = await boxOf(page.locator('.contact-heading h2'));
+  const intro = await boxOf(page.locator('.contact-intro'));
+  const form = await boxOf(page.locator('.contact-form'));
   const side = await boxOf(page.locator('.contact-side'));
-  const normalizedStart = (side.x - heading.x) / heading.width;
+  const title = await boxOf(page.locator('.contact-title'));
 
-  expect(normalizedStart).toBeLessThanOrEqual(0.64);
-  expect(side.x - (title.x + title.width)).toBeGreaterThanOrEqual(24);
-  expect(side.x + side.width).toBeLessThanOrEqual(heading.x + heading.width + 1);
+  expect(form.x - (intro.x + intro.width)).toBeGreaterThanOrEqual(48);
+  expect(side.y).toBeGreaterThanOrEqual(title.y + title.height + 24);
+  expect(Math.abs(side.x - title.x)).toBeLessThan(2);
 });
 
-test('la sombra del formulario y los canales directos conservan separación', async ({ page }) => {
-  await openHome(page);
-
-  const direct = await boxOf(page.locator('.contact-direct'));
-  const form = await boxOf(page.locator('.contact-form'));
-  expect(overlap(direct, form)).toBe(false);
-  expect(form.x - (direct.x + direct.width)).toBeGreaterThanOrEqual(24);
+test('el contacto se apila sin desbordes en tablet y móvil', async ({ page }) => {
+  for (const width of [900, 560, 320]) {
+    await openHome(page, width, 900);
+    const intro = await boxOf(page.locator('.contact-intro'));
+    const form = await boxOf(page.locator('.contact-form'));
+    expect(form.y, `${width}px`).toBeGreaterThanOrEqual(intro.y + intro.height + 48);
+    expect(form.x, `${width}px`).toBeGreaterThanOrEqual(0);
+    expect(form.x + form.width, `${width}px`).toBeLessThanOrEqual(width);
+  }
 });
 
 test('el correo público del footer conserva una línea legible', async ({ page }) => {

@@ -863,6 +863,8 @@ main > section {
 }
 
 .contact-section {
+  position: relative;
+  overflow: hidden;
   color: #fff;
   background: var(--blue);
 }
@@ -871,97 +873,136 @@ main > section {
   border-color: #fff;
 }
 
-.contact-heading {
+.contact-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: end;
+  grid-template-columns: minmax(20rem, 0.88fr) minmax(0, 1.12fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: start;
 }
 
-.contact-heading h2 {
-  max-width: 58rem;
-  margin-top: 1rem;
-  font-size: clamp(4rem, 8vw, 8rem);
-}
-
-.contact-side p {
-  margin: 0 0 1.5rem;
-  font-size: 1.2rem;
-}
-
-.contact-section .button {
-  color: #111318;
-  background: #fff;
-  border-color: #fff;
-}
-
-.contact-section .button-outline {
-  color: #fff;
-  background: transparent;
-}
-
-.contact-actions {
-  align-items: stretch;
+.contact-intro {
+  display: flex;
+  min-width: 0;
   flex-direction: column;
 }
 
-.contact-workspace {
-  display: grid;
-  grid-template-columns: minmax(15rem, 0.55fr) minmax(0, 1.45fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: start;
-  margin-top: 4.5rem;
+.contact-title h2 {
+  max-width: 8ch;
+  margin-top: 1rem;
+  font-size: clamp(4rem, 6.5vw, 6.8rem);
 }
 
-.contact-direct {
-  min-width: 0;
+.contact-title h2 em {
+  color: var(--signal);
+  font-family: var(--editorial);
+  font-weight: 500;
+  letter-spacing: -0.04em;
 }
 
-.contact-direct > p {
-  margin: 0 0 1rem;
+.contact-side {
+  width: min(100%, 32rem);
+  margin-top: clamp(2rem, 5vw, 4rem);
 }
 
-.contact-direct > a {
+.contact-side p {
+  margin: 0 0 1.75rem;
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.contact-whatsapp {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.25rem 1rem;
+  gap: 0.1rem 1rem;
   align-items: center;
-  min-width: 0;
-  padding: 1rem;
+  width: 100%;
+  min-height: 4.8rem;
+  padding: 0.9rem 1.1rem;
   color: #111318;
   text-decoration: none;
   background: var(--signal);
   border: 1px solid #111318;
   border-radius: var(--radius);
+  transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
-.contact-direct span {
+.contact-whatsapp:hover {
+  box-shadow: 4px 4px 0 #111318;
+  transform: translate(-2px, -2px);
+}
+
+.contact-whatsapp span {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.contact-whatsapp strong {
+  grid-row: 2;
   font-family: var(--mono);
   font-size: 0.72rem;
-  text-transform: uppercase;
+  font-weight: 500;
 }
 
-.contact-direct strong {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.contact-direct b {
+.contact-whatsapp b {
   grid-row: 1 / 3;
   grid-column: 2;
+}
+
+.contact-direct {
+  width: min(100%, 32rem);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+}
+
+.contact-direct > span {
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.contact-direct > a {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: var(--display);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 650;
+  text-underline-offset: 0.3rem;
 }
 
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.4rem;
+  gap: 1.1rem 1.5rem;
   min-width: 0;
-  padding: clamp(1.5rem, 3vw, 3rem);
+  padding: clamp(1.5rem, 3.5vw, 3rem);
   color: var(--ink);
   background: var(--surface);
   border: 1px solid #111318;
   border-radius: var(--radius);
-  box-shadow: 8px 8px 0 #111318;
+  box-shadow: 10px 10px 0 color-mix(in srgb, #111318 88%, transparent);
+}
+
+.contact-form-heading {
+  padding-bottom: 1.3rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line-color);
+}
+
+.contact-form-heading p {
+  margin: 0 0 0.5rem;
+  color: var(--blue-text);
+}
+
+.contact-form-heading h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
 }
 
 .form-row {
@@ -1000,7 +1041,7 @@ main > section {
 }
 
 .form-row textarea {
-  min-height: 9rem;
+  min-height: 7.5rem;
   padding-top: 0.8rem;
   resize: vertical;
 }
@@ -1426,10 +1467,17 @@ details p {
   .section-head,
   .system-copy,
   .experience-grid,
-  .contact-heading,
-  .contact-workspace,
+  .contact-layout,
   .legal-intro {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-layout {
+    gap: 3.5rem;
+  }
+
+  .contact-title h2 {
+    max-width: 10ch;
   }
 
   .hero-side {
@@ -1606,7 +1654,7 @@ details p {
     grid-column: 1;
   }
 
-  .contact-heading h2 {
+  .contact-title h2 {
     font-size: clamp(3.3rem, 16vw, 5.2rem);
   }
 
