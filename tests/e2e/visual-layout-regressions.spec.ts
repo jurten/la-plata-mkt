@@ -160,6 +160,43 @@ test('el correo público del footer conserva una línea legible', async ({ page 
   }
 });
 
+test('experience cards share geometry and highlight treatment', async ({ page }) => {
+  await openHome(page);
+
+  const realEstate = page.locator('.experience-real-estate');
+  const professional = page.locator('.experience-professional');
+  const [realEstateBox, professionalBox] = await Promise.all([
+    boxOf(realEstate),
+    boxOf(professional),
+  ]);
+
+  expect(Math.abs(realEstateBox.width - professionalBox.width)).toBeLessThan(2);
+
+  const cardColors = async () => page.evaluate(() => ({
+    realEstate: getComputedStyle(document.querySelector<HTMLElement>('.experience-real-estate')!).backgroundColor,
+    professional: getComputedStyle(document.querySelector<HTMLElement>('.experience-professional')!).backgroundColor,
+  }));
+
+  const initial = await cardColors();
+  expect(initial.realEstate).toBe(initial.professional);
+
+  await professional.hover();
+  await expect.poll(async () => (await cardColors()).professional).not.toBe(initial.professional);
+  const professionalHover = await cardColors();
+  expect(professionalHover.realEstate).toBe(initial.realEstate);
+
+  await realEstate.hover();
+  await expect.poll(async () => (await cardColors()).realEstate).toBe(professionalHover.professional);
+  await expect.poll(async () => (await cardColors()).professional).toBe(initial.professional);
+  const realEstateHover = await cardColors();
+  expect(realEstateHover.realEstate).toBe(professionalHover.professional);
+
+  const action = page.locator('.experience-action').getByRole('link', { name: /Tengo un proyecto parecido/ });
+  await expect(action).toBeVisible();
+  await expect(realEstate.getByRole('link')).toHaveCount(0);
+  await expect(professional.getByRole('link')).toHaveCount(0);
+});
+
 for (const route of ['/', '/privacidad']) {
   test(`${route} no desborda en anchos críticos`, async ({ page }) => {
     for (const width of [320, 390, 560, 900, 901, 1440]) {
