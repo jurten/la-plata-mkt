@@ -196,12 +196,12 @@ const structuredData = {
             </div>
           </header>
           <div class="problems">
-            <div class="problem-item"><span class="meta">01</span><p>Tu web ya no representa el nivel real de tu negocio.</p></div>
-            <div class="problem-item"><span class="meta">02</span><p>Invertís en publicidad, pero no sabés qué pasa con las consultas.</p></div>
-            <div class="problem-item"><span class="meta">03</span><p>Los clientes llegan por distintos canales y el seguimiento se dispersa.</p></div>
-            <div class="problem-item"><span class="meta">04</span><p>Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</p></div>
-            <div class="problem-item"><span class="meta">05</span><p>Dependés demasiado de Instagram, WhatsApp o tareas manuales.</p></div>
-            <div class="problem-item"><span class="meta">06</span><p>Sabés que podrías captar más, pero no tenés un recorrido claro.</p></div>
+            <div class="problem-item"><span class="meta">01</span><p>Tu web ya no representa el nivel real de tu negocio.</p><span class="problem-signal" aria-hidden="true"></span></div>
+            <div class="problem-item"><span class="meta">02</span><p>Invertís en publicidad, pero no sabés qué pasa con las consultas.</p><span class="problem-signal" aria-hidden="true"></span></div>
+            <div class="problem-item"><span class="meta">03</span><p>Los clientes llegan por distintos canales y el seguimiento se dispersa.</p><span class="problem-signal" aria-hidden="true"></span></div>
+            <div class="problem-item"><span class="meta">04</span><p>Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</p><span class="problem-signal" aria-hidden="true"></span></div>
+            <div class="problem-item"><span class="meta">05</span><p>Dependés demasiado de Instagram, WhatsApp o tareas manuales.</p><span class="problem-signal" aria-hidden="true"></span></div>
+            <div class="problem-item"><span class="meta">06</span><p>Sabés que podrías captar más, pero no tenés un recorrido claro.</p><span class="problem-signal" aria-hidden="true"></span></div>
           </div>
           <p class="prompt">↓ Primero se reconoce el problema. Después se descubre el sistema.</p>
         </div>
@@ -261,7 +261,7 @@ const structuredData = {
                 <p class="meta">Sector 01 / Real estate</p>
                 <p class="case-status">{realEstateCase.label}</p>
               </div>
-              <div class="case-diagram" data-orbit-diagram aria-hidden="true">
+              <div class="case-diagram" data-orbit-diagram data-ambient-motion aria-hidden="true">
                 <span class="case-sun"></span>
                 <span class="case-orbit case-orbit-inner"><span class="case-planet"></span></span>
                 <span class="case-orbit case-orbit-middle"><span class="case-planet"></span></span>
@@ -275,6 +275,12 @@ const structuredData = {
               <div>
                 <p class="meta">Sector 02 / Servicios profesionales</p>
                 <p class="case-status">{legalCase.label}</p>
+              </div>
+              <div class="trust-badge" aria-hidden="true">
+                <svg class="trust-badge-mark" viewBox="0 0 48 48" focusable="false">
+                  <path d="m13 25 7 7 15-17" />
+                </svg>
+                <span>Señal verificada</span>
               </div>
               <h3 class="display">Credibilidad que convierte.</h3>
               <p>{legalCase.summary}</p>
@@ -294,7 +300,7 @@ const structuredData = {
               <p class="section-intro muted">El proyecto no empieza eligiendo herramientas. Empieza entendiendo qué está pasando.</p>
             </div>
           </header>
-          <ol class="method-steps">
+          <ol class="method-steps" data-method-flow>
             {methodSteps.map(([title, description]) => (
               <li class="method-step"><h3>{title}</h3><p>{description}</p></li>
             ))}

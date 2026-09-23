@@ -111,19 +111,32 @@ test('el flujo permanece neutral y destaca únicamente la etapa bajo el puntero'
   await expect.poll(() => conversion.evaluate((node) => getComputedStyle(node).backgroundColor)).toBe(restBackground);
 });
 
-test('el sistema orbital gira sólo mientras el caso está visible', async ({ page }) => {
+test('los instrumentos ambientales se activan sólo mientras están visibles', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
 
   const diagram = page.locator('[data-orbit-diagram]');
   await diagram.scrollIntoViewIfNeeded();
-  await expect(diagram).toHaveClass(/is-orbiting/);
+  await expect(diagram).toHaveClass(/is-motion-active/);
   await expect(diagram.locator('.case-orbit').first()).toHaveCSS('animation-play-state', 'running');
 
   await page.locator('#inicio').scrollIntoViewIfNeeded();
-  await expect(diagram).not.toHaveClass(/is-orbiting/);
+  await expect(diagram).not.toHaveClass(/is-motion-active/);
   await expect(diagram.locator('.case-orbit').first()).toHaveCSS('animation-play-state', 'paused');
+});
+
+test('el método dibuja una ruta secuencial sin ocultar el contenido', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const flow = page.locator('[data-method-flow]');
+  await flow.scrollIntoViewIfNeeded();
+  await expect(flow).toHaveClass(/is-in-view/);
+  await expect(flow.locator('.method-step').first()).toHaveCSS('opacity', '1');
+  expect(await flow.locator('.method-step').first().evaluate((step) => getComputedStyle(step, '::after').animationName))
+    .toBe('method-signal');
 });
 
 test('las soluciones transfieren el estado seleccionado con puntero y teclado', async ({ page }) => {

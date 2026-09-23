@@ -2,7 +2,8 @@ const root = document.documentElement;
 
 const systemFlow = document.querySelector('.system-flow');
 const solutionPaths = document.querySelector('.solution-paths');
-const orbitDiagram = document.querySelector('[data-orbit-diagram]');
+const methodFlow = document.querySelector('[data-method-flow]');
+const ambientMotion = [...document.querySelectorAll('[data-ambient-motion]')];
 let prefersReducedMotion = false;
 
 try {
@@ -28,18 +29,28 @@ const observeOnce = (element, threshold) => {
 
 observeOnce(solutionPaths, 0.12);
 observeOnce(systemFlow, 0.22);
+observeOnce(methodFlow, 0.24);
 
-if (orbitDiagram && !prefersReducedMotion && 'IntersectionObserver' in window) {
-  let orbitVisible = false;
-  const syncOrbit = () => {
-    orbitDiagram.classList.toggle('is-orbiting', orbitVisible && !document.hidden);
+if (ambientMotion.length && !prefersReducedMotion) {
+  const visibleMotion = new WeakMap();
+  const syncAmbientMotion = () => {
+    ambientMotion.forEach((element) => {
+      element.classList.toggle('is-motion-active', visibleMotion.get(element) === true && !document.hidden);
+    });
   };
-  const orbitObserver = new IntersectionObserver(([entry]) => {
-    orbitVisible = entry.isIntersecting;
-    syncOrbit();
-  }, { threshold: 0.2 });
-  orbitObserver.observe(orbitDiagram);
-  document.addEventListener('visibilitychange', syncOrbit);
+
+  if ('IntersectionObserver' in window) {
+    const ambientObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => visibleMotion.set(entry.target, entry.isIntersecting));
+      syncAmbientMotion();
+    }, { threshold: 0.12 });
+    ambientMotion.forEach((element) => ambientObserver.observe(element));
+  } else {
+    ambientMotion.forEach((element) => visibleMotion.set(element, true));
+    syncAmbientMotion();
+  }
+
+  document.addEventListener('visibilitychange', syncAmbientMotion);
 }
 
 const themeButtons = [...document.querySelectorAll('[data-set-theme]')];

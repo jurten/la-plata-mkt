@@ -88,6 +88,7 @@ body {
   line-height: 1.55;
 }
 
+/* impeccable-disable-next-line codex-grid-background: intentional system-mapping canvas for the site's operating-system visual world */
 body::before {
   position: fixed;
   inset: 0;
@@ -500,11 +501,14 @@ main > section {
 }
 
 .problem-item {
+  position: relative;
   display: grid;
   grid-template-columns: 3.25rem minmax(0, 1fr);
   gap: 1.1rem;
   padding: 1.55rem 0.75rem;
+  overflow: hidden;
   border-bottom: 1px solid var(--line-color);
+  transition: background-color 220ms var(--motion-ease-out);
 }
 
 .problem-item:nth-child(odd) {
@@ -521,8 +525,36 @@ main > section {
 }
 
 .problem-item p {
+  position: relative;
+  z-index: 1;
   margin: 0;
   font-size: 1.15rem;
+}
+
+.problem-signal {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms var(--motion-ease-out);
+}
+
+@media (hover: hover) {
+  .problem-item:hover {
+    background: color-mix(in srgb, var(--blue) 6%, transparent);
+  }
+
+  .problem-item:hover .problem-signal {
+    transform: scaleX(1);
+  }
+
+  .problem-item:hover .meta {
+    color: var(--pulse);
+  }
 }
 
 .prompt {
@@ -1032,7 +1064,7 @@ main > section {
   animation-play-state: paused;
 }
 
-.case-diagram.is-orbiting .case-orbit {
+.case-diagram.is-motion-active .case-orbit {
   animation-play-state: running;
 }
 
@@ -1094,6 +1126,44 @@ main > section {
   }
 }
 
+.trust-badge {
+  position: absolute;
+  top: 1.55rem;
+  right: 1.55rem;
+  z-index: 2;
+  display: flex;
+  max-width: 7.5rem;
+  gap: 0.55rem;
+  align-items: center;
+  color: var(--ink);
+}
+
+.trust-badge-mark {
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: 0 0 auto;
+  color: #111318;
+  background: var(--signal);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.trust-badge-mark path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.trust-badge span {
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .method-steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1106,21 +1176,66 @@ main > section {
 }
 
 .method-step {
+  --method-index: 0;
+  position: relative;
   display: flex;
   min-width: 0;
   min-height: 19rem;
   padding: 1.5rem;
+  overflow: hidden;
   flex-direction: column;
   counter-increment: method-step;
   border-right: 1px solid var(--line-color);
   border-bottom: 1px solid var(--line-color);
+  transition: background-color 220ms var(--motion-ease-out), color 220ms var(--motion-ease-out);
 }
+
+.method-step:nth-child(2) { --method-index: 1; }
+.method-step:nth-child(3) { --method-index: 2; }
+.method-step:nth-child(4) { --method-index: 3; }
 
 .method-step::before {
   content: '0' counter(method-step);
   color: var(--blue-text);
   font-family: var(--mono);
   font-size: 0.76rem;
+}
+
+.method-step::after {
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 4px;
+  content: '';
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.method-steps.is-in-view .method-step::after {
+  animation: method-signal 560ms var(--motion-ease-out) calc(var(--method-index) * 130ms) both;
+}
+
+@media (hover: hover) {
+  .method-step:hover {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  .method-step:hover::before,
+  .method-step:hover p {
+    color: #fff;
+  }
+
+  .method-step:hover::after {
+    background: var(--signal);
+  }
+}
+
+@keyframes method-signal {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 .method-step h3 {
@@ -1142,9 +1257,30 @@ main > section {
 }
 
 .capability {
+  position: relative;
   min-width: 0;
   padding-top: 1.1rem;
   border-top: 4px solid var(--blue);
+}
+
+.capability::before {
+  position: absolute;
+  top: -0.65rem;
+  left: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  content: '';
+  background: var(--bg);
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+  transition: background-color 180ms ease, transform 260ms var(--motion-ease-out);
+}
+
+@media (hover: hover) {
+  .capability:hover::before {
+    background: var(--signal);
+    transform: scale(1.35);
+  }
 }
 
 .capability h3 {
@@ -1746,6 +1882,14 @@ details p {
   .method-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .experience-professional > div:first-child {
+    padding-right: 3.25rem;
+  }
+
+  .trust-badge span {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1995,6 +2139,20 @@ details p {
   }
 
   .case-diagram {
+    display: none;
+  }
+
+  .trust-badge {
+    top: 1.1rem;
+    right: 1.1rem;
+  }
+
+  .trust-badge-mark {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .trust-badge span {
     display: none;
   }
 
