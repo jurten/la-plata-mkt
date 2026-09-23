@@ -36,11 +36,15 @@ test('conserva destinos aprobados y no importa placeholders ni dependencias del 
   await page.goto('/');
 
   const whatsappLinks = page.getByRole('link', { name: whatsappName });
-  await expect(whatsappLinks).toHaveCount(2);
-  for (let index = 0; index < 2; index += 1) {
+  await expect(whatsappLinks).toHaveCount(3);
+  for (let index = 0; index < 3; index += 1) {
     await expect(whatsappLinks.nth(index)).toHaveAttribute('href', whatsappHref);
     await expect(whatsappLinks.nth(index)).not.toHaveAttribute('target', '_blank');
   }
+
+  const floatingWhatsapp = page.locator('[data-floating-whatsapp]');
+  await expect(floatingWhatsapp).toBeVisible();
+  await expect(floatingWhatsapp).toHaveCSS('position', 'fixed');
 
   await expect(page.locator('a[href="mailto:ceo@laplatamarketing.com"]')).toHaveCount(2);
   const html = await page.locator('html').innerHTML();

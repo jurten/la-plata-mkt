@@ -203,6 +203,44 @@ textarea {
   transform: none;
 }
 
+.floating-whatsapp {
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 45;
+  display: grid;
+  width: 3.75rem;
+  height: 3.75rem;
+  color: #fff;
+  text-decoration: none;
+  background: #128c4a;
+  border: 2px solid #fffdf7;
+  border-radius: 50%;
+  box-shadow: 0 0.45rem 1.25rem rgba(17, 19, 24, 0.28);
+  place-items: center;
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms var(--motion-ease-out),
+    background-color 180ms ease;
+}
+
+.floating-whatsapp svg {
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+}
+
+.floating-whatsapp:hover {
+  background: #0e783e;
+  box-shadow: 0 0.7rem 1.65rem rgba(17, 19, 24, 0.34);
+  transform: translateY(-3px);
+}
+
+.floating-whatsapp:active {
+  box-shadow: 0 0.3rem 0.8rem rgba(17, 19, 24, 0.28);
+  transform: translateY(0) scale(0.96);
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -2217,6 +2255,13 @@ details p {
     font-size: 16px;
   }
 
+  .floating-whatsapp {
+    right: max(0.9rem, env(safe-area-inset-right));
+    bottom: max(0.9rem, env(safe-area-inset-bottom));
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
   main > section {
     padding-block: 5.15rem;
   }
@@ -2411,6 +2456,12 @@ details p {
   .legal-sections article {
     min-height: auto;
     padding-block: 3.5rem;
+  }
+}
+
+@media print {
+  .floating-whatsapp {
+    display: none;
   }
 }
 
