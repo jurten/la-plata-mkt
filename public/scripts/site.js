@@ -3,6 +3,7 @@ const root = document.documentElement;
 const systemFlow = document.querySelector('.system-flow');
 const solutionPaths = document.querySelector('.solution-paths');
 const methodFlow = document.querySelector('[data-method-flow]');
+const heroTicker = document.querySelector('.hero-ticker');
 const ambientMotion = [...document.querySelectorAll('[data-ambient-motion]')];
 let prefersReducedMotion = false;
 
@@ -30,6 +31,7 @@ const observeOnce = (element, threshold) => {
 observeOnce(solutionPaths, 0.12);
 observeOnce(systemFlow, 0.22);
 observeOnce(methodFlow, 0.24);
+observeOnce(heroTicker, 0.35);
 
 if (ambientMotion.length && !prefersReducedMotion) {
   const visibleMotion = new WeakMap();

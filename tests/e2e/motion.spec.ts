@@ -65,6 +65,36 @@ test('movimiento reducido elimina desplazamientos y transiciones no esenciales',
     expect(Number.parseFloat(durations.animation)).toBeLessThanOrEqual(0.001);
     expect(Number.parseFloat(durations.transition)).toBeLessThanOrEqual(0.001);
   }
+
+  const tickerDurations = await page.locator('.ticker-cell').first().evaluate((cell) => ({
+    node: getComputedStyle(cell, '::before').animationDuration,
+    label: getComputedStyle(cell.querySelector('span')!).animationDuration,
+  }));
+  expect(Number.parseFloat(tickerDurations.node)).toBeLessThanOrEqual(0.001);
+  expect(Number.parseFloat(tickerDurations.label)).toBeLessThanOrEqual(0.001);
+});
+
+test('el hero recorre y activa sus tres resultados como un sistema', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const ticker = page.locator('.hero-ticker');
+  await expect(ticker).toHaveClass(/is-in-view/);
+
+  const motion = await ticker.evaluate((element) => {
+    const firstCell = element.querySelector('.ticker-cell')!;
+    return {
+      route: getComputedStyle(element, '::after').animationName,
+      node: getComputedStyle(firstCell, '::before').animationName,
+      label: getComputedStyle(firstCell.querySelector('span')!).animationName,
+    };
+  });
+  expect(motion).toEqual({
+    route: 'ticker-route',
+    node: 'ticker-node-route',
+    label: 'ticker-label-reveal',
+  });
 });
 
 test('el recorrido del sistema activa una única señal secuencial al entrar en vista', async ({ page }) => {

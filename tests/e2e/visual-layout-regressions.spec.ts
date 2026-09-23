@@ -21,15 +21,32 @@ const openHome = async (page: Page, width = 1440, height = 1000) => {
 };
 
 test('el hero protege la lectura y conserva aire antes de sus resultados', async ({ page }) => {
-  await openHome(page);
+  await openHome(page, 1280, 900);
 
   const title = await boxOf(page.locator('#hero-title'));
   const side = await boxOf(page.locator('.hero-side'));
   const actions = await boxOf(page.locator('.hero-side .actions'));
   const ticker = await boxOf(page.locator('.hero-ticker'));
+  const buttons = await page.locator('.hero-side .actions .button').evaluateAll((elements) =>
+    elements.map((element) => element.getBoundingClientRect().width),
+  );
 
   expect(overlap(title, side)).toBe(false);
   expect(ticker.y - (actions.y + actions.height)).toBeGreaterThanOrEqual(24);
+  expect(ticker.y - (actions.y + actions.height)).toBeLessThanOrEqual(160);
+  expect(Math.abs(buttons[0] - buttons[1])).toBeLessThan(2);
+});
+
+test('el hero pasa a una lectura lineal antes de comprimir su columna de conversión', async ({ page }) => {
+  await openHome(page, 1024, 900);
+
+  const title = await boxOf(page.locator('#hero-title'));
+  const side = await boxOf(page.locator('.hero-side'));
+  const ticker = await boxOf(page.locator('.hero-ticker'));
+
+  expect(side.y).toBeGreaterThanOrEqual(title.y + title.height);
+  expect(Math.abs(side.x - title.x)).toBeLessThan(2);
+  expect(ticker.y).toBeGreaterThan(side.y + side.height);
 });
 
 test('las tres rutas mantienen tarjetas íntegras y títulos dentro de sus bordes', async ({ page }) => {
