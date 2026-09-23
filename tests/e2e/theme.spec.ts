@@ -77,3 +77,20 @@ test('la nueva identidad conserva foco visible en navegación, tema y formulario
 
   await assertKeyboardFocus(page.getByLabel('Email'));
 });
+
+test('el selector de apariencia conserva objetivos táctiles de 44px en pantallas estrechas', async ({ page }) => {
+  for (const width of [320, 390, 900]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/');
+
+    const buttons = page.getByRole('group', { name: 'Apariencia' }).getByRole('button');
+    await expect(buttons).toHaveCount(2);
+
+    for (const button of await buttons.all()) {
+      const box = await button.boundingBox();
+      expect(box, `${width}px`).not.toBeNull();
+      expect(box!.width, `${width}px de ancho`).toBeGreaterThanOrEqual(44);
+      expect(box!.height, `${width}px de alto`).toBeGreaterThanOrEqual(44);
+    }
+  }
+});

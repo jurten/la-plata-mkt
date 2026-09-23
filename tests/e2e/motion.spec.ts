@@ -169,6 +169,66 @@ test('el método dibuja una ruta secuencial sin ocultar el contenido', async ({ 
     .toBe('method-signal');
 });
 
+test('las capacidades aparecen de arriba hacia abajo con un desvanecido escalonado', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const grid = page.locator('.capability-grid');
+  await grid.scrollIntoViewIfNeeded();
+  await expect(grid).toHaveClass(/is-in-view/);
+
+  const firstCapability = grid.locator('.capability').first();
+  await expect(firstCapability.locator('h3')).toHaveCSS('animation-name', 'capability-row-arrive');
+
+  const rowDelays = await firstCapability.locator('li').evaluateAll((rows) =>
+    rows.map((row) => Number.parseFloat(getComputedStyle(row).animationDelay)),
+  );
+  expect(rowDelays).toEqual([...rowDelays].sort((a, b) => a - b));
+  expect(new Set(rowDelays).size).toBe(rowDelays.length);
+});
+
+test('las respuestas frecuentes se despliegan de arriba hacia abajo al interactuar', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/#faq');
+
+  const disclosure = page.locator('#faq details').first();
+  const summary = disclosure.locator('summary');
+  const answer = disclosure.locator('p');
+
+  await summary.focus();
+  await page.keyboard.press('Enter');
+  await expect(disclosure).toHaveAttribute('open', '');
+  await expect(disclosure).toHaveClass(/is-expanding/);
+  await expect(answer).toHaveCSS('animation-name', 'faq-answer-arrive');
+  await expect(answer).toBeVisible();
+  await expect.poll(() => disclosure.evaluate((element) => element.classList.contains('is-expanding'))).toBe(false);
+
+  await summary.click();
+  await expect(disclosure).toHaveClass(/is-closing/);
+  await expect(answer).toHaveCSS('animation-name', 'faq-answer-leave');
+  await expect.poll(() => disclosure.getAttribute('open')).toBeNull();
+
+  await summary.click();
+  await expect(disclosure).toHaveClass(/is-expanding/);
+  await summary.click();
+  await expect(disclosure).toHaveClass(/is-closing/);
+  await summary.click();
+  await expect(disclosure).toHaveClass(/is-expanding/);
+  await expect.poll(() => disclosure.evaluate((element) => element.classList.contains('is-expanding'))).toBe(false);
+  await expect(disclosure).toHaveAttribute('open', '');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  const reducedDisclosure = page.locator('#faq details').first();
+  await reducedDisclosure.locator('summary').click();
+  const reducedDuration = await reducedDisclosure.locator('p').evaluate((element) =>
+    Number.parseFloat(getComputedStyle(element).animationDuration),
+  );
+  expect(reducedDuration).toBeLessThanOrEqual(0.001);
+});
+
 test('las soluciones transfieren el estado seleccionado con puntero y teclado', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });

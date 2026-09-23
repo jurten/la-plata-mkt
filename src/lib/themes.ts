@@ -25,7 +25,7 @@ export const colorThemes = {
     ink: '#E9ECE7',
     muted: '#AEB9C9',
     blue: '#254BFF',
-    blueText: '#5973FF',
+    blueText: '#637CFF',
     blueStrong: '#4968FF',
     sky: '#1A285E',
     signal: '#B8F35A',

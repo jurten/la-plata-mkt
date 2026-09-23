@@ -4,6 +4,8 @@ const systemFlow = document.querySelector('.system-flow');
 const solutionPaths = document.querySelector('.solution-paths');
 const methodFlow = document.querySelector('[data-method-flow]');
 const heroTicker = document.querySelector('.hero-ticker');
+const capabilityGrid = document.querySelector('.capability-grid');
+const faqDisclosures = [...document.querySelectorAll('.faq-list details')];
 const ambientMotion = [...document.querySelectorAll('[data-ambient-motion]')];
 let prefersReducedMotion = false;
 
@@ -32,6 +34,63 @@ observeOnce(solutionPaths, 0.12);
 observeOnce(systemFlow, 0.22);
 observeOnce(methodFlow, 0.24);
 observeOnce(heroTicker, 0.35);
+observeOnce(capabilityGrid, 0.2);
+
+if (!prefersReducedMotion && typeof Element.prototype.animate === 'function') {
+  faqDisclosures.forEach((details) => {
+    const summary = details.querySelector('summary');
+    if (!summary) return;
+
+    let heightAnimation;
+
+    const cancelHeightAnimation = () => {
+      if (!heightAnimation) return;
+      heightAnimation.onfinish = null;
+      heightAnimation.oncancel = null;
+      heightAnimation.cancel();
+      heightAnimation = undefined;
+    };
+
+    const settle = (open) => {
+      details.open = open;
+      details.classList.remove('is-expanding', 'is-closing');
+      details.style.removeProperty('height');
+      details.style.removeProperty('overflow');
+      heightAnimation = undefined;
+    };
+
+    const animateDisclosure = (open) => {
+      const startHeight = details.getBoundingClientRect().height;
+      cancelHeightAnimation();
+
+      if (open) details.open = true;
+      const endHeight = open ? details.scrollHeight : summary.getBoundingClientRect().height;
+
+      details.classList.toggle('is-expanding', open);
+      details.classList.toggle('is-closing', !open);
+      details.style.height = `${startHeight}px`;
+      details.style.overflow = 'hidden';
+
+      heightAnimation = details.animate(
+        { height: [`${startHeight}px`, `${endHeight}px`] },
+        {
+          duration: open ? 420 : 260,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        },
+      );
+      heightAnimation.onfinish = () => settle(open);
+      heightAnimation.oncancel = () => {
+        heightAnimation = undefined;
+      };
+    };
+
+    summary.addEventListener('click', (event) => {
+      event.preventDefault();
+      const shouldOpen = !details.open || details.classList.contains('is-closing');
+      animateDisclosure(shouldOpen);
+    });
+  });
+}
 
 if (ambientMotion.length && !prefersReducedMotion) {
   const visibleMotion = new WeakMap();

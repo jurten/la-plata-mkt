@@ -1,11 +1,10 @@
 ---
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/newsreader';
-import '@fontsource/ibm-plex-sans/400.css';
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-sans/600.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
 import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
@@ -336,15 +335,17 @@ const structuredData = {
               <p class="eyebrow">07 / Empecemos</p>
               <h2 id="contact-title" class="display">Contanos qué necesitás <em>resolver.</em></h2>
             </div>
-            <div class="contact-side">
-              <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
-              <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
-                <span>Escribir por WhatsApp</span><strong>{whatsappDisplay}</strong><b aria-hidden="true">↗</b>
-              </a>
-            </div>
-            <div class="contact-direct">
-              <span class="meta">O escribinos por email</span>
-              <a href={`mailto:${contactEmail}`}>{contactEmail} <b aria-hidden="true">↗</b></a>
+            <div role="group" aria-label="Canales de contacto directo">
+              <div class="contact-side">
+                <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
+                <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
+                  <span>Escribir por WhatsApp</span><strong>{whatsappDisplay}</strong><b aria-hidden="true">↗</b>
+                </a>
+              </div>
+              <div class="contact-direct">
+                <span class="meta">O escribinos por email</span>
+                <a href={`mailto:${contactEmail}`}>{contactEmail} <b aria-hidden="true">↗</b></a>
+              </div>
             </div>
           </div>
 
