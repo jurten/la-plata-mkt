@@ -1,0 +1,46 @@
+---
+const steps: Array<{
+  number: string;
+  action: string;
+  title: string;
+  state?: 'active' | 'human';
+}> = [
+  { number: '01', action: 'Atraer', title: 'Publicidad' },
+  { number: '02', action: 'Recibir', title: 'Web' },
+  { number: '03', action: 'Convertir', title: 'Consulta', state: 'active' },
+  { number: '04', action: 'Conversar', title: 'WhatsApp', state: 'human' },
+  { number: '05', action: 'Registrar', title: 'CRM' },
+  { number: '06', action: 'Seguir', title: 'Proceso' },
+  { number: '07', action: 'Resultado', title: 'Venta' },
+];
+---
+
+<figure class="system-map">
+  <ol class="system-flow" aria-label="Flujo desde publicidad hasta venta">
+    {steps.map((step, index) => (
+      <li
+        class:list={['system-node', step.state]}
+        aria-current={step.state === 'active' ? 'step' : undefined}
+      >
+        <span class="system-node-marker" aria-hidden="true">{step.number}</span>
+        <span class="system-node-copy">
+          <span class="system-node-action">{step.action}</span>
+          <strong>{step.title}</strong>
+        </span>
+        {index < steps.length - 1 && (
+          <span class="system-connector" aria-hidden="true">
+            <svg viewBox="0 0 16 16" focusable="false">
+              <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5"></path>
+            </svg>
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+  <figcaption class="system-map-caption">
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M2 8h11M9.5 4.5 13 8l-3.5 3.5"></path>
+    </svg>
+    <span>Hacer visible el sistema para poder intervenirlo.</span>
+  </figcaption>
+</figure>

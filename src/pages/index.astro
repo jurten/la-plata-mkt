@@ -10,6 +10,7 @@ import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import SystemFlow from '../components/SystemFlow.astro';
 import '../styles/global.css';
 
 export const prerender = true;
@@ -30,7 +31,6 @@ const solutionPaths = [
     question: 'Necesito transformar visibilidad en oportunidades reales.',
     tags: ['Meta Ads', 'Landing', 'Medición', 'Optimización'],
     action: 'Generar consultas',
-    featured: true,
   },
   {
     number: '3',
@@ -40,16 +40,6 @@ const solutionPaths = [
     tags: ['CRM', 'Automatización', 'Integraciones', 'Turnos'],
     action: 'Ordenar mi operación',
   },
-];
-
-const systemNodes = [
-  ['01 / ATRAER', 'Publicidad'],
-  ['02 / RECIBIR', 'Web'],
-  ['03 / CONVERTIR', 'Consulta', 'active'],
-  ['04 / CONVERSAR', 'WhatsApp', 'human'],
-  ['05 / REGISTRAR', 'CRM'],
-  ['06 / SEGUIR', 'Proceso'],
-  ['07 / RESULTADO', 'Venta'],
 ];
 
 const methodSteps = [
@@ -228,14 +218,14 @@ const structuredData = {
           </header>
           <div class="solution-paths">
             {solutionPaths.map((path) => (
-              <article class:list={['solution-path', { featured: path.featured }]} data-number={path.number}>
+              <article class="solution-path" data-number={path.number}>
                 <p class="meta">{path.category}</p>
                 <h3>{path.title}</h3>
                 <p class="path-question">{path.question}</p>
                 <div class="tags" aria-label={`Herramientas para ${path.category}`}>
                   {path.tags.map((tag) => <span class="tag">{tag}</span>)}
                 </div>
-                <a class:list={['button', { 'button-primary': path.featured, 'button-text': !path.featured }]} href="#contacto">
+                <a class="button solution-path-action" href="#contacto">
                   {path.action} <span aria-hidden="true">→</span>
                 </a>
               </article>
@@ -252,14 +242,7 @@ const structuredData = {
             <p>Una campaña puede generar tráfico. Pero el tráfico necesita un lugar donde convertir. Una consulta necesita seguimiento. Y el seguimiento necesita un sistema.</p>
             <p>Por eso La Plata Marketing conecta marketing, tecnología y operación comercial. Intervenimos donde se corta la cadena.</p>
           </div>
-          <div class="system-flow" role="group" aria-label="Flujo desde publicidad hasta venta">
-            {systemNodes.map(([label, title, modifier]) => (
-              <div class:list={['system-node', modifier]}>
-                <b>{label}</b><span>{title}</span>
-              </div>
-            ))}
-          </div>
-          <p class="prompt">→ Hacer visible el sistema para poder intervenirlo.</p>
+          <SystemFlow />
         </div>
       </section>
 

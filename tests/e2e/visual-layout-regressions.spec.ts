@@ -56,7 +56,7 @@ test('las tres rutas mantienen tarjetas íntegras y títulos dentro de sus borde
   }
 });
 
-test('el flujo conserva siete etapas contiguas en escritorio y una columna íntegra en móvil', async ({ page }) => {
+test('el flujo conserva siete etapas alineadas en escritorio y una columna íntegra en móvil', async ({ page }) => {
   await openHome(page, 901, 900);
   let flow = page.locator('.system-flow');
   await flow.scrollIntoViewIfNeeded();
@@ -67,7 +67,9 @@ test('el flujo conserva siete etapas contiguas en escritorio y una columna ínte
     return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
   }));
   for (let index = 1; index < desktop.length; index += 1) {
-    expect(Math.abs(desktop[index].left - desktop[index - 1].right)).toBeLessThan(2);
+    const gap = desktop[index].left - desktop[index - 1].right;
+    expect(gap).toBeGreaterThanOrEqual(4);
+    expect(gap).toBeLessThanOrEqual(16);
     expect(Math.abs(desktop[index].top - desktop[0].top)).toBeLessThan(2);
     expect(Math.abs(desktop[index].bottom - desktop[0].bottom)).toBeLessThan(2);
   }
@@ -81,7 +83,9 @@ test('el flujo conserva siete etapas contiguas en escritorio y una columna ínte
     return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
   }));
   for (let index = 1; index < mobile.length; index += 1) {
-    expect(Math.abs(mobile[index].top - mobile[index - 1].bottom)).toBeLessThan(2);
+    const gap = mobile[index].top - mobile[index - 1].bottom;
+    expect(gap).toBeGreaterThanOrEqual(4);
+    expect(gap).toBeLessThanOrEqual(16);
     expect(Math.abs(mobile[index].left - mobile[0].left)).toBeLessThan(2);
     expect(Math.abs(mobile[index].right - mobile[0].right)).toBeLessThan(2);
   }

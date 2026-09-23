@@ -1,5 +1,33 @@
 const root = document.documentElement;
 
+const systemFlow = document.querySelector('.system-flow');
+const solutionPaths = document.querySelector('.solution-paths');
+let prefersReducedMotion = false;
+
+try {
+  prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+} catch {
+  prefersReducedMotion = false;
+}
+
+const observeOnce = (element, threshold) => {
+  if (!element || prefersReducedMotion) return;
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      element.classList.add('is-in-view');
+      observer.disconnect();
+    }, { threshold });
+    observer.observe(element);
+  } else {
+    element.classList.add('is-in-view');
+  }
+};
+
+observeOnce(solutionPaths, 0.12);
+observeOnce(systemFlow, 0.22);
+
 const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
 const themeMeta = document.querySelector('meta[name="theme-color"]');
 const themeLabel = document.querySelector('#mode-label');
@@ -152,6 +180,7 @@ contactForm?.addEventListener('submit', async (event) => {
     button.disabled = true;
     button.textContent = 'Enviando…';
   }
+  contactForm.dataset.submissionState = 'sending';
   contactForm.setAttribute('aria-busy', 'true');
   if (status) status.textContent = '';
 
@@ -173,9 +202,11 @@ contactForm?.addEventListener('submit', async (event) => {
         : '¡Listo! Recibimos tu consulta.';
       status.focus();
     }
+    contactForm.dataset.submissionState = 'success';
     contactForm.reset();
     window.history.replaceState(null, '', '#contacto');
   } catch {
+    contactForm.dataset.submissionState = 'error';
     if (status) {
       status.textContent = 'No pudimos enviar la consulta. Probá de nuevo o escribinos a ceo@laplatamarketing.com.';
       status.focus();
