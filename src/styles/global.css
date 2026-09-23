@@ -1006,22 +1006,92 @@ main > section {
   right: -2.5rem;
   width: 14.5rem;
   height: 14.5rem;
-  border: 1px solid currentColor;
-  border-radius: 50%;
 }
 
-.case-diagram::before,
-.case-diagram::after {
+.case-sun,
+.case-orbit {
   position: absolute;
-  content: '';
-  border: 1px solid currentColor;
   border-radius: 50%;
-  inset: 1.75rem;
 }
 
-.case-diagram::after {
+.case-sun {
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 5.5rem;
+  height: 5.5rem;
   background: var(--signal);
-  inset: 4.4rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 65%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.case-orbit {
+  border: 1px solid currentColor;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+}
+
+.case-diagram.is-orbiting .case-orbit {
+  animation-play-state: running;
+}
+
+.case-orbit-inner {
+  inset: 3.15rem;
+  animation-name: case-orbit-clockwise;
+  animation-duration: 8s;
+  animation-delay: -3s;
+}
+
+.case-orbit-middle {
+  inset: 1.55rem;
+  animation-name: case-orbit-counterclockwise;
+  animation-duration: 14s;
+  animation-delay: -9s;
+}
+
+.case-orbit-outer {
+  inset: 0;
+  animation-name: case-orbit-clockwise;
+  animation-duration: 21s;
+  animation-delay: -13s;
+}
+
+.case-planet {
+  position: absolute;
+  top: 50%;
+  right: -0.3rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--blue);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.case-orbit-middle .case-planet {
+  width: 0.48rem;
+  height: 0.48rem;
+  color: #111318;
+  background: var(--surface);
+}
+
+.case-orbit-outer .case-planet {
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--pulse);
+}
+
+@keyframes case-orbit-clockwise {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes case-orbit-counterclockwise {
+  to {
+    transform: rotate(-1turn);
+  }
 }
 
 .method-steps {

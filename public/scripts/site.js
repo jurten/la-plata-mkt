@@ -2,6 +2,7 @@ const root = document.documentElement;
 
 const systemFlow = document.querySelector('.system-flow');
 const solutionPaths = document.querySelector('.solution-paths');
+const orbitDiagram = document.querySelector('[data-orbit-diagram]');
 let prefersReducedMotion = false;
 
 try {
@@ -27,6 +28,19 @@ const observeOnce = (element, threshold) => {
 
 observeOnce(solutionPaths, 0.12);
 observeOnce(systemFlow, 0.22);
+
+if (orbitDiagram && !prefersReducedMotion && 'IntersectionObserver' in window) {
+  let orbitVisible = false;
+  const syncOrbit = () => {
+    orbitDiagram.classList.toggle('is-orbiting', orbitVisible && !document.hidden);
+  };
+  const orbitObserver = new IntersectionObserver(([entry]) => {
+    orbitVisible = entry.isIntersecting;
+    syncOrbit();
+  }, { threshold: 0.2 });
+  orbitObserver.observe(orbitDiagram);
+  document.addEventListener('visibilitychange', syncOrbit);
+}
 
 const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
 const themeMeta = document.querySelector('meta[name="theme-color"]');

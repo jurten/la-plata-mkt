@@ -261,7 +261,12 @@ const structuredData = {
                 <p class="meta">Sector 01 / Real estate</p>
                 <p class="case-status">{realEstateCase.label}</p>
               </div>
-              <div class="case-diagram" aria-hidden="true"></div>
+              <div class="case-diagram" data-orbit-diagram aria-hidden="true">
+                <span class="case-sun"></span>
+                <span class="case-orbit case-orbit-inner"><span class="case-planet"></span></span>
+                <span class="case-orbit case-orbit-middle"><span class="case-planet"></span></span>
+                <span class="case-orbit case-orbit-outer"><span class="case-planet"></span></span>
+              </div>
               <h3 class="display">Demanda, atención y seguimiento.</h3>
               <p>{realEstateCase.summary}</p>
               <small>{realEstateCase.name}</small>

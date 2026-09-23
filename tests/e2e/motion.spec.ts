@@ -54,6 +54,7 @@ test('movimiento reducido elimina desplazamientos y transiciones no esenciales',
     page.locator('.button').first(),
     page.locator('.solution-path').first(),
     page.locator('.system-node-marker').first(),
+    page.locator('.case-orbit').first(),
     page.locator('.skip-link'),
     page.locator('.submit-button'),
   ]) {
@@ -108,6 +109,21 @@ test('el flujo permanece neutral y destaca únicamente la etapa bajo el puntero'
   await human.hover();
   await expect(human.locator('.system-node-marker')).toHaveCSS('background-color', 'rgb(184, 243, 90)');
   await expect.poll(() => conversion.evaluate((node) => getComputedStyle(node).backgroundColor)).toBe(restBackground);
+});
+
+test('el sistema orbital gira sólo mientras el caso está visible', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+
+  const diagram = page.locator('[data-orbit-diagram]');
+  await diagram.scrollIntoViewIfNeeded();
+  await expect(diagram).toHaveClass(/is-orbiting/);
+  await expect(diagram.locator('.case-orbit').first()).toHaveCSS('animation-play-state', 'running');
+
+  await page.locator('#inicio').scrollIntoViewIfNeeded();
+  await expect(diagram).not.toHaveClass(/is-orbiting/);
+  await expect(diagram.locator('.case-orbit').first()).toHaveCSS('animation-play-state', 'paused');
 });
 
 test('las soluciones transfieren el estado seleccionado con puntero y teclado', async ({ page }) => {
