@@ -113,7 +113,7 @@ test('el diagrama de experiencia nunca invade texto esencial', async ({ page }) 
 
   const card = page.locator('.experience-real-estate');
   const diagram = await boxOf(card.locator('.case-diagram'));
-  await expect(card.locator('.case-orbit-middle .case-planet')).toHaveCSS('border-top-color', 'rgb(255, 255, 255)');
+  await expect(card.locator('.case-orbit-middle .case-planet')).toHaveCSS('border-top-color', 'rgb(0, 0, 0)');
   for (const locator of [card.locator('h3'), card.locator(':scope > p:not(.meta)'), card.locator(':scope > small')]) {
     expect(overlap(diagram, await boxOf(locator))).toBe(false);
   }

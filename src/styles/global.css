@@ -1292,7 +1292,7 @@ main > section {
   width: 0.48rem;
   height: 0.48rem;
   background: var(--surface);
-  border-color: #fff;
+  border-color: #000;
 }
 
 .case-orbit-outer .case-planet {
