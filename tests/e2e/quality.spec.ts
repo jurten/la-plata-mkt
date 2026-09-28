@@ -47,11 +47,33 @@ test('las páginas publican cabeceras de seguridad compatibles con el formulario
 
   expect(headers['content-security-policy']).toContain("default-src 'self'");
   expect(headers['content-security-policy']).toContain('https://challenges.cloudflare.com');
+  expect(headers['content-security-policy']).toContain('https://js.hs-scripts.com');
+  expect(headers['content-security-policy']).toContain('https://js.hs-analytics.net');
+  expect(headers['content-security-policy']).toContain('https://js.hs-banner.com');
+  expect(headers['content-security-policy']).toContain('https://js.hscollectedforms.net');
+  expect(headers['content-security-policy']).toContain('https://static.cloudflareinsights.com');
+  expect(headers['content-security-policy']).toContain('https://*.hubspot.com');
+  expect(headers['content-security-policy']).toContain('https://*.hs-analytics.net');
+  expect(headers['content-security-policy']).toContain('https://cloudflareinsights.com');
+  expect(headers['content-security-policy']).toContain('https://track.hubspot.com');
+  expect(headers['content-security-policy']).toContain('https://forms.hsforms.com');
+  expect(headers['content-security-policy']).toContain('https://forms.hscollectedforms.net');
+  expect(headers['content-security-policy']).not.toContain("'unsafe-eval'");
   expect(headers['x-content-type-options']).toBe('nosniff');
   expect(headers['x-frame-options']).toBe('DENY');
   expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
   expect(headers['permissions-policy']).toContain('camera=()');
 });
+
+for (const path of ['/', '/privacidad/']) {
+  test(`${path} instala una sola vez el portal de HubSpot 52086486`, async ({ page }) => {
+    await page.goto(path);
+
+    const loader = page.locator('#hs-script-loader');
+    await expect(loader).toHaveCount(1);
+    await expect(loader).toHaveAttribute('src', 'https://js.hs-scripts.com/52086486.js');
+  });
+}
 
 test('inicia sin errores de consola ni excepciones de página', async ({ page }) => {
   const errors: string[] = [];

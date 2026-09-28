@@ -104,6 +104,16 @@ describe('Cloudflare Workers deployment contract', () => {
 
     const headers = text('public/_headers');
     expect(headers).toContain("Content-Security-Policy: default-src 'self'");
+    expect(headers).toContain(
+      "script-src 'self' https://challenges.cloudflare.com https://js.hs-scripts.com https://js.hs-analytics.net https://js.hs-banner.com https://js.hscollectedforms.net https://static.cloudflareinsights.com",
+    );
+    expect(headers).toContain(
+      "img-src 'self' data: https://track.hubspot.com https://*.hubspot.com https://forms.hsforms.com",
+    );
+    expect(headers).toContain(
+      "connect-src 'self' https://challenges.cloudflare.com https://*.hubspot.com https://*.hs-analytics.net https://forms.hscollectedforms.net https://cloudflareinsights.com",
+    );
+    expect(headers).not.toContain("'unsafe-eval'");
     expect(headers).toContain('X-Frame-Options: DENY');
     expect(headers).toContain('X-Content-Type-Options: nosniff');
     expect(headers).toContain('Referrer-Policy: strict-origin-when-cross-origin');

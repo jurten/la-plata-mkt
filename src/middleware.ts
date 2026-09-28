@@ -11,11 +11,11 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' https://challenges.cloudflare.com",
+  "script-src 'self' https://challenges.cloudflare.com https://js.hs-scripts.com https://js.hs-analytics.net https://js.hs-banner.com https://js.hscollectedforms.net https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  "img-src 'self' data: https://track.hubspot.com https://*.hubspot.com https://forms.hsforms.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://challenges.cloudflare.com",
+  "connect-src 'self' https://challenges.cloudflare.com https://*.hubspot.com https://*.hs-analytics.net https://forms.hscollectedforms.net https://cloudflareinsights.com",
   'frame-src https://challenges.cloudflare.com',
 ].join('; ');
 
