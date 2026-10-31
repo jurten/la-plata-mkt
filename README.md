@@ -2,7 +2,9 @@
 
 Sitio one-page en español para conectar marketing, tecnología y ventas, presentar caminos de solución, mostrar experiencia autorizada y recibir consultas.
 
-La dirección visual porta el mockup aprobado `lpm-home-mockup`: papel cálido cuadriculado, cobalto, secciones nocturnas, tipografía grotesca condensada, acentos editoriales y módulos de sistema. El HTML de referencia se reinterpretó como Astro semántico; no se importaron sus placeholders, Google Fonts, formulario decorativo ni enlaces de contacto inseguros.
+La dirección visual **Otra perspectiva** presenta a LPM con una presencia extraterrestre azul sobre negro: «Ideas de otro planeta. Para problemas de acá». Un retrato original, geometrías de mirada y una apertura interactiva expresan la conexión entre comunicación y marketing, tecnología, y la combinación de ambas. La página continua incluye enfoque, portfolio conceptual, nosotros, capacidades, contacto y preguntas frecuentes. WhatsApp es la acción principal; email y formulario son alternativas.
+
+El brief confirmado vive en `PRODUCT.md`, la dirección vigente en `docs/alien-redesign.md` y el sistema implementado en `DESIGN.md`. El plan anterior se conserva como registro histórico. La página de privacidad comparte tipografía, colores y controles.
 
 ## Estado
 
@@ -10,7 +12,7 @@ La dirección visual porta el mockup aprobado `lpm-home-mockup`: papel cálido c
 - Formulario, validación, honeypot, límite de 16 KiB, rate limit, Turnstile y adaptador de correo implementados.
 - Sin credenciales, el formulario funciona en **modo demo** y declara de forma explícita que no envió el email.
 - Con las cuatro variables requeridas, el formulario usa Turnstile y envía una notificación más una respuesta automática mediante Resend.
-- Los casos se publican anonimizados por defecto. Los nombres y la narrativa suministrados se muestran únicamente con `PUBLIC_CASE_STUDIES_APPROVED=true`; no se incluyen métricas inventadas.
+- El portfolio del rediseño muestra solamente estudios conceptuales anónimos, con divulgación visible. La autorización de clientes no fue suministrada. `getCaseStudies` conserva su contrato de aprobación para futuras integraciones, pero la home solicita explícitamente la versión anónima: cambiar `PUBLIC_CASE_STUDIES_APPROVED` por sí solo no publica nombres en esta versión.
 - Aviso de privacidad: responsable, proveedores y criterio de conservación completados.
 
 ## Stack
@@ -38,17 +40,20 @@ El servidor de desarrollo abre por defecto en `http://127.0.0.1:4321`.
 
 Los tokens base de la identidad LPM son:
 
-- Tinta: `#111318`
-- Tinta atenuada: `#56595F`
-- Papel cálido: `#F3EFE5`
-- Superficie clara: `#FFFDF7`
+- Tinta: `#0B1430`
+- Tinta atenuada: `#4F5E7D`
+- Fondo claro frío: `#EEF2FF`
+- Superficie clara: `#F8FAFF`
 - Azul cobalto: `#1536F1`
 - Azul cielo: `#B7D7EE`
 - Amarillo señal: `#F4C430`
 - Rojo pulso: `#F0442D`
-- Fondo nocturno: `#111318`
+- Fondo de marca: `#020307`
+- Fondo de lectura oscuro: `#060917`
 
-Sin una elección guardada, la interfaz sigue automáticamente `prefers-color-scheme`. El selector visible ofrece únicamente los íconos de sol y luna para fijar modo claro u oscuro; esa elección explícita se guarda localmente en `lpm-theme`. Las familias Bricolage Grotesque, Newsreader e IBM Plex se sirven desde Fontsource, sin peticiones a Google Fonts.
+Sin una elección guardada, la interfaz sigue automáticamente `prefers-color-scheme`. El selector visible ofrece únicamente los íconos de sol y luna para fijar modo claro u oscuro; esa elección explícita se guarda localmente en `lpm-theme` y se aplica antes del contenido mediante `theme-init.js`. La portada permanece negra y azul en ambos modos. Bricolage Grotesque e IBM Plex Sans se sirven desde Fontsource, sin peticiones a Google Fonts. La escena de perspectiva permite alternar entre una pieza y el sistema; con movimiento reducido comienza completa. El contenido sigue disponible sin JavaScript.
+
+El retrato original y su prompt están en `src/assets/lpm-visitor.png` y `src/assets/lpm-visitor.prompt.txt`. Astro produce variantes WebP responsive; la imagen de apertura declara dimensiones, prioridad alta y carga inmediata. Las geometrías de mirada y el diagrama se construyen con CSS/SVG semánticos.
 
 ## Verificación
 
@@ -59,15 +64,16 @@ npm run build         # astro check + build para Cloudflare Workers
 npm run verify        # las tres puertas anteriores, en serie
 ```
 
-Para auditar el build real:
+Para capturar el servidor de desarrollo activo:
 
 ```bash
-npm run build
-npm run start -- --host 127.0.0.1 --port 4322
+npm run dev -- --host 127.0.0.1
 npm run visual:audit
 ```
 
-`visual:audit` captura desktop y mobile en `artifacts/`, comprueba overflow, consola, red, menú móvil y envío demo. La carpeta no se versiona.
+`visual:audit` captura desktop, mobile, modo oscuro, menú, privacidad y las dos perspectivas en `artifacts/redesign/`, y registra estado HTTP, overflow, respuestas locales fallidas y excepciones de página. Espera la decodificación de imágenes, el pintado y los observadores de scroll. Para auditar un preview del build en otro puerto, definir `VISUAL_BASE_URL` con ese origen. Las interacciones, el formulario demo y las respuestas fallidas se verifican en Playwright. Los assets de HubSpot se sustituyen únicamente en las capturas para que sean reproducibles; la integración de producción se conserva. La carpeta `artifacts/` no se versiona.
+
+En Windows PowerShell, usar `npm.cmd` si la política local bloquea `npm.ps1`.
 
 ## Formulario y correo real
 
@@ -167,7 +173,7 @@ Cloudflare aporta el IP del visitante en `CF-Connecting-IP`; el endpoint valida 
 ## Estado de producción y decisiones pendientes
 
 - Producción verificada: apex en Cloudflare Workers, redirección de `www`, Turnstile, Resend y DNS de correo con SPF, DKIM y DMARC.
-- Obtener autorización para publicar los nombres y la narrativa, y recién entonces definir `PUBLIC_CASE_STUDIES_APPROVED=true`.
+- Obtener autorización antes de integrar nombres, narrativa o material de clientes al portfolio. El rediseño actual usa conceptos anónimos incluso si se cambia el flag histórico de casos.
 - Incorporar resultados cuantitativos únicamente si existen y fueron aprobados.
 - Confirmar enlaces sociales, si deben mostrarse.
 - Elegir analítica; no se instaló tracking sin una decisión explícita.
@@ -185,4 +191,4 @@ npm run assets:og
 npm run assets:brand
 ```
 
-Ambos generadores usan Pillow. El generador Open Graph carga directamente estas fuentes de Windows: `C:\Windows\Fonts\impact.ttf` (Impact), `arial.ttf` y `arialbd.ttf` (Arial regular y negrita), `georgiai.ttf` (Georgia Italic) y `consola.ttf` (Consolas). No implementa fuentes de reemplazo: si alguno de esos archivos no está disponible, Pillow interrumpe la generación. Los archivos finales ya están versionados, por lo que Pillow y esas fuentes no son necesarios para ejecutar el sitio.
+El favicon conserva su generador Python/Pillow. Open Graph usa `scripts/generate-og.mjs`: Node y Playwright renderizan a 1200 × 630 el retrato, logo y fuentes locales mediante data URLs, sin red. La composición se reproduce sin depender de las fuentes instaladas en Windows. El antiguo generador Python de OG queda como fuente histórica sin uso en los comandos npm. Los archivos finales ya están versionados y no se regeneran para ejecutar el sitio.

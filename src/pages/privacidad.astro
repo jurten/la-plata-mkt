@@ -1,14 +1,15 @@
 ---
 import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource-variable/newsreader';
+import SiteTransmission from '../components/SiteTransmission.astro';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-600.css';
-import '@fontsource/ibm-plex-mono/latin-400.css';
-import '@fontsource/ibm-plex-mono/latin-500.css';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import Icon from '../components/Icon.astro';
 import '../styles/global.css';
+import '../styles/alien.css';
+import '../styles/retro-cursor.css';
 
 export const prerender = true;
 
@@ -30,7 +31,8 @@ const contactHref = '/#contacto';
       content="Cómo La Plata Marketing recibe, utiliza y protege los datos enviados mediante su formulario de contacto."
     />
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content="#F3EFE5" />
+    <meta name="theme-color" content="#EEF2FF" />
+    <script is:inline src="/scripts/theme-init.js"></script>
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
@@ -44,12 +46,12 @@ const contactHref = '/#contacto';
         <span>LPM</span>
       </a>
       <ThemeSwitcher />
-      <a class="legal-back" href={contactHref}>Volver al formulario <span aria-hidden="true">↙</span></a>
+      <a class="legal-back" href={contactHref}>Volver al formulario <Icon name="right" /></a>
     </header>
 
     <main id="contenido-legal" class="legal-main">
       <section class="legal-intro" aria-labelledby="privacy-title">
-        <p class="section-index">[ PRIVACIDAD ]</p>
+
         <h1 id="privacy-title">Privacidad,<br /><em>sin letra chica.</em></h1>
         <div class="legal-intro-copy">
           <p>
@@ -124,9 +126,8 @@ const contactHref = '/#contacto';
       </section>
 
       <section class="legal-cta" aria-labelledby="legal-cta-title">
-        <p class="section-index">[ ¿SEGUIMOS? ]</p>
         <h2 id="legal-cta-title">Volvé a tu consulta<br />cuando estés <em>listo.</em></h2>
-        <a class="button button-primary" href={contactHref}>Volver al formulario <span aria-hidden="true">↗</span></a>
+        <a class="button button-primary" href={contactHref}>Volver al formulario <Icon /></a>
       </section>
     </main>
 
@@ -135,6 +136,7 @@ const contactHref = '/#contacto';
       <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
     </footer>
 
+    <SiteTransmission />
     <script is:inline src="/scripts/site.js" defer></script>
     <!-- Start of HubSpot Embed Code -->
     <script is:inline type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/52086486.js"></script>

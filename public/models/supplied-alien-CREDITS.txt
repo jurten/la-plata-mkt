@@ -1,0 +1,12 @@
+Grey Alien Head 3D Model
+Author: Joel Dcosta (joel_shanky)
+Source: https://sketchfab.com/3d-models/grey-alien-head-3d-model-915a6375927e4003a8790d8932655e76
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License URL: https://creativecommons.org/licenses/by/4.0/
+
+Provided by the site owner as grey-alien-head-3d-model.zip.
+Original GLB asset copyright: joel_shanky.
+Web derivative: simplified from 499,964 to 100,000 triangles, original UVs and
+surface normals retained, textures resized and converted to same-origin JPEGs.
+Runtime changes: cobalt material tint, physical lighting, centered head rotation,
+and a CRT transmission shader with a cursor-controlled cyan clearing beam.

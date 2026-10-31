@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+interface Props { type: 'real-estate' | 'legal'; }
+const { type } = Astro.props;
+---
+<div class:list={['concept-preview', `preview-${type}`]} aria-hidden="true">
+  {type === 'real-estate' ? (
+    <div class="concept-canvas estate-canvas">
+      <div class="mock-nav"><span>Habitar.</span><span>Espacios para conectar <Icon name="arrow" /></span></div>
+      <div class="estate-layout">
+        <div class="estate-type">Un lugar.<br />Muchas<br /><em>posibilidades.</em></div>
+        <div class="estate-shapes"><div class="arch arch-back"></div><div class="arch arch-front"></div><span class="estate-circle"></span></div>
+      </div>
+      <div class="mock-bottom"><span>Presencia + consultas + seguimiento</span><span>Todo conectado <Icon name="right" /></span></div>
+    </div>
+  ) : (
+    <div class="concept-canvas legal-canvas">
+      <div class="mock-nav"><span>Estudio.</span><span>Claridad en cada paso <Icon name="arrow" /></span></div>
+      <div class="legal-composition"><span class="legal-large">La confianza<br />empieza en<br /><em>los detalles.</em></span><span class="legal-symbol">E<span>.</span></span></div>
+      <div class="mock-bottom"><span>Contenido + experiencia web</span><span>Un contacto directo <Icon name="right" /></span></div>
+    </div>
+  )}
+</div>

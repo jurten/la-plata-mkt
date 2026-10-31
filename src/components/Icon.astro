@@ -1,0 +1,19 @@
+---
+interface Props {
+  name?: 'arrow' | 'right' | 'down' | 'plus' | 'code' | 'spark' | 'link' | 'menu' | 'play';
+  class?: string;
+}
+const { name = 'arrow', class: className = '' } = Astro.props;
+const paths = {
+  arrow: 'M5 19 19 5M5 5h14v14',
+  right: 'M4 12h16m-6-6 6 6-6 6',
+  down: 'M12 4v16m-6-6 6 6 6-6',
+  plus: 'M12 4v16M4 12h16',
+  code: 'm8 5-7 7 7 7m8-14 7 7-7 7M14 3l-4 18',
+  spark: 'M12 2v5m0 10v5M2 12h5m10 0h5M5 5l3 3m8 8 3 3M5 19l3-3m8-8 3-3',
+  link: 'm10 13 4-4m-6 6-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0m2 3 2-2a4 4 0 0 1 6 6l-5 5a4 4 0 0 1-6 0',
+  menu: 'M4 8h16M4 16h16',
+  play: 'm9 5 10 7-10 7Z',
+};
+---
+<svg class:list={['icon', className]} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={paths[name]} /></svg>

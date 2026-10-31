@@ -20,6 +20,13 @@ const contentSecurityPolicy = [
 ].join('; ');
 
 function secure(response: Response): Response {
+  // Optimized images may arrive from the runtime cache with immutable headers.
+  // Re-wrap the body and metadata before applying the same security policy.
+  response = new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: new Headers(response.headers),
+  });
   response.headers.set('content-security-policy', contentSecurityPolicy);
   response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
   response.headers.set('x-content-type-options', 'nosniff');

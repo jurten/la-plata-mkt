@@ -1,0 +1,51 @@
+{
+ "slug": "alien-grey",
+ "triangles": 415368,
+ "texture_px": 4096,
+ "triangles_light": 207683,
+ "texture_px_light": 1024,
+ "files": {
+  "glb": {
+   "name": "alien-grey.glb",
+   "bytes": 15562456
+  },
+  "blend": {
+   "name": "alien-grey.blend",
+   "bytes": 18890144
+  },
+  "fbx": {
+   "name": "alien-grey.fbx",
+   "bytes": 26231756
+  },
+  "obj": {
+   "name": "alien-grey-obj.zip",
+   "bytes": 11819224
+  },
+  "usdz": {
+   "name": "alien-grey.usdz",
+   "bytes": 24216086
+  },
+  "glb_light": {
+   "name": "alien-grey-light.glb",
+   "bytes": 6464996
+  },
+  "fbx_light": {
+   "name": "alien-grey-light.fbx",
+   "bytes": 12640460
+  }
+ },
+ "extras": {
+  "license": "CC0-1.0",
+  "source": "grab3d.com",
+  "dimensions_m": "0.748 x 0.251 x 1.400",
+  "triangles": 415368,
+  "variant": "download",
+  "generator": "Created by grab3d",
+  "created": "2026-10-29"
+ },
+ "origin": {
+  "method": "ai-assisted",
+  "detail": "Base mesh and textures generated with an AI image-to-3D tool (Meshy), then cleaned up, scaled, textured and checked in Blender.",
+  "ai_content": true
+ }
+}

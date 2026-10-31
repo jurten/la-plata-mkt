@@ -8,7 +8,7 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
   await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#EEF2FF');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
   await expect(page.locator('a[href="/privacidad/"]')).toHaveCount(2);
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--blue').trim())).toBe(
@@ -22,7 +22,7 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
   await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#F3EFE5');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#EEF2FF');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
   await expect(page.locator('.legal-header .brand')).toHaveAttribute('href', '/');
   await expect(page.locator('.legal-back')).toHaveAttribute('href', '/#contacto');
@@ -52,7 +52,7 @@ test('la nueva identidad conserva foco visible en navegación, tema y formulario
     expect(focus).toEqual({ color: 'rgb(17, 19, 24)', offset: '3px', style: 'solid', width: '3px' });
   };
 
-  await assertKeyboardFocus(page.getByRole('link', { name: 'Soluciones' }).first());
+  await assertKeyboardFocus(page.getByRole('link', { name: 'Enfoque' }).first());
   const darkThemeButton = page.getByRole('button', { name: 'Modo oscuro' });
   await assertKeyboardFocus(darkThemeButton);
 

@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+import SystemFlow from './SystemFlow.astro';
+---
+<div class="perspective-study" data-perspective-study data-view="whole">
+  <div class="perspective-toolbar">
+    <div class="perspective-controls" role="group" aria-label="Cambiar la perspectiva del recorrido" data-perspective-controls hidden>
+      <button type="button" data-perspective-view="piece" aria-pressed="false">Una pieza</button>
+      <button type="button" data-perspective-view="whole" aria-pressed="true">El sistema</button>
+    </div>
+    <p class="perspective-caption" aria-live="polite" aria-atomic="true" data-perspective-caption>Las piezas se potencian cuando trabajan juntas.</p>
+  </div>
+  <div class="perspective-canvas">
+    <div class="perspective-field" aria-hidden="true"></div>
+    <svg class="perspective-orbit" viewBox="0 0 1200 320" fill="none" aria-hidden="true" focusable="false"><ellipse cx="600" cy="160" rx="580" ry="145" /><ellipse cx="600" cy="160" rx="440" ry="110" /></svg>
+    <SystemFlow />
+  </div>
+  <div class="perspective-bottom"><p>Hacemos que todo trabaje como un sistema.</p><button type="button" data-perspective-explore hidden><span data-perspective-explore-label>Ampliar la mirada</span><Icon name="arrow" /></button></div>
+</div>

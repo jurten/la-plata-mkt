@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs><path id="hand" d="M12 3h4v10h2v-2h4v2h4v2h2v10h-2v4H12v-2h-2v-2H8v-2H6v-4H4v-2h2v-2h2v2h4Z"/></defs>
+  <use href="#hand" fill="#eef3ff" stroke="#020307" stroke-width="4" stroke-linejoin="miter"/>
+  <use href="#hand" fill="#eef3ff" stroke="#1536f1" stroke-width="2" stroke-linejoin="miter"/>
+  <path d="M18 13v6m4-4v6m4-4v6" fill="none" stroke="#1536f1" stroke-width="2"/>
+</svg>

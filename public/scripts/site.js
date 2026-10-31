@@ -1,117 +1,35 @@
 const root = document.documentElement;
 
-const systemFlow = document.querySelector('.system-flow');
-const solutionPaths = document.querySelector('.solution-paths');
-const methodFlow = document.querySelector('[data-method-flow]');
-const heroTicker = document.querySelector('.hero-ticker');
-const capabilityGrid = document.querySelector('.capability-grid');
-const faqDisclosures = [...document.querySelectorAll('.faq-list details')];
-const ambientMotion = [...document.querySelectorAll('[data-ambient-motion]')];
-let prefersReducedMotion = false;
-
-try {
-  prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
-} catch {
-  prefersReducedMotion = false;
-}
-
-const observeOnce = (element, threshold) => {
-  if (!element || prefersReducedMotion) return;
-
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      element.classList.add('is-in-view');
-      observer.disconnect();
-    }, { threshold });
-    observer.observe(element);
-  } else {
-    element.classList.add('is-in-view');
-  }
-};
-
-observeOnce(solutionPaths, 0.12);
-observeOnce(systemFlow, 0.22);
-observeOnce(methodFlow, 0.24);
-observeOnce(heroTicker, 0.35);
-observeOnce(capabilityGrid, 0.2);
-
-if (!prefersReducedMotion && typeof Element.prototype.animate === 'function') {
-  faqDisclosures.forEach((details) => {
-    const summary = details.querySelector('summary');
-    if (!summary) return;
-
-    let heightAnimation;
-
-    const cancelHeightAnimation = () => {
-      if (!heightAnimation) return;
-      heightAnimation.onfinish = null;
-      heightAnimation.oncancel = null;
-      heightAnimation.cancel();
-      heightAnimation = undefined;
-    };
-
-    const settle = (open) => {
-      details.open = open;
-      details.classList.remove('is-expanding', 'is-closing');
-      details.style.removeProperty('height');
-      details.style.removeProperty('overflow');
-      heightAnimation = undefined;
-    };
-
-    const animateDisclosure = (open) => {
-      const startHeight = details.getBoundingClientRect().height;
-      cancelHeightAnimation();
-
-      if (open) details.open = true;
-      const endHeight = open ? details.scrollHeight : summary.getBoundingClientRect().height;
-
-      details.classList.toggle('is-expanding', open);
-      details.classList.toggle('is-closing', !open);
-      details.style.height = `${startHeight}px`;
-      details.style.overflow = 'hidden';
-
-      heightAnimation = details.animate(
-        { height: [`${startHeight}px`, `${endHeight}px`] },
-        {
-          duration: open ? 420 : 260,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        },
-      );
-      heightAnimation.onfinish = () => settle(open);
-      heightAnimation.oncancel = () => {
-        heightAnimation = undefined;
-      };
-    };
-
-    summary.addEventListener('click', (event) => {
-      event.preventDefault();
-      const shouldOpen = !details.open || details.classList.contains('is-closing');
-      animateDisclosure(shouldOpen);
-    });
-  });
-}
-
-if (ambientMotion.length && !prefersReducedMotion) {
-  const visibleMotion = new WeakMap();
-  const syncAmbientMotion = () => {
-    ambientMotion.forEach((element) => {
-      element.classList.toggle('is-motion-active', visibleMotion.get(element) === true && !document.hidden);
-    });
+// A single authored scene: widen the view from one inquiry to the whole system.
+const study = document.querySelector('[data-perspective-study]');
+const motionPreference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+if (study) {
+  const controls = study.querySelector('[data-perspective-controls]');
+  const choices = [...study.querySelectorAll('[data-perspective-view]')];
+  const caption = study.querySelector('[data-perspective-caption]');
+  const explore = study.querySelector('[data-perspective-explore]');
+  const exploreLabel = study.querySelector('[data-perspective-explore-label]');
+  const setPerspective = (view) => {
+    const safeView = view === 'piece' ? 'piece' : 'whole';
+    study.dataset.view = safeView;
+    choices.forEach((choice) => choice.setAttribute('aria-pressed', String(choice.dataset.perspectiveView === safeView)));
+    if (caption) caption.textContent = safeView === 'piece'
+      ? 'Una consulta aislada cuenta sólo una parte.'
+      : 'Las piezas se potencian cuando trabajan juntas.';
+    if (exploreLabel) exploreLabel.textContent = safeView === 'piece' ? 'Ampliar la mirada' : 'Volver a una pieza';
   };
-
-  if ('IntersectionObserver' in window) {
-    const ambientObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => visibleMotion.set(entry.target, entry.isIntersecting));
-      syncAmbientMotion();
-    }, { threshold: 0.12 });
-    ambientMotion.forEach((element) => ambientObserver.observe(element));
-  } else {
-    ambientMotion.forEach((element) => visibleMotion.set(element, true));
-    syncAmbientMotion();
-  }
-
-  document.addEventListener('visibilitychange', syncAmbientMotion);
+  if (controls) controls.hidden = false;
+  if (explore) explore.hidden = false;
+  choices.forEach((choice) => choice.addEventListener('click', () => setPerspective(choice.dataset.perspectiveView)));
+  explore?.addEventListener('click', () => setPerspective(study.dataset.view === 'piece' ? 'whole' : 'piece'));
+  setPerspective(motionPreference?.matches ? 'whole' : 'piece');
+  requestAnimationFrame(() => { study.dataset.enhanced = 'true'; });
+  motionPreference?.addEventListener?.('change', () => {
+    if (motionPreference.matches) {
+      setPerspective('whole');
+      study.getAnimations?.({ subtree: true }).forEach((animation) => animation.finish());
+    }
+  });
 }
 
 const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
@@ -157,7 +75,7 @@ const applyTheme = (theme, persist = false) => {
   });
 
   const dark = resolvedTheme === 'dark';
-  if (themeMeta) themeMeta.setAttribute('content', dark ? '#0B1238' : '#F3EFE5');
+  if (themeMeta) themeMeta.setAttribute('content', dark ? '#060917' : '#EEF2FF');
   if (themeLabel) {
     themeLabel.textContent = safeTheme === 'auto'
       ? `Identidad visual / Sistema ${dark ? 'oscuro' : 'claro'}`
@@ -192,30 +110,38 @@ const nav = document.querySelector('.primary-nav');
 
 if (toggle && nav) {
   root.dataset.menuState = 'ready';
-
+  const closeMenu = (returnFocus = false) => {
+    toggle.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('is-open');
+    if (returnFocus) toggle.focus();
+  };
   toggle.addEventListener('click', () => {
     const isOpen = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!isOpen));
     nav.classList.toggle('is-open', !isOpen);
   });
-
-  nav.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      toggle.setAttribute('aria-expanded', 'false');
-      nav.classList.remove('is-open');
-    });
-  });
-
+  nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => closeMenu()));
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && nav.classList.contains('is-open')) {
-      toggle.setAttribute('aria-expanded', 'false');
-      nav.classList.remove('is-open');
-      toggle.focus();
-    }
+    if (event.key === 'Escape' && nav.classList.contains('is-open')) closeMenu(true);
   });
+  document.addEventListener('click', (event) => {
+    if (!nav.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+  });
+  document.querySelector('.topbar')?.addEventListener('focusout', (event) => {
+    if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) closeMenu();
+  });
+  window.matchMedia?.('(min-width: 1001px)').addEventListener?.('change', () => closeMenu());
 }
 
 const contactForm = document.querySelector('[data-contact-form]');
+const floatingContact = document.querySelector('[data-floating-whatsapp]');
+const contactSection = document.querySelector('#contacto');
+if (floatingContact && contactSection && 'IntersectionObserver' in window) {
+  // Contact has its own action; keep the floating control clear of form fields.
+  new IntersectionObserver((entries) => {
+    floatingContact.hidden = entries.some((entry) => entry.isIntersecting);
+  }, { threshold: 0 }).observe(contactSection);
+}
 
 contactForm?.addEventListener('submit', async (event) => {
   event.preventDefault();

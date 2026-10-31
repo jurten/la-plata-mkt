@@ -1,16 +1,19 @@
 ---
 import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource-variable/newsreader';
 import '@fontsource/ibm-plex-sans/latin-400.css';
 import '@fontsource/ibm-plex-sans/latin-600.css';
-import '@fontsource/ibm-plex-mono/latin-400.css';
-import '@fontsource/ibm-plex-mono/latin-500.css';
 import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-import SystemFlow from '../components/SystemFlow.astro';
+import Icon from '../components/Icon.astro';
+import AlienPortrait from '../components/AlienPortrait.astro';
+import SiteTransmission from '../components/SiteTransmission.astro';
+import PerspectiveStudy from '../components/PerspectiveStudy.astro';
+import ConceptPreview from '../components/ConceptPreview.astro';
 import '../styles/global.css';
+import '../styles/alien.css';
+import '../styles/retro-cursor.css';
 
 export const prerender = true;
 
@@ -68,10 +71,9 @@ const faqs = [
 
 const turnstileSiteKey =
   readRuntimeEnv('PUBLIC_TURNSTILE_SITE_KEY', import.meta.env.PUBLIC_TURNSTILE_SITE_KEY) ?? '';
-const caseStudiesApproved =
-  readRuntimeEnv('PUBLIC_CASE_STUDIES_APPROVED', import.meta.env.PUBLIC_CASE_STUDIES_APPROVED) ===
-  'true';
-const [realEstateCase, legalCase] = getCaseStudies(caseStudiesApproved);
+// No portfolio publication approval has been supplied for this redesign.
+// Keep the existing approval-aware data source, using anonymous concepts only.
+const [realEstateCase, legalCase] = getCaseStudies(false);
 
 const pageTitle = 'Marketing, tecnología y ventas como un sistema | La Plata Marketing';
 const pageDescription =
@@ -115,7 +117,8 @@ const structuredData = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={pageDescription} />
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content="#F3EFE5" />
+    <meta name="theme-color" content="#EEF2FF" />
+    <script is:inline src="/scripts/theme-init.js"></script>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
@@ -140,219 +143,89 @@ const structuredData = {
     <title>{pageTitle}</title>
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline></script>
   </head>
-  <body>
+  <body class="site-home">
+    <!-- THESIS: Ideas from another planet for problems here: an unfamiliar perspective makes the client's complete system visible.
+    OWN-WORLD: An original cobalt extraterrestrial portrait in black, eye-shaped apertures, decisive Bricolage typography, cool reading fields and restrained glass.
+    STORY: Be intrigued by the gaze, understand the three disciplines, widen the view from one piece to the system, and start a human WhatsApp conversation.
+    FIRST VIEWPORT: Large white headline and direct action on black at left; the enormous blue portrait owns the right. Phone composition puts the action before the gaze.
+    FORM: User-pinned blue alien mystery; delegated composition, seed b1a8d2c7. Raster portrait plus semantic interactive aperture; no generic space HUD.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
-
     <header class="topbar">
-      <div class="nav wrap">
-        <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio">
-          <span class="brand-mark" aria-hidden="true">L/</span>
-          <span>LPM</span>
-        </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-          Menú
-        </button>
+      <div class="nav">
+        <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio"><span class="brand-mark" aria-hidden="true">L/</span><span>LPM</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menú <Icon name="menu" /></button>
         <nav class="primary-nav" id="primary-nav" aria-label="Navegación principal">
-          <a href="#soluciones">Soluciones</a>
-          <a href="#trabajo">Experiencia</a>
-          <a href="#metodo">Método</a>
-          <a href="#capacidades">Capacidades</a>
-          <a class="button nav-cta" href="#contacto">Contanos qué necesitás <span aria-hidden="true">↗</span></a>
+          <a href="#soluciones">Enfoque</a><a href="#trabajo">Portfolio</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a>
+          <a class="button nav-cta" href={whatsappHref}>Hablemos <Icon /></a>
         </nav>
         <ThemeSwitcher />
       </div>
     </header>
-
     <main id="contenido">
-      <section class="hero" id="inicio" aria-labelledby="hero-title">
-        <div class="wrap hero-grid">
+      <section class="hero alien-hero" id="inicio" aria-labelledby="hero-title">
+        <AlienPortrait />
+        <div class="wrap hero-stage">
           <div class="hero-copy">
             <h1 id="hero-title" class="display">
-              <span class="hero-title-line">Hacemos que todo</span>
-              <span class="hero-title-line">trabaje como</span>
-              <em>un sistema.</em>
+              <span>Ideas de </span>
+              <span>otro planeta.</span>
             </h1>
-          </div>
-          <div class="hero-side">
-            <p class="hero-context">LPM / Marketing × Tecnología × Ventas</p>
-            <p class="hero-lede">Ayudamos a profesionales y negocios establecidos a mejorar su presencia digital, generar consultas y ordenar cómo gestionan sus clientes.</p>
-            <div class="actions">
-              <a class="button button-primary" href="#contacto">Contanos tu problema <span aria-hidden="true">↗</span></a>
-              <a class="button button-outline" href="#sistema">Ver cómo trabajamos <span aria-hidden="true">↓</span></a>
-            </div>
+            <p class="hero-subtitle">Para problemas de acá.</p>
+            <p class="hero-lede"><strong>Comunicación, marketing y tecnología.</strong> Ayudamos a profesionales y negocios establecidos a mejorar su presencia digital, generar consultas y ordenar cómo gestionan sus clientes.</p>
+            <div class="actions"><a class="button button-primary" href={whatsappHref}>Hablemos por WhatsApp <Icon /></a><a class="button button-text" href="#soluciones">Conocé nuestro enfoque <Icon name="down" /></a></div>
           </div>
         </div>
-        <ol class="wrap hero-ticker" aria-label="Principales resultados">
-          <li class="ticker-cell"><b>01</b><span>Presencia que representa</span></li>
-          <li class="ticker-cell"><b>02</b><span>Consultas que se pueden medir</span></li>
-          <li class="ticker-cell"><b>03</b><span>Procesos que no dependen de memoria</span></li>
-        </ol>
+        <div class="spatial-controls" data-spatial-controls hidden>
+          <p data-spatial-hint>Mové el cursor para revelar la señal</p>
+          <div class="spatial-actions">
+            <button type="button" data-spatial-toggle aria-pressed="true" aria-label="Pausar efecto espacial"><Icon name="spark" /><span>Pausar efecto</span></button>
+            <button type="button" data-spatial-orientation aria-pressed="false" hidden>Activar inclinación</button>
+          </div>
+        </div>
+        <div class="hero-footer wrap"><p>LPM / Marketing × Tecnología × Ventas</p><a href="#soluciones">Hay otra forma de mirar <Icon name="down" /></a></div>
       </section>
 
-      <section id="problemas">
+      <section class="pillars-section alien-pillars" id="soluciones" aria-labelledby="pillars-title">
         <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">01 / Reconocer</p>
-            <div>
-              <h2 class="display">Tu negocio funciona. ¿Su sistema digital también?</h2>
-              <p class="section-intro muted">A veces el problema parece ser una web, una campaña o una planilla. Muchas veces es la forma en que esas piezas se conectan.</p>
-            </div>
-          </header>
-          <div class="problems">
-            <div class="problem-item"><span class="meta">01</span><p>Tu web ya no representa el nivel real de tu negocio.</p><span class="problem-signal" aria-hidden="true"></span></div>
-            <div class="problem-item"><span class="meta">02</span><p>Invertís en publicidad, pero no sabés qué pasa con las consultas.</p><span class="problem-signal" aria-hidden="true"></span></div>
-            <div class="problem-item"><span class="meta">03</span><p>Los clientes llegan por distintos canales y el seguimiento se dispersa.</p><span class="problem-signal" aria-hidden="true"></span></div>
-            <div class="problem-item"><span class="meta">04</span><p>Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</p><span class="problem-signal" aria-hidden="true"></span></div>
-            <div class="problem-item"><span class="meta">05</span><p>Dependés demasiado de Instagram, WhatsApp o tareas manuales.</p><span class="problem-signal" aria-hidden="true"></span></div>
-            <div class="problem-item"><span class="meta">06</span><p>Sabés que podrías captar más, pero no tenés un recorrido claro.</p><span class="problem-signal" aria-hidden="true"></span></div>
+          <header class="section-head"><h2 id="pillars-title" class="display">Miramos distinto.<br /><span class="text-muted">Conectamos todo.</span></h2><p>Tres pilares para mirar más allá de una herramienta: comunicación y marketing, tecnología, y la combinación de ambas.</p></header>
+          <div class="pillars">
+            <article class="pillar pillar-marketing"><div class="pillar-art marketing-art" aria-hidden="true"><span class="communication-eye"><span>Aa</span></span></div><div class="pillar-copy"><h3>Comunicación <br />y marketing.</h3><p>Una presencia que representa a tu negocio. Campañas, contenidos y medición para transformar visibilidad en oportunidades reales.</p><ul class="service-list"><li>Contenido y presencia digital</li><li>Meta Ads y campañas</li><li>Medición y optimización</li></ul><a class="inline-link" href="#capacidades">Ver capacidades <Icon name="right" /></a></div></article>
+            <article class="pillar pillar-technology"><div class="pillar-art technology-art" aria-hidden="true"><div class="build-plane"><span>Una idea.</span><strong>En funcionamiento.</strong><span class="build-foot">Web / Sistemas / Automatización</span></div></div><div class="pillar-copy"><h3>Tecnología.</h3><p>Webs y herramientas que están a la altura. Construimos el lugar donde llegan tus consultas y los sistemas que ayudan a gestionarlas.</p><ul class="service-list"><li>Web, landing pages y ecommerce</li><li>CRM, integraciones y turnos</li><li>Automatización de procesos</li></ul><a class="inline-link" href="#capacidades">Ver capacidades <Icon name="right" /></a></div></article>
+            <article class="pillar pillar-combined"><div class="pillar-art combined-art" aria-hidden="true"><span class="combine-eye eye-one"></span><span class="combine-eye eye-two"></span><span class="combined-center">L/</span></div><div class="pillar-copy"><h3>La conexión <br />entre ambas.</h3><p>Una campaña necesita un lugar donde convertir. Una consulta, seguimiento. Conectamos las piezas para que todo trabaje como un sistema.</p><ul class="service-list"><li>Estrategia y diagnóstico</li><li>Sistemas comerciales</li><li>Diseño de procesos</li></ul><a class="inline-link" href="#sistema">Ver cómo se conectan <Icon name="right" /></a></div></article>
           </div>
-          <p class="prompt">↓ Primero se reconoce el problema. Después se descubre el sistema.</p>
+          <div class="solution-paths" aria-label="Tres maneras de empezar">{solutionPaths.map((path) => (<article class="solution-path"><div><h3>{path.title}</h3><p>{path.question}</p></div><div class="path-details"><div class="tags">{path.tags.map((tag) => <span class="tag">{tag}</span>)}</div><a href={whatsappHref} class="inline-link">{path.action} <Icon /></a></div></article>))}</div>
         </div>
       </section>
 
-      <section id="soluciones">
-        <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">02 / Elegir un camino</p>
-            <div>
-              <h2 class="display">Empecemos por lo que necesitás lograr.</h2>
-              <p class="section-intro muted">No hace falta conocer la herramienta correcta. Elegí la situación que más se parece a la tuya.</p>
-            </div>
-          </header>
-          <div class="solution-paths">
-            {solutionPaths.map((path) => (
-              <article class="solution-path" data-number={path.number}>
-                <p class="meta">{path.category}</p>
-                <h3>{path.title}</h3>
-                <p class="path-question">{path.question}</p>
-                <div class="tags" aria-label={`Herramientas para ${path.category}`}>
-                  {path.tags.map((tag) => <span class="tag">{tag}</span>)}
-                </div>
-                <a class="button solution-path-action" href="#contacto">
-                  {path.action} <span aria-hidden="true">→</span>
-                </a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section class="system-section" id="sistema" aria-labelledby="system-title"><div class="wrap">
+        <div class="system-heading"><h2 id="system-title" class="display">Otra perspectiva.<br /><span>El sistema completo.</span></h2><div class="system-copy"><p>Una campaña puede generar tráfico. Pero el tráfico necesita un lugar donde convertir. Una consulta necesita seguimiento. Y el seguimiento necesita un sistema.</p><p>Por eso La Plata Marketing conecta marketing, tecnología y operación comercial. Intervenimos donde se corta la cadena.</p></div></div>
+        <PerspectiveStudy />
+        <p class="system-footnote">Una herramienta sola rara vez resuelve todo el problema.</p>
+      </div></section>
 
-      <section class="system-section" id="sistema" aria-labelledby="system-title">
-        <div class="wrap">
-          <p class="eyebrow">03 / Hacer visible</p>
-          <h2 id="system-title" class="display">Una herramienta sola rara vez resuelve todo el problema.</h2>
-          <div class="system-copy">
-            <p>Una campaña puede generar tráfico. Pero el tráfico necesita un lugar donde convertir. Una consulta necesita seguimiento. Y el seguimiento necesita un sistema.</p>
-            <p>Por eso La Plata Marketing conecta marketing, tecnología y operación comercial. Intervenimos donde se corta la cadena.</p>
-          </div>
-          <SystemFlow />
-        </div>
-      </section>
+      <section id="trabajo" class="portfolio-section" aria-labelledby="experience-title"><div class="wrap">
+        <header class="section-head"><h2 id="experience-title" class="display">Ideas que toman<br /><span class="text-muted">forma.</span></h2><div><p>Portfolio de estudios conceptuales. Una forma de hacer visible cómo podrían conectarse las piezas de un proyecto.</p><p class="content-disclosure">Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.</p></div></header>
+        <div class="experience-grid">
+          <article class="experience-card experience-real-estate"><ConceptPreview type="real-estate" /><div class="concept-description"><h3>Demanda, atención<br />y seguimiento.</h3><div class="concept-caption"><span>Proyecto inmobiliario</span><span class="concept-label">Estudio conceptual</span></div><p>{realEstateCase.summary}</p><p class="concept-scope">{realEstateCase.scope}</p></div></article>
+          <article class="experience-card experience-professional"><ConceptPreview type="legal" /><div class="concept-description"><h3>Credibilidad<br />que convierte.</h3><div class="concept-caption"><span>Proyecto jurídico</span><span class="concept-label">Estudio conceptual</span></div><p>{legalCase.summary}</p><p class="concept-scope">{legalCase.scope}</p></div></article>
+        </div><div class="experience-action"><p>Cada negocio necesita una conexión distinta.</p><a class="button button-outline" href={whatsappHref}>Tengo un proyecto parecido <Icon /></a></div>
+      </div></section>
 
-      <section id="trabajo" aria-labelledby="experience-title">
-        <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">04 / Experiencia</p>
-            <div>
-              <h2 id="experience-title" class="display">Experiencia aplicada a negocios reales.</h2>
-              <p class="section-intro muted">Conocemos el recorrido completo: desde cómo llega una consulta hasta cómo se convierte en una relación comercial.</p>
-            </div>
-          </header>
-          <div class="experience-grid">
-            <article class="experience-card experience-real-estate">
-              <div>
-                <p class="meta">Sector 01 / Real estate</p>
-                <p class="case-status">{realEstateCase.label}</p>
-              </div>
-              <div class="case-diagram" data-orbit-diagram data-ambient-motion aria-hidden="true">
-                <span class="case-sun"></span>
-                <span class="case-orbit case-orbit-inner"><span class="case-planet"></span></span>
-                <span class="case-orbit case-orbit-middle"><span class="case-planet"></span></span>
-                <span class="case-orbit case-orbit-outer"><span class="case-planet"></span></span>
-              </div>
-              <h3 class="display">Demanda, atención y seguimiento.</h3>
-              <p>{realEstateCase.summary}</p>
-              <small>{realEstateCase.name}</small>
-            </article>
-            <article class="experience-card experience-professional">
-              <div>
-                <p class="meta">Sector 02 / Servicios profesionales</p>
-                <p class="case-status">{legalCase.label}</p>
-              </div>
-              <div class="trust-badge" aria-hidden="true">
-                <svg class="trust-badge-mark" viewBox="0 0 48 48" focusable="false">
-                  <path d="m13 25 7 7 15-17" />
-                </svg>
-                <span>Señal verificada</span>
-              </div>
-              <h3 class="display">Credibilidad que convierte.</h3>
-              <p>{legalCase.summary}</p>
-              <small>{legalCase.name}</small>
-            </article>
-          </div>
-          <div class="experience-action">
-            <a class="button button-text" href="#contacto">Tengo un proyecto parecido <span aria-hidden="true">→</span></a>
-          </div>
-        </div>
-      </section>
+      <section id="nosotros" class="about-section"><div class="wrap">
+        <div class="about-intro"><h2 class="display">Para entender,<br /><span class="text-muted">hay que mirar distinto.</span></h2><div><p class="about-statement">El proyecto no empieza eligiendo herramientas. Empieza entendiendo qué está pasando.</p><p>Ser un poco extraterrestres es animarnos a cambiar de perspectiva. Tomar distancia, hacer otras preguntas y conectar lo que parecía separado.</p><p>Conocemos el recorrido completo: desde cómo llega una consulta hasta cómo se convierte en una relación comercial.</p><p>No todos los negocios necesitan todo. Elegimos las herramientas en función del problema.</p></div></div>
+        <div id="metodo" class="method-block"><h3 class="method-heading">De un problema a una solución.</h3><ol class="method-steps" data-method-flow>{methodSteps.map(([title, description]) => (<li class="method-step"><h4>{title}</h4><p>{description}</p></li>))}</ol></div>
+        <div id="problemas" class="problems-block"><details class="business-problems"><summary><span>Tu negocio funciona. ¿Su sistema digital también?</span><Icon name="plus" /></summary><p>A veces el problema parece ser una web, una campaña o una planilla. Muchas veces es la forma en que esas piezas se conectan.</p><ul class="problems"><li class="problem-item">Tu web ya no representa el nivel real de tu negocio.</li><li class="problem-item">Invertís en publicidad, pero no sabés qué pasa con las consultas.</li><li class="problem-item">Los clientes llegan por distintos canales y el seguimiento se dispersa.</li><li class="problem-item">Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</li><li class="problem-item">Dependés demasiado de Instagram, WhatsApp o tareas manuales.</li><li class="problem-item">Sabés que podrías captar más, pero no tenés un recorrido claro.</li></ul></details></div>
+      </div></section>
 
-      <section id="metodo" aria-labelledby="method-title">
-        <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">05 / Método</p>
-            <div>
-              <h2 id="method-title" class="display">De un problema a una solución.</h2>
-              <p class="section-intro muted">El proyecto no empieza eligiendo herramientas. Empieza entendiendo qué está pasando.</p>
-            </div>
-          </header>
-          <ol class="method-steps" data-method-flow>
-            {methodSteps.map(([title, description]) => (
-              <li class="method-step"><h3>{title}</h3><p>{description}</p></li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <section id="capacidades" class="capabilities-section"><div class="wrap"><header class="section-head"><h2 class="display">Las herramientas.<br /><span class="text-muted">Al servicio de la idea.</span></h2><p>Herramientas distintas para problemas distintos. Podemos resolver una necesidad puntual o conectar varias partes del recorrido.</p></header><div class="capability-grid">{capabilities.map(([title, items]) => (<article class="capability"><h3>{title}</h3><ul>{items.map((item) => <li>{item}</li>)}</ul></article>))}</div></div></section>
 
-      <section id="capacidades" aria-labelledby="capabilities-title">
-        <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">06 / Capacidades</p>
-            <div><h2 id="capabilities-title" class="display">Herramientas distintas para problemas distintos.</h2></div>
-          </header>
-          <div class="capability-grid">
-            {capabilities.map(([title, items]) => (
-              <article class="capability"><h3>{title}</h3><ul>{items.map((item) => <li>{item}</li>)}</ul></article>
-            ))}
-          </div>
-          <p class="capability-note">No todos los negocios necesitan todo. Elegimos las herramientas en función del problema.</p>
-        </div>
-      </section>
-
-      <section class="contact-section" id="contacto" aria-labelledby="contact-title">
-        <div class="wrap contact-layout">
-          <div class="contact-intro">
-            <div class="contact-title">
-              <p class="eyebrow">07 / Empecemos</p>
-              <h2 id="contact-title" class="display">Contanos qué necesitás <em>resolver.</em></h2>
-            </div>
-            <div role="group" aria-label="Canales de contacto directo">
-              <div class="contact-side">
-                <p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p>
-                <a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
-                  <span>Escribir por WhatsApp</span><strong>{whatsappDisplay}</strong><b aria-hidden="true">↗</b>
-                </a>
-              </div>
-              <div class="contact-direct">
-                <span class="meta">O escribinos por email</span>
-                <a href={`mailto:${contactEmail}`}>{contactEmail} <b aria-hidden="true">↗</b></a>
-              </div>
-            </div>
-          </div>
-
-          <form id="contact-form" class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
+      <section class="contact-section" id="contacto" aria-labelledby="contact-title"><div class="wrap">
+        <div class="contact-layout"><div class="contact-intro"><div class="contact-title"><h2 id="contact-title" class="display">Contanos qué <br />necesitás <br /><span>resolver.</span></h2></div><div role="group" aria-label="Canales de contacto directo"><div class="contact-side"><p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p><a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}><span>Hablemos por WhatsApp<strong>{whatsappDisplay}</strong></span><Icon /></a></div><div class="contact-direct"><p>O escribinos por email</p><a href={`mailto:${contactEmail}`}>{contactEmail} <Icon /></a></div></div></div>
+        <div class="form-surface">          <form id="contact-form" class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
             <div class="contact-form-heading form-row-full">
-              <p class="meta">Formulario de contacto</p>
               <h3>Tu consulta</h3>
+              <p>Si preferís, escribinos desde acá.</p>
             </div>
             <div class="form-row">
               <label for="company">Empresa</label>
@@ -390,52 +263,18 @@ const structuredData = {
               <div class="form-row-full turnstile-wrap"><div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div></div>
             )}
             <div class="form-status form-row-full" role="status" aria-live="polite" tabindex="-1"></div>
-            <button class="submit-button form-row-full" type="submit">Enviar consulta <span aria-hidden="true">↗</span></button>
-          </form>
-        </div>
-      </section>
+            <button class="submit-button form-row-full" type="submit">Enviar consulta <Icon /></button>
+          </form></div></div>
+      </div></section>
 
-      <section id="faq" aria-labelledby="faq-title">
-        <div class="wrap">
-          <header class="section-head">
-            <p class="eyebrow">08 / Preguntas</p>
-            <div><h2 id="faq-title" class="display">Antes de conversar.</h2></div>
-          </header>
-          <div class="faq-list">
-            {faqs.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}
-          </div>
-        </div>
-      </section>
+      <section id="faq" class="faq-section" aria-labelledby="faq-title"><div class="wrap faq-layout"><h2 id="faq-title" class="display">Antes de<br /><span class="text-muted">conversar.</span></h2><div class="faq-list">{faqs.map(([question, answer]) => <details><summary>{question}<Icon name="plus" /></summary><p>{answer}</p></details>)}</div></div></section>
     </main>
-
-    <footer class="site-footer">
-      <div class="wrap">
-        <div class="footer-grid">
-          <a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba">LPM</a>
-          <div><h3>Soluciones</h3><a href="#soluciones">Presencia</a><a href="#soluciones">Captación</a><a href="#soluciones">Organización</a></div>
-          <div><h3>Explorar</h3><a href="#sistema">Sistema</a><a href="#trabajo">Experiencia</a><a href="#metodo">Método</a><a href={privacyHref}>Privacidad</a></div>
-          <div><h3>Contacto</h3><a href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>WhatsApp</a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="#inicio">Volver arriba ↑</a></div>
-        </div>
-        <div class="footer-bottom"><span>© 2026 LPM / La Plata, Argentina</span><span id="mode-label">Identidad visual / Sistema automático</span></div>
-      </div>
-    </footer>
-
-    <a
-      class="floating-whatsapp"
-      href={whatsappHref}
-      aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}
-      title="Escribir por WhatsApp"
-      data-floating-whatsapp
-    >
-      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-        <path d="M16.04 3A12.92 12.92 0 0 0 5.1 22.78L3 29l6.43-2.02A12.96 12.96 0 1 0 16.04 3Zm0 2.6a10.35 10.35 0 1 1-5.99 18.8l-.47-.33-3.07.96 1-2.96-.36-.5A10.33 10.33 0 0 1 16.04 5.6Zm-4.55 4.62c-.2 0-.53.08-.81.39-.28.3-1.07 1.04-1.07 2.54s1.1 2.95 1.24 3.15c.15.2 2.14 3.43 5.3 4.68 2.62 1.04 3.16.83 3.73.78.57-.05 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.07-.13-.28-.2-.59-.36-.3-.16-1.83-.91-2.12-1.01-.28-.1-.49-.16-.7.15-.2.31-.8 1.02-.98 1.22-.18.21-.36.23-.67.08-.3-.16-1.29-.48-2.46-1.52a9.2 9.2 0 0 1-1.7-2.12c-.17-.3-.01-.47.14-.62.14-.14.3-.36.46-.54.15-.18.2-.31.3-.52.11-.2.06-.39-.02-.54-.08-.16-.69-1.67-.95-2.29-.25-.6-.51-.52-.7-.53h-.65Z" />
-      </svg>
-    </a>
-
+    <footer class="site-footer"><div class="wrap"><div class="footer-top"><a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba"><span class="brand-mark" aria-hidden="true">L/</span> La Plata<br />Marketing.</a><div class="footer-navigation"><a href="#soluciones">Enfoque</a><a href="#trabajo">Portfolio</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a></div><div class="footer-contact"><a href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>WhatsApp <Icon /></a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="/privacidad/">Privacidad</a></div></div><div class="footer-bottom"><span>© 2026 LPM / La Plata, Argentina</span><span id="mode-label">Identidad visual / Sistema automático</span><a href="#inicio">Volver arriba <Icon name="arrow" /></a></div></div></footer>
+    <a class="floating-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`} title="Escribir por WhatsApp" data-floating-whatsapp><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.04 3A12.92 12.92 0 0 0 5.1 22.78L3 29l6.43-2.02A12.96 12.96 0 1 0 16.04 3Zm0 2.6a10.35 10.35 0 1 1-5.99 18.8l-.47-.33-3.07.96 1-2.96-.36-.5A10.33 10.33 0 0 1 16.04 5.6Zm-4.55 4.62c-.2 0-.53.08-.81.39-.28.3-1.07 1.04-1.07 2.54s1.1 2.95 1.24 3.15c.15.2 2.14 3.43 5.3 4.68 2.62 1.04 3.16.83 3.73.78.57-.05 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.07-.13-.28-.2-.59-.36-.3-.16-1.83-.91-2.12-1.01-.28-.1-.49-.16-.7.15-.2.31-.8 1.02-.98 1.22-.18.21-.36.23-.67.08-.3-.16-1.29-.48-2.46-1.52a9.2 9.2 0 0 1-1.7-2.12c-.17-.3-.01-.47.14-.62.14-.14.3-.36.46-.54.15-.18.2-.31.3-.52.11-.2.06-.39-.02-.54-.08-.16-.69-1.67-.95-2.29-.25-.6-.51-.52-.7-.53h-.65Z" /></svg></a>
+    <p class="model-credit wrap">Modelo 3D: <a href="https://sketchfab.com/3d-models/grey-alien-head-3d-model-915a6375927e4003a8790d8932655e76" target="_blank" rel="noopener noreferrer">Grey Alien Head</a> de Joel Dcosta · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> · Adaptado por LPM.</p>
+    <SiteTransmission />
     <script is:inline src="/scripts/site.js" defer></script>
     {turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
-    <!-- Start of HubSpot Embed Code -->
     <script is:inline type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/52086486.js"></script>
-    <!-- End of HubSpot Embed Code -->
   </body>
 </html>

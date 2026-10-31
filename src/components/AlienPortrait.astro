@@ -1,0 +1,11 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/lpm-visitor.png';
+---
+<div class="alien-portrait" data-spatial-portrait data-spatial-state="static" data-transmission-beam="inactive">
+  <Image src={portrait} alt="Retrato conceptual de un extraterrestre azul que mira al visitante." widths={[640, 960, 1280, 1536]} sizes="(max-width: 700px) 110vw, 100vw" width={1536} height={1024} format="webp" quality={84} loading="eager" fetchpriority="high" decoding="async" />
+  <canvas class="spatial-canvas" aria-hidden="true"></canvas>
+</div>
+<script>
+  import '../scripts/alien-spatial.js';
+</script>
