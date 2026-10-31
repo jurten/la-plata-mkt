@@ -34,7 +34,10 @@ export async function createSuppliedAlien() {
     root,
     pose(x: number, y: number, coarse = false) {
       // This supplied head is a static mesh. Turn its centered volume as a whole.
-      root.rotation.set(y * .10, x * (coarse ? .23 : .32), -x * .018);
+      // Add progressively more desktop yaw toward the left edge (up to .60 rad).
+      const leftReach = coarse ? 0 : Math.max(0, -x);
+      const yaw = x * (coarse ? .23 : .32) - leftReach * leftReach * .28;
+      root.rotation.set(y * .10, yaw, -x * .018);
     },
     dispose() {
       if (disposed) return;

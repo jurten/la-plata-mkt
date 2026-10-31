@@ -9,6 +9,8 @@ related_targets: ["src/pages/privacidad.astro"]
 
 Mode: Persuade. Primary route: `src/pages/index.astro`; supporting route: `src/pages/privacidad.astro`.
 
+Cursor follow-up, 2026-10-31: text selection and editing now use a matching 32px cobalt/white retro I-beam, hotspot (16,16), with native `text` fallback. Arrow/hand behavior, forced-color and touch fallbacks remain. Shared by home and privacy.
+
 Latest ring direction, 2026-10-31: make the contour crazier while preserving its reduced base size and 1100ms slow organic morph. Twelve random anchors, amplified folds and overlapping lobes create deep bays and tendrils along a smooth 192-point contour. Remove the vertical light shaft completely. All illumination hugs the neon ring: cobalt corona, cyan bloom and hot core, clipped outside the fully clear interior. The existing CRT intensity and cadence remain.
 
 Latest tuning, 2026-10-31: ray diameter/radius and glow are halved. Eight broad random radial lobes use continuous cubic B-splines in angle and time, replacing sharp tips and edge jitter. Morphing is 60% slower: 1100ms target intervals instead of 440ms. Increase CRT displacement, static, scanline depth and tracking-band/tear strength without changing its 24fps cadence or temporal speeds. Full clearing, pause, mobile scrolling and accessibility behavior remain.

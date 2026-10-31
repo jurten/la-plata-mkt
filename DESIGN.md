@@ -348,9 +348,9 @@ Desktop places the head to the right of live copy; mobile centers it below the o
 
 ### Native Pixel Cursor
 
-The user-requested old-school treatment uses native PNG cursors (32px), shared by the homepage and privacy route when a fine pointer can hover and forced colors are off. The arrow hotspot is (4px, 1px); interactive targets use the pixel hand with hotspot (14px, 1px). Each URL includes its standard `default` or `pointer` fallback. Coarse pointers and forced-colors mode retain native cursors.
+The user-requested old-school treatment uses native PNG cursors (32px), shared by the homepage and privacy route when a fine pointer can hover and forced colors are off. The arrow hotspot is (4px, 1px); interactive targets use the pixel hand with hotspot (14px, 1px). Selectable text and editable fields use the matching cobalt/white pixel I-beam with hotspot (16px, 16px). Each URL includes its standard `default` or `pointer` fallback. Coarse pointers and forced-colors mode retain native cursors.
 
-Reading text and editable fields keep the I-beam. Disabled controls retain native wait or not-allowed affordances, and busy regions use progress. This specific pixel cursor is allowed; it introduces no JavaScript follower, trails, hidden pointer, or animation-frame work.
+Reading text and editable fields use the retro I-beam PNG with the native `text` cursor as fallback. Disabled controls retain native wait or not-allowed affordances, and busy regions use progress. This specific pixel cursor is allowed; it introduces no JavaScript follower, trails, hidden pointer, or animation-frame work.
 
 ## Do's and Don'ts
 

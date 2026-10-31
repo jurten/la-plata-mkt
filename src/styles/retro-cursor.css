@@ -1,5 +1,5 @@
 /* Native 32px pixel cursors: no follower, animation frame or hidden OS pointer.
-   Hotspots sit on the arrow tip and index fingertip, respectively. */
+   Hotspots sit on the arrow tip, index fingertip and I-beam center. */
 @media (hover: hover) and (pointer: fine) and (forced-colors: none) {
   :is(.site-home, .legal-body) {
     cursor: url('/cursors/retro-arrow.png') 4 1, default;
@@ -19,7 +19,7 @@
     cursor: url('/cursors/retro-hand.png') 14 1, pointer;
   }
 
-  /* Text selection and native editing/resize affordances remain familiar. */
+  /* Pixel I-beam matches the arrow/hand; native text is the fallback. */
   :is(.site-home, .legal-body) :is(
     p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote,
     input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='button']):not([type='submit']):not([type='reset']),
@@ -27,7 +27,7 @@
     [contenteditable='true'],
     [contenteditable='']
   ) {
-    cursor: text;
+    cursor: url('/cursors/retro-text.png') 16 16, text;
   }
 
   :is(.site-home, .legal-body) :is(input, select, textarea):disabled,

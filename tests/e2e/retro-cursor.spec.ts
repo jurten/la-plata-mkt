@@ -2,17 +2,18 @@ import { expect, test } from '@playwright/test';
 
 const arrowCursor = /url\([^)]*\/cursors\/retro-arrow\.png[^)]*\) 4 1, default/;
 const handCursor = /url\([^)]*\/cursors\/retro-hand\.png[^)]*\) 14 1, pointer/;
+const textCursor = /url\([^)]*\/cursors\/retro-text\.png[^)]*\) 16 16, text/;
 
-test('el cursor retro distingue acciones y conserva edición y espera nativas', async ({ page }) => {
+test('el cursor retro distingue acciones y texto y conserva la espera nativa', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('body')).toHaveCSS('cursor', arrowCursor);
   await expect(page.locator('.hero .button-primary')).toHaveCSS('cursor', handCursor);
   await expect(page.locator('[data-set-theme="dark"]')).toHaveCSS('cursor', handCursor);
   await expect(page.locator('details summary').first()).toHaveCSS('cursor', handCursor);
-  await expect(page.locator('#company')).toHaveCSS('cursor', 'text');
-  await expect(page.locator('#issue')).toHaveCSS('cursor', 'text');
-  await expect(page.locator('.hero h1')).toHaveCSS('cursor', 'text');
+  await expect(page.locator('#company')).toHaveCSS('cursor', textCursor);
+  await expect(page.locator('#issue')).toHaveCSS('cursor', textCursor);
+  await expect(page.locator('.hero h1')).toHaveCSS('cursor', textCursor);
 
   const submit = page.locator('.submit-button');
   await submit.evaluate((button) => { (button as HTMLButtonElement).disabled = true; });
@@ -25,7 +26,7 @@ test('el cursor retro distingue acciones y conserva edición y espera nativas', 
   await expect(page.locator('.hero .button-primary')).toHaveCSS('cursor', handCursor);
 
   // Confirm the native cursor sources are real 32px PNGs, not missing URLs.
-  for (const name of ['retro-arrow', 'retro-hand']) {
+  for (const name of ['retro-arrow', 'retro-hand', 'retro-text']) {
     const response = await page.request.get(`/cursors/${name}.png`);
     expect(response.ok()).toBeTruthy();
     expect(response.headers()['content-type']).toContain('image/png');
@@ -37,6 +38,7 @@ test('el cursor retro distingue acciones y conserva edición y espera nativas', 
   await page.goto('/privacidad/');
   await expect(page.locator('body')).toHaveCSS('cursor', arrowCursor);
   await expect(page.getByRole('link').first()).toHaveCSS('cursor', handCursor);
+  await expect(page.locator('main p').first()).toHaveCSS('cursor', textCursor);
 });
 
 test('el cursor del sistema se conserva con colores forzados', async ({ page }) => {

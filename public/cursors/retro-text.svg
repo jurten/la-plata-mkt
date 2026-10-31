@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs><path id="text" d="M9 5h6v2h2V5h6v4h-4v14h4v4h-6v-2h-2v2H9v-4h4V9H9Z"/></defs>
+  <use href="#text" fill="#eef3ff" stroke="#020307" stroke-width="4" stroke-linejoin="miter"/>
+  <use href="#text" fill="#eef3ff" stroke="#1536f1" stroke-width="2" stroke-linejoin="miter"/>
+</svg>
