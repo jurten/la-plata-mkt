@@ -33,7 +33,8 @@ test('la lectura y el contacto básico funcionan sin JavaScript', async ({ brows
   await expect(page.locator('h1')).toBeVisible();
   await expect(page.locator('.primary-nav').getByRole('link', { name: 'Contacto', exact: true })).toBeVisible();
   await expect(page.locator('.hero .button-primary')).toHaveAttribute('href', 'https://wa.me/5491158861954');
-  await expect(page.locator('.alien-portrait img')).toBeVisible();
+  await expect(page.locator('.alien-portrait img')).toHaveCount(0);
+  await expect(page.locator('.alien-portrait canvas')).toHaveCSS('opacity', '0');
   await expect(page.locator('.perspective-study')).toHaveAttribute('data-view', 'whole');
   await expect(page.getByRole('group', { name: 'Cambiar la perspectiva del recorrido', includeHidden: true })).toBeHidden();
   await page.locator('#faq summary').first().click();

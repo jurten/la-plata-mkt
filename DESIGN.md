@@ -205,17 +205,17 @@ components:
 
 **Creative North Star: "Otra perspectiva"**
 
-An unfamiliar blue gaze expresses a different way of understanding real client problems. The live opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin and an old CRT transmission treatment. Black brand fields, decisive typography, optical geometry, and cool reading surfaces carry the identity. The original detailed portrait provides the static fallback. Preserve the existing L/ and LPM logo treatment.
+An unfamiliar blue gaze expresses a different way of understanding real client problems. The live opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin and an old CRT transmission treatment confined to the hero. Black brand fields, decisive typography, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; the image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the existing L/ and LPM logo treatment.
 
 The alien supplies mystery; clear Spanish copy, visible services, and direct contact supply confidence. The light appearance uses cold blue-white fields and the dark appearance uses midnight fields. The opening, optical union, and perspective scene keep their fixed dark materials in either appearance. The alien greets once, then follows input by turning its centered head volume. A cyan beam clears the CRT interference near the cursor. The perspective interaction expands attention from a piece to the complete system.
 
 **Key Characteristics:**
 
-- The supplied cobalt extraterrestrial with real head volume, CRT interference, and a cursor-controlled neon clearing beam; the detailed original portrait remains the static fallback.
+- The supplied cobalt extraterrestrial with real head volume, hero-scoped chromatic CRT interference, and a cursor-controlled neon clearing beam; no raster alien fallback appears on the homepage.
 - Cold light and midnight reading appearances around fixed black brand fields.
 - Bricolage messages with quiet Plex explanations and controls.
 - Eye-shaped apertures, two disciplines plus their visible union, and open editorial groups.
-- Purposeful perspective and 3D-alien interactions, with complete static fallbacks.
+- Purposeful perspective and 3D-alien interactions; live copy, actions, and the complete service journey remain available without animation.
 
 ## Colors
 
@@ -271,7 +271,7 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 
 ## Layout
 
-Content caps at (1280px), centered with (48px) desktop gutters, (32px) at and below (1000px), and (20px) at and below (700px). Home navigation caps at (1328px) with desktop outer gutters (24px). Legal reading content caps at (1056px). Minimum page width is (320px); anchor scrolling reserves (120px) above targets.
+Home compositions use the full viewport width with fluid desktop gutters from (48px) to (80px), then (32px) at and below (1000px) and (20px) at and below (700px). Visual grids and chapter layouts remain uncapped so large displays become part of the composition; individual copy blocks retain readable character measures. The home navigation follows the same viewport gutters. Legal reading content alone caps at (1056px). Minimum page width is (320px); anchor scrolling reserves (120px) above targets.
 
 Open editorial pairs alternate message and explanation. The first two disciplines sit side by side; their union spans the grid in a separate dark field. Portfolio uses two unequal columns, method and capabilities use four, and contact pairs a message with an opaque form. Fine dividers organize rows without enclosing ordinary text in cards.
 
@@ -326,7 +326,13 @@ Visible labels sit above fields with a gap (8px). Fields use active page backgro
 
 ### Navigation
 
-The sticky home island sits (16px) from the top with minimum inner height (76px). At the menu breakpoint these become (12px) and (68px). It stays dark across appearances; its logo stays cobalt. Links and appearance buttons have minimum targets (44px). Selected appearance uses a quiet pale overlay. The opaque mobile menu closes on Escape, outside click, navigation, or focus leaving the header. Without JavaScript, links remain visible in flow. System preference sets the initial appearance; explicit light/dark choices persist and apply before content paint.
+The home navigation now uses a compact, frameless television masthead, superseding the earlier home-island layout and glass treatment. It sits at the top edge, spans the viewport, and keeps an opaque encounter-black field, cobalt logo, fixed pale links, and quiet channel metadata in either appearance. Its inner layout is uncapped and follows the shared fluid page gutters, with minimum height (92px); below (700px), height becomes (80px) with (20px) gutters. Links and controls retain minimum targets (44px). Main links use Plex Sans; channel numbers and television labels use Plex Mono. Hover and active links gain a fine underline. The masthead retains the shared dark focus outline and pale halo; the station index uses a sky outline (2px), offset (5px).
+
+The menu opens a full-screen dark station index with large Bricolage section links, numbered channels, direct WhatsApp access, and an optional power-on replay. A geometric (4:3) television test card previews the focused or hovered channel beside the links; it is decorative and hides below (700px). At (1000px), the masthead's inline links yield to the menu control. Opening focuses the active channel, keeps background content inert, and contains keyboard focus in the masthead and index. Escape and the menu control close it and restore control focus; choosing a destination closes it and focuses the destination heading for menu or keyboard navigation.
+
+Channels remain real section anchors in the continuous page. Active links expose `aria-current="location"`, and a polite status announces a selected destination. Enhancement preserves destination hashes and browser history; without JavaScript, the regular links remain visible in flow. System preference sets the initial appearance; explicit light/dark choices persist and apply before content paint.
+
+The user-requested retro-to-new treatment adds finite television transitions: power-on opens from a central point through a horizontal line over (720ms), and section changes use a tuning sweep with channel identification over (460ms). These are navigation feedback, not a new global visual world or a scroll-driven sequence. Reduced motion, forced colors, global pause, and hidden-page state bypass or cancel the effect while completing the requested destination. Direct hash arrivals skip the opening, and the replay control is disabled when motion is unavailable.
 
 ### Perspective Scene
 
@@ -336,13 +342,23 @@ Clipping and orbit transform transition over (1000ms) with `cubic-bezier(.16, 1,
 
 ### 3D Alien
 
-Use `grey-alien-head-3d-model.zip` supplied at the project root as the homepage's 3D base. Joel Dcosta's Grey Alien Head is CC BY 4.0; retain the visible linked credit and `public/models/supplied-alien-CREDITS.txt`. The web derivative has 67,070 vertices and 100,000 triangles and preserves its own UVs, normals and four PBR maps. The supplied head has no skeleton: rotate its centered volume instead of assuming head/neck bones. The original portrait remains a distinct static fallback.
+Use `grey-alien-head-3d-model.zip` supplied at the project root as the homepage's 3D base. Joel Dcosta's Grey Alien Head is CC BY 4.0; retain the visible linked credit and `public/models/supplied-alien-CREDITS.txt`. The web derivative has 67,070 vertices and 100,000 triangles and preserves its own UVs, normals and four PBR maps. The supplied head has no skeleton: rotate its centered volume instead of assuming head/neck bones. The user's later direction removes the raster alien from every homepage state. Retain original portrait assets as historical/source material, without rendering them as a fallback. The canvas has a semantic image role and description when the 3D scene is available; it remains hidden from assistive technology otherwise.
 
 `supplied-alien.ts` loads the new mesh with its original base color, normal, metallic/roughness and specular maps. A cobalt tint and physical studio lighting carry the site identity. The previous Grab3D rig, refinement and skin modules remain isolated to the historical `/alien-study/` route.
 
 `alien-scene.ts` uses a perspective camera, ACES tone mapping, studio reflections, and hemisphere/key/fill/rim lights. Yaw is horizontal input times (.32rad fine, .23rad coarse), pitch is vertical input times (.10rad), and roll is negative horizontal input times (.018rad). Camera travel is (.018 world units horizontal) and (.012 vertical). Input smoothing remains (110ms).
 
-One finite (2400ms) greeting runs on first visible initialization and is interrupted by input. It does not replay on resize or re-entry. The user requested stronger, full-site interference: `SiteTransmission` now covers both the homepage and privacy route with real backdrop displacement, dense phosphor static, scanlines, horizontal tears and a rolling tracking band at 24fps. Its fixed layer follows the viewport through every section, including navigation. Stronger displacement, denser static, deeper scanlines and more pronounced tracking bands/tears increase CRT intensity while retaining the same 24fps cadence and temporal speeds. A cyan ion rim surrounds a fully clear irregular hole. The ray keeps half the original base diameter. Twelve random radial anchors, amplified folds and overlapping lobes produce a more extreme organic contour using cubic B-splines in angle and time. All light follows the neon ring as a cobalt/cyan corona; there is no vertical shaft. Target intervals are 1100ms instead of 440ms, reducing morph speed by 60%, sampled into a 192-point contour; the exact same inverse path clips backdrop distortion and removes static, and all beam light stays outside the hole. The beam's core is pixel-identical to disabling the effect. A global pause control remains available below the hero and synchronizes with the alien control. Pause removes interference and freezes the head. The head stops drawing when settled or offscreen while the global effect continues; hidden pages and reduced motion stop all animation. Reduced motion, absent JavaScript, unavailable graphics and failed alien assets preserve the original static image. Initial reduced motion requests no 3D scene, model, maps or WebGL context.
+One finite (2400ms) greeting runs on first visible initialization and is interrupted by input. It does not replay on resize or re-entry.
+
+The latest user direction confines `SiteTransmission` to the `#inicio` hero and requires full signal collapse, briefly making the alien unrecognizable. Its absolute layer is clipped by the hero and does not continue through reading sections, navigation, or the privacy route. At 24fps, a quieter coherent picture gives way to a (1080ms) failure in each (6800ms) cycle. Three (120ms) broken frames repeat three times, then the coherent view returns in one frame. The cycle also has a (600ms) tracking phase.
+
+`signal-pass.ts` caches the actual 3D scene in a `WebGLRenderTarget` and presents it through a full-screen `ShaderMaterial`. Eleven explicit UV bands enlarge, mirror, compress, and relocate distant parts of that rendered frame, with RGB splitting and tracking jumps. The former SVG backdrop-filter path is removed: Firefox can ignore SVG URL backdrop filters, as documented in [Mozilla bug 1961378](https://bugzilla.mozilla.org/show_bug.cgi?id=1961378). The target uses half-float color when supported, otherwise unsigned-byte color; tone mapping and output color conversion happen once in the final shader.
+
+Signal-only changes reuse the cached scene without redrawing the 3D mesh. The output pass presents changed phases/frames and active beam updates, while unchanged settled output stays idle. `site-transmission.ts` sends `lpm:signal-frame` to the portrait controller; presentation state attributes update only after the renderer draws. The separate 2D CRT noise, scanlines, and tracking bands continue at 24fps even while the head pose is held. The cursor aperture restores the coherent live 3D view and motion; pause also restores coherent output before holding the pose. Offscreen and hidden states do no output work.
+
+A cyan ion rim surrounds a fully clear irregular hole. The ray keeps half the original base diameter. Twelve random radial anchors, amplified folds and overlapping lobes produce a more extreme organic contour using cubic B-splines in angle and time. All light follows the neon ring as a cobalt/cyan corona; there is no vertical shaft. Target intervals are 1100ms instead of 440ms, reducing morph speed by 60%, sampled into a 192-point contour. The same 192 radii map the hero-space aperture into the portrait shader and remove the 2D static; all beam light stays outside the hole, with the hero's CSS clipping containing both layers. The beam's core is pixel-identical to disabling the effect.
+
+The interference pause control stays inside the hero and synchronizes with the alien control. Pause removes interference and freezes the head. Intersection observers suspend the transmission and head when their regions leave view; the head also stops drawing when settled. Hidden pages suspend both, and reduced motion stops animation. Forced colors hides the CRT layer and its control. Reduced motion, absent JavaScript, loading, unavailable graphics, and failed alien assets leave a blank black image area with live text and actions intact; never substitute a raster alien. Initial reduced motion requests no 3D scene, model, maps, or WebGL context.
 
 Desktop places the head to the right of live copy; mobile centers it below the opening actions. Validate responsive framing, detailed cobalt skin, readable dark eyes, clean anatomy during turns, and stable text/actions. Original-image pixel equivalence is a retired depth-reconstruction check. Touch preserves vertical pan and pinch zoom, and optional secure-context orientation permission is requested only on the explicit inclination action. The existing glass controls and native pixel cursor remain.
 
@@ -359,7 +375,7 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 - **Do** preserve the L/ and LPM logo, fixed cobalt/sky artwork, and separate active theme roles.
 - **Do** carry the gaze into optical geometry instead of relying on the portrait alone.
 - **Do** pair expressive headings with readable Plex copy, bounded measures, and open content groups.
-- **Do** keep the complete system readable in both perspective states and preserve reduced-motion and no-JavaScript fallbacks for both authored interactions.
+- **Do** keep the complete system readable in both perspective states and preserve live content without motion or JavaScript; the alien's fallback is a blank black image area.
 - **Do** preserve visible labels, consent, status feedback, keyboard focus, and direct WhatsApp access.
 - **Do** label illustrative portfolio work as conceptual until client material is approved for publication.
 - **Do** scope the native pixel cursor to fine hover pointers and preserve editing, waiting, disabled, and forced-colors affordances.
@@ -369,7 +385,7 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 - **Don't** restore the retired warm-paper editorial world when extending this identity.
 - **Don't** add fake telemetry, arbitrary coordinates, starfields, terminal styling, sound, cursor followers, trails, `cursor: none`, or hijacked scrolling.
 - **Don't** apply glass to reading or form surfaces.
-- **Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, and perspective scene.
+- **Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, hero-scoped CRT interference, perspective scene, and finite television power-on/channel transitions.
 - **Don't** present concept imagery as approved client projects, results, or testimonials.
 - **Don't** promote miniature text inside decorative concept artwork into a reading or control type role.
 

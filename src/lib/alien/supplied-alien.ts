@@ -1,9 +1,13 @@
 import { Box3, Group, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Texture, Vector3 } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { refineSuppliedSkin } from './supplied-skin';
 
 /** The user's Joel Dcosta head, with its own anatomy, UVs and PBR textures. */
-export async function createSuppliedAlien() {
-  const { scene: model } = await new GLTFLoader().loadAsync('/models/supplied-alien-head.glb');
+export async function createSuppliedAlien(onProgress?: (progress: number) => void) {
+  const { scene: model } = await new GLTFLoader().loadAsync('/models/supplied-alien-head.glb', event => {
+    if (event.total > 0) onProgress?.(Math.min(event.loaded / event.total, 1));
+  });
+  onProgress?.(1);
   const root = new Group();
   root.name = 'supplied-alien-head';
   model.updateMatrixWorld(true);
@@ -22,11 +26,7 @@ export async function createSuppliedAlien() {
       // maps as a failed enhancement rather than showing an untextured alien.
       if (!material.map || !material.normalMap || !material.roughnessMap || !material.metalnessMap
         || !(material instanceof MeshPhysicalMaterial) || !material.specularColorMap) incomplete = true;
-      material.color.set('#728fff');
-      material.metalness = .08;
-      material.roughness = .62;
-      material.normalScale.set(.65, .65);
-      material.envMapIntensity = .75;
+      if (material instanceof MeshPhysicalMaterial) refineSuppliedSkin(object.geometry, material);
     }
   });
   let disposed = false;

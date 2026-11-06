@@ -1,13 +1,12 @@
 function enhancePortrait(portrait) {
   const hero = portrait.closest('.alien-hero');
-  const image = portrait.querySelector('img');
   const canvas = portrait.querySelector('.spatial-canvas');
   const controls = hero?.querySelector('[data-spatial-controls]');
   const toggle = controls?.querySelector('[data-spatial-toggle]');
   const toggleLabel = toggle?.querySelector('span');
   const orientation = controls?.querySelector('[data-spatial-orientation]');
   const hint = controls?.querySelector('[data-spatial-hint]');
-  if (!hero || !image || !canvas || !controls || !toggle) return;
+  if (!hero || !canvas || !controls || !toggle) return;
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   // Read once, then use event state. Polling the native query during every draw
@@ -17,7 +16,13 @@ function enhancePortrait(portrait) {
   let renderer;
   let loading;
   let failed = false;
+  let settled = false;
   let paused = false;
+  let signalHeld = false;
+  let signal = {
+    enabled: false, phase: 'locked', frame: -1, present: true,
+    beam: { active: false, x: 0, y: 0, radii: new Float32Array(192) },
+  };
   let inView = false;
   let frame = 0;
   let lastTime = 0;
@@ -31,8 +36,13 @@ function enhancePortrait(portrait) {
   let sensorEnabled = false;
   let sensorOrigin;
   const clamp = (value) => Math.max(-1, Math.min(1, value));
-  const canRun = () => !failed && !paused && !reduceMotion && inView && !document.hidden;
+  const canRun = () => !failed && !paused && !signalHeld && !reduceMotion && inView && !document.hidden;
   const defaultHint = () => coarse.matches ? 'Deslizá de lado para explorar' : 'Mové el cursor para explorar';
+  const reportProgress = (value) => {
+    const progress = Math.max(0, Math.min(100, Math.round(value)));
+    portrait.dataset.spatialProgress = String(progress);
+    window.dispatchEvent(new CustomEvent('lpm:alien-progress', { detail: progress }));
+  };
   const stop = () => {
     cancelAnimationFrame(frame);
     frame = 0;
@@ -49,6 +59,11 @@ function enhancePortrait(portrait) {
       orientation.setAttribute('aria-pressed', 'false');
     }
   };
+  const reportSettled = (state) => {
+    if (settled) return;
+    settled = true;
+    window.dispatchEvent(new CustomEvent(`lpm:alien-${state}`));
+  };
   const fallback = () => {
     failed = true;
     stop();
@@ -56,16 +71,36 @@ function enhancePortrait(portrait) {
     renderer?.destroy();
     renderer = undefined;
     portrait.dataset.spatialState = 'unavailable';
+    canvas.setAttribute('aria-hidden', 'true');
     controls.hidden = true;
+    reportSettled('unavailable');
+  };
+  const recordPresentation = () => {
+    portrait.dataset.spatialSignal = signal.enabled ? signal.phase : 'locked';
+    portrait.dataset.spatialSignalFrame = signal.enabled ? String(signal.frame) : '-1';
+  };
+  const presentSignal = () => {
+    if (!renderer || failed) return;
+    // Holding the pose must not hold the postprocess which corrupts that pose.
+    const visible = inView && !document.hidden && !reduceMotion && signal.present !== false;
+    try {
+      if (renderer.signal(signal, visible && (!paused || !signal.enabled))) recordPresentation();
+    } catch { fallback(); }
   };
   const draw = () => {
-    try { renderer?.draw(current.x, current.y, coarse.matches); } catch { fallback(); }
+    try {
+      if (renderer?.draw(current.x, current.y, coarse.matches)) {
+        recordPresentation();
+        reportProgress(100);
+        reportSettled('ready');
+      }
+    } catch { fallback(); }
   };
   const tick = (time) => {
     frame = 0;
     if (!renderer || !canRun()) return stop();
-    // The global transmission owns the CRT animation. Only redraw the head
-    // while its pose changes; the whole-site layer can distort its cached view.
+    // The hero transmission distorts the cached view. Only redraw the head
+    // while its pose changes, and hold that view during a skipping burst.
     if (time - lastDraw < 1000 / 24) { frame = requestAnimationFrame(tick); return; }
     lastDraw = time;
     if (greeting) {
@@ -122,17 +157,19 @@ function enhancePortrait(portrait) {
   const initialize = () => {
     if (renderer || loading || failed || reduceMotion) return loading;
     portrait.dataset.spatialState = 'loading';
+    reportProgress(5);
     loading = (async () => {
-      await image.decode();
-      if (reduceMotion) return;
       const { createAlienScene } = await import('../lib/alien/alien-scene');
       if (reduceMotion) return;
-      const next = await createAlienScene(canvas);
+      reportProgress(15);
+      const next = await createAlienScene(canvas, progress => reportProgress(15 + progress * 70));
+      reportProgress(92);
       if (reduceMotion || !inView || document.hidden) { next.destroy(); portrait.dataset.spatialState = 'static'; return; }
       renderer = next;
       current = { x: 0, y: 0 };
       target = { ...current };
       geometry();
+      presentSignal();
     })().catch(fallback).finally(() => {
       loading = undefined;
       synchronize();
@@ -144,6 +181,8 @@ function enhancePortrait(portrait) {
     if (reduceMotion || paused) {
       stop();
       stopSensor();
+      signal = { ...signal, enabled: false, phase: 'locked', frame: -1 };
+      presentSignal();
       if (paused) draw();
       if (reduceMotion) current = target = { x: 0, y: 0 };
       else target = { ...current };
@@ -155,6 +194,7 @@ function enhancePortrait(portrait) {
       else if (!greeting) move(target.x, target.y);
     } else if (canRun()) initialize();
     controls.hidden = !renderer || reduceMotion;
+    canvas.setAttribute('aria-hidden', String(!renderer || reduceMotion));
     toggle.setAttribute('aria-pressed', String(!paused));
     toggle.setAttribute('aria-label', paused ? 'Activar efecto espacial' : 'Pausar efecto espacial');
     if (toggleLabel) toggleLabel.textContent = paused ? 'Activar efecto' : 'Pausar efecto';
@@ -189,6 +229,15 @@ function enhancePortrait(portrait) {
   window.addEventListener('blur', () => { endDrag(); stopSensor(); });
   screen.orientation?.addEventListener('change', () => { stopSensor(); move(0, 0); });
   window.addEventListener('lpm:transmission-pause', (event) => { paused = event.detail; synchronize(); });
+  hero.addEventListener('lpm:signal-skip', (event) => {
+    signalHeld = Boolean(event.detail);
+    if (signalHeld) stop();
+    else if (canRun() && Math.abs(target.x - current.x) + Math.abs(target.y - current.y) >= .001) move(target.x, target.y);
+  });
+  hero.addEventListener('lpm:signal-frame', (event) => {
+    signal = event.detail;
+    presentSignal();
+  });
   toggle.addEventListener('click', () => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: !paused })));
 
   function onOrientation(event) {
@@ -225,10 +274,6 @@ function enhancePortrait(portrait) {
 
   canvas.addEventListener('webglcontextlost', (event) => { event.preventDefault(); fallback(); });
   canvas.addEventListener('webglcontextrestored', () => { failed = false; synchronize(); });
-  image.addEventListener('load', () => {
-    if (!renderer) return;
-    geometry();
-  });
   reduced.addEventListener('change', (event) => { reduceMotion = event.matches; synchronize(); });
   coarse.addEventListener('change', () => { stopSensor(); current = target = { x: 0, y: 0 }; geometry(); synchronize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopSensor(); synchronize(); });

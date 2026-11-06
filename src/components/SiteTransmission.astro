@@ -1,18 +1,12 @@
 ---
 import '../styles/site-transmission.css';
 ---
-<div class="site-transmission" data-site-transmission data-transmission-state="static" data-beam="inactive" aria-hidden="true">
+<div class="site-transmission" data-site-transmission data-transmission-state="static" data-beam="inactive" data-signal-phase="locked" aria-hidden="true">
   <svg class="transmission-definitions" width="0" height="0" focusable="false">
     <defs>
-      <filter id="site-crt-warp" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
-        <feTurbulence type="fractalNoise" baseFrequency=".001 .026" numOctaves="1" seed="17" result="tracking" />
-        <feOffset in="tracking" dx="0" dy="0" result="drift" data-crt-drift />
-        <feDisplacementMap in="SourceGraphic" in2="drift" scale="23" xChannelSelector="R" yChannelSelector="G" data-crt-warp />
-      </filter>
       <clipPath id="site-crt-cutout" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" data-crt-cutout /></clipPath>
     </defs>
   </svg>
-  <div class="transmission-glass"></div>
   <canvas class="transmission-static"></canvas>
 </div>
 <button class="transmission-toggle" type="button" data-transmission-toggle aria-pressed="true" hidden>

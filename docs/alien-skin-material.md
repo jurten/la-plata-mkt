@@ -1,5 +1,32 @@
 # Alien skin material — 2026-10-31
 
+## Current homepage: matte supplied head
+
+`supplied-skin.ts` refines the supplied Joel Dcosta head with nonmetallic skin,
+reduced specular/environment intensity and a shader roughness floor of .80–.96.
+The authored map previously multiplied down the material's roughness, leaving
+near-polished highlights despite the higher scalar setting.
+
+Object-space noise layers add broad blue-gray/teal pigment variation, restrained
+violet mottling, irregular freckles and fine pore relief. Coordinates are
+normalized to the mesh height, so pigmentation follows turns without UV seams
+or new texture downloads. The original color and normal maps remain underneath;
+a brightness mask preserves the dark eyes, nostrils and mouth. Dark features keep
+a separate .28 minimum roughness. Geometry and interaction remain unchanged.
+
+This material is authored in code; no new generated image is used. Desktop/mobile
+and turned-head captures are saved in ignored `artifacts/matte-skin/`.
+
+Validation: production check/build passed with zero errors and the existing two
+diagnostic hints/chunk-size advisory. Desktop/mobile captures reported no browser
+errors or horizontal overflow. The existing alien suite passed 13 checks on its
+first production run; the responsive rendering and idle-drawing checks passed
+when rerun in isolation (60-second overall timeout for the four-viewport check).
+Initial development-server attempts were blocked by a stale optimized-module
+cache, so the browser checks used the built files served locally on port 4335.
+
+## Earlier rigged study: generated albedo
+
 Built-in image_gen, reference: src/assets/lpm-visitor.png.
 Saved asset: src/assets/lpm-alien-skin-albedo.png.
 

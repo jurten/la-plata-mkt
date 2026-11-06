@@ -1,0 +1,78 @@
+---
+import ThemeSwitcher from './ThemeSwitcher.astro';
+import Icon from './Icon.astro';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '../styles/tv-navigation.css';
+
+const channels = [
+  { id: 'inicio', number: '01', label: 'Inicio', description: 'Ideas de otro planeta. Para problemas de acá.' },
+  { id: 'soluciones', number: '02', label: 'Enfoque', description: 'Comunicación, marketing y tecnología. Las piezas, conectadas.' },
+  { id: 'trabajo', number: '03', label: 'Portfolio', description: 'Estudios conceptuales. Ideas que empiezan a tomar forma.' },
+  { id: 'nosotros', number: '04', label: 'Nosotros', description: 'Otra perspectiva para entender lo que necesita tu negocio.' },
+  { id: 'contacto', number: '05', label: 'Contacto', description: 'Contanos qué querés mejorar. Empezamos por escucharte.' },
+];
+---
+<header class="topbar television-nav" data-tv-navigation>
+  <div class="nav">
+    <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio"><span class="brand-mark" aria-hidden="true">L/</span><span>LPM</span></a>
+    <span class="current-channel" data-current-channel aria-hidden="true">CH 01</span>
+    <nav class="primary-nav" id="primary-nav" aria-label="Enlaces de sección">
+      {channels.slice(1).map(channel => <a href={`#${channel.id}`}><span class="nav-channel-number" aria-hidden="true">{channel.number}</span>{channel.label}</a>)}
+    </nav>
+    <ThemeSwitcher />
+    <button class="menu-toggle station-toggle" type="button" aria-label="Menú" aria-expanded="false" aria-controls="station-menu" hidden>
+      <span>Menú</span><span class="station-toggle-icon" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<div class="station-menu" id="station-menu" data-station-menu role="region" aria-label="Navegación por canales" hidden>
+  <div class="station-menu-inner">
+    <div class="station-menu-heading"><p>Una señal distinta.</p><span aria-hidden="true">LPM / CANALES</span></div>
+    <div class="station-menu-grid">
+      <nav class="station-links" aria-label="Navegación principal">
+        {channels.map(channel => (
+          <a href={`#${channel.id}`} data-station-link data-channel-number={channel.number} data-channel-label={channel.label} data-channel-description={channel.description}>
+            <span class="station-number" aria-hidden="true">{channel.number}</span><span>{channel.label}</span><Icon name="right" />
+          </a>
+        ))}
+      </nav>
+      <div class="station-preview" aria-hidden="true" data-station-preview>
+        <div class="station-screen">
+          <div class="station-screen-top"><span>LPM</span><span data-preview-channel>CH 01</span></div>
+          <svg class="station-testcard" viewBox="0 0 480 320" fill="none">
+            <defs><clipPath id="station-circle"><circle cx="240" cy="160" r="119" /></clipPath></defs>
+            <path d="M0 80h480M0 160h480M0 240h480M80 0v320M160 0v320M240 0v320M320 0v320M400 0v320" stroke="currentColor" opacity=".15" />
+            <g clip-path="url(#station-circle)">
+              <path fill="#dbe7ff" d="M120 40h240v240H120z" />
+              <path fill="#1536f1" d="M120 88h48v144h-48z" /><path fill="#b7d7ee" d="M168 88h48v144h-48z" /><path fill="#080e1d" d="M216 88h48v144h-48z" /><path fill="#7a94ff" d="M264 88h48v144h-48z" /><path fill="#1536f1" d="M312 88h48v144h-48z" />
+              <path fill="#080e1d" d="M120 124h240v72H120z" />
+              <path stroke="#eef3ff" stroke-width="8" d="M218 139v42h28m17-44-13 46" />
+              <path stroke="#080e1d" stroke-width="2" d="M120 62h240M120 258h240M240 40v48M240 232v48" />
+              <path stroke="#eef3ff" stroke-width="2" d="M180 208h120m-60-8v16" />
+            </g>
+            <circle cx="240" cy="160" r="119" stroke="currentColor" />
+            <path d="M16 16h24M16 16v24m448-24h-24m24 0v24M16 304h24m-24 0v-24m448 24h-24m24 0v-24" stroke="currentColor" />
+          </svg>
+          <div class="station-screen-bottom"><span>OTRA PERSPECTIVA</span><span class="station-led"></span></div>
+        </div>
+        <div class="station-preview-copy"><span data-preview-title>Inicio</span><p data-preview-description>{channels[0].description}</p></div>
+      </div>
+    </div>
+    <div class="station-menu-footer">
+      <a class="station-contact" href="https://wa.me/5491158861954">Hablemos por WhatsApp <Icon /></a>
+      <button type="button" class="power-replay" data-power-replay><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v8m-5.4-6a8 8 0 1 0 10.8 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg><span>Repetir encendido</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="tv-transition" data-tv-transition aria-hidden="true" hidden>
+  <div class="tv-shutter" data-tv-shutter></div>
+  <div class="tv-tuning" data-tv-tuning></div>
+  <div class="tv-phosphor" data-tv-phosphor></div>
+  <div class="tv-osd" data-tv-osd><span data-tv-osd-number>CH 01</span><span data-tv-osd-label>INICIO</span></div>
+</div>
+<span class="tv-channel-announcement" role="status" aria-live="polite" data-channel-announcement></span>
+<script>
+  import '../scripts/tv-navigation';
+</script>

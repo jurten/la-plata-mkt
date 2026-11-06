@@ -15,7 +15,7 @@
   --display: 'Bricolage Grotesque Variable', 'Arial Narrow', sans-serif;
   --body: 'IBM Plex Sans', Arial, sans-serif;
   --radius: 16px;
-  --max: 1280px;
+  --page-gutter: clamp(48px, 3.125vw, 80px);
   --header-height: 76px;
   --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: light;
@@ -81,7 +81,7 @@ img, svg { display: block; max-width: 100%; }
 ::selection { color: #111318; background: #F4C430; }
 :focus-visible { outline: 3px solid #111318; outline-offset: 3px; box-shadow: 0 0 0 6px #FFFDF7; }
 [hidden] { display: none !important; }
-.wrap { width: min(calc(100% - 96px), var(--max)); margin-inline: auto; }
+.wrap { width: calc(100% - var(--page-gutter) - var(--page-gutter)); margin-inline: auto; }
 .display { font-family: var(--display); font-weight: 750; letter-spacing: -.04em; line-height: 1.02; }
 h2.display { font-size: clamp(40px, 4.6vw, 64px); }
 .text-muted { color: var(--muted); }
@@ -90,7 +90,7 @@ h2.display { font-size: clamp(40px, 4.6vw, 64px); }
 .skip-link:focus { transform: none; }
 
 /* Glass is a functional, legible navigation layer. Reading surfaces stay opaque. */
-.topbar { position: sticky; top: 16px; z-index: 50; width: min(calc(100% - 48px), 1328px); margin: 16px auto 0; border-radius: 24px; background: var(--glass); box-shadow: var(--elevation); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.topbar { position: sticky; top: 16px; z-index: 50; width: calc(100% - var(--page-gutter) - var(--page-gutter)); margin: 16px auto 0; border-radius: 24px; background: var(--glass); box-shadow: var(--elevation); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 .nav { min-height: var(--header-height); display: flex; align-items: center; gap: 24px; padding: 12px 20px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--display); font-size: 23px; font-weight: 750; letter-spacing: -.02em; }
 .brand-mark { display: grid; flex: 0 0 auto; place-items: center; width: 36px; height: 36px; background: #1536F1; color: #FFFDF7; border-radius: 10px; font-size: 21px; letter-spacing: -.04em; }
@@ -296,7 +296,7 @@ summary::-webkit-details-marker { display: none; }
 .floating-whatsapp svg { width: 30px; height: 30px; fill: currentColor; }
 
 /* The supporting legal page uses the same type, control, and material rules. */
-.legal-header { display: flex; align-items: center; gap: 24px; width: min(calc(100% - 48px), 1280px); margin: 24px auto 0; padding: 16px 24px; border-radius: 24px; background: var(--glass); }
+.legal-header { display: flex; align-items: center; gap: 24px; width: calc(100% - var(--page-gutter) - var(--page-gutter)); margin: 24px auto 0; padding: 16px 24px; border-radius: 24px; background: var(--glass); }
 .legal-header .theme-switcher { margin-left: auto; }
 .legal-back { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; text-decoration: none; }
 .legal-main { width: min(calc(100% - 96px), 1056px); margin: 96px auto; }
@@ -312,7 +312,7 @@ summary::-webkit-details-marker { display: none; }
 .legal-cta { padding-top: 64px; }
 .legal-cta h2 { font-family: var(--display); font-size: clamp(36px, 4vw, 52px); line-height: 1.05; letter-spacing: -.03em; }
 .legal-cta .button { margin-top: 28px; }
-.legal-footer { display: flex; justify-content: space-between; gap: 24px; width: min(calc(100% - 96px), 1280px); margin: 0 auto; padding-block: 32px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.legal-footer { display: flex; justify-content: space-between; gap: 24px; width: calc(100% - var(--page-gutter) - var(--page-gutter)); margin: 0 auto; padding-block: 32px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
 
 @media (min-width: 1600px) { .hero { padding-top: 104px; } }
 @media (max-width: 1100px) {
@@ -330,7 +330,7 @@ summary::-webkit-details-marker { display: none; }
   .system-connector { right: -12px; }
 }
 @media (max-width: 1000px) {
-  .wrap { width: min(calc(100% - 64px), var(--max)); }
+  :root { --page-gutter: 32px; }
   .topbar { width: calc(100% - 32px); top: 12px; margin-top: 12px; }
   .nav { padding: 10px 16px; min-height: 68px; }
   .brand { margin-right: auto; }
@@ -389,7 +389,7 @@ summary::-webkit-details-marker { display: none; }
   .footer-bottom { flex-wrap: wrap; }
 }
 @media (max-width: 700px) {
-  .wrap { width: calc(100% - 40px); }
+  :root { --page-gutter: 20px; }
   .nav { gap: 8px; padding-inline: 12px; }
   .brand { font-size: 20px; gap: 7px; }
   .brand-mark { width: 32px; height: 32px; font-size: 19px; border-radius: 8px; }
@@ -503,6 +503,14 @@ summary::-webkit-details-marker { display: none; }
   .contact-direct a .icon { width: 17px; height: 17px; }
   .footer-top { grid-template-columns: 1fr; gap: 24px; }
   .footer-contact a[href^='mailto'] { font-size: 13px; }
+}
+@media (min-width: 1600px) {
+  .section-head { grid-template-columns: minmax(0, 1.45fr) minmax(34ch, .55fr); gap: clamp(64px, 6vw, 144px); }
+  .pillars, .experience-grid, .method-steps, .capability-grid, .contact-layout, .faq-layout { column-gap: clamp(40px, 3.25vw, 88px); }
+  .concept-preview { height: clamp(460px, 27vw, 680px); }
+  .concept-canvas { padding: clamp(28px, 2vw, 52px); }
+  .estate-layout, .legal-composition { min-height: clamp(260px, 16vw, 410px); }
+  .contact-layout { grid-template-columns: .8fr 1.2fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

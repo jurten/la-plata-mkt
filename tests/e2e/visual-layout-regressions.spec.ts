@@ -23,17 +23,13 @@ for (const route of ['/', '/privacidad/']) {
   });
 }
 
-test('el hero carga su imagen, mantiene el CTA visible y lo prioriza en móvil', async ({ page }) => {
+test('el hero omite la imagen plana, mantiene el CTA visible y lo prioriza en móvil', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const width of [390, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
-    const image = page.locator('.alien-portrait img');
-    await expect(image).toBeVisible();
-    await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
-    await image.evaluate((element) => (element as HTMLImageElement).decode());
-    await expect(image).toHaveAttribute('loading', 'eager');
-    await expect(image).toHaveAttribute('fetchpriority', 'high');
+    await expect(page.locator('.alien-portrait img')).toHaveCount(0);
+    await expect(page.locator('.spatial-canvas')).toHaveAttribute('aria-hidden', 'true');
     const action = page.locator('.hero .button-primary');
     await expect(action).toBeVisible();
     await expect(action).toBeInViewport();

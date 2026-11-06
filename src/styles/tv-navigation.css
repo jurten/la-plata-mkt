@@ -1,0 +1,128 @@
+/* Television wayfinding: sharp masthead, a station index and finite tuning. */
+.site-home .topbar.television-nav {
+  --station-ink: #eef3ff;
+  --station-muted: #b5c3df;
+  z-index: 90;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  background: #020307;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.television-nav .nav { width: 100%; min-height: 92px; margin: auto; padding: 16px var(--page-gutter); gap: 24px; }
+.television-nav .brand { gap: 9px; }
+.television-nav .brand-mark { border-radius: 10px; }
+.current-channel { color: var(--station-muted); font: 400 11px/1.5 'IBM Plex Mono', monospace; white-space: nowrap; }
+.television-nav .primary-nav { gap: 26px; }
+.television-nav .primary-nav > a:not(.button) { position: relative; gap: 7px; color: var(--station-ink); }
+.nav-channel-number { color: #93a5c9; font: 400 10px/1 'IBM Plex Mono', monospace; align-self: flex-start; margin-top: 10px; }
+.television-nav .primary-nav > a::after { content: ''; position: absolute; height: 2px; bottom: 3px; left: 0; right: 0; background: #8ca8ff; transform: scaleX(0); transform-origin: left; transition: transform 180ms ease-out; }
+.television-nav .primary-nav > a:hover::after, .television-nav .primary-nav > a[aria-current='location']::after { transform: scaleX(1); }
+.television-nav .theme-switcher { padding-left: 16px; }
+.television-nav .theme-switcher button { width: 44px; min-height: 44px; padding: 10px; }
+.television-nav .station-toggle { display: inline-flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 44px; padding: 10px 0 10px 18px; border: 0; border-left: 1px solid #33405d; color: #eef3ff; background: transparent; font: 600 14px/1.4 var(--body); }
+.television-nav .station-toggle[hidden] { display: none; }
+.station-toggle-icon { position: relative; width: 22px; height: 18px; }
+.station-toggle-icon span { position: absolute; left: 0; top: 5px; width: 22px; height: 2px; background: currentColor; transition: transform 220ms ease-out; }
+.station-toggle-icon span:last-child { top: 12px; width: 15px; }
+.station-toggle[aria-expanded='true'] .station-toggle-icon span:first-child { transform: translateY(3px) rotate(45deg); }
+.station-toggle[aria-expanded='true'] .station-toggle-icon span:last-child { width: 22px; transform: translateY(-4px) rotate(-45deg); }
+.station-toggle:hover { color: #b7d7ee; }
+.station-menu :focus-visible { outline: 2px solid #b7d7ee; outline-offset: 5px; box-shadow: none; }
+
+.station-menu { position: fixed; inset: 0; z-index: 80; overflow-y: auto; overscroll-behavior: contain; background: #080e1d; color: #eef3ff; }
+.station-menu[hidden], .tv-transition[hidden] { display: none; }
+html[data-station-open='true'] { overflow: hidden; }
+html[data-station-open='true'] .television-nav { background: #080e1d; }
+html[data-station-open='true'] .transmission-toggle { visibility: hidden; }
+.station-menu-inner { width: 100%; min-height: 100%; margin: auto; padding: 128px var(--page-gutter) 32px; display: flex; flex-direction: column; }
+.station-menu-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid #33405d; padding-bottom: 20px; }
+.station-menu-heading p { margin: 0; font: 500 clamp(22px, 2.4vw, 32px)/1.2 var(--display); letter-spacing: -.02em; }
+.station-menu-heading > span { font: 400 11px/1.5 'IBM Plex Mono', monospace; color: #b5c3df; }
+.station-menu-grid { flex: 1; display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: clamp(48px, 7vw, 112px); padding-block: 30px 40px; }
+.station-links { display: flex; flex-direction: column; }
+.station-links a { display: flex; align-items: center; gap: 22px; min-height: 78px; padding: 12px 0; border-bottom: 1px solid #33405d; color: #eef3ff; text-decoration: none; }
+.station-links a > span:nth-child(2) { font: 600 clamp(32px, 4.6vw, 64px)/1.05 var(--display); letter-spacing: -.035em; transition: transform 220ms cubic-bezier(.16, 1, .3, 1), color 180ms; }
+.station-links .station-number { flex: 0 0 24px; color: #b5c3df; font: 400 12px/1.5 'IBM Plex Mono', monospace; }
+.station-links a > .icon { margin-left: auto; width: 30px; height: 30px; color: #b7d7ee; opacity: 0; transform: translateX(-8px); transition: opacity 180ms, transform 220ms ease-out; }
+.station-links a:is(:hover, :focus-visible, [aria-current='location']) > span:nth-child(2) { color: #b7d7ee; transform: translateX(8px); }
+.station-links a:is(:hover, :focus-visible, [aria-current='location']) > .icon { opacity: 1; transform: none; }
+.station-preview { align-self: center; }
+.station-screen { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid #b5c3df; border-radius: 24px; color: #b7d7ee; background: #020307; }
+.station-screen-top, .station-screen-bottom { position: absolute; z-index: 1; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; color: #b5c3df; font: 400 10px/1.4 'IBM Plex Mono', monospace; }
+.station-screen-top { top: 17px; }
+.station-screen-bottom { bottom: 17px; }
+.station-led { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.station-testcard { display: block; width: 100%; height: 100%; }
+.station-preview-copy { display: grid; grid-template-columns: 1fr 1.8fr; align-items: start; gap: 24px; margin-top: 24px; }
+.station-preview-copy > span { font: 600 20px/1.3 var(--display); }
+.station-preview-copy p { margin: 0; color: #b5c3df; font-size: 14px; line-height: 1.6; }
+.station-menu-footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; border-top: 1px solid #33405d; padding-top: 22px; }
+.station-contact { display: inline-flex; align-items: center; gap: 24px; min-height: 44px; color: #eef3ff; font-size: 16px; font-weight: 600; text-decoration: none; }
+.station-contact:hover { color: #b7d7ee; }
+.power-replay { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 0; border: 0; color: #b5c3df; background: transparent; font: 400 13px/1.4 var(--body); }
+.power-replay svg { width: 21px; height: 21px; }
+.power-replay:hover { color: #eef3ff; }
+.power-replay:disabled { opacity: .5; cursor: default; }
+.station-menu:not([hidden]) .station-menu-grid { animation: station-lock 360ms cubic-bezier(.16, 1, .3, 1) both; }
+html[data-tv-motion='static'] .station-menu-grid { animation: none; }
+@keyframes station-lock { from { clip-path: inset(48% 0); } to { clip-path: inset(0); } }
+
+.tv-transition { position: fixed; inset: 0; z-index: 95; pointer-events: none; overflow: hidden; contain: strict; }
+.tv-shutter, .tv-tuning { position: absolute; inset: 0; }
+.tv-shutter { background: #020307; }
+.tv-tuning { background: repeating-linear-gradient(0deg, transparent 0 3px, #b7d7ee40 3px 4px), linear-gradient(0deg, transparent 15%, #1536f150 46%, #b7d7ee88 50%, #1536f150 54%, transparent 85%); }
+.tv-phosphor { position: absolute; top: calc(50% - 1px); left: 5%; width: 90%; height: 2px; background: #eef3ff; box-shadow: 0 0 8px #eef3ff, 0 0 20px #b7d7ee, 0 0 38px #1536f1; opacity: 0; transform-origin: center; }
+.tv-osd { position: absolute; top: 124px; left: var(--page-gutter); display: flex; flex-direction: column; gap: 4px; color: #b7d7ee; font: 400 clamp(18px, 2.2vw, 30px)/1.3 'IBM Plex Mono', monospace; text-shadow: 2px 0 #1536f1; }
+.tv-osd > span:last-child { font-size: 12px; letter-spacing: .08em; }
+.tv-channel-announcement { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (min-width: 1001px) { .television-nav .primary-nav { position: static; } }
+@media (max-width: 1100px) { .television-nav .nav { padding-inline: 32px; gap: 18px; } .television-nav .primary-nav { gap: 18px; } .nav-channel-number { display: none; } }
+@media (max-width: 1000px) {
+  .television-nav .nav { min-height: 92px; }
+  .site-home .alien-hero { margin-top: -92px; }
+  .television-nav .theme-switcher { margin-left: auto; }
+  html[data-menu-state='ready'] .television-nav .primary-nav { display: none; }
+  html[data-menu-state='ready'] .television-nav .station-toggle { display: inline-flex; padding: 10px 0 10px 18px; }
+  .station-menu-inner { padding-inline: 32px; }
+  .station-menu-grid { grid-template-columns: 1.1fr 1fr; gap: 40px; }
+  .station-links a { min-height: 76px; gap: 16px; }
+  .station-preview-copy { grid-template-columns: 1fr; gap: 8px; }
+  html:not([data-menu-state]) .television-nav .primary-nav { position: static; display: flex; flex-basis: 100%; padding: 8px 0; border-radius: 0; background: #020307; flex-direction: row; flex-wrap: wrap; gap: 8px 24px; }
+}
+@media (max-width: 700px) {
+  .television-nav .nav { min-height: 80px; padding: 14px 20px; gap: 14px; }
+  .site-home .alien-hero { margin-top: -80px; }
+  .television-nav .brand-mark { width: 32px; height: 32px; }
+  .television-nav .theme-switcher { padding-left: 0; border: 0; }
+  .television-nav .station-toggle, html[data-menu-state='ready'] .television-nav .station-toggle { gap: 12px; padding-left: 14px; }
+  .station-menu-inner { padding: 108px 24px 22px; }
+  .station-menu-heading { padding-bottom: 20px; }
+  .station-menu-heading > span { display: none; }
+  .station-menu-grid { display: block; flex: 1; padding-block: 20px 32px; }
+  .station-links a { min-height: 72px; gap: 16px; }
+  .station-links a > span:nth-child(2) { font-size: clamp(35px, 9vw, 48px); }
+  .station-links a > .icon { width: 26px; height: 26px; }
+  .station-preview { display: none; }
+  .station-menu-footer { flex-wrap: wrap; gap: 4px 24px; }
+  .station-contact { font-size: 15px; gap: 16px; }
+  .power-replay { font-size: 12px; }
+  .tv-osd { top: 106px; left: 24px; }
+}
+@media (max-width: 380px) {
+  .television-nav .nav { padding-inline: 16px; gap: 8px; }
+  .television-nav .current-channel { display: none; }
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  .tv-transition { display: none; }
+  .station-menu:not([hidden]) .station-menu-grid { animation: none; }
+  .station-links a > span:nth-child(2), .station-links a > .icon { transform: none !important; }
+}
+@media (forced-colors: active) {
+  .station-menu, .site-home .television-nav { background: Canvas; color: CanvasText; }
+  .station-links a, .station-contact, .power-replay, .television-nav .primary-nav > a:not(.button), .television-nav .station-toggle { color: LinkText; }
+}

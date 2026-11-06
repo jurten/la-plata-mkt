@@ -11,17 +11,18 @@ const readyPortrait = async (page: Page) => {
   const portrait = page.locator(portraitSelector);
   await portrait.scrollIntoViewIfNeeded();
   await expect(portrait).toHaveAttribute('data-spatial-state', 'ready', { timeout: 15_000 });
-  await expect(portrait.locator('canvas.spatial-canvas')).toHaveAttribute('aria-hidden', 'true');
+  await expect(portrait.locator('canvas.spatial-canvas')).toHaveAttribute('aria-hidden', 'false');
+  await expect(portrait.getByRole('img')).toHaveAccessibleName('Modelo tridimensional de un extraterrestre azul que mira al visitante.');
+  await expect(portrait.locator('img')).toHaveCount(0);
   return portrait;
 };
 
 const expectFallback = async (page: Page, state: 'static' | 'unavailable') => {
   const portrait = page.locator(portraitSelector);
   await expect(portrait).toHaveAttribute('data-spatial-state', state);
-  const image = portrait.locator('img');
-  await expect(image).toBeVisible();
-  await expect(image).toHaveCSS('opacity', '1');
-  await expect.poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(portrait.locator('img')).toHaveCount(0);
+  await expect(portrait.locator('canvas.spatial-canvas')).toHaveCSS('opacity', '0');
+  await expect(portrait.locator('canvas.spatial-canvas')).toHaveAttribute('aria-hidden', 'true');
   await expect(page.locator('.hero h1')).toBeVisible();
   await expect(page.locator('.hero .button-primary')).toHaveAttribute('href', 'https://wa.me/5491158861954');
 };
@@ -153,7 +154,7 @@ test('el retrato tiene profundidad visible y puede pausarse sin mover texto ni C
   await expect(portrait).toHaveAttribute('data-spatial-state', 'paused');
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
   await expect(canvas).toHaveCSS('opacity', '1');
-  await expect(portrait.locator('img')).toHaveCSS('opacity', '0');
+  await expect(portrait.locator('img')).toHaveCount(0);
   await page.mouse.move(heroBox.x + heroBox.width * .15, heroBox.y + heroBox.height * .25);
   const paused = createHash('sha256').update(await portrait.screenshot()).digest('hex');
   await page.mouse.move(heroBox.x + heroBox.width * .85, heroBox.y + heroBox.height * .25);
@@ -217,12 +218,13 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
     await page.setViewportSize({ width, height: 1000 });
     const portrait = await readyPortrait(page);
     await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
+    await expect(portrait).toHaveAttribute('data-spatial-signal', 'locked');
     const canvas = portrait.locator('canvas.spatial-canvas');
     const canvasBox = (await canvas.boundingBox())!;
-    const imageBox = (await portrait.locator('img').boundingBox())!;
-    for (const key of ['x', 'y', 'width', 'height'] as const) expect(canvasBox[key], `${key} @ ${width}`).toBeCloseTo(imageBox[key], 0);
+    const portraitBox = (await portrait.boundingBox())!;
+    for (const key of ['x', 'y', 'width', 'height'] as const) expect(canvasBox[key], `${key} @ ${width}`).toBeCloseTo(portraitBox[key], 0);
     const rendered = await canvas.screenshot({
-      style: '.hero-copy,.hero-footer,.spatial-controls,.topbar,.floating-whatsapp{visibility:hidden!important}',
+      style: '.hero-copy,.hero-footer,.spatial-controls,.topbar,.floating-whatsapp,[data-site-transmission]{visibility:hidden!important}',
     });
     const face = await page.evaluate(async (bytes) => {
       const bitmap = await createImageBitmap(new Blob([new Uint8Array(bytes)], { type: 'image/png' }));
@@ -278,7 +280,7 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
   }
 });
 
-test('movimiento reducido inicial conserva la imagen sin cargar Three, GPU ni sensores', async ({ page }) => {
+test('movimiento reducido inicial omite el alien sin cargar imagen, Three, GPU ni sensores', async ({ page }) => {
   const sceneRequests: string[] = [];
   const depthRequests: string[] = [];
   const modelRequests: string[] = [];
@@ -309,11 +311,12 @@ test('movimiento reducido inicial conserva la imagen sin cargar Three, GPU ni se
   expect(depthRequests).toEqual([]);
   expect(modelRequests).toEqual([]);
   expect(requested.some((url) => url.includes('/models/supplied-alien'))).toBeFalsy();
+  expect(requested.some((url) => /lpm-visitor(?:\.|\/)/i.test(url))).toBeFalsy();
   expect(await page.evaluate(() => (window as unknown as { __spatialAudit: unknown }).__spatialAudit))
     .toEqual({ contexts: 0, permissions: 0 });
 });
 
-test('activar movimiento reducido durante la visita devuelve el retrato estático', async ({ page }) => {
+test('activar movimiento reducido durante la visita oculta el alien sin mostrar una imagen', async ({ page }) => {
   await page.addInitScript(() => {
     const query = matchMedia('(prefers-reduced-motion: reduce)');
     const audit = { changes: 0, lastMatches: query.matches };
@@ -336,9 +339,9 @@ test('activar movimiento reducido durante la visita devuelve el retrato estátic
   await expectOtherControlsWork(page);
 });
 
-test('el alien no redibuja en reposo mientras la transmisión global sigue activa', async ({ page }) => {
+test('el alien no redibuja en reposo y la transmisión se suspende fuera del hero', async ({ page }) => {
   await page.addInitScript(() => {
-    const audit = { frames: 0, draws: 0 };
+    const audit = { frames: 0, modelDraws: 0, outputDraws: 0 };
     Object.defineProperty(window, '__spatialIdleAudit', { value: audit });
     const originalRAF = window.requestAnimationFrame;
     window.requestAnimationFrame = function (callback: FrameRequestCallback) {
@@ -350,14 +353,18 @@ test('el alien no redibuja en reposo mientras la transmisión global sigue activ
       const context = (originalContext as (...args: unknown[]) => unknown).apply(this, [contextId, ...args]);
       if (/webgl/i.test(contextId) && this.matches('.spatial-canvas') && context) {
         const graphics = context as WebGLRenderingContext;
+        const recordDraw = () => {
+          if (graphics.getParameter(graphics.FRAMEBUFFER_BINDING) !== null) audit.modelDraws += 1;
+          else audit.outputDraws += 1;
+        };
         const originalArrays = graphics.drawArrays;
         graphics.drawArrays = function (...drawArgs: Parameters<WebGLRenderingContext['drawArrays']>) {
-          audit.draws += 1;
+          recordDraw();
           return originalArrays.apply(graphics, drawArgs);
         };
         const originalElements = graphics.drawElements;
         graphics.drawElements = function (...drawArgs: Parameters<WebGLRenderingContext['drawElements']>) {
-          audit.draws += 1;
+          recordDraw();
           return originalElements.apply(graphics, drawArgs);
         };
       }
@@ -372,14 +379,19 @@ test('el alien no redibuja en reposo mientras la transmisión global sigue activ
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'moving');
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
   const readAudit = () => page.evaluate(() => ({ ...(window as unknown as {
-    __spatialIdleAudit: { frames: number; draws: number };
+    __spatialIdleAudit: { frames: number; modelDraws: number; outputDraws: number };
   }).__spatialIdleAudit }));
   const settled = await readAudit();
   expect(settled.frames).toBeGreaterThan(0);
-  expect(settled.draws).toBeGreaterThan(0);
-  // The global backdrop owns interference; the settled head consumes no draws.
+  expect(settled.modelDraws).toBeGreaterThan(0);
+  expect(settled.outputDraws).toBeGreaterThan(0);
+  // The post-processing quad can present interference from the cached target.
+  // The settled 3D head must schedule no animation frames or model/FBO draws.
   await page.waitForTimeout(400);
-  expect(await readAudit()).toEqual(settled);
+  const idle = await readAudit();
+  expect(idle.frames).toBe(settled.frames);
+  expect(idle.modelDraws).toBe(settled.modelDraws);
+  expect(idle.outputDraws).toBeGreaterThanOrEqual(settled.outputDraws);
   await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'running');
   await page.locator('[data-spatial-toggle]').click();
   const paused = await readAudit();
@@ -388,14 +400,14 @@ test('el alien no redibuja en reposo mientras la transmisión global sigue activ
   await page.locator('[data-spatial-toggle]').click();
   await page.locator('#contact-title').evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
   await expect(portrait).not.toBeInViewport();
-  await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'running');
+  await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'suspended');
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
   const offscreen = await readAudit();
   await page.waitForTimeout(400);
   expect(await readAudit()).toEqual(offscreen);
 });
 
-test('sin WebGL quedan disponibles el retrato, la navegación y el contacto', async ({ page }) => {
+test('sin WebGL no aparece una imagen y siguen disponibles la navegación y el contacto', async ({ page }) => {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, contextId: string, ...args: unknown[]) {
@@ -409,7 +421,7 @@ test('sin WebGL quedan disponibles el retrato, la navegación y el contacto', as
   await expectOtherControlsWork(page);
 });
 
-test('un módulo 3D que falla deja la imagen original y los controles útiles', async ({ page }) => {
+test('un módulo 3D que falla no muestra una imagen y deja los controles útiles', async ({ page }) => {
   const aborted: string[] = [];
   await page.route('**/*', (route) => {
     if (sceneURL.test(route.request().url())) {
@@ -425,7 +437,7 @@ test('un módulo 3D que falla deja la imagen original y los controles útiles', 
   await expectOtherControlsWork(page);
 });
 
-test('un modelo GLB que falla conserva el retrato detallado y el contacto', async ({ page }) => {
+test('un modelo GLB que falla omite el alien y conserva el contacto', async ({ page }) => {
   const aborted: string[] = [];
   await page.route('**/*', (route) => {
     if (modelURL.test(route.request().url())) {aborted.push(route.request().url());return route.abort('failed');}
@@ -438,7 +450,7 @@ test('un modelo GLB que falla conserva el retrato detallado y el contacto', asyn
   await expectOtherControlsWork(page);
 });
 
-test('una textura del modelo nuevo que falla conserva el retrato y el contacto', async ({ page }) => {
+test('una textura del modelo que falla omite el alien y conserva el contacto', async ({ page }) => {
   let failed = false;
   await page.route('**/models/supplied-alien-textures/basecolor.jpg*', (route) => {failed = true;return route.abort('failed');});
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -461,7 +473,7 @@ test('un mapa normal del modelo que falla no degrada silenciosamente la piel', a
   await expectOtherControlsWork(page);
 });
 
-test('perder el contexto gráfico recupera inmediatamente el fallback', async ({ page }) => {
+test('perder el contexto gráfico oculta el alien sin mostrar una imagen', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   const portrait = await readyPortrait(page);
@@ -473,7 +485,8 @@ test('perder el contexto gráfico recupera inmediatamente el fallback', async ({
   await expectOtherControlsWork(page);
 });
 
-test('el gesto vertical sobre el alien permite desplazar la página en móvil', async ({ browser }) => {
+test('el gesto vertical sobre el alien permite desplazar la página en móvil', async ({ browser, browserName }) => {
+  test.skip(browserName !== 'chromium', 'La secuencia de gestos nativos usa Chrome DevTools Protocol.');
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'no-preference',
   });
@@ -501,9 +514,9 @@ test('el gesto vertical sobre el alien permite desplazar la página en móvil', 
   }
 });
 
-test('el permiso de orientación se solicita únicamente al pulsar el control', async ({ browser }) => {
+test('el permiso de orientación se solicita únicamente al pulsar el control', async ({ browser, browserName }) => {
   const context = await browser.newContext({
-    viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'no-preference',
+    viewport: { width: 390, height: 844 }, isMobile: browserName !== 'firefox', hasTouch: true, reducedMotion: 'no-preference',
   });
   try {
     await context.addInitScript(() => {

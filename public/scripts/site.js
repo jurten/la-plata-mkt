@@ -108,7 +108,7 @@ try {
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.primary-nav');
 
-if (toggle && nav) {
+if (toggle && nav && !toggle.closest('[data-tv-navigation]')) {
   root.dataset.menuState = 'ready';
   const closeMenu = (returnFocus = false) => {
     toggle.setAttribute('aria-expanded', 'false');
