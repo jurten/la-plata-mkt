@@ -145,12 +145,11 @@ test('el retrato tiene profundidad visible y puede pausarse sin mover texto ni C
   expect(rightView).not.toBe(leftView);
   expect(await heading.boundingBox()).toEqual(headingBox);
   expect(await action.boundingBox()).toEqual(actionBox);
+  await expect(page.locator('.hero-scroll-cue')).toHaveText('Deslizá para descubrir');
+  await expect(page.locator('.hero-scroll-cue')).toHaveAttribute('href', '#soluciones');
 
-  const toggle = page.locator('[data-spatial-toggle]');
-  await expect(page.locator('[data-spatial-controls]')).toBeVisible();
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-spatial-controls], [data-spatial-toggle], [data-spatial-orientation]')).toHaveCount(0);
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: true })));
   await expect(portrait).toHaveAttribute('data-spatial-state', 'paused');
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
   await expect(canvas).toHaveCSS('opacity', '1');
@@ -159,8 +158,7 @@ test('el retrato tiene profundidad visible y puede pausarse sin mover texto ni C
   const paused = createHash('sha256').update(await portrait.screenshot()).digest('hex');
   await page.mouse.move(heroBox.x + heroBox.width * .85, heroBox.y + heroBox.height * .25);
   expect(createHash('sha256').update(await portrait.screenshot()).digest('hex')).toBe(paused);
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: false })));
   await expect(portrait).toHaveAttribute('data-spatial-state', 'ready');
 });
 
@@ -224,7 +222,7 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
     const portraitBox = (await portrait.boundingBox())!;
     for (const key of ['x', 'y', 'width', 'height'] as const) expect(canvasBox[key], `${key} @ ${width}`).toBeCloseTo(portraitBox[key], 0);
     const rendered = await canvas.screenshot({
-      style: '.hero-copy,.hero-footer,.spatial-controls,.topbar,.floating-whatsapp,[data-site-transmission]{visibility:hidden!important}',
+      style: '.hero-copy,.hero-footer,.topbar,.floating-whatsapp,[data-site-transmission]{visibility:hidden!important}',
     });
     const face = await page.evaluate(async (bytes) => {
       const bitmap = await createImageBitmap(new Blob([new Uint8Array(bytes)], { type: 'image/png' }));
@@ -306,7 +304,7 @@ test('movimiento reducido inicial omite el alien sin cargar imagen, Three, GPU n
   await page.goto('/');
   await page.locator(portraitSelector).scrollIntoViewIfNeeded();
   await expectFallback(page, 'static');
-  await expect(page.locator('[data-spatial-controls]')).toBeHidden();
+  await expect(page.locator('[data-spatial-controls]')).toHaveCount(0);
   expect(sceneRequests).toEqual([]);
   expect(depthRequests).toEqual([]);
   expect(modelRequests).toEqual([]);
@@ -335,7 +333,7 @@ test('activar movimiento reducido durante la visita oculta el alien sin mostrar 
   }).__reducedChangeAudit.lastMatches)).toBeTruthy();
   await expectFallback(page, 'static');
   await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
-  await expect(page.locator('[data-spatial-controls]')).toBeHidden();
+  await expect(page.locator('[data-spatial-controls]')).toHaveCount(0);
   await expectOtherControlsWork(page);
 });
 
@@ -393,11 +391,11 @@ test('el alien no redibuja en reposo y la transmisión se suspende fuera del her
   expect(idle.modelDraws).toBe(settled.modelDraws);
   expect(idle.outputDraws).toBeGreaterThanOrEqual(settled.outputDraws);
   await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'running');
-  await page.locator('[data-spatial-toggle]').click();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: true })));
   const paused = await readAudit();
   await page.waitForTimeout(400);
   expect(await readAudit()).toEqual(paused);
-  await page.locator('[data-spatial-toggle]').click();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: false })));
   await page.locator('#contact-title').evaluate((element) => element.scrollIntoView({ behavior: 'instant', block: 'start' }));
   await expect(portrait).not.toBeInViewport();
   await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'suspended');
@@ -514,7 +512,7 @@ test('el gesto vertical sobre el alien permite desplazar la página en móvil', 
   }
 });
 
-test('el permiso de orientación se solicita únicamente al pulsar el control', async ({ browser, browserName }) => {
+test('no se expone un control de orientación ni se solicita permiso', async ({ browser, browserName }) => {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 }, isMobile: browserName !== 'firefox', hasTouch: true, reducedMotion: 'no-preference',
   });
@@ -534,10 +532,8 @@ test('el permiso de orientación se solicita únicamente al pulsar el control', 
       __spatialAudit: { permissions: number };
     }).__spatialAudit.permissions);
     expect(await requests()).toBe(0);
-    const orientation = page.locator('[data-spatial-orientation]');
-    await expect(orientation).toBeVisible();
-    await orientation.click();
-    await expect.poll(requests).toBe(1);
+    await expect(page.locator('[data-spatial-orientation]')).toHaveCount(0);
+    expect(await requests()).toBe(0);
   } finally {
     await context.close();
   }

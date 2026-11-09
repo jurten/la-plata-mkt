@@ -8,7 +8,6 @@ function enhanceTransmission(surface: HTMLElement) {
   const canvas = surface.querySelector<HTMLCanvasElement>('canvas')!;
   const context = canvas.getContext('2d', { alpha: true });
   const cutout = surface.querySelector<SVGPathElement>('[data-crt-cutout]')!;
-  const toggle = hero.querySelector<HTMLButtonElement>('[data-transmission-toggle]')!;
   if (!context) return;
   const ctx = context;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -163,9 +162,6 @@ function enhanceTransmission(surface: HTMLElement) {
     const running = allowed();
     surface.dataset.transmissionState = running ? 'running' : paused ? 'paused' : reduced.matches || forced.matches ? 'static' : 'suspended';
     surface.dataset.beam = active && running ? 'active' : 'inactive';
-    toggle.hidden = reduced.matches || forced.matches;
-    toggle.setAttribute('aria-pressed', String(!paused));
-    toggle.querySelector('span')!.textContent = paused ? 'Activar interferencia' : 'Pausar interferencia';
     updatePortraitBeam();
     if (running) frame = requestAnimationFrame(draw);
   }
@@ -201,7 +197,6 @@ function enhanceTransmission(surface: HTMLElement) {
   document.addEventListener('visibilitychange', () => { if (document.hidden) leave(); synchronize(); });
   reduced.addEventListener('change', synchronize); forced.addEventListener('change', synchronize);
   window.addEventListener('lpm:transmission-pause', ((event: CustomEvent<boolean>) => { paused = event.detail; leave(); synchronize(); }) as EventListener);
-  toggle.addEventListener('click', () => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: !paused })));
   new ResizeObserver(resize).observe(hero);
   new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;

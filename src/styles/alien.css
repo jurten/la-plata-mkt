@@ -41,14 +41,6 @@
     background: linear-gradient(90deg, #020307 20%, rgba(2, 3, 7, .95) 36%, rgba(2, 3, 7, .78) 49%, rgba(2, 3, 7, .25) 60%, transparent 74%);
   }
 }
-.spatial-controls { position: absolute; z-index: 4; right: var(--page-gutter); bottom: 100px; max-width: calc(100% - 40px); color: #d6e2ff; text-align: right; }
-.spatial-controls[hidden], .spatial-controls button[hidden] { display: none; }
-.spatial-controls p { margin: 0 0 8px; font-size: 12px; line-height: 1.5; }
-.spatial-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-.spatial-controls button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 14px; border: 1px solid #7788ad; border-radius: 12px; background: rgba(5, 9, 20, .88); color: #e5edff; font: inherit; font-size: 12px; line-height: 1.4; cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-.spatial-controls button:hover { background: #172743; border-color: #b7d7ee; }
-.spatial-controls button:focus-visible { outline: 3px solid #b7d7ee; outline-offset: 3px; }
-.spatial-controls .icon { width: 16px; height: 16px; }
 .hero-stage { display: flex; align-items: center; flex: 1; position: relative; }
 .alien-hero .hero-copy { width: 53%; max-width: 680px; padding-bottom: 64px; }
 .alien-hero h1 { font-size: clamp(68px, 7.2vw, 96px); line-height: .98; letter-spacing: -.04em; }
@@ -61,8 +53,10 @@
 .alien-hero .button-primary:hover { background: #284bff; }
 .alien-hero .button-text { color: #e5edff; }
 .alien-hero .button-text:hover { color: #b7d7ee; }
-.alien-hero .hero-footer { position: relative; margin-top: auto; border-color: rgba(194, 211, 255, .24); color: #c2ceea; padding-block: 18px; }
-.alien-hero .hero-footer a:hover { color: #fff; }
+.alien-hero .hero-footer { position: relative; z-index: 6; margin-top: auto; display: grid; place-items: center; border-color: rgba(194, 211, 255, .24); color: #c2ceea; padding-block: 18px; }
+.hero-scroll-cue { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; color: inherit; font-weight: 500; text-decoration: none; }
+.hero-scroll-cue:hover { color: #fff; }
+.hero-scroll-cue .icon { width: 16px; height: 16px; }
 
 /* The first two disciplines sit side by side; their union owns a separate field. */
 .alien-pillars .pillars { grid-template-columns: 1fr 1fr; gap: 48px; }
@@ -202,11 +196,9 @@
   .alien-hero .hero-lede { max-width: 48ch; font-size: 16px; margin-top: 20px; }
   .alien-hero .actions { margin-top: 24px; flex-direction: row; align-items: center; gap: 8px 20px; }
   .alien-portrait { position: relative; inset: auto; z-index: 0; order: 2; width: 100%; height: clamp(380px, 117vw, 560px); margin-top: 12px; }
-  .spatial-controls { left: 20px; right: auto; bottom: 92px; max-width: calc(100% - 90px); text-align: left; }
-  .spatial-actions { justify-content: flex-start; }
   .hero-stage { order: 1; }
   .alien-hero .hero-footer { order: 3; margin-top: 0; }
-  .alien-hero .hero-footer p { max-width: none; font-size: 10px; }
+  .hero-scroll-cue { font-size: 11px; }
   .alien-pillars .pillars { gap: 40px 24px; }
   .alien-pillars .pillar-art { height: 210px; }
   .alien-pillars .pillar h3 { font-size: 28px; }
@@ -229,7 +221,6 @@
   .alien-hero .actions { flex-direction: column; align-items: flex-start; }
   .alien-hero .button-primary { width: 100%; justify-content: space-between; }
   .alien-hero h1 { font-size: clamp(44px, 12.5vw, 60px); }
-  .alien-hero .hero-footer a { font-size: 0; }
   .alien-pillars .pillars { grid-template-columns: 1fr; }
   .alien-pillars .pillar-art { height: 250px; }
   .communication-eye { width: 88%; height: 200px; }
@@ -248,10 +239,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .alien-portrait[data-spatial-state] .spatial-canvas { opacity: 0; }
-  .spatial-controls { display: none; }
   .perspective-field, .perspective-orbit, .perspective-canvas .system-node { transition: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .site-home .topbar { background: #0b1123; backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .spatial-controls button { background: #0b1123; backdrop-filter: none; -webkit-backdrop-filter: none; }
 }

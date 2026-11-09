@@ -11,6 +11,7 @@ import AlienPortrait from '../components/AlienPortrait.astro';
 import SiteTransmission from '../components/SiteTransmission.astro';
 import PerspectiveStudy from '../components/PerspectiveStudy.astro';
 import ConceptPreview from '../components/ConceptPreview.astro';
+import TeamRoster from '../components/TeamRoster.astro';
 import '../styles/global.css';
 import '../styles/alien.css';
 import '../styles/retro-cursor.css';
@@ -166,14 +167,7 @@ const structuredData = {
             <div class="actions"><a class="button button-primary" href={whatsappHref}>Hablemos por WhatsApp <Icon /></a><a class="button button-text" href="#soluciones">Conocé nuestro enfoque <Icon name="down" /></a></div>
           </div>
         </div>
-        <div class="spatial-controls" data-spatial-controls hidden>
-          <p data-spatial-hint>Mové el cursor para revelar la señal</p>
-          <div class="spatial-actions">
-            <button type="button" data-spatial-toggle aria-pressed="true" aria-label="Pausar efecto espacial"><Icon name="spark" /><span>Pausar efecto</span></button>
-            <button type="button" data-spatial-orientation aria-pressed="false" hidden>Activar inclinación</button>
-          </div>
-        </div>
-        <div class="hero-footer wrap"><p>LPM / Marketing × Tecnología × Ventas</p><a href="#soluciones">Hay otra forma de mirar <Icon name="down" /></a></div>
+        <div class="hero-footer wrap"><a class="hero-scroll-cue" href="#soluciones">Deslizá para descubrir <Icon name="down" /></a></div>
         <SiteTransmission />
       </section>
 
@@ -205,6 +199,7 @@ const structuredData = {
 
       <section id="nosotros" class="about-section"><div class="wrap">
         <div class="about-intro"><h2 class="display">Para entender,<br /><span class="text-muted">hay que mirar distinto.</span></h2><div><p class="about-statement">El proyecto no empieza eligiendo herramientas. Empieza entendiendo qué está pasando.</p><p>Ser un poco extraterrestres es animarnos a cambiar de perspectiva. Tomar distancia, hacer otras preguntas y conectar lo que parecía separado.</p><p>Conocemos el recorrido completo: desde cómo llega una consulta hasta cómo se convierte en una relación comercial.</p><p>No todos los negocios necesitan todo. Elegimos las herramientas en función del problema.</p></div></div>
+        <TeamRoster />
         <div id="metodo" class="method-block"><h3 class="method-heading">De un problema a una solución.</h3><ol class="method-steps" data-method-flow>{methodSteps.map(([title, description]) => (<li class="method-step"><h4>{title}</h4><p>{description}</p></li>))}</ol></div>
         <div id="problemas" class="problems-block"><details class="business-problems"><summary><span>Tu negocio funciona. ¿Su sistema digital también?</span><Icon name="plus" /></summary><p>A veces el problema parece ser una web, una campaña o una planilla. Muchas veces es la forma en que esas piezas se conectan.</p><ul class="problems"><li class="problem-item">Tu web ya no representa el nivel real de tu negocio.</li><li class="problem-item">Invertís en publicidad, pero no sabés qué pasa con las consultas.</li><li class="problem-item">Los clientes llegan por distintos canales y el seguimiento se dispersa.</li><li class="problem-item">Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</li><li class="problem-item">Dependés demasiado de Instagram, WhatsApp o tareas manuales.</li><li class="problem-item">Sabés que podrías captar más, pero no tenés un recorrido claro.</li></ul></details></div>
       </div></section>

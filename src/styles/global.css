@@ -121,9 +121,7 @@ h2.display { font-size: clamp(40px, 4.6vw, 64px); }
 .hero h1 > span { display: block; }
 .hero-lede { max-width: 48ch; margin-top: 32px; color: var(--muted); font-size: 18px; line-height: 1.55; }
 .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 24px; margin-top: 28px; }
-.hero-footer { margin-top: 56px; padding: 24px 0; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 24px; color: var(--muted); font-size: 13px; }
-.hero-footer a { display: flex; align-items: center; gap: 20px; text-decoration: none; min-height: 44px; }
-.hero-footer a:hover { color: var(--blue-text); }
+.hero-footer { margin-top: 56px; padding: 24px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 
 /* Three disciplines, one editorial family, each with its own expressive field. */
 .pillars-section, .portfolio-section, .about-section, .capabilities-section, .faq-section { padding-block: var(--section-space); }
@@ -402,9 +400,6 @@ summary::-webkit-details-marker { display: none; }
   .hero .actions { margin-top: 24px; gap: 8px 20px; }
   .hero .actions > .button { font-size: 14px; }
   .hero-footer { margin-top: 28px; padding-block: 20px; }
-  .hero-footer p { max-width: 24ch; font-size: 11px; }
-  .hero-footer a { font-size: 0; gap: 0; }
-  .hero-footer a .icon { width: 24px; height: 24px; }
   .section-head, .system-heading, .about-intro, .faq-layout { grid-template-columns: 1fr; gap: 24px; }
   .section-head { margin-bottom: 36px; }
   .section-head > p, .section-head > div { max-width: 56ch; }

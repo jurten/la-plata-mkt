@@ -1,12 +1,7 @@
 function enhancePortrait(portrait) {
   const hero = portrait.closest('.alien-hero');
   const canvas = portrait.querySelector('.spatial-canvas');
-  const controls = hero?.querySelector('[data-spatial-controls]');
-  const toggle = controls?.querySelector('[data-spatial-toggle]');
-  const toggleLabel = toggle?.querySelector('span');
-  const orientation = controls?.querySelector('[data-spatial-orientation]');
-  const hint = controls?.querySelector('[data-spatial-hint]');
-  if (!hero || !canvas || !controls || !toggle) return;
+  if (!hero || !canvas) return;
 
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   // Read once, then use event state. Polling the native query during every draw
@@ -33,11 +28,8 @@ function enhancePortrait(portrait) {
   let target = { x: 0, y: 0 };
   let bounds;
   let drag;
-  let sensorEnabled = false;
-  let sensorOrigin;
   const clamp = (value) => Math.max(-1, Math.min(1, value));
   const canRun = () => !failed && !paused && !signalHeld && !reduceMotion && inView && !document.hidden;
-  const defaultHint = () => coarse.matches ? 'Deslizá de lado para explorar' : 'Mové el cursor para explorar';
   const reportProgress = (value) => {
     const progress = Math.max(0, Math.min(100, Math.round(value)));
     portrait.dataset.spatialProgress = String(progress);
@@ -50,15 +42,6 @@ function enhancePortrait(portrait) {
     greeting = undefined;
     portrait.dataset.spatialMotion = 'idle';
   };
-  const stopSensor = () => {
-    window.removeEventListener('deviceorientation', onOrientation);
-    sensorEnabled = false;
-    sensorOrigin = undefined;
-    if (orientation) {
-      orientation.textContent = 'Activar inclinación';
-      orientation.setAttribute('aria-pressed', 'false');
-    }
-  };
   const reportSettled = (state) => {
     if (settled) return;
     settled = true;
@@ -67,12 +50,10 @@ function enhancePortrait(portrait) {
   const fallback = () => {
     failed = true;
     stop();
-    stopSensor();
     renderer?.destroy();
     renderer = undefined;
     portrait.dataset.spatialState = 'unavailable';
     canvas.setAttribute('aria-hidden', 'true');
-    controls.hidden = true;
     reportSettled('unavailable');
   };
   const recordPresentation = () => {
@@ -180,7 +161,6 @@ function enhancePortrait(portrait) {
     if (failed) return;
     if (reduceMotion || paused) {
       stop();
-      stopSensor();
       signal = { ...signal, enabled: false, phase: 'locked', frame: -1 };
       presentSignal();
       if (paused) draw();
@@ -193,22 +173,16 @@ function enhancePortrait(portrait) {
       else if (!greeted) greet();
       else if (!greeting) move(target.x, target.y);
     } else if (canRun()) initialize();
-    controls.hidden = !renderer || reduceMotion;
     canvas.setAttribute('aria-hidden', String(!renderer || reduceMotion));
-    toggle.setAttribute('aria-pressed', String(!paused));
-    toggle.setAttribute('aria-label', paused ? 'Activar efecto espacial' : 'Pausar efecto espacial');
-    if (toggleLabel) toggleLabel.textContent = paused ? 'Activar efecto' : 'Pausar efecto';
-    if (hint) hint.textContent = coarse.matches ? defaultHint() : 'Mové el cursor para revelar la señal';
-    if (orientation) orientation.hidden = !coarse.matches || paused || !window.isSecureContext || !('DeviceOrientationEvent' in window);
   };
 
   hero.addEventListener('pointermove', (event) => {
-    if (event.pointerType === 'touch' || coarse.matches || sensorEnabled) return;
+    if (event.pointerType === 'touch' || coarse.matches) return;
     const region = hero.getBoundingClientRect();
     move((event.clientX - region.left) / region.width * 2 - 1, (event.clientY - region.top) / region.height * 2 - 1);
   }, { passive: true });
   hero.addEventListener('pointerleave', () => {
-    if (!sensorEnabled) move(0, 0);
+    move(0, 0);
   });
   portrait.addEventListener('pointerdown', (event) => {
     if (event.pointerType !== 'touch') return;
@@ -222,12 +196,12 @@ function enhancePortrait(portrait) {
   }, { passive: true });
   const endDrag = () => {
     drag = undefined;
-    if (!sensorEnabled) move(0, 0);
+    move(0, 0);
   };
   portrait.addEventListener('pointerup', endDrag, { passive: true });
   portrait.addEventListener('pointercancel', endDrag, { passive: true });
-  window.addEventListener('blur', () => { endDrag(); stopSensor(); });
-  screen.orientation?.addEventListener('change', () => { stopSensor(); move(0, 0); });
+  window.addEventListener('blur', endDrag);
+  screen.orientation?.addEventListener('change', () => move(0, 0));
   window.addEventListener('lpm:transmission-pause', (event) => { paused = event.detail; synchronize(); });
   hero.addEventListener('lpm:signal-skip', (event) => {
     signalHeld = Boolean(event.detail);
@@ -238,46 +212,13 @@ function enhancePortrait(portrait) {
     signal = event.detail;
     presentSignal();
   });
-  toggle.addEventListener('click', () => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: !paused })));
-
-  function onOrientation(event) {
-    if (!sensorEnabled || !canRun() || event.gamma == null || event.beta == null) return;
-    if (!sensorOrigin) sensorOrigin = { x: event.gamma, y: event.beta };
-    let x = (event.gamma - sensorOrigin.x) / 16;
-    let y = (event.beta - sensorOrigin.y) / 16;
-    const angle = (screen.orientation?.angle ?? window.orientation ?? 0) * Math.PI / 180;
-    const rotatedX = x * Math.cos(angle) - y * Math.sin(angle);
-    y = x * Math.sin(angle) + y * Math.cos(angle);
-    x = rotatedX;
-    if (Math.abs(x - target.x) + Math.abs(y - target.y) > .01) move(x, y);
-  }
-  orientation?.addEventListener('click', async () => {
-    if (sensorEnabled) { stopSensor(); move(0, 0); return; }
-    try {
-      // iOS permission is requested only in this explicit user gesture.
-      const api = window.DeviceOrientationEvent;
-      const permission = typeof api?.requestPermission === 'function' ? await api.requestPermission() : 'granted';
-      if (permission !== 'granted' || !canRun()) {
-        if (hint) hint.textContent = 'Podés explorar arrastrando el retrato';
-        return;
-      }
-      sensorEnabled = true;
-      sensorOrigin = undefined;
-      window.addEventListener('deviceorientation', onOrientation, { passive: true });
-      orientation.textContent = 'Desactivar inclinación';
-      orientation.setAttribute('aria-pressed', 'true');
-      if (hint) hint.textContent = 'Incliná suavemente el teléfono';
-    } catch {
-      if (hint) hint.textContent = 'Podés explorar arrastrando el retrato';
-    }
-  });
 
   canvas.addEventListener('webglcontextlost', (event) => { event.preventDefault(); fallback(); });
   canvas.addEventListener('webglcontextrestored', () => { failed = false; synchronize(); });
   reduced.addEventListener('change', (event) => { reduceMotion = event.matches; synchronize(); });
-  coarse.addEventListener('change', () => { stopSensor(); current = target = { x: 0, y: 0 }; geometry(); synchronize(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stopSensor(); synchronize(); });
-  window.addEventListener('pagehide', () => { stop(); stopSensor(); });
+  coarse.addEventListener('change', () => { current = target = { x: 0, y: 0 }; geometry(); synchronize(); });
+  document.addEventListener('visibilitychange', synchronize);
+  window.addEventListener('pagehide', stop);
   window.addEventListener('pageshow', synchronize);
   if ('ResizeObserver' in window) new ResizeObserver(geometry).observe(portrait);
   else window.addEventListener('resize', geometry, { passive: true });

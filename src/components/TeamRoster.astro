@@ -1,0 +1,417 @@
+---
+const teamDisciplines = [
+  {
+    name: 'Estrategia',
+    category: 'Entender',
+    mark: 'Es',
+    description:
+      'Leemos el negocio completo antes de proponer una herramienta. Ordenamos el problema, el objetivo y el recorrido que hay que mejorar.',
+  },
+  {
+    name: 'Comunicación',
+    category: 'Contar',
+    mark: 'Co',
+    description:
+      'Convertimos lo que hace valioso a un negocio en una idea clara, una voz reconocible y mensajes que ayudan a avanzar.',
+  },
+  {
+    name: 'Diseño',
+    category: 'Dar forma',
+    mark: 'Di',
+    description:
+      'Le damos forma a cada punto de contacto para que se vea a la altura, sea fácil de entender y tenga una función concreta.',
+  },
+  {
+    name: 'Tecnología',
+    category: 'Construir',
+    mark: 'Te',
+    description:
+      'Construimos sitios y herramientas que funcionan de verdad: rápidos, accesibles y preparados para integrarse al resto del negocio.',
+  },
+  {
+    name: 'Automatización',
+    category: 'Conectar',
+    mark: 'Au',
+    description:
+      'Conectamos consultas, datos y tareas para reducir trabajo manual y hacer que la información llegue a donde tiene que llegar.',
+  },
+  {
+    name: 'Medición',
+    category: 'Aprender',
+    mark: 'Me',
+    description:
+      'Medimos lo que pasa después de publicar. Los datos nos permiten ajustar, aprender y decidir el próximo movimiento con criterio.',
+  },
+] as const;
+---
+
+<section class="team-roster" aria-labelledby="team-roster-title" data-team-roster>
+  <div class="team-roster__sticky">
+    <div class="team-roster__heading">
+      <h3 id="team-roster-title">Un equipo.<br /><span>Muchas miradas.</span></h3>
+      <p>
+        Distintas especialidades trabajando sobre el mismo problema. La idea no pasa de mano en mano:
+        se construye en conjunto.
+      </p>
+    </div>
+
+    <div class="team-roster__active" aria-hidden="true">
+      <div class="team-signal">
+        <span class="team-signal__orbit team-signal__orbit--one"></span>
+        <span class="team-signal__orbit team-signal__orbit--two"></span>
+        <span class="team-signal__satellite"></span>
+        <strong data-team-current-mark>{teamDisciplines[0].mark}</strong>
+        <span data-team-current-name>{teamDisciplines[0].name}</span>
+      </div>
+      <p class="team-roster__description" data-team-current-description aria-live="polite">
+        {teamDisciplines[0].description}
+      </p>
+    </div>
+  </div>
+
+  <ol class="team-roster__list" aria-label="Especialidades que forman nuestro equipo">
+    {
+      teamDisciplines.map((discipline, index) => (
+        <li
+          class:list={['team-roster__item', { 'is-active': index === 0 }]}
+          data-team-item
+          data-name={discipline.name}
+          data-mark={discipline.mark}
+          data-description={discipline.description}
+          aria-current={index === 0 ? 'true' : undefined}
+        >
+          <span class="team-roster__category">{discipline.category}</span>
+          <h4>{discipline.name}</h4>
+          <p>{discipline.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<script>
+  const rosters = document.querySelectorAll<HTMLElement>('[data-team-roster]');
+
+  rosters.forEach((roster) => {
+    const items = Array.from(roster.querySelectorAll<HTMLElement>('[data-team-item]'));
+    const currentName = roster.querySelector<HTMLElement>('[data-team-current-name]');
+    const currentMark = roster.querySelector<HTMLElement>('[data-team-current-mark]');
+    const currentDescription = roster.querySelector<HTMLElement>('[data-team-current-description]');
+    let activeIndex = -1;
+
+    const activate = (index: number) => {
+      const item = items[index];
+      if (!item || index === activeIndex) return;
+
+      activeIndex = index;
+      roster.style.setProperty('--team-turn', `${index * 19}deg`);
+      roster.style.setProperty('--team-counter-turn', `${index * -19 - 22}deg`);
+
+      items.forEach((candidate, candidateIndex) => {
+        const active = candidateIndex === index;
+        candidate.classList.toggle('is-active', active);
+        if (active) candidate.setAttribute('aria-current', 'true');
+        else candidate.removeAttribute('aria-current');
+      });
+
+      if (currentName) currentName.textContent = item.dataset.name ?? '';
+      if (currentMark) currentMark.textContent = item.dataset.mark ?? '';
+      if (currentDescription) currentDescription.textContent = item.dataset.description ?? '';
+    };
+
+    activate(0);
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
+        const closest = visible[0]?.target;
+        const index = closest ? items.indexOf(closest as HTMLElement) : -1;
+        if (index >= 0) activate(index);
+      },
+      { rootMargin: '-42% 0px -46% 0px', threshold: 0 },
+    );
+
+    items.forEach((item) => observer.observe(item));
+  });
+</script>
+
+<style>
+  .team-roster {
+    --team-turn: 0deg;
+    --team-counter-turn: -22deg;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(48px, 7vw, 132px);
+    margin-top: clamp(88px, 10vw, 160px);
+    padding: clamp(28px, 3vw, 52px);
+    border-radius: 20px;
+    background: #020307;
+    color: #eef2ff;
+  }
+
+  .team-roster__sticky {
+    position: sticky;
+    top: clamp(112px, 15vh, 168px);
+    display: grid;
+    align-content: space-between;
+    align-self: start;
+    min-height: min(68vh, 680px);
+  }
+
+  .team-roster__heading h3 {
+    max-width: 8.5ch;
+    font-family: var(--display);
+    font-size: clamp(40px, 4.6vw, 64px);
+    font-weight: 750;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+
+  .team-roster__heading h3 span {
+    color: #b7d7ee;
+  }
+
+  .team-roster__heading > p {
+    max-width: 45ch;
+    margin-top: 28px;
+    color: #b5c3df;
+    font-size: 15px;
+  }
+
+  .team-roster__active {
+    display: grid;
+    grid-template-columns: minmax(156px, 0.72fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: end;
+    margin-top: 56px;
+  }
+
+  .team-signal {
+    position: relative;
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #1536f1;
+    isolation: isolate;
+  }
+
+  .team-signal::after {
+    position: absolute;
+    inset: auto 14px 12px;
+    z-index: 3;
+    height: 1px;
+    background: rgba(238, 242, 255, 0.44);
+    content: '';
+  }
+
+  .team-signal > strong {
+    position: relative;
+    z-index: 2;
+    font-family: var(--display);
+    font-size: clamp(68px, 7vw, 96px);
+    font-weight: 650;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: #eef2ff;
+  }
+
+  .team-signal > span:last-child {
+    position: absolute;
+    right: 14px;
+    bottom: 16px;
+    z-index: 4;
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+    color: #eef2ff;
+    font-size: 12px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .team-signal__orbit {
+    position: absolute;
+    z-index: 1;
+    width: 84%;
+    height: 38%;
+    border: 1px solid rgba(238, 242, 255, 0.62);
+    border-radius: 50%;
+    transform: rotate(var(--team-turn));
+    transition: transform 640ms var(--motion-ease-out);
+  }
+
+  .team-signal__orbit--two {
+    width: 42%;
+    height: 92%;
+    border-color: rgba(183, 215, 238, 0.58);
+    transform: rotate(var(--team-counter-turn));
+  }
+
+  .team-signal__satellite {
+    position: absolute;
+    top: 12%;
+    right: 11%;
+    z-index: 2;
+    width: 18%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #f4c430;
+  }
+
+  .team-roster__description {
+    max-width: 34ch;
+    color: #b5c3df;
+    font-size: 14px;
+  }
+
+  .team-roster__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .team-roster__item {
+    position: relative;
+    display: grid;
+    min-height: clamp(154px, 20vh, 210px);
+    align-content: center;
+    padding: 28px 0 28px clamp(76px, 7vw, 136px);
+    border-bottom: 1px solid rgba(238, 242, 255, 0.22);
+    color: #b5c3df;
+    opacity: 0.55;
+    transition: color 280ms var(--motion-ease-out), opacity 280ms var(--motion-ease-out);
+  }
+
+  .team-roster__item:first-child {
+    border-top: 1px solid rgba(238, 242, 255, 0.22);
+  }
+
+  .team-roster__item.is-active {
+    color: #eef2ff;
+    opacity: 1;
+  }
+
+  .team-roster__item h4 {
+    font-family: var(--display);
+    font-size: clamp(40px, 4.6vw, 64px);
+    font-weight: 650;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    text-wrap: nowrap;
+  }
+
+  .team-roster__category {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: clamp(64px, 6vw, 116px);
+    color: #b5c3df;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transform: translateY(-50%);
+  }
+
+  .team-roster__item > p {
+    display: none;
+  }
+
+  @media (max-width: 1000px) {
+    .team-roster {
+      gap: 48px;
+    }
+
+    .team-roster__sticky {
+      min-height: min(62vh, 600px);
+    }
+
+    .team-roster__active {
+      grid-template-columns: 148px 1fr;
+    }
+
+    .team-roster__item {
+      padding-left: 74px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .team-roster {
+      display: block;
+      margin-inline: calc(var(--page-gutter) * -0.5);
+      padding: 36px 20px;
+      border-radius: 16px;
+    }
+
+    .team-roster__sticky {
+      position: static;
+      min-height: 0;
+    }
+
+    .team-roster__heading {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .team-roster__heading > p {
+      margin-top: 0;
+    }
+
+    .team-roster__active {
+      display: none;
+    }
+
+    .team-roster__list {
+      margin-top: 48px;
+    }
+
+    .team-roster__item {
+      min-height: 0;
+      padding: 28px 0;
+      color: #eef2ff;
+      opacity: 1;
+    }
+
+    .team-roster__item h4 {
+      font-size: clamp(40px, 10vw, 52px);
+      text-wrap: balance;
+    }
+
+    .team-roster__category {
+      position: static;
+      width: auto;
+      margin-bottom: 8px;
+      color: #91a5ff;
+      transform: none;
+    }
+
+    .team-roster__item > p {
+      display: block;
+      max-width: 46ch;
+      margin-top: 14px;
+      color: #b5c3df;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .team-roster {
+      margin-inline: 0;
+      padding-inline: 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .team-signal__orbit,
+    .team-roster__item {
+      transition: none;
+    }
+  }
+</style>

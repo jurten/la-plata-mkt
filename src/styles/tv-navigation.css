@@ -7,11 +7,14 @@
   width: 100%;
   margin: 0;
   border-radius: 0;
-  background: #020307;
+  background: transparent;
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  transition: background-color 220ms ease-out;
 }
+.site-home .topbar.television-nav[data-scrolled='true'] { background: #020307; }
+html[data-station-open='true'] .site-home .topbar.television-nav { background: #080e1d; }
 .television-nav .nav { width: 100%; min-height: 92px; margin: auto; padding: 16px var(--page-gutter); gap: 24px; }
 .television-nav .brand { gap: 9px; }
 .television-nav .brand-mark { border-radius: 10px; }
@@ -37,7 +40,6 @@
 .station-menu[hidden], .tv-transition[hidden] { display: none; }
 html[data-station-open='true'] { overflow: hidden; }
 html[data-station-open='true'] .television-nav { background: #080e1d; }
-html[data-station-open='true'] .transmission-toggle { visibility: hidden; }
 .station-menu-inner { width: 100%; min-height: 100%; margin: auto; padding: 128px var(--page-gutter) 32px; display: flex; flex-direction: column; }
 .station-menu-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid #33405d; padding-bottom: 20px; }
 .station-menu-heading p { margin: 0; font: 500 clamp(22px, 2.4vw, 32px)/1.2 var(--display); letter-spacing: -.02em; }

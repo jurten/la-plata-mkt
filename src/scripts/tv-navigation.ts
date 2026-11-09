@@ -186,13 +186,14 @@ function enhanceNavigation(header: HTMLElement) {
     toggle.setAttribute('aria-expanded', 'true');
     menu.hidden = false;
     root.dataset.stationOpen = 'true';
-    inertElements = [...document.querySelectorAll<HTMLElement>('body > main, body > footer, body > .floating-whatsapp, body > .model-credit, body > .transmission-toggle')].map(element => ({ element, previous: element.inert }));
+    inertElements = [...document.querySelectorAll<HTMLElement>('body > main, body > footer, body > .floating-whatsapp, body > .model-credit')].map(element => ({ element, previous: element.inert }));
     inertElements.forEach(({ element }) => { element.inert = true; });
     (links.find(link => link.hash === `#${active.id}`) ?? links[0]).focus({ preventScroll: true });
   }
 
   function syncScroll() {
     scrollFrame = 0;
+    header.dataset.scrolled = String(window.scrollY > 0);
     const line = header.getBoundingClientRect().bottom + 100;
     const current = [...channels].reverse().find(channel => channel.section.getBoundingClientRect().top <= line) ?? channels[0];
     if (current !== active) setActive(current);
@@ -263,6 +264,7 @@ function enhanceNavigation(header: HTMLElement) {
   window.addEventListener('popstate', () => { clearTransition(); closeMenu(); requestAnimationFrame(syncScroll); });
   window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(syncScroll); }, { passive: true });
   window.addEventListener('resize', syncScroll, { passive: true });
+  window.addEventListener('pageshow', syncScroll);
   setActive(active);
   syncScroll();
   updateMotion();

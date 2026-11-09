@@ -15,11 +15,10 @@ test('la interferencia pertenece al hero y se suspende fuera de pantalla', async
   await page.goto('/#inicio');
   const hero = page.locator('#inicio');
   const surface = hero.locator('[data-site-transmission]');
-  const toggle = hero.locator('[data-transmission-toggle]');
   await expect(surface).toHaveAttribute('data-transmission-state', 'running');
   await expect(surface).toHaveCSS('position', 'absolute');
   await expect(surface).toHaveCSS('pointer-events', 'none');
-  await expect(toggle).not.toHaveCSS('position', 'fixed');
+  await expect(hero.locator('[data-transmission-toggle]')).toHaveCount(0);
   expect(await hero.evaluate(element => ['clip', 'hidden'].includes(getComputedStyle(element).overflowY))).toBe(true);
   await expectHeroBounds(hero, surface);
 
@@ -30,7 +29,6 @@ test('la interferencia pertenece al hero y se suspende fuera de pantalla', async
   await page.locator('#trabajo').evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }));
   await expect(surface).toHaveAttribute('data-transmission-state', 'suspended');
   await expect(surface).not.toBeInViewport();
-  await expect(toggle).not.toBeInViewport();
   const stopped = await surface.getAttribute('data-signal-tick');
   // Cover several 24fps intervals: hidden work must actually stop.
   await page.waitForTimeout(220);
@@ -67,7 +65,7 @@ test('el framebuffer colapsa, repite cuadros y recupera la imagen sin filtros CS
   // Hide every overlay and disable CSS backdrop filtering. A change in these
   // screenshots must therefore come from pixels presented by the WebGL canvas.
   const screenshotStyle = `
-    .site-transmission,.hero-copy,.hero-footer,.spatial-controls,.topbar,.floating-whatsapp{visibility:hidden!important}
+    .site-transmission,.hero-copy,.hero-footer,.topbar,.floating-whatsapp{visibility:hidden!important}
     #inicio,#inicio *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   `;
   const normal = await canvas.screenshot({ style: screenshotStyle });
@@ -160,7 +158,6 @@ test('el rayo usa coordenadas del hero y la pausa y movimiento reducido detienen
   await page.goto('/#inicio');
   const hero = page.locator('#inicio');
   const surface = hero.locator('[data-site-transmission]');
-  const toggle = hero.locator('[data-transmission-toggle]');
   await expect(surface).toHaveAttribute('data-transmission-state', 'running');
   await page.evaluate(() => window.scrollTo({ top: 160, behavior: 'instant' }));
   const point = { x: 900, y: 350 };
@@ -177,15 +174,14 @@ test('el rayo usa coordenadas del hero y la pausa y movimiento reducido detienen
     const y = Math.round((cursor.y - box.top) * canvas.height / box.height);
     return canvas.getContext('2d')!.getImageData(x, y, 1, 1).data[3];
   }, point)).toBe(0);
-  await toggle.click();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: true })));
   await expect(surface).toHaveAttribute('data-transmission-state', 'paused');
   await expect(surface).toBeHidden();
-  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-  await toggle.click();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: false })));
   await expect(surface).toHaveAttribute('data-transmission-state', 'running');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(surface).toBeHidden();
-  await expect(toggle).toBeHidden();
+  await expect(hero.locator('[data-transmission-toggle]')).toHaveCount(0);
   // Decorative layers never take over actual section navigation.
   await page.locator('.primary-nav a[href="#contacto"]').click();
   await expect(page).toHaveURL(/#contacto$/);
