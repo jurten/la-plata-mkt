@@ -33,6 +33,8 @@ input, textarea { caret-color: var(--blue-text); }
   padding-top: 160px; overflow: clip; background: #020307; color: #f3f6ff;
 }
 .alien-portrait { position: absolute; inset: 0; z-index: -1; touch-action: pan-y pinch-zoom; }
+.constellation-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.alien-portrait:is([data-spatial-state='ready'], [data-spatial-state='paused']) .constellation-canvas { visibility: hidden; }
 .spatial-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
 .alien-portrait:is([data-spatial-state='ready'], [data-spatial-state='paused']) .spatial-canvas { opacity: 1; }
 .hero-stage { display: flex; align-items: center; flex: 1; position: relative; }
@@ -232,9 +234,13 @@ input, textarea { caret-color: var(--blue-text); }
   .portfolio-section .concept-preview { padding: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .alien-portrait[data-spatial-state] .constellation-canvas { visibility: visible; }
   .alien-portrait[data-spatial-state] .spatial-canvas { opacity: 0; }
   .perspective-field, .perspective-orbit, .perspective-canvas .system-node { transition: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .site-home .topbar { background: #020307; backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .constellation-canvas { display: none; }
 }

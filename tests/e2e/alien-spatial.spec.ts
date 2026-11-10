@@ -239,6 +239,25 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
         if (b > 35 && b > r * 1.18 && b > g * 1.03) {skin[at] = 1;skinCount++;top = Math.min(top, y);bottom = Math.max(bottom, y);}
         if (Math.max(r, g, b) < 60) dark[at] = 1;
       }
+      // The sky can contain blue stars. Only the largest connected blue surface
+      // is the face; isolated stars must not extend its bounds or join its eyes
+      // to the surrounding black field in this visual check.
+      const visited = new Uint8Array(w * h);
+      let facePixels: number[] = [];
+      for (let start = 0; start < skin.length; start++) if (skin[start] && !visited[start]) {
+        const queue = [start];visited[start] = 1;
+        for (let q = 0; q < queue.length; q++) {
+          const at = queue[q], x = at % w, y = Math.floor(at / w);
+          for (const next of [x > 0 ? at - 1 : -1, x + 1 < w ? at + 1 : -1, y > 0 ? at - w : -1, y + 1 < h ? at + w : -1]) {
+            if (next >= 0 && skin[next] && !visited[next]) {visited[next] = 1;queue.push(next);}
+          }
+        }
+        if (queue.length > facePixels.length) facePixels = queue;
+      }
+      skin.fill(0);skinCount = facePixels.length;top = h;bottom = 0;
+      for (const at of facePixels) {
+        skin[at] = 1;const y = Math.floor(at / w);top = Math.min(top, y);bottom = Math.max(bottom, y);
+      }
       // Dark lenses must live inside the colored face, rather than merely being
       // empty page background. Their size distinguishes them from mouth/nostrils.
       const holes = new Uint8Array(w * h);

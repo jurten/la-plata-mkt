@@ -217,6 +217,7 @@ function enhancePortrait(portrait) {
   canvas.addEventListener('webglcontextrestored', () => { failed = false; synchronize(); });
   reduced.addEventListener('change', (event) => { reduceMotion = event.matches; synchronize(); });
   coarse.addEventListener('change', () => { current = target = { x: 0, y: 0 }; geometry(); synchronize(); });
+  matchMedia('(forced-colors: active)').addEventListener('change', geometry);
   document.addEventListener('visibilitychange', synchronize);
   window.addEventListener('pagehide', stop);
   window.addEventListener('pageshow', synchronize);

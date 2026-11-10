@@ -203,6 +203,10 @@ components:
 
 # Design System: La Plata Marketing
 
+## Generative hero sky, 2026-11-10
+
+The latest user refinement requires only independent stars, with no constellation groups or connecting lines. Density is doubled to 300 blue-white stars on desktop and 128 on mobile; star radii are 60% larger. Each full page reload generates a fresh sky. This supersedes the previous prohibition on starfields and the blank-black background fallback, while the alien itself remains 3D-only. A page-scoped random seed preserves the arrangement through resizing and delayed 3D loading; no stored seed or HTTP-cache invalidation is involved. Three subtle depth layers respond to pointer input through the existing renderer. The cached scene passes through the existing CRT and clear ray. A static 2D version of the same sky remains during loading, reduced motion and graphics failures, and is hidden in forced colors. No new continuous animation loop or dependency is added.
+
 ## Overview
 
 **Creative North Star: "Otra perspectiva"**
@@ -401,7 +405,7 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 ### Don't:
 
 - **Don't** restore the retired warm-paper editorial world when extending this identity.
-- **Don't** add fake telemetry, arbitrary coordinates, starfields, terminal styling, sound, cursor followers, trails, `cursor: none`, or hijacked scrolling.
+- **Don't** add fake telemetry, arbitrary coordinates, terminal styling, sound, cursor followers, trails, `cursor: none`, or hijacked scrolling. The faint generative hero sky is explicitly approved.
 - **Don't** apply glass to reading or form surfaces.
 - **Don't** reintroduce decorative yellow, tilted service cards, or unrelated colored chapters into this approved refinement.
 - **Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, hero-scoped CRT interference, perspective scene, and finite television power-on/channel transitions.
