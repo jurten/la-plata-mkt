@@ -32,7 +32,7 @@ if (study) {
   });
 }
 
-const themeButtons = [...document.querySelectorAll('[data-set-theme]')];
+const themeButtons = [...document.querySelectorAll('[data-theme-toggle]')];
 const themeMeta = document.querySelector('meta[name="theme-color"]');
 const themeLabel = document.querySelector('#mode-label');
 const explicitThemes = new Set(['light', 'dark']);
@@ -71,7 +71,8 @@ const applyTheme = (theme, persist = false) => {
 
   themeButtons.forEach((button) => {
     button.removeAttribute('disabled');
-    button.setAttribute('aria-pressed', String(button.dataset.setTheme === resolvedTheme));
+    button.setAttribute('aria-checked', String(resolvedTheme === 'dark'));
+    button.title = resolvedTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
   });
 
   const dark = resolvedTheme === 'dark';
@@ -94,7 +95,7 @@ try {
 applyTheme(storedTheme);
 
 themeButtons.forEach((button) => {
-  button.addEventListener('click', () => applyTheme(button.dataset.setTheme, true));
+  button.addEventListener('click', () => applyTheme(button.getAttribute('aria-checked') === 'true' ? 'light' : 'dark', true));
 });
 
 try {

@@ -41,7 +41,7 @@ The current information must be preserved. Reorganizing information into the thr
 
 ## Brand Commitments
 
-- Preserve the existing logo and core cobalt/sky brand colors. The latest blue extraterrestrial direction replaces warm neutral fields with cool reading surfaces and a fixed black opening.
+- Use the official LPM logo and typography supplied in the November 2026 brand files. This latest logo/type-only update supersedes the previous L/ mark and Bricolage headings; preserve the core cobalt/sky colors and established blue extraterrestrial world.
 - Preserve existing information.
 - Communicate creativity, confidence, and originality.
 - Latest direction: blue, alien, mysterious, visually striking; an extraterrestrial perspective expresses a different way of understanding client problems. This explicitly replaces the prior predominantly light editorial preference.
@@ -51,12 +51,13 @@ The current information must be preserved. Reorganizing information into the thr
 - One purposeful signature interaction, with restrained transitions elsewhere. An expanded perspective should communicate the connection between the three pillars.
 - Use the existing approach and method as the basis for About.
 - The 2026-11-09 refinement preserves the blue 3D alien, hero CRT interference, neon clearing ray, native retro cursor, and television channel menu. The user rejected a redesign that removed that identity. Zentry informs hierarchy and restraint within the established world; it does not authorize replacing the brand or adding commercial claims.
+- The subsequent supplied-brand update is limited to logo and typefaces. The LPM initials and inclined outline form one exact drawing; use the guide-extracted vector and supplied profile image. Radio Canada Big Bold is the heading voice, IBM Plex Sans supports reading, IBM Plex Mono carries the descriptor and labels/data, and Newsreader Italic provides editorial emphasis. Preserve layout, transparent initial navigation, colors, content, alien/CRT effects, and behavior.
 
 ## Evidence on Hand
 
 - Existing information: `src/pages/index.astro` and `src/pages/privacidad.astro`.
 - Existing brand palette: `src/styles/global.css` and `src/lib/themes.ts`.
-- Existing logo treatment: header/footer markup and `public/favicon.svg`.
+- Current brand sources: supplied `LPM_Guia_de_marca.html`, `LPM_Iconografia.xlsx`, and `LPM_Foto_de_perfil.png`; canonical vector `public/brand/lpm-logo.svg`, unchanged profile image `public/brand/lpm-profile.png`, and shared `src/components/BrandLogo.astro`.
 - Existing conceptual case information: `src/lib/case-studies.ts`.
 - The user confirmed there is no approved portfolio material available for publication. Do not treat named cases, client identities, results, or testimonials as approved.
 - Repository captures in `artifacts/` are historical visual evidence, not verification of the current live site.

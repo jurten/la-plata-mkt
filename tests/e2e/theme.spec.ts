@@ -1,10 +1,28 @@
 import { expect, test, type Locator } from '@playwright/test';
 
+test('el interruptor alterna con teclado y conserva la apariencia entre páginas', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+  await page.goto('/');
+  const toggle = page.getByRole('switch', { name: 'Modo oscuro' });
+  await expect(toggle).toBeChecked();
+  await toggle.focus();
+  await page.keyboard.press('Space');
+  await expect(toggle).not.toBeChecked();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await page.reload();
+  await expect(toggle).not.toBeChecked();
+  await toggle.click();
+  await expect(toggle).toBeChecked();
+  await page.goto('/privacidad/');
+  await expect(toggle).toBeChecked();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+});
+
 test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo automático', async ({ page }) => {
   await page.goto('/?palettes=1&palette=manchette');
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
-  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('button')).toHaveCount(2);
+  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('switch')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
   await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
@@ -18,7 +36,7 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await page.goto('/privacidad?palettes=1&palette=sobreimpresion');
 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
-  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('button')).toHaveCount(2);
+  await expect(page.getByRole('group', { name: 'Apariencia' }).getByRole('switch')).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Usar preferencia del sistema' })).toHaveCount(0);
   await expect(page.locator('[data-theme-icon="sun"], [data-theme-icon="moon"]')).toHaveCount(2);
   await expect(page.locator('[data-palette-lab], [data-palette-option], [data-palette-toggle]')).toHaveCount(0);
@@ -31,7 +49,7 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
 
 test('la nueva identidad conserva foco visible en navegación, tema y formulario', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Modo claro' }).click();
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.reload();
 
   const assertKeyboardFocus = async (locator: Locator) => {
@@ -53,7 +71,7 @@ test('la nueva identidad conserva foco visible en navegación, tema y formulario
   };
 
   await assertKeyboardFocus(page.getByRole('link', { name: 'Enfoque' }).first());
-  const darkThemeButton = page.getByRole('button', { name: 'Modo oscuro' });
+  const darkThemeButton = page.getByRole('switch', { name: 'Modo oscuro' });
   await assertKeyboardFocus(darkThemeButton);
 
   const focusPaint = await darkThemeButton.evaluate((element) => {
@@ -83,8 +101,8 @@ test('el selector de apariencia conserva objetivos táctiles de 44px en pantalla
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/');
 
-    const buttons = page.getByRole('group', { name: 'Apariencia' }).getByRole('button');
-    await expect(buttons).toHaveCount(2);
+    const buttons = page.getByRole('group', { name: 'Apariencia' }).getByRole('switch');
+    await expect(buttons).toHaveCount(1);
 
     for (const button of await buttons.all()) {
       const box = await button.boundingBox();

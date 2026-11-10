@@ -1,0 +1,10 @@
+---
+interface Props {
+  variant?: 'horizontal' | 'stacked' | 'compact';
+}
+const { variant = 'horizontal' } = Astro.props;
+---
+<span class:list={['brand-logo', `brand-logo--${variant}`]} aria-hidden="true">
+  <svg class="brand-logo__symbol" viewBox="0 0 1154 752" focusable="false"><use href="/brand/lpm-logo.svg#lpm" /></svg>
+  {variant !== 'compact' && <span class="brand-logo__descriptor">La Plata Marketing</span>}
+</span>

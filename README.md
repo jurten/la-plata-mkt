@@ -51,7 +51,7 @@ Los tokens base de la identidad LPM son:
 - Fondo de marca: `#020307`
 - Fondo de lectura oscuro: `#060917`
 
-Sin una elección guardada, la interfaz sigue automáticamente `prefers-color-scheme`. El selector visible ofrece únicamente los íconos de sol y luna para fijar modo claro u oscuro; esa elección explícita se guarda localmente en `lpm-theme` y se aplica antes del contenido mediante `theme-init.js`. La portada permanece negra y azul en ambos modos. Bricolage Grotesque e IBM Plex Sans se sirven desde Fontsource, sin peticiones a Google Fonts. La escena de perspectiva permite alternar entre una pieza y el sistema; con movimiento reducido comienza completa. El contenido sigue disponible sin JavaScript.
+Sin una elección guardada, la interfaz sigue automáticamente `prefers-color-scheme`. El selector visible ofrece únicamente los íconos de sol y luna para fijar modo claro u oscuro; esa elección explícita se guarda localmente en `lpm-theme` y se aplica antes del contenido mediante `theme-init.js`. La portada permanece negra y azul en ambos modos. Radio Canada Big se sirve desde los archivos de la guía de marca; IBM Plex Sans, IBM Plex Mono y Newsreader se sirven desde Fontsource local, sin peticiones a Google Fonts. La escena de perspectiva permite alternar entre una pieza y el sistema; con movimiento reducido comienza completa. El contenido sigue disponible sin JavaScript.
 
 El retrato original y su prompt están en `src/assets/lpm-visitor.png` y `src/assets/lpm-visitor.prompt.txt`. Astro produce variantes WebP responsive; la imagen de apertura declara dimensiones, prioridad alta y carga inmediata. Las geometrías de mirada y el diagrama se construyen con CSS/SVG semánticos.
 

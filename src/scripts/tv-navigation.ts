@@ -177,6 +177,7 @@ function enhanceNavigation(header: HTMLElement) {
   }
 
   function openMenu() {
+    if (matchMedia('(min-width: 1001px)').matches) return;
     // Complete a requested destination before interrupting its visual cover.
     const tune = pendingTune;
     clearTransition();
@@ -264,6 +265,13 @@ function enhanceNavigation(header: HTMLElement) {
   window.addEventListener('popstate', () => { clearTransition(); closeMenu(); requestAnimationFrame(syncScroll); });
   window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(syncScroll); }, { passive: true });
   window.addEventListener('resize', syncScroll, { passive: true });
+  matchMedia('(min-width: 1001px)').addEventListener('change', (event) => {
+    if (event.matches) {
+      const focusWasInMenu = menu.contains(document.activeElement) || document.activeElement === toggle;
+      closeMenu();
+      if (focusWasInMenu) header.querySelector<HTMLAnchorElement>('.primary-nav a')?.focus({ preventScroll: true });
+    }
+  });
   window.addEventListener('pageshow', syncScroll);
   setActive(active);
   syncScroll();

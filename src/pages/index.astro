@@ -1,7 +1,5 @@
 ---
-import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource/ibm-plex-sans/latin-400.css';
-import '@fontsource/ibm-plex-sans/latin-600.css';
+import '../styles/fonts.css';
 import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
@@ -13,9 +11,11 @@ import PerspectiveStudy from '../components/PerspectiveStudy.astro';
 import ConceptPreview from '../components/ConceptPreview.astro';
 import TeamRoster from '../components/TeamRoster.astro';
 import ServicesSection from '../components/ServicesSection.astro';
+import BrandLogo from '../components/BrandLogo.astro';
 import '../styles/global.css';
 import '../styles/alien.css';
 import '../styles/retro-cursor.css';
+import '../styles/brand.css';
 
 export const prerender = true;
 
@@ -95,6 +95,7 @@ const structuredData = {
   '@type': 'Organization',
   name: 'La Plata Marketing',
   ...(canonicalUrl ? { url: canonicalUrl.toString() } : {}),
+  ...(publicSite ? { logo: new URL('/brand/lpm-profile.png', publicSite).toString() } : {}),
   email: contactEmail,
   description: pageDescription,
   hasOfferCatalog: {
@@ -121,8 +122,9 @@ const structuredData = {
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
     <meta name="theme-color" content="#EEF2FF" />
     <script is:inline src="/scripts/theme-init.js"></script>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
+    <link rel="icon" href="/favicon.svg?v=20261109" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico?v=20261109" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
+    <link rel="apple-touch-icon" href="/brand/lpm-profile.png" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
@@ -237,7 +239,7 @@ const structuredData = {
 
       <section id="faq" class="faq-section" aria-labelledby="faq-title"><div class="wrap faq-layout"><h2 id="faq-title" class="display">Antes de<br /><span class="text-muted">conversar.</span></h2><div class="faq-list">{faqs.map(([question, answer]) => <details><summary>{question}<Icon name="plus" /></summary><p>{answer}</p></details>)}</div></div></section>
     </main>
-    <footer class="site-footer"><div class="wrap"><div class="footer-top"><a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba"><span class="brand-mark" aria-hidden="true">L/</span> La Plata<br />Marketing.</a><div class="footer-navigation"><a href="#soluciones">Enfoque</a><a href="#trabajo">Portfolio</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a></div><div class="footer-contact"><a href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>WhatsApp <Icon /></a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="/privacidad/">Privacidad</a></div></div><div class="footer-bottom"><span>© 2026 LPM / La Plata, Argentina</span><span id="mode-label">Identidad visual / Sistema automático</span><a href="#inicio">Volver arriba <Icon name="arrow" /></a></div></div></footer>
+    <footer class="site-footer"><div class="wrap"><div class="footer-top"><a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba"><BrandLogo variant="stacked" /></a><div class="footer-navigation"><a href="#soluciones">Enfoque</a><a href="#trabajo">Portfolio</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a></div><div class="footer-contact"><a href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>WhatsApp <Icon /></a><a href={`mailto:${contactEmail}`}>{contactEmail}</a><a href="/privacidad/">Privacidad</a></div></div><div class="footer-bottom"><span>© 2026 LPM / La Plata, Argentina</span><span id="mode-label">Identidad visual / Sistema automático</span><a href="#inicio">Volver arriba <Icon name="arrow" /></a></div></div></footer>
     <a class="floating-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`} title="Escribir por WhatsApp" data-floating-whatsapp><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.04 3A12.92 12.92 0 0 0 5.1 22.78L3 29l6.43-2.02A12.96 12.96 0 1 0 16.04 3Zm0 2.6a10.35 10.35 0 1 1-5.99 18.8l-.47-.33-3.07.96 1-2.96-.36-.5A10.33 10.33 0 0 1 16.04 5.6Zm-4.55 4.62c-.2 0-.53.08-.81.39-.28.3-1.07 1.04-1.07 2.54s1.1 2.95 1.24 3.15c.15.2 2.14 3.43 5.3 4.68 2.62 1.04 3.16.83 3.73.78.57-.05 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.07-.13-.28-.2-.59-.36-.3-.16-1.83-.91-2.12-1.01-.28-.1-.49-.16-.7.15-.2.31-.8 1.02-.98 1.22-.18.21-.36.23-.67.08-.3-.16-1.29-.48-2.46-1.52a9.2 9.2 0 0 1-1.7-2.12c-.17-.3-.01-.47.14-.62.14-.14.3-.36.46-.54.15-.18.2-.31.3-.52.11-.2.06-.39-.02-.54-.08-.16-.69-1.67-.95-2.29-.25-.6-.51-.52-.7-.53h-.65Z" /></svg></a>
     <p class="model-credit wrap">Modelo 3D: <a href="https://sketchfab.com/3d-models/grey-alien-head-3d-model-915a6375927e4003a8790d8932655e76" target="_blank" rel="noopener noreferrer">Grey Alien Head</a> de Joel Dcosta · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a> · Adaptado por LPM.</p>
     <script is:inline src="/scripts/site.js" defer></script>

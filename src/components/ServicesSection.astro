@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import BrandLogo from './BrandLogo.astro';
 interface Props {
   capabilities: readonly (readonly [string, readonly string[]])[];
   solutionPaths: { title: string; question: string; tags: string[]; action: string }[];
@@ -20,7 +21,7 @@ const { capabilities, solutionPaths, whatsappHref } = Astro.props;
         <div class="pillar-copy"><h3>Tecnología.</h3><p>Webs y herramientas que hacen más simple tu día a día.</p><details class="service-disclosure"><summary>Ver servicios <Icon name="plus" /></summary><ul class="service-list"><li>Web, landing pages y ecommerce</li><li>CRM, integraciones y turnos</li><li>Automatización de procesos</li><li>Mantenimiento y modernización</li></ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></details></div>
       </article>
       <article class="pillar pillar-combined">
-        <div class="pillar-art combined-art" aria-hidden="true"><span class="combine-eye eye-one"></span><span class="combine-eye eye-two"></span><span class="combined-center">L/</span></div>
+        <div class="pillar-art combined-art" aria-hidden="true"><span class="combine-eye eye-one"></span><span class="combine-eye eye-two"></span><span class="combined-center"><BrandLogo variant="compact" /></span></div>
         <div class="pillar-copy"><h3>La conexión entre ambas.</h3><p>Del primer clic al seguimiento. Las piezas, trabajando juntas.</p><details class="service-disclosure"><summary>Ver cómo se conectan <Icon name="plus" /></summary><ul class="service-list"><li>Estrategia y diagnóstico</li><li>Sistemas comerciales</li><li>Diseño de procesos</li></ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></details></div>
       </article>
     </div>

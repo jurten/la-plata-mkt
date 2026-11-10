@@ -10,6 +10,8 @@ test('los canales conservan los enlaces de escritorio y muestran la sección act
   await page.goto('/');
   const header = page.locator('.topbar[data-tv-navigation]');
   await expect(header).toBeVisible();
+  await expect(header.locator('.menu-toggle')).toBeHidden();
+  await expect(header.locator('.brand-logo__descriptor')).toHaveCount(0);
   await expect(header.locator('[data-current-channel]')).toHaveText('CH 01');
   const contact = header.locator('.primary-nav a[href="#contacto"]');
   await expect(contact).toBeVisible();
@@ -68,6 +70,8 @@ test('cambiar de canal y repetir el encendido siempre terminan con la pantalla d
   await idle(page);
   await expect(page.locator('#trabajo')).toBeInViewport();
 
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#trabajo').scrollIntoViewIfNeeded();
   await page.locator('.menu-toggle').click();
   await page.locator('[data-station-menu] [data-power-replay]').click();
   await expect(page.locator('html')).toHaveAttribute('data-tv-transition-state', 'power');
@@ -126,7 +130,8 @@ for (const preference of ['reduced', 'paused'] as const) {
     expect(state).toBe('idle');
     await expect(page).toHaveURL(/#contacto$/);
     await expect(page.locator('#contacto')).toBeInViewport();
-    await page.locator('.menu-toggle').click();
+    await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('.menu-toggle').click();
     const replayState = await page.locator('[data-station-menu] [data-power-replay]').evaluate(element => {
       (element as HTMLButtonElement).click();
       return document.documentElement.dataset.tvTransitionState;

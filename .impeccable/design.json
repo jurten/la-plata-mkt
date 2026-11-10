@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-10T00:55:37.454194+00:00",
+  "generatedAt": "2026-11-10T01:44:40+00:00",
   "title": "Design System: La Plata Marketing",
   "extensions": {
     "colorMeta": {
@@ -430,15 +430,27 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Visible form labels."
+        "purpose": "Visible form labels in IBM Plex Mono Regular."
       },
       "metadata": {
         "displayName": "Metadata",
-        "purpose": "Concept status, scope, and consent."
+        "purpose": "Sans reading metadata, including consent."
       },
       "navigation-action": {
         "displayName": "Navigation Action",
         "purpose": "Stronger masthead and inline action labels."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Mono conceptual-publication status, tags, labels, and system markers; source sizes vary by context."
+      },
+      "brand-descriptor": {
+        "displayName": "Brand Descriptor",
+        "purpose": "Full La Plata Marketing descriptor in IBM Plex Mono Medium; 12px in navigation at the 1100px breakpoint, hidden at 700px."
+      },
+      "editorial-emphasis": {
+        "displayName": "Editorial Emphasis",
+        "purpose": "Newsreader Variable Italic supporting hero phrase and emphasized privacy headings. Italic style is source-defined."
       }
     },
     "shadows": [
@@ -548,11 +560,19 @@
         "src/scripts/site-transmission.ts",
         "src/styles/site-transmission.css",
         "src/styles/tv-navigation.css",
-        "src/scripts/alien-spatial.js"
+        "src/scripts/alien-spatial.js",
+        "src/components/BrandLogo.astro",
+        "src/styles/brand.css",
+        "src/styles/fonts.css",
+        "src/styles/global.css",
+        "public/brand/lpm-logo.svg",
+        "public/brand/lpm-profile.png",
+        "artifacts/brand-update/report.json"
       ],
-      "validation": "Source-observed refinement. The hero correction has current 1920px, 1440px and 390px captures with the real alien loaded, full-width CRT, and transparent top navigation. This validates the reported hero regression only; complete-page rendered verification remains pending.",
+      "validation": "Current brand-update report confirms loaded fonts, no horizontal overflow at 320/390/768/900/1024/1440/1920px, hero at the top, and transparent initial navigation. Header, footer, privacy and link preview captures were visually inspected. 79 unit tests, 21 browser tests and the production build passed. The stitched services-390 locator image is excluded pending recapture. This is a bounded brand source refresh, not a new computed-style extraction.",
       "inheritedMetadata": "Existing tonal ramps retained for unchanged colors; they were not re-extracted or remeasured. Unchanged metadata is inherited from the prior sidecar.",
-      "sourceDriftNotCanonized": "Pause listeners remain, but current markup exposes no pause dispatcher or inclination action. Earlier glass-control descriptions are historical, not an approved removal decision."
+      "sourceDriftNotCanonized": "Pause listeners remain, but current markup exposes no pause dispatcher or inclination action. Earlier glass-control descriptions are historical, not an approved removal decision.",
+      "brandScope": "Only logo and typefaces change. Preserve the established alien, hero-wide CRT/ray, transparent initial navigation, colors, content, layout and behavior. The exact official LPM initials/outline drawing and supplied profile supersede previous L/ marks."
     }
   },
   "components": [
@@ -585,7 +605,7 @@
       "kind": "input",
       "description": "Visible label, active reading material, and distinct focus border.",
       "html": "<label class=\"ds-field\">Email<input type=\"email\" autocomplete=\"email\" required/></label>",
-      "css": ".ds-field{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:grid;gap:8px;color:var(--ink,#0b1430);font-size:13px;font-weight:600;max-width:360px}.ds-field input{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);width:100%;min-width:0;padding:12px 14px;background:var(--surface,#f8faff);color:var(--ink,#0b1430);border:1px solid color-mix(in srgb,var(--ink,#0b1430) 35%,transparent);border-radius:4px;font-size:16px;font-weight:400;line-height:1.5}.ds-field input:focus{border-color:var(--blue-text,#1536f1)}.ds-field input:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-field input:disabled{opacity:.65;cursor:wait}",
+      "css": ".ds-field{font-family:var(--mono,'IBM Plex Mono',monospace);display:grid;gap:8px;color:var(--ink,#0b1430);font-size:13px;font-weight:400;max-width:360px}.ds-field input{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);width:100%;min-width:0;padding:12px 14px;background:var(--surface,#f8faff);color:var(--ink,#0b1430);border:1px solid color-mix(in srgb,var(--ink,#0b1430) 35%,transparent);border-radius:4px;font-size:16px;font-weight:400;line-height:1.5}.ds-field input:focus{border-color:var(--blue-text,#1536f1)}.ds-field input:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-field input:disabled{opacity:.65;cursor:wait}",
       "refersTo": "input"
     },
     {
@@ -593,7 +613,7 @@
       "kind": "chip",
       "description": "Unboxed, noninteractive conceptual-publication metadata in the portfolio.",
       "html": "<span class=\"ds-concept-label\">Estudio conceptual</span>",
-      "css": ".ds-concept-label{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-block;padding:0;border:0;border-radius:0;font-size:12px;line-height:1.55;color:var(--blue-text,#1536f1)}",
+      "css": ".ds-concept-label{font-family:var(--mono,'IBM Plex Mono',monospace);display:inline-block;padding:0;border:0;border-radius:0;font-size:12px;line-height:1.55;color:var(--blue-text,#1536f1)}",
       "refersTo": "concept-label"
     },
     {
@@ -601,15 +621,15 @@
       "kind": "custom",
       "description": "Transparent contact container, separated from direct contact by a fine rule.",
       "html": "<section class=\"ds-form-surface\"><h3>Tu consulta</h3></section>",
-      "css": ".ds-form-surface{padding:32px 0 0;border-top:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));background:transparent;color:var(--ink,#0b1430);border-radius:0;max-width:480px}.ds-form-surface h3{margin:0;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:29px;font-weight:650;letter-spacing:-.02em;line-height:1.55}@media(max-width:700px){.ds-form-surface{padding-top:24px}}",
+      "css": ".ds-form-surface{padding:32px 0 0;border-top:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));background:transparent;color:var(--ink,#0b1430);border-radius:0;max-width:480px}.ds-form-surface h3{margin:0;font-family:var(--display,'Radio Canada Big',Arial,sans-serif);font-size:29px;font-weight:700;letter-spacing:-.02em;line-height:1.55}@media(max-width:700px){.ds-form-surface{padding-top:24px}}",
       "refersTo": "form-surface"
     },
     {
       "name": "Home Navigation",
       "kind": "nav",
-      "description": "Frameless masthead transparent over the hero at the top, with existing dark scrolled/menu states and regular links; the complete page retains its numbered station index.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Navegacion de muestra\"><a class=\"ds-brand\" href=\"#inicio\"><span class=\"ds-brand-mark\">L/</span>LPM</a><a class=\"ds-nav-link\" href=\"#soluciones\">Enfoque</a><a class=\"ds-nav-action\" href=\"#contacto\">Hablemos <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></a></nav>",
-      "css": ".ds-nav{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:flex;align-items:center;gap:24px;min-height:92px;padding:16px clamp(24px,4.2vw,80px);border-radius:0;background:#020307;color:#eef3ff;box-shadow:none;backdrop-filter:none}.ds-nav a{text-decoration:none;color:inherit}.ds-brand{display:inline-flex;align-items:center;gap:10px;margin-right:auto;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:23px;font-weight:750;letter-spacing:-.02em}.ds-brand-mark{display:grid;place-items:center;width:36px;height:36px;background:#1536f1;color:#fffdf7;border-radius:8px;font-size:21px;letter-spacing:-.04em}.ds-nav-link{display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:400;transition:color 180ms}.ds-nav-link:hover{color:#a5b9ff}.ds-nav-action{display:inline-flex;align-items:center;gap:22px;min-height:44px;padding:10px 16px;border-radius:8px;background:var(--blue,#1536f1);font-size:14px;font-weight:600;line-height:1.35;transition:background-color 180ms,transform 180ms}.ds-nav-action svg{width:21px;height:21px}.ds-nav-action:hover{background:var(--blue-strong,#0d2ccf);transform:none}.ds-nav-action:active{transform:none}.ds-nav a:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-transparency:reduce){.ds-nav{background:#020307;backdrop-filter:none}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}.ds-nav-action:hover{transform:none}}"
+      "description": "Transparent frameless masthead with the exact official LPM vector and mono descriptor; compact symbol below 700px. Existing dark scrolled/menu states remain on the complete page.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegacion de muestra\"><a class=\"ds-brand\" href=\"#inicio\" aria-label=\"La Plata Marketing, inicio\"><svg class=\"ds-brand-symbol\" viewBox=\"0 0 1154 752\" aria-hidden=\"true\" focusable=\"false\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M 601.500 1.525 C 531.648 8.629, 475.072 29.634, 405.601 74.255 C 341.295 115.559, 274.667 174.633, 217.490 241.036 C 175.456 289.853, 124.502 358.610, 90.791 412 C 53.255 471.450, 11.494 550.602, 3.409 577.622 C 0.111 588.643, -0.427 604.388, 2.210 612.694 C 10.404 638.501, 33.677 659.401, 80 682.550 C 149.323 717.193, 245.340 741.074, 349.500 749.580 C 375.759 751.724, 455.182 752.617, 483.021 751.081 C 589.534 745.206, 688.857 722.571, 777.500 683.972 C 809.106 670.210, 848.390 648.466, 881 626.685 C 952.873 578.679, 1017.758 508.732, 1067.708 425.411 C 1103.702 365.370, 1137.380 287.580, 1150.576 234 C 1152.827 224.858, 1153.418 220.142, 1153.454 211 L 1153.500 199.500 1150.712 193.822 C 1147.306 186.886, 1140.203 180.137, 1124.284 168.709 C 1080.840 137.521, 1012.892 99.257, 957 74.504 C 863.991 33.313, 783.208 10.680, 698 1.939 C 680.497 0.144, 617.730 -0.126, 601.500 1.525 M 635 52.659 C 555.408 56.008, 481.798 80.951, 407.500 129.746 C 372.780 152.549, 340.633 178.690, 300.137 217.052 C 262.739 252.479, 236.222 283.236, 188.101 347 C 118.160 439.680, 83.406 499.397, 70.253 549.500 C 68.182 557.389, 67.614 561.938, 67.564 571.050 L 67.500 582.600 71.235 590.158 C 77.727 603.298, 93.083 615.863, 119.407 629.575 C 184.796 663.635, 279.847 688.438, 380 697.576 C 403.555 699.725, 462.009 700.540, 488.500 699.089 C 558.192 695.270, 630.721 682.633, 695.021 663.107 C 778.356 637.800, 853.445 598.117, 915.500 546.587 C 940.237 526.045, 974.028 490.173, 995.652 461.500 C 1027.001 419.929, 1057.077 362.982, 1073.024 315 C 1080.866 291.404, 1084.083 276.574, 1084.740 260.989 C 1085.523 242.432, 1082.942 233.601, 1073.245 221.654 C 1058.717 203.754, 1011.718 170.105, 965.329 144.390 C 887.225 101.094, 801.329 69.890, 729 58.539 C 706.631 55.029, 662.712 51.662, 646.500 52.215 C 643.750 52.309, 638.575 52.508, 635 52.659 M 319.434 230.685 C 293.388 253.455, 259.220 288.087, 233.124 318.170 L 223 329.840 223 438.420 L 223 547 325.506 547 L 428.013 547 427.756 471.750 L 427.500 396.500 387 396.500 L 346.500 396.500 346.234 424.250 L 345.968 452 338.484 452 L 331 452 331 337 C 331 273.750, 330.633 222, 330.184 222 C 329.736 222, 324.898 225.908, 319.434 230.685 M 440 384.500 L 440 547 491 547 L 542 547 542.009 512.250 C 542.013 493.137, 542.301 475.137, 542.648 472.250 L 543.279 467 583.103 467 L 622.927 467 630.675 456.750 C 634.936 451.112, 641.928 442.058, 646.211 436.629 L 654 426.758 653.966 346.129 L 653.932 265.500 633.216 243.820 L 612.500 222.139 526.250 222.070 L 440 222 440 384.500 M 667 384.500 L 667 547 715.500 547 L 764 547 764 429 L 764 311 771.500 311 L 779 311 779 429.010 L 779 547.020 825.231 546.760 L 871.463 546.500 871.560 544.500 C 871.614 543.400, 871.735 490.394, 871.829 426.708 L 872 310.916 879.750 311.208 L 887.500 311.500 887.715 425.500 C 887.833 488.200, 887.946 540.771, 887.965 542.324 L 888 545.148 900.219 534.324 C 928.463 509.305, 962.271 473.622, 980.768 449.309 L 987 441.118 986.954 351.809 L 986.909 262.500 967.204 242.240 L 947.500 221.981 807.250 221.990 L 667 222 667 384.500 M 542.755 332.250 C 542.620 343.938, 542.462 358, 542.405 363.500 C 542.347 369, 542.509 375.863, 542.765 378.750 L 543.230 384 550.115 384 L 557 384 557 347.500 L 557 311 550 311 L 543 311 542.755 332.250\"/></svg><span class=\"ds-brand-descriptor\">La Plata Marketing</span></a><a class=\"ds-nav-link\" href=\"#soluciones\">Enfoque</a><a class=\"ds-nav-action\" href=\"#contacto\">Hablemos <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></a></nav>",
+      "css": ".ds-nav{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:flex;align-items:center;gap:24px;min-height:92px;padding:14px clamp(24px,4.2vw,80px);border-radius:0;background:transparent;color:#eef3ff;box-shadow:none;backdrop-filter:none}.ds-nav a{text-decoration:none;color:inherit}.ds-brand{display:inline-flex;flex:0 0 auto;align-items:center;gap:20px;margin-right:auto;color:inherit}.ds-brand-symbol{display:block;flex:0 0 auto;width:96px;height:auto;aspect-ratio:1154/752;fill:currentColor}.ds-brand-descriptor{display:block;padding-left:16px;border-left:1px solid currentColor;font:500 14px/1.3 var(--mono,'IBM Plex Mono',monospace);letter-spacing:0;white-space:nowrap}.ds-nav-link{display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:400;transition:color 180ms}.ds-nav-link:hover{color:#a5b9ff}.ds-nav-action{display:inline-flex;align-items:center;gap:22px;min-height:44px;padding:10px 16px;border-radius:8px;background:var(--blue,#1536f1);font-size:14px;font-weight:600;line-height:1.35;transition:background-color 180ms,transform 180ms}.ds-nav-action svg{width:21px;height:21px}.ds-nav-action:hover{background:var(--blue-strong,#0d2ccf);transform:none}.ds-nav-action:active{transform:none}.ds-nav a:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-transparency:reduce){.ds-nav{background:#020307;backdrop-filter:none}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}.ds-nav-action:hover{transform:none}}@media(max-width:1100px){.ds-brand{gap:14px}.ds-brand-descriptor{font-size:12px;padding-left:14px}}@media(max-width:700px){.ds-nav{padding-block:8px;min-height:80px}.ds-brand{gap:0}.ds-brand-descriptor{display:none}}"
     },
     {
       "name": "Perspective Choices",
@@ -629,16 +649,16 @@
     {
       "name": "Optical Union",
       "kind": "custom",
-      "description": "Compact overlapping cobalt/sky service mark, on the open reading field.",
-      "html": "<div class=\"ds-union\" aria-hidden=\"true\"><span class=\"ds-eye ds-eye-one\"></span><span class=\"ds-eye ds-eye-two\"></span><span class=\"ds-union-center\">L/</span></div>",
-      "css": ".ds-union{position:relative;display:flex;align-items:center;justify-content:center;width:200px;height:160px;background:transparent;isolation:isolate}.ds-eye{position:absolute;width:112px;height:76px;border-radius:78% 18% 78% 18%}.ds-eye-one{background:#1536f1;transform:translate(-20px,-14px) rotate(15deg)}.ds-eye-two{background:#b7d7ee;transform:translate(20px,18px) rotate(-15deg)}.ds-union-center{z-index:1;display:grid;place-items:center;width:42px;height:42px;background:#1536f1;color:#eef3ff;border-radius:4px;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-weight:600;font-size:28px;letter-spacing:-.04em}@media(max-width:700px){.ds-union{width:100px;height:100px}.ds-eye{width:68px;height:46px}.ds-eye-one{transform:translate(-10px,-10px) rotate(15deg)}.ds-eye-two{transform:translate(10px,10px) rotate(-15deg)}.ds-union-center{width:28px;height:28px;font-size:19px}}"
+      "description": "Existing overlapping cobalt/sky service mark with the exact official LPM vector at its center.",
+      "html": "<div class=\"ds-union\" aria-hidden=\"true\"><span class=\"ds-eye ds-eye-one\"></span><span class=\"ds-eye ds-eye-two\"></span><span class=\"ds-union-center\"><svg class=\"ds-brand-symbol\" viewBox=\"0 0 1154 752\" aria-hidden=\"true\" focusable=\"false\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M 601.500 1.525 C 531.648 8.629, 475.072 29.634, 405.601 74.255 C 341.295 115.559, 274.667 174.633, 217.490 241.036 C 175.456 289.853, 124.502 358.610, 90.791 412 C 53.255 471.450, 11.494 550.602, 3.409 577.622 C 0.111 588.643, -0.427 604.388, 2.210 612.694 C 10.404 638.501, 33.677 659.401, 80 682.550 C 149.323 717.193, 245.340 741.074, 349.500 749.580 C 375.759 751.724, 455.182 752.617, 483.021 751.081 C 589.534 745.206, 688.857 722.571, 777.500 683.972 C 809.106 670.210, 848.390 648.466, 881 626.685 C 952.873 578.679, 1017.758 508.732, 1067.708 425.411 C 1103.702 365.370, 1137.380 287.580, 1150.576 234 C 1152.827 224.858, 1153.418 220.142, 1153.454 211 L 1153.500 199.500 1150.712 193.822 C 1147.306 186.886, 1140.203 180.137, 1124.284 168.709 C 1080.840 137.521, 1012.892 99.257, 957 74.504 C 863.991 33.313, 783.208 10.680, 698 1.939 C 680.497 0.144, 617.730 -0.126, 601.500 1.525 M 635 52.659 C 555.408 56.008, 481.798 80.951, 407.500 129.746 C 372.780 152.549, 340.633 178.690, 300.137 217.052 C 262.739 252.479, 236.222 283.236, 188.101 347 C 118.160 439.680, 83.406 499.397, 70.253 549.500 C 68.182 557.389, 67.614 561.938, 67.564 571.050 L 67.500 582.600 71.235 590.158 C 77.727 603.298, 93.083 615.863, 119.407 629.575 C 184.796 663.635, 279.847 688.438, 380 697.576 C 403.555 699.725, 462.009 700.540, 488.500 699.089 C 558.192 695.270, 630.721 682.633, 695.021 663.107 C 778.356 637.800, 853.445 598.117, 915.500 546.587 C 940.237 526.045, 974.028 490.173, 995.652 461.500 C 1027.001 419.929, 1057.077 362.982, 1073.024 315 C 1080.866 291.404, 1084.083 276.574, 1084.740 260.989 C 1085.523 242.432, 1082.942 233.601, 1073.245 221.654 C 1058.717 203.754, 1011.718 170.105, 965.329 144.390 C 887.225 101.094, 801.329 69.890, 729 58.539 C 706.631 55.029, 662.712 51.662, 646.500 52.215 C 643.750 52.309, 638.575 52.508, 635 52.659 M 319.434 230.685 C 293.388 253.455, 259.220 288.087, 233.124 318.170 L 223 329.840 223 438.420 L 223 547 325.506 547 L 428.013 547 427.756 471.750 L 427.500 396.500 387 396.500 L 346.500 396.500 346.234 424.250 L 345.968 452 338.484 452 L 331 452 331 337 C 331 273.750, 330.633 222, 330.184 222 C 329.736 222, 324.898 225.908, 319.434 230.685 M 440 384.500 L 440 547 491 547 L 542 547 542.009 512.250 C 542.013 493.137, 542.301 475.137, 542.648 472.250 L 543.279 467 583.103 467 L 622.927 467 630.675 456.750 C 634.936 451.112, 641.928 442.058, 646.211 436.629 L 654 426.758 653.966 346.129 L 653.932 265.500 633.216 243.820 L 612.500 222.139 526.250 222.070 L 440 222 440 384.500 M 667 384.500 L 667 547 715.500 547 L 764 547 764 429 L 764 311 771.500 311 L 779 311 779 429.010 L 779 547.020 825.231 546.760 L 871.463 546.500 871.560 544.500 C 871.614 543.400, 871.735 490.394, 871.829 426.708 L 872 310.916 879.750 311.208 L 887.500 311.500 887.715 425.500 C 887.833 488.200, 887.946 540.771, 887.965 542.324 L 888 545.148 900.219 534.324 C 928.463 509.305, 962.271 473.622, 980.768 449.309 L 987 441.118 986.954 351.809 L 986.909 262.500 967.204 242.240 L 947.500 221.981 807.250 221.990 L 667 222 667 384.500 M 542.755 332.250 C 542.620 343.938, 542.462 358, 542.405 363.500 C 542.347 369, 542.509 375.863, 542.765 378.750 L 543.230 384 550.115 384 L 557 384 557 347.500 L 557 311 550 311 L 543 311 542.755 332.250\"/></svg></span></div>",
+      "css": ".ds-union{position:relative;display:flex;align-items:center;justify-content:center;width:200px;height:160px;background:transparent;isolation:isolate}.ds-eye{position:absolute;width:112px;height:76px;border-radius:78% 18% 78% 18%}.ds-eye-one{background:#1536f1;transform:translate(-20px,-14px) rotate(15deg)}.ds-eye-two{background:#b7d7ee;transform:translate(20px,18px) rotate(-15deg)}.ds-union-center{z-index:1;display:grid;place-items:center;box-sizing:border-box;width:120px;height:88px;padding:12px;background:var(--bg,#eef2ff);color:var(--blue-text,#1536f1);border-radius:0}.ds-union-center .ds-brand-symbol{display:block;width:96px;height:auto;aspect-ratio:1154/752;fill:currentColor}@media(max-width:700px){.ds-union{width:100px;height:100px}.ds-eye{width:68px;height:46px}.ds-eye-one{transform:translate(-10px,-10px) rotate(15deg)}.ds-eye-two{transform:translate(10px,10px) rotate(-15deg)}}"
     },
     {
       "name": "Concept Preview Frame",
       "kind": "card",
       "description": "Shared frame for the existing labeled conceptual work; inner artwork remains source content.",
       "html": "<div class=\"ds-preview-frame\"><div class=\"ds-preview-canvas\"><strong>Estudio conceptual</strong></div></div>",
-      "css": ".ds-preview-frame{padding:32px;border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));border-radius:var(--radius,8px);background:var(--surface,#f8faff)}.ds-preview-canvas{padding:24px;border-radius:4px;background:#f8faff;color:#0b1430;font:400 17px/1.55 var(--body,'IBM Plex Sans',Arial,sans-serif)}.ds-preview-canvas strong{font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-weight:650}@media(max-width:700px){.ds-preview-frame{padding:24px}}@media(max-width:500px){.ds-preview-frame{padding:18px}}"
+      "css": ".ds-preview-frame{padding:32px;border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));border-radius:var(--radius,8px);background:var(--surface,#f8faff)}.ds-preview-canvas{padding:24px;border-radius:4px;background:#f8faff;color:#0b1430;font:400 17px/1.55 var(--body,'IBM Plex Sans',Arial,sans-serif)}.ds-preview-canvas strong{font-family:var(--display,'Radio Canada Big',Arial,sans-serif);font-weight:700}@media(max-width:700px){.ds-preview-frame{padding:24px}}@media(max-width:500px){.ds-preview-frame{padding:18px}}"
     },
     {
       "name": "Service Disclosure",
@@ -650,11 +670,11 @@
   ],
   "narrative": {
     "northStar": "Otra perspectiva",
-    "overview": "An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the L/ and LPM logo, native retro cursor, and television channel menu.\n\nThe alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Bricolage headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.\n\nThis refinement is source-observed. Complete-page rendered visual verification is pending; current hero-restored captures verify the hero correction only, and historical screenshots of the rejected design do not verify this refinement. The sidecar is a partial source refresh, not a new computed-style extraction.",
+    "overview": "An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Use the supplied official LPM logo, preserving the native retro cursor and television channel menu.\n\nThe alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Radio Canada Big headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.\n\nThe supplied-brand update was checked against current captures in `artifacts/brand-update/` and `report.json`: fonts loaded, no horizontal overflow at widths (320/390/768/900/1024/1440/1920px), the hero begins at the top, and initial navigation stays transparent. The header, footer, privacy route, and link preview were visually inspected. All (79) unit tests, (21) browser tests, and the production build passed. The sidecar remains a partial source refresh, not a new computed-style extraction; historical captures of the rejected design do not verify this update.",
     "keyCharacteristics": [
       "The supplied cobalt 3D extraterrestrial, hero-scoped CRT collapse, and cursor-controlled neon clearing ray; no raster alien fallback on the homepage.",
       "Continuous cold-light and midnight reading fields around fixed black brand objects.",
-      "Bricolage messages at weight (650), quiet Plex explanations, and native disclosures for detail.",
+      "Radio Canada Big messages at weight (700), quiet Plex explanations, mono labels, editorial italic emphasis, and native disclosures for detail.",
       "Eye-shaped apertures, three open service rows, consistent preview frames, and a clear contact path.",
       "Native retro cursors and a numbered station index preserve the established retro identity.",
       "Purposeful interactions with readable live content, direct actions, and accessible static behavior."
@@ -672,12 +692,12 @@
       },
       {
         "name": "The Expressive Head, Quiet Body Rule",
-        "body": "Use Bricolage for the message and Plex for explanation, navigation, and controls. Keep complete word boundaries at narrow widths.",
+        "body": "Use Radio Canada Big for headings, Plex Sans for reading and actions, Plex Mono for the descriptor and labels/data, and Newsreader Italic for editorial emphasis. Keep complete word boundaries at narrow widths.",
         "section": "typography"
       }
     ],
     "dos": [
-      "**Do** preserve the L/ and LPM logo, fixed cobalt/sky artwork, and separate active theme roles.",
+      "**Do** use the supplied inseparable LPM vector and approved type roles, preserving fixed cobalt/sky artwork and separate active theme roles.",
       "**Do** carry the gaze into optical geometry instead of relying on the portrait alone.",
       "**Do** pair expressive headings with readable Plex copy, bounded measures, native disclosures, and open content groups.",
       "**Do** keep the complete system readable in both perspective states and preserve live content without motion or JavaScript; the alien's fallback is a blank black image area.",

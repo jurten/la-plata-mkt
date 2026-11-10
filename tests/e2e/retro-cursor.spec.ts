@@ -9,7 +9,7 @@ test('el cursor retro distingue acciones y texto y conserva la espera nativa', a
   await page.goto('/');
   await expect(page.locator('body')).toHaveCSS('cursor', arrowCursor);
   await expect(page.locator('.hero .button-primary')).toHaveCSS('cursor', handCursor);
-  await expect(page.locator('[data-set-theme="dark"]')).toHaveCSS('cursor', handCursor);
+  await expect(page.locator('[data-theme-toggle]')).toHaveCSS('cursor', handCursor);
   await expect(page.locator('details summary').first()).toHaveCSS('cursor', handCursor);
   await expect(page.locator('#company')).toHaveCSS('cursor', textCursor);
   await expect(page.locator('#issue')).toHaveCSS('cursor', textCursor);
@@ -21,7 +21,7 @@ test('el cursor retro distingue acciones y texto y conserva la espera nativa', a
   await submit.evaluate((button) => { (button as HTMLButtonElement).disabled = false; });
   await expect(submit).toHaveCSS('cursor', handCursor);
 
-  await page.locator('[data-set-theme="dark"]').click();
+  await page.locator('[data-theme-toggle]').click();
   await expect(page.locator('body')).toHaveCSS('cursor', arrowCursor);
   await expect(page.locator('.hero .button-primary')).toHaveCSS('cursor', handCursor);
 
@@ -46,7 +46,7 @@ test('el cursor del sistema se conserva con colores forzados', async ({ page }) 
   await page.goto('/');
   await expect(page.locator('body')).not.toHaveCSS('cursor', /url\(/);
   await expect(page.locator('.hero .button-primary')).not.toHaveCSS('cursor', /url\(/);
-  await expect(page.locator('[data-set-theme="dark"]')).toHaveCSS('cursor', 'pointer');
+  await expect(page.locator('[data-theme-toggle]')).toHaveCSS('cursor', 'pointer');
   await expect(page.locator('#company')).toHaveCSS('cursor', 'text');
 });
 
@@ -60,7 +60,7 @@ test('un dispositivo táctil conserva los cursores del sistema', async ({ browse
     expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBeTruthy();
     await expect(page.locator('body')).not.toHaveCSS('cursor', /url\(/);
     await expect(page.locator('.hero .button-primary')).not.toHaveCSS('cursor', /url\(/);
-    await expect(page.locator('[data-set-theme="dark"]')).toHaveCSS('cursor', 'pointer');
+    await expect(page.locator('[data-theme-toggle]')).toHaveCSS('cursor', 'pointer');
   } finally {
     await context.close();
   }

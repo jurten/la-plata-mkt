@@ -110,7 +110,7 @@ for (const path of ['/', '/privacidad']) {
 for (const path of ['/', '/privacidad']) {
   test(`${path} en modo oscuro no introduce violaciones de contraste`, async ({ page }) => {
     await page.goto(path);
-    await page.getByRole('button', { name: 'Modo oscuro' }).click();
+    await page.getByRole('switch', { name: 'Modo oscuro' }).click();
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();

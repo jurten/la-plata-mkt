@@ -1,14 +1,14 @@
 ---
-import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource/ibm-plex-sans/latin-400.css';
-import '@fontsource/ibm-plex-sans/latin-600.css';
+import '../styles/fonts.css';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import Icon from '../components/Icon.astro';
+import BrandLogo from '../components/BrandLogo.astro';
 import '../styles/global.css';
 import '../styles/alien.css';
 import '../styles/retro-cursor.css';
+import '../styles/brand.css';
 
 export const prerender = true;
 
@@ -33,16 +33,16 @@ const contactHref = '/#contacto';
     <meta name="theme-color" content="#EEF2FF" />
     <script is:inline src="/scripts/theme-init.js"></script>
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
+    <link rel="icon" href="/favicon.svg?v=20261109" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico?v=20261109" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
+    <link rel="apple-touch-icon" href="/brand/lpm-profile.png" />
     <title>Privacidad | La Plata Marketing</title>
   </head>
   <body class="legal-body">
     <a class="skip-link" href="#contenido-legal">Saltar al contenido</a>
     <header class="legal-header">
       <a class="brand" href={homeHref} aria-label="La Plata Marketing, volver al inicio">
-        <span class="brand-mark" aria-hidden="true">L/</span>
-        <span>LPM</span>
+        <BrandLogo />
       </a>
       <ThemeSwitcher />
       <a class="legal-back" href={contactHref}>Volver al formulario <Icon name="right" /></a>

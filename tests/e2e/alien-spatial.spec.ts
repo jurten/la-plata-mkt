@@ -28,7 +28,7 @@ const expectFallback = async (page: Page, state: 'static' | 'unavailable') => {
 };
 
 const expectOtherControlsWork = async (page: Page) => {
-  await page.locator('[data-set-theme="dark"]').click();
+  await page.locator('[data-theme-toggle]').click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.locator('.primary-nav').getByRole('link', { name: 'Contacto', exact: true }).click();
   await expect(page).toHaveURL(/#contacto$/);

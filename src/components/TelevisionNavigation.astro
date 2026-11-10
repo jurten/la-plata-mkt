@@ -1,7 +1,7 @@
 ---
 import ThemeSwitcher from './ThemeSwitcher.astro';
 import Icon from './Icon.astro';
-import '@fontsource/ibm-plex-mono/latin-400.css';
+import BrandLogo from './BrandLogo.astro';
 import '../styles/tv-navigation.css';
 
 const channels = [
@@ -14,7 +14,7 @@ const channels = [
 ---
 <header class="topbar television-nav" data-tv-navigation>
   <div class="nav">
-    <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio"><span class="brand-mark" aria-hidden="true">L/</span><span>LPM</span></a>
+    <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio"><BrandLogo variant="compact" /></a>
     <span class="current-channel" data-current-channel aria-hidden="true">CH 01</span>
     <nav class="primary-nav" id="primary-nav" aria-label="Enlaces de sección">
       {channels.slice(1).map(channel => <a href={`#${channel.id}`}><span class="nav-channel-number" aria-hidden="true">{channel.number}</span>{channel.label}</a>)}
@@ -47,7 +47,7 @@ const channels = [
               <path fill="#dbe7ff" d="M120 40h240v240H120z" />
               <path fill="#1536f1" d="M120 88h48v144h-48z" /><path fill="#b7d7ee" d="M168 88h48v144h-48z" /><path fill="#080e1d" d="M216 88h48v144h-48z" /><path fill="#7a94ff" d="M264 88h48v144h-48z" /><path fill="#1536f1" d="M312 88h48v144h-48z" />
               <path fill="#080e1d" d="M120 124h240v72H120z" />
-              <path stroke="#eef3ff" stroke-width="8" d="M218 139v42h28m17-44-13 46" />
+              <svg class="station-testcard__brand" x="186" y="125" width="108" height="70" viewBox="0 0 1154 752"><use href="/brand/lpm-logo.svg#lpm" /></svg>
               <path stroke="#080e1d" stroke-width="2" d="M120 62h240M120 258h240M240 40v48M240 232v48" />
               <path stroke="#eef3ff" stroke-width="2" d="M180 208h120m-60-8v16" />
             </g>

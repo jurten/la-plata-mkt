@@ -31,33 +31,33 @@ colors:
   dark-error: '#ff8a82'
 typography:
   display:
-    fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
+    fontFamily: Radio Canada Big, Arial, sans-serif
     fontSize: clamp(68px, 7.2vw, 96px)
-    fontWeight: 650
+    fontWeight: 700
     lineHeight: 0.98
     letterSpacing: -0.035em
   headline:
-    fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
+    fontFamily: Radio Canada Big, Arial, sans-serif
     fontSize: clamp(40px, 4.6vw, 64px)
-    fontWeight: 650
+    fontWeight: 700
     lineHeight: 1.04
     letterSpacing: -0.035em
   title:
-    fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
+    fontFamily: Radio Canada Big, Arial, sans-serif
     fontSize: 36px
-    fontWeight: 650
+    fontWeight: 700
     lineHeight: 1.1
     letterSpacing: -0.03em
   pillar-title:
-    fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
+    fontFamily: Radio Canada Big, Arial, sans-serif
     fontSize: clamp(30px, 3vw, 44px)
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 1.1
     letterSpacing: -0.03em
   title-small:
-    fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
+    fontFamily: Radio Canada Big, Arial, sans-serif
     fontSize: 23px
-    fontWeight: 650
+    fontWeight: 700
     lineHeight: 1.55
     letterSpacing: -0.02em
   body:
@@ -96,15 +96,32 @@ typography:
     fontWeight: 600
     lineHeight: 1.35
   label:
-    fontFamily: IBM Plex Sans, Arial, sans-serif
+    fontFamily: IBM Plex Mono, monospace
     fontSize: 13px
-    fontWeight: 600
+    fontWeight: 400
     lineHeight: 1.55
   metadata:
     fontFamily: IBM Plex Sans, Arial, sans-serif
     fontSize: 12px
     fontWeight: 400
     lineHeight: 1.55
+  data:
+    fontFamily: IBM Plex Mono, monospace
+    fontSize: 12px
+    fontWeight: 400
+    lineHeight: 1.55
+  brand-descriptor:
+    fontFamily: IBM Plex Mono, monospace
+    fontSize: 14px
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: 0
+  editorial-emphasis:
+    fontFamily: Newsreader Variable, Georgia, serif
+    fontSize: clamp(24px, 2.3vw, 32px)
+    fontWeight: 400
+    lineHeight: 1.2
+    letterSpacing: -0.025em
 rounded:
   canvas: 4px
   field: 4px
@@ -167,7 +184,7 @@ components:
   concept-label:
     backgroundColor: transparent
     textColor: '{colors.blue-text}'
-    typography: '{typography.metadata}'
+    typography: '{typography.data}'
     padding: 0
   form-surface:
     backgroundColor: transparent
@@ -190,17 +207,17 @@ components:
 
 **Creative North Star: "Otra perspectiva"**
 
-An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the L/ and LPM logo, native retro cursor, and television channel menu.
+An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Use the supplied official LPM logo, preserving the native retro cursor and television channel menu.
 
-The alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Bricolage headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.
+The alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Radio Canada Big headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.
 
-This refinement is source-observed. Current rendered visual verification is pending; historical screenshots of the rejected design do not verify it. The sidecar is a partial source refresh, not a new computed-style extraction.
+The supplied-brand update was checked against current captures in `artifacts/brand-update/` and `report.json`: fonts loaded, no horizontal overflow at widths (320/390/768/900/1024/1440/1920px), the hero begins at the top, and initial navigation stays transparent. The header, footer, privacy route, and link preview were visually inspected. All (79) unit tests, (21) browser tests, and the production build passed. The sidecar remains a partial source refresh, not a new computed-style extraction; historical captures of the rejected design do not verify this update.
 
 **Key Characteristics:**
 
 - The supplied cobalt 3D extraterrestrial, hero-scoped CRT collapse, and cursor-controlled neon clearing ray; no raster alien fallback on the homepage.
 - Continuous cold-light and midnight reading fields around fixed black brand objects.
-- Bricolage messages at weight (650), quiet Plex explanations, and native disclosures for detail.
+- Radio Canada Big messages at weight (700), quiet Plex explanations, mono labels, editorial italic emphasis, and native disclosures for detail.
 - Eye-shaped apertures, three open service rows, consistent preview frames, and a clear contact path.
 - Native retro cursors and a numbered station index preserve the established retro identity.
 - Purposeful interactions with readable live content, direct actions, and accessible static behavior.
@@ -237,24 +254,33 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 
 ## Typography
 
-**Display Font:** Bricolage Grotesque Variable, with Arial Narrow and sans-serif fallbacks.
+The supplied November 2026 brand guide now owns logo and typography. Radio Canada Big Bold (700) is the heading voice; its exact embedded 500/700 font files are served locally. IBM Plex Sans Regular/Semibold remains the reading voice. IBM Plex Mono Medium (500) sets the full brand descriptor, with Regular/Medium for labels and data. Newsreader Variable Italic (400) supplies editorial emphasis, including the supporting hero phrase.
+
+The official LPM initials and inclined contour are one inseparable vector in `public/brand/lpm-logo.svg`, extracted unchanged from the supplied HTML guide. `BrandLogo.astro` supplies horizontal, stacked and compact signatures. The supplied profile PNG remains unchanged as `public/brand/lpm-profile.png`. Previous L/ marks are superseded; the alien, continuous CRT, transparent initial navigation and existing colors remain.
+
+**Display Font:** Radio Canada Big, with Arial and sans-serif fallbacks.
 
 **Body Font:** IBM Plex Sans, with Arial and sans-serif fallbacks.
+
+**Label/Mono Font:** IBM Plex Mono, with monospace fallback. The full descriptor uses Medium (500); form labels, conceptual status, service tags, and system markers use Regular (400).
+
+**Editorial Font:** Newsreader Variable Italic, with Georgia and serif fallbacks. The frontmatter editorial-emphasis role is always italic in the source.
 
 **Character:** Broad, tightly tracked display forms deliver the idea; practical sentence-case copy explains it. Balanced headline wrapping and intentional line breaks preserve complete words.
 
 ### Hierarchy
 
-- **Display:** the frontmatter role describes the desktop alien headline. At and below (1100px), it uses `clamp(60px, 7.3vw, 80px)`; at (700px), `clamp(46px, 11.8vw, 72px)`; and at (500px), `clamp(42px, 11.8vw, 60px)`. The supporting Bricolage line uses weight (500), fluid desktop size (24-32px), then (26px) and (24px). The legal display retains its separate heavy (750), fluid (48-80px) role.
-- **Headline:** home section messages use the frontmatter role. Contact uses a fluid (48-76px) range. Team headings use weight (650) and fluid (36-52px) sizing.
-- **Title:** portfolio names use title. Service headings use pillar-title at weight (600), stepping to (30px) at (700px) and (32px) at (500px). Method, capability, and smaller headings keep the established contextual (23-26px) family.
+- **Display:** the frontmatter role describes the desktop alien headline. At and below (1100px), it uses `clamp(60px, 7.3vw, 80px)`; at (700px), `clamp(46px, 11.8vw, 72px)`; and at (500px), `clamp(42px, 11.8vw, 60px)`. The legal display uses weight (700) and a fluid (48-80px) role.
+- **Editorial emphasis:** the supporting hero phrase uses the italic editorial-emphasis role, stepping to (26px) and (24px) at the existing breakpoints. Emphasized phrases on the privacy route also use Newsreader Italic (400).
+- **Headline:** home section messages use the frontmatter role. Contact uses a fluid (48-76px) range. Team headings use weight (700) and fluid (36-52px) sizing.
+- **Title:** portfolio names use title. Service headings use pillar-title at weight (700), stepping to (30px) at (700px) and (32px) at (500px). Method, capability, and smaller headings keep the established contextual (23-26px) family.
 - **Body:** default reading text uses body; project, method, FAQ, and capability explanations use body-support; compact explanations and status use body-compact. Hero copy uses (17px), then (16px) at (1000px). Reading measures include hero (36ch desktop), service summaries (52ch), concepts (50ch), and legal introduction (65ch).
-- **Controls:** primary actions retain the button role, and form values use input. Masthead text links are regular Plex at (14px); action links retain their stronger interface weight. Native service summaries use (14px) and section disclosures use (16px), with minimum targets (44px). Labels use label; publication status and consent use metadata. Compact spatial controls retain their regular (12px) role and line-height (1.4).
+- **Controls:** primary actions retain the button role, and form values use input. Masthead text links are regular Plex Sans at (14px); action links retain their stronger interface weight. Native service summaries use (14px) and section disclosures use (16px), with minimum targets (44px). Form labels use label; publication status uses mono data while consent remains sans metadata. Compact spatial controls retain their regular (12px) role and line-height (1.4).
 - **Small print:** informational captions use regular Plex (13px). Decorative concept canvases contain miniature artwork lettering; the footer retains its compact legal line (11px). These are not defaults for new body copy or controls.
 
 ### Named Rules
 
-**The Expressive Head, Quiet Body Rule.** Use Bricolage for the message and Plex for explanation, navigation, and controls. Keep complete word boundaries at narrow widths.
+**The Expressive Head, Quiet Body Rule.** Use Radio Canada Big for headings, Plex Sans for reading and actions, Plex Mono for the descriptor and labels/data, and Newsreader Italic for editorial emphasis. Keep complete word boundaries at narrow widths.
 
 ## Layout
 
@@ -286,6 +312,10 @@ Dividers mix active ink at (16%) with transparency; field borders strengthen tha
 
 ## Components
 
+### Brand Signatures
+
+The LPM initials and inclined outline are one exact vector drawing, never typeset lettering or a separately redrawn contour. Shared signatures consume `public/brand/lpm-logo.svg`; preserve its (1154:752) viewBox and aspect ratio. Horizontal navigation pairs a (96px) symbol with the Medium mono descriptor, separated by a fine vertical rule. At and below (700px), navigation hides the descriptor for the compact signature. The footer uses the stacked signature with a (170px) symbol and the full descriptor beneath. The combined-service center and television test card use the same canonical symbol. The supplied profile PNG is retained unchanged for image-based brand uses; favicon derivatives and the link preview follow these current assets and fonts.
+
 ### Buttons
 
 Confident, readable actions with restrained color changes.
@@ -315,7 +345,7 @@ Visible labels sit above fields with a gap (8px). Fields use the active surface,
 
 The home navigation now uses a compact, frameless television masthead, superseding the earlier home-island layout and glass treatment. It sits at the top edge, spans the viewport, and overlays the hero transparently with the cobalt logo and fixed pale links in either appearance. The existing dark field applies after scrolling or while the station menu is open. Redundant compact channel metadata is hidden in the masthead; the full-screen index keeps its numbered destinations. Its inner layout is uncapped and follows the shared fluid page gutters, with minimum height (92px); below (700px), height becomes (80px) with (20px) gutters. Links and controls retain minimum targets (44px). Main links use regular Plex Sans; station-index channel numbers and television labels use Plex Mono. Hover and active links gain a fine underline. The masthead retains the shared dark focus outline and pale halo; the station index uses a sky outline (2px), offset (5px).
 
-The menu opens a full-screen dark station index with large Bricolage section links, numbered channels, direct WhatsApp access, and an optional power-on replay. A geometric (4:3) television test card previews the focused or hovered channel beside the links; it is decorative and hides below (700px). At (1000px), the masthead's inline links yield to the menu control. Opening focuses the active channel, keeps background content inert, and contains keyboard focus in the masthead and index. Escape and the menu control close it and restore control focus; choosing a destination closes it and focuses the destination heading for menu or keyboard navigation.
+The menu opens a full-screen dark station index with large Radio Canada Big section links, numbered channels, direct WhatsApp access, and an optional power-on replay. A geometric (4:3) television test card previews the focused or hovered channel beside the links; it is decorative and hides below (700px). At (1000px), the masthead's inline links yield to the menu control. Opening focuses the active channel, keeps background content inert, and contains keyboard focus in the masthead and index. Escape and the menu control close it and restore control focus; choosing a destination closes it and focuses the destination heading for menu or keyboard navigation.
 
 Channels remain real section anchors in the continuous page. Active links expose `aria-current="location"`, and a polite status announces a selected destination. Enhancement preserves destination hashes and browser history; without JavaScript, the regular links remain visible in flow. System preference sets the initial appearance; explicit light/dark choices persist and apply before content paint.
 
@@ -359,7 +389,7 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 
 ### Do:
 
-- **Do** preserve the L/ and LPM logo, fixed cobalt/sky artwork, and separate active theme roles.
+- **Do** use the supplied inseparable LPM vector and approved type roles, preserving fixed cobalt/sky artwork and separate active theme roles.
 - **Do** carry the gaze into optical geometry instead of relying on the portrait alone.
 - **Do** pair expressive headings with readable Plex copy, bounded measures, native disclosures, and open content groups.
 - **Do** keep the complete system readable in both perspective states and preserve live content without motion or JavaScript; the alien's fallback is a blank black image area.
