@@ -1,0 +1,45 @@
+.floating-whatsapp[data-floating-whatsapp],
+.floating-whatsapp[data-floating-whatsapp]:hover {
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  transition: none;
+}
+/* Expand the native link target only after hover has activated following. */
+.floating-whatsapp[data-splash-state='active']::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 192px;
+  height: 192px;
+  transform: translate(-50%, -50%);
+  clip-path: circle(50%);
+}
+.whatsapp-visual {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  border-radius: 50%;
+}
+.whatsapp-visual > svg { pointer-events: none; }
+.whatsapp-splash path { pointer-events: visiblePainted; }
+.floating-whatsapp .whatsapp-splash {
+  position: absolute;
+  left: -14.2857%;
+  top: -14.2857%;
+  width: 128.5714%;
+  height: 128.5714%;
+  max-width: none;
+  overflow: visible;
+  fill: #1536f1;
+  filter: drop-shadow(0 6px 11px rgba(17, 19, 24, .2));
+}
+.floating-whatsapp:hover .whatsapp-splash { fill: #284bff; }
+.whatsapp-visual > svg:last-child { position: relative; }
+@media (forced-colors: active) {
+  .floating-whatsapp .whatsapp-splash { fill: ButtonFace; stroke: ButtonText; stroke-width: 1; filter: none; }
+  .floating-whatsapp { color: LinkText; }
+}
