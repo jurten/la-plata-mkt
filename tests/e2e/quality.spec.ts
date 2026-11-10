@@ -188,7 +188,7 @@ test('la composición móvil no desborda y el menú funciona con teclado', async
   }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport);
 
-  const capabilitiesHeading = page.locator('#capacidades h2');
+  const capabilitiesHeading = page.locator('#capacidades > summary');
   const headingWidth = await capabilitiesHeading.evaluate((element) => ({
     client: element.clientWidth,
     scroll: element.scrollWidth,

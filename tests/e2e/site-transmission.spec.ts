@@ -203,14 +203,37 @@ test('en móvil el rayo sigue el toque sin retener el scroll y queda dentro del 
   const surface = hero.locator('[data-site-transmission]');
   await expect(surface).toHaveAttribute('data-transmission-state', 'running');
   await expectHeroBounds(hero, surface);
+  const portrait = hero.locator('[data-spatial-portrait]');
+  await portrait.scrollIntoViewIfNeeded();
+  const portraitBox = (await portrait.boundingBox())!;
+  const point = { x: portraitBox.x + portraitBox.width / 2, y: portraitBox.y + portraitBox.height / 2 };
+  const initialScroll = await page.evaluate(() => scrollY);
   const cdp = await context.newCDPSession(page);
-  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 180, y: 350 }] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point] });
   await expect(surface).toHaveAttribute('data-beam', 'active');
-  for (const y of [310, 260, 210, 160]) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 180, y }] });
+  for (const distance of [40, 90, 140, 190]) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: point.x, y: point.y - distance }] });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect(surface).toHaveAttribute('data-beam', 'inactive');
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(40);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(initialScroll + 40);
   await expectHeroBounds(hero, surface);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
   await context.close();
+});
+
+test('el CRT cubre también el lado del texto y la barra comienza transparente', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const surface = page.locator('[data-site-transmission]');
+  await expect(surface).toHaveAttribute('data-transmission-state', 'running');
+  const copy = (await page.locator('.hero-copy').boundingBox())!;
+  await expect(surface).toHaveCSS('clip-path', 'none');
+  await expect(page.locator('.television-nav')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await expect.poll(() => surface.locator('canvas').evaluate(element => {
+    const canvas = element as HTMLCanvasElement;
+    const pixels = canvas.getContext('2d')!.getImageData(0, 0, Math.min(100, canvas.width), Math.min(100, canvas.height)).data;
+    return pixels.some((value, index) => index % 4 === 3 && value > 0);
+  })).toBe(true);
+  await page.mouse.move(copy.x + copy.width / 2, copy.y + copy.height / 2);
+  await expect(surface).toHaveAttribute('data-beam', 'active');
+  await expect(page.locator('.hero .button-primary')).toBeVisible();
 });

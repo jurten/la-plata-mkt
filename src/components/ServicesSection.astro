@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  capabilities: readonly (readonly [string, readonly string[]])[];
+  solutionPaths: { title: string; question: string; tags: string[]; action: string }[];
+  whatsappHref: string;
+}
+const { capabilities, solutionPaths, whatsappHref } = Astro.props;
+---
+<section class="pillars-section alien-pillars" id="soluciones" aria-labelledby="pillars-title">
+  <div class="wrap">
+    <header class="section-head"><h2 id="pillars-title" class="display">Miramos distinto.<br /><span class="text-muted">Conectamos todo.</span></h2><p>Comunicación, marketing y tecnología.<br />Cada parte, al servicio de tu negocio.</p></header>
+    <div class="pillars">
+      <article class="pillar pillar-marketing">
+        <div class="pillar-art marketing-art" aria-hidden="true"><span class="communication-eye"><span>Aa</span></span></div>
+        <div class="pillar-copy"><h3>Comunicación y marketing.</h3><p>Una presencia que te representa. Campañas que generan consultas.</p><details class="service-disclosure"><summary>Ver servicios <Icon name="plus" /></summary><ul class="service-list"><li>Contenido y presencia digital</li><li>Meta Ads y campañas</li><li>Medición y optimización</li></ul><a class="inline-link" href={whatsappHref}>Mejorar mi presencia <Icon /></a></details></div>
+      </article>
+      <article class="pillar pillar-technology">
+        <div class="pillar-art technology-art" aria-hidden="true"><span class="technology-eye"><Icon name="code" /></span></div>
+        <div class="pillar-copy"><h3>Tecnología.</h3><p>Webs y herramientas que hacen más simple tu día a día.</p><details class="service-disclosure"><summary>Ver servicios <Icon name="plus" /></summary><ul class="service-list"><li>Web, landing pages y ecommerce</li><li>CRM, integraciones y turnos</li><li>Automatización de procesos</li><li>Mantenimiento y modernización</li></ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></details></div>
+      </article>
+      <article class="pillar pillar-combined">
+        <div class="pillar-art combined-art" aria-hidden="true"><span class="combine-eye eye-one"></span><span class="combine-eye eye-two"></span><span class="combined-center">L/</span></div>
+        <div class="pillar-copy"><h3>La conexión entre ambas.</h3><p>Del primer clic al seguimiento. Las piezas, trabajando juntas.</p><details class="service-disclosure"><summary>Ver cómo se conectan <Icon name="plus" /></summary><ul class="service-list"><li>Estrategia y diagnóstico</li><li>Sistemas comerciales</li><li>Diseño de procesos</li></ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></details></div>
+      </article>
+    </div>
+    <details class="section-disclosure capabilities-section" id="capacidades"><summary><h3>Todas las capacidades</h3><Icon name="plus" /></summary><div class="capability-grid">{capabilities.map(([title, items]) => <article class="capability"><h4>{title}</h4><ul>{items.map(item => <li>{item}</li>)}</ul></article>)}</div></details>
+    <details class="section-disclosure"><summary><span>¿Por dónde empezamos?</span><Icon name="plus" /></summary><div class="solution-paths" aria-label="Tres maneras de empezar">{solutionPaths.map(path => <article class="solution-path"><div><h3>{path.title}</h3><p>{path.question}</p></div><div class="path-details"><div class="tags">{path.tags.map(tag => <span>{tag}</span>)}</div><a href={whatsappHref} class="inline-link">{path.action} <Icon /></a></div></article>)}</div></details>
+  </div>
+</section>

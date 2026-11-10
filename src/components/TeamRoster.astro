@@ -147,10 +147,10 @@ const teamDisciplines = [
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     gap: clamp(48px, 7vw, 132px);
     margin-top: clamp(88px, 10vw, 160px);
-    padding: clamp(28px, 3vw, 52px);
-    border-radius: 20px;
-    background: #020307;
-    color: #eef2ff;
+    padding: 48px 0 0;
+    border-top: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
   }
 
   .team-roster__sticky {
@@ -159,26 +159,26 @@ const teamDisciplines = [
     display: grid;
     align-content: space-between;
     align-self: start;
-    min-height: min(68vh, 680px);
+    min-height: min(58vh, 560px);
   }
 
   .team-roster__heading h3 {
     max-width: 8.5ch;
     font-family: var(--display);
-    font-size: clamp(40px, 4.6vw, 64px);
-    font-weight: 750;
+    font-size: clamp(36px, 3.8vw, 52px);
+    font-weight: 650;
     line-height: 0.98;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.035em;
   }
 
   .team-roster__heading h3 span {
-    color: #b7d7ee;
+    color: var(--muted);
   }
 
   .team-roster__heading > p {
     max-width: 45ch;
     margin-top: 28px;
-    color: #b5c3df;
+    color: var(--muted);
     font-size: 15px;
   }
 
@@ -196,7 +196,7 @@ const teamDisciplines = [
     aspect-ratio: 1;
     place-items: center;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: var(--radius);
     background: #1536f1;
     isolation: isolate;
   }
@@ -262,12 +262,12 @@ const teamDisciplines = [
     width: 18%;
     aspect-ratio: 1;
     border-radius: 50%;
-    background: #f4c430;
+    background: #b7d7ee;
   }
 
   .team-roster__description {
     max-width: 34ch;
-    color: #b5c3df;
+    color: var(--muted);
     font-size: 14px;
   }
 
@@ -280,27 +280,27 @@ const teamDisciplines = [
   .team-roster__item {
     position: relative;
     display: grid;
-    min-height: clamp(154px, 20vh, 210px);
+    min-height: clamp(140px, 17vh, 180px);
     align-content: center;
     padding: 28px 0 28px clamp(76px, 7vw, 136px);
-    border-bottom: 1px solid rgba(238, 242, 255, 0.22);
-    color: #b5c3df;
-    opacity: 0.55;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    opacity: 1;
     transition: color 280ms var(--motion-ease-out), opacity 280ms var(--motion-ease-out);
   }
 
   .team-roster__item:first-child {
-    border-top: 1px solid rgba(238, 242, 255, 0.22);
+    border-top: 1px solid var(--line);
   }
 
   .team-roster__item.is-active {
-    color: #eef2ff;
+    color: var(--blue-text);
     opacity: 1;
   }
 
   .team-roster__item h4 {
     font-family: var(--display);
-    font-size: clamp(40px, 4.6vw, 64px);
+    font-size: clamp(32px, 3.6vw, 52px);
     font-weight: 650;
     line-height: 0.92;
     letter-spacing: -0.04em;
@@ -312,7 +312,7 @@ const teamDisciplines = [
     top: 50%;
     left: 0;
     width: clamp(64px, 6vw, 116px);
-    color: #b5c3df;
+    color: var(--muted);
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -344,9 +344,8 @@ const teamDisciplines = [
   @media (max-width: 760px) {
     .team-roster {
       display: block;
-      margin-inline: calc(var(--page-gutter) * -0.5);
-      padding: 36px 20px;
-      border-radius: 16px;
+      margin-inline: 0;
+      padding: 36px 0 0;
     }
 
     .team-roster__sticky {
@@ -375,12 +374,12 @@ const teamDisciplines = [
     .team-roster__item {
       min-height: 0;
       padding: 28px 0;
-      color: #eef2ff;
+      color: var(--ink);
       opacity: 1;
     }
 
     .team-roster__item h4 {
-      font-size: clamp(40px, 10vw, 52px);
+      font-size: clamp(32px, 9vw, 44px);
       text-wrap: balance;
     }
 
@@ -388,7 +387,7 @@ const teamDisciplines = [
       position: static;
       width: auto;
       margin-bottom: 8px;
-      color: #91a5ff;
+      color: var(--blue-text);
       transform: none;
     }
 
@@ -396,7 +395,7 @@ const teamDisciplines = [
       display: block;
       max-width: 46ch;
       margin-top: 14px;
-      color: #b5c3df;
+      color: var(--muted);
       font-size: 14px;
     }
   }
@@ -404,7 +403,7 @@ const teamDisciplines = [
   @media (max-width: 430px) {
     .team-roster {
       margin-inline: 0;
-      padding-inline: 18px;
+      padding-inline: 0;
     }
   }
 

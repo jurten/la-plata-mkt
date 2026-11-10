@@ -4,6 +4,7 @@ dist/
 playwright-report/
 test-results/
 artifacts/
+.impeccable/review/
 .env
 .env.*
 !.env.example

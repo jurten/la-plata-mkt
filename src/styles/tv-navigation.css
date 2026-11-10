@@ -53,7 +53,7 @@ html[data-station-open='true'] .television-nav { background: #080e1d; }
 .station-links a:is(:hover, :focus-visible, [aria-current='location']) > span:nth-child(2) { color: #b7d7ee; transform: translateX(8px); }
 .station-links a:is(:hover, :focus-visible, [aria-current='location']) > .icon { opacity: 1; transform: none; }
 .station-preview { align-self: center; }
-.station-screen { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid #b5c3df; border-radius: 24px; color: #b7d7ee; background: #020307; }
+.station-screen { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid #b5c3df; border-radius: var(--radius); color: #b7d7ee; background: #020307; }
 .station-screen-top, .station-screen-bottom { position: absolute; z-index: 1; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; color: #b5c3df; font: 400 10px/1.4 'IBM Plex Mono', monospace; }
 .station-screen-top { top: 17px; }
 .station-screen-bottom { bottom: 17px; }

@@ -50,6 +50,7 @@ The current information must be preserved. Reorganizing information into the thr
 - The user supplied DMCG, Mobbin, Pear, and Mac Moss Studio as references.
 - One purposeful signature interaction, with restrained transitions elsewhere. An expanded perspective should communicate the connection between the three pillars.
 - Use the existing approach and method as the basis for About.
+- The 2026-11-09 refinement preserves the blue 3D alien, hero CRT interference, neon clearing ray, native retro cursor, and television channel menu. The user rejected a redesign that removed that identity. Zentry informs hierarchy and restraint within the established world; it does not authorize replacing the brand or adding commercial claims.
 
 ## Evidence on Hand
 

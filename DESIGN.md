@@ -17,10 +17,8 @@ colors:
   fixed-ink: '#eef3ff'
   fixed-muted: '#b5c3df'
   nav-surface: '#0b1123'
-  union-surface: '#070c1b'
   system-node: '#0c142b'
   aperture: '#102355'
-  signal: '#f4c430'
   error: '#a62828'
   dark-bg: '#060917'
   dark-surface: '#0c142a'
@@ -35,15 +33,15 @@ typography:
   display:
     fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
     fontSize: clamp(68px, 7.2vw, 96px)
-    fontWeight: 750
+    fontWeight: 650
     lineHeight: 0.98
-    letterSpacing: -0.04em
+    letterSpacing: -0.035em
   headline:
     fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
     fontSize: clamp(40px, 4.6vw, 64px)
-    fontWeight: 750
-    lineHeight: 1.02
-    letterSpacing: -0.04em
+    fontWeight: 650
+    lineHeight: 1.04
+    letterSpacing: -0.035em
   title:
     fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
     fontSize: 36px
@@ -52,8 +50,8 @@ typography:
     letterSpacing: -0.03em
   pillar-title:
     fontFamily: Bricolage Grotesque Variable, Arial Narrow, sans-serif
-    fontSize: 38px
-    fontWeight: 650
+    fontSize: clamp(30px, 3vw, 44px)
+    fontWeight: 600
     lineHeight: 1.1
     letterSpacing: -0.03em
   title-small:
@@ -85,6 +83,11 @@ typography:
   navigation:
     fontFamily: IBM Plex Sans, Arial, sans-serif
     fontSize: 14px
+    fontWeight: 400
+    lineHeight: 1.55
+  navigation-action:
+    fontFamily: IBM Plex Sans, Arial, sans-serif
+    fontSize: 14px
     fontWeight: 600
     lineHeight: 1.55
   button:
@@ -102,20 +105,12 @@ typography:
     fontSize: 12px
     fontWeight: 400
     lineHeight: 1.55
-  spatial-control:
-    fontFamily: IBM Plex Sans, Arial, sans-serif
-    fontSize: 12px
-    fontWeight: 400
-    lineHeight: 1.4
 rounded:
   canvas: 4px
-  concept-label: 6px
-  field: 8px
-  control: 10px
-  small: 12px
-  surface: 16px
-  chapter: 20px
-  navigation: 24px
+  field: 4px
+  control: 8px
+  small: 8px
+  surface: 8px
   circle: 50%
 spacing:
   xs: 8px
@@ -132,7 +127,7 @@ spacing:
   major: 64px
   chapter: 80px
   dark-chapter: 88px
-  section: clamp(80px, 9vw, 144px)
+  section: clamp(88px, 9vw, 144px)
 components:
   button-primary:
     backgroundColor: '{colors.blue}'
@@ -160,26 +155,24 @@ components:
   nav-cta:
     backgroundColor: '{colors.blue}'
     textColor: '#fff'
-    typography: '{typography.navigation}'
+    typography: '{typography.navigation-action}'
     rounded: '{rounded.small}'
     padding: 10px 16px
   input:
-    backgroundColor: '{colors.bg}'
+    backgroundColor: '{colors.surface}'
     textColor: '{colors.ink}'
     typography: '{typography.input}'
     rounded: '{rounded.field}'
     padding: 12px 14px
   concept-label:
     backgroundColor: transparent
-    textColor: '{colors.muted}'
+    textColor: '{colors.blue-text}'
     typography: '{typography.metadata}'
-    rounded: '{rounded.concept-label}'
-    padding: 4px 9px
+    padding: 0
   form-surface:
-    backgroundColor: '{colors.surface}'
+    backgroundColor: transparent
     textColor: '{colors.ink}'
-    rounded: '{rounded.surface}'
-    padding: 36px
+    padding: 32px 0 0
   perspective-choice:
     backgroundColor: transparent
     textColor: '#c2ceea'
@@ -189,14 +182,6 @@ components:
   perspective-choice-selected:
     backgroundColor: '{colors.brand-cobalt}'
     textColor: '#fff'
-  spatial-control:
-    backgroundColor: rgba(5, 9, 20, .88)
-    textColor: '#e5edff'
-    typography: '{typography.spatial-control}'
-    rounded: '{rounded.small}'
-    padding: 8px 14px
-  spatial-control-hover:
-    backgroundColor: '#172743'
 ---
 
 # Design System: La Plata Marketing
@@ -205,17 +190,20 @@ components:
 
 **Creative North Star: "Otra perspectiva"**
 
-An unfamiliar blue gaze expresses a different way of understanding real client problems. The live opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin and an old CRT transmission treatment confined to the hero. Black brand fields, decisive typography, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; the image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the existing L/ and LPM logo treatment.
+An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the L/ and LPM logo, native retro cursor, and television channel menu.
 
-The alien supplies mystery; clear Spanish copy, visible services, and direct contact supply confidence. The light appearance uses cold blue-white fields and the dark appearance uses midnight fields. The opening, optical union, and perspective scene keep their fixed dark materials in either appearance. The alien greets once, then follows input by turning its centered head volume. A cyan beam clears the CRT interference near the cursor. The perspective interaction expands attention from a piece to the complete system.
+The alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Bricolage headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.
+
+This refinement is source-observed. Current rendered visual verification is pending; historical screenshots of the rejected design do not verify it. The sidecar is a partial source refresh, not a new computed-style extraction.
 
 **Key Characteristics:**
 
-- The supplied cobalt extraterrestrial with real head volume, hero-scoped chromatic CRT interference, and a cursor-controlled neon clearing beam; no raster alien fallback appears on the homepage.
-- Cold light and midnight reading appearances around fixed black brand fields.
-- Bricolage messages with quiet Plex explanations and controls.
-- Eye-shaped apertures, two disciplines plus their visible union, and open editorial groups.
-- Purposeful perspective and 3D-alien interactions; live copy, actions, and the complete service journey remain available without animation.
+- The supplied cobalt 3D extraterrestrial, hero-scoped CRT collapse, and cursor-controlled neon clearing ray; no raster alien fallback on the homepage.
+- Continuous cold-light and midnight reading fields around fixed black brand objects.
+- Bricolage messages at weight (650), quiet Plex explanations, and native disclosures for detail.
+- Eye-shaped apertures, three open service rows, consistent preview frames, and a clear contact path.
+- Native retro cursors and a numbered station index preserve the established retro identity.
+- Purposeful interactions with readable live content, direct actions, and accessible static behavior.
 
 ## Colors
 
@@ -224,7 +212,7 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 ### Primary
 
 - **Cobalt action** (`blue`, `blue-strong`): theme-aware filled controls and hover. **Cobalt text** (`blue-text`) is independently lightened for dark-mode links.
-- **Encounter cobalt** (`brand-cobalt`, `brand-cobalt-hover`): fixed artwork, opening action, perspective selection, contact chapter, and floating contact. The contact chapter remains cobalt; its large WhatsApp action is pale with dark text.
+- **Encounter cobalt** (`brand-cobalt`, `brand-cobalt-hover`): fixed artwork, opening action, perspective selection, team signal, and floating contact. Contact shares the active reading field and uses a theme-aware cobalt WhatsApp action.
 
 ### Secondary
 
@@ -232,19 +220,18 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 
 ### Tertiary
 
-- **Signal yellow** (`signal`): a small concept-art accent and text selection.
 - **Error red** (`error`, `dark-error`): validation and failed-submission feedback.
 
 ### Neutral
 
 - **Cold reading field** (`bg`), **blue-white surface** (`surface`), **midnight ink** (`ink`), and **quiet slate** (`muted`) form the light appearance. Their `dark-` counterparts form the midnight appearance.
 - **Encounter black** (`night`) and **on-night** are the dark editorial field and reading roles; the latter has a dark counterpart.
-- **Fixed pale ink** (`fixed-ink`) and **fixed slate** (`fixed-muted`) support the home header, union, and perspective scene. Navigation, union, node, and aperture colors are distinct dark tonal layers.
-- Components consume active CSS roles. Fixed brand artwork remains independent. Unused pulse and theme-specific signal/sky declarations are not normative visual roles.
+- **Fixed pale ink** (`fixed-ink`) and **fixed slate** (`fixed-muted`) support the home header, union, and perspective scene. Navigation, node, and aperture colors are distinct dark tonal layers.
+- Components consume active CSS roles. Fixed brand artwork remains independent. Unused pulse and signal declarations are not normative visual roles. Homepage selection uses cobalt with white text; yellow is not a decorative accent in the current refinement.
 
 ### Named Rules
 
-**The Fixed Encounter Rule.** Keep the portrait opening and optical brand fields dark in both appearances. Theme changes apply to reading surfaces and active control roles.
+**The Fixed Encounter Rule.** Keep the portrait opening and bounded perspective scene dark in both appearances. Theme changes apply to the continuous reading field and active control roles.
 
 **The Two Blues Rule.** Use blue for theme-aware filled actions and blue-text for theme-aware links. Fixed brand artwork uses brand-cobalt and sky, independent of dark-theme overrides.
 
@@ -258,12 +245,12 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 
 ### Hierarchy
 
-- **Display:** the frontmatter role describes the desktop alien headline. It steps to (76px) below (1100px), fluid (56â€“76px) below (1000px), fluid (48â€“72px) below (700px), and fluid (44â€“60px) below (500px). The supporting Bricolage line uses weight (500), desktop size (29px), and line-height (1.2), reducing to (24px) on phones. The legal display follows the same heavy, tight family with a fluid (48â€“80px) range.
-- **Headline:** section messages use the frontmatter role, reducing to (35â€“52px) below the mobile breakpoint. Contact headlines have a separate fluid (52â€“76px) desktop range.
-- **Title:** portfolio names use title; disciplines and their union use pillar-title, stepping through (32px), (28px), and (33px) as the grid changes. Method and smaller headings occupy the observed (23â€“26px) family. This is a contextual hierarchy, not a mathematical scale.
-- **Body:** default reading text uses body; project, method, FAQ, and capability explanations use body-support; compact explanations and status use body-compact. Mobile hero copy uses (16px). Reading measures include hero (42ch desktop), pillar (51ch), concept (52ch), about (48ch), and legal introduction (65ch).
-- **Controls:** navigation and inline actions use navigation; primary actions use button; form values use input. Labels use label; concept status, scope, and consent use metadata. The distinct (14px), (15px), and (16px) interface roles are intentional. Compact spatial controls use their own regular (12px) role with line-height (1.4).
-- **Small print:** informational captions also use regular Plex (13px). Decorative concept canvases contain miniature artwork lettering; the footer retains a compact legal line (11px). These are not defaults for new body copy or controls.
+- **Display:** the frontmatter role describes the desktop alien headline. At and below (1100px), it uses `clamp(60px, 7.3vw, 80px)`; at (700px), `clamp(46px, 11.8vw, 72px)`; and at (500px), `clamp(42px, 11.8vw, 60px)`. The supporting Bricolage line uses weight (500), fluid desktop size (24-32px), then (26px) and (24px). The legal display retains its separate heavy (750), fluid (48-80px) role.
+- **Headline:** home section messages use the frontmatter role. Contact uses a fluid (48-76px) range. Team headings use weight (650) and fluid (36-52px) sizing.
+- **Title:** portfolio names use title. Service headings use pillar-title at weight (600), stepping to (30px) at (700px) and (32px) at (500px). Method, capability, and smaller headings keep the established contextual (23-26px) family.
+- **Body:** default reading text uses body; project, method, FAQ, and capability explanations use body-support; compact explanations and status use body-compact. Hero copy uses (17px), then (16px) at (1000px). Reading measures include hero (36ch desktop), service summaries (52ch), concepts (50ch), and legal introduction (65ch).
+- **Controls:** primary actions retain the button role, and form values use input. Masthead text links are regular Plex at (14px); action links retain their stronger interface weight. Native service summaries use (14px) and section disclosures use (16px), with minimum targets (44px). Labels use label; publication status and consent use metadata. Compact spatial controls retain their regular (12px) role and line-height (1.4).
+- **Small print:** informational captions use regular Plex (13px). Decorative concept canvases contain miniature artwork lettering; the footer retains its compact legal line (11px). These are not defaults for new body copy or controls.
 
 ### Named Rules
 
@@ -271,62 +258,62 @@ Cold blue neutrals support reading; cobalt establishes presence and sky opens th
 
 ## Layout
 
-Home compositions use the full viewport width with fluid desktop gutters from (48px) to (80px), then (32px) at and below (1000px) and (20px) at and below (700px). Visual grids and chapter layouts remain uncapped so large displays become part of the composition; individual copy blocks retain readable character measures. The home navigation follows the same viewport gutters. Legal reading content alone caps at (1056px). Minimum page width is (320px); anchor scrolling reserves (120px) above targets.
+Home compositions use the full viewport width with fluid gutters `clamp(24px, 4.2vw, 80px)`. The television masthead separately uses (32px) gutters at (1100px) and (20px) at (700px). Reading sections retain the fluid root gutter in the current cascade. Visual grids remain uncapped; individual copy blocks keep readable measures. Legal reading content alone caps at (1056px). Minimum page width is (320px); anchor scrolling reserves (120px) above targets.
 
-Open editorial pairs alternate message and explanation. The first two disciplines sit side by side; their union spans the grid in a separate dark field. Portfolio uses two unequal columns, method and capabilities use four, and contact pairs a message with an opaque form. Fine dividers organize rows without enclosing ordinary text in cards.
+One continuous theme-aware reading field connects services, the system introduction, portfolio, About/team, contact, and footer. Fine dividers organize content. Services form three open horizontal rows, each pairing a small optical mark with summary and native disclosure. The perspective scene is a bounded black object within the field. Portfolio uses equal columns with matching frames; contact pairs direct actions with the form.
 
-Reading chapters use the fluid section spacing. System and contact chapters use dark-chapter spacing, reducing to (64px) on mobile. Section headings leave (56px) before content, reducing to (36px). The spacing tokens record recurring gaps and padding rather than an invented uniform grid.
+Reading chapters use the frontmatter section spacing. System and contact introduce their content with a fine rule and (64px) inner top space, reducing to (48px) at (700px). Service headings leave (56px), then (36px). Service rows use (36px) vertical padding, then (28px). These are observed contextual relationships, not a uniform grid imposed on every component.
 
-At (1000px), navigation becomes a menu, the seven-stage system becomes vertical, method and capabilities become two columns, and contact becomes one outer column. At (700px), editorial pairs and portfolio stack; the portrait follows opening copy and actions in flow. The union stacks at (700px), while the two disciplines remain paired until (500px). Below (500px), the opening primary action fills its available width. At (430px), form fields and method steps become one column. The (1100px) breakpoint tunes density.
+At (1000px), masthead links yield to the menu, the seven-stage system becomes vertical, method/capabilities use two columns, and contact becomes one outer column. At (760px), the team loses its sticky desktop pairing and each specialty shows its explanation in flow. At (700px), editorial pairs and portfolio stack; the portrait follows opening copy and actions. Service rows retain an optical-mark column until (500px), when their marks sit above the copy and the primary hero action fills its width. At (430px), form fields and method steps become one column. The (1100px) and (1600px) rules tune hero/service density.
 
 ## Elevation & Depth
 
-Tonal layers, physically lit head geometry, and overlapping optical forms carry depth. Editorial groups and form surfaces remain flat. The home header uses dark translucency (rgba(5, 9, 20, .88)) and backdrop blur (20px). Small spatial-portrait controls share that dark fill with blur (16px). The legal header is opaque. Reduced-transparency preference removes both functional blurs and supplies the fixed opaque navigation surface.
+Tonal layers, physically lit head geometry, and optical forms carry depth. Open reading content, service rows, and the transparent form container remain flat. The television masthead is frameless with no shadow or blur; its scrolled field and full-screen index remain dark. The current homepage markup exposes no spatial-portrait control surface; earlier glass-control treatments are historical rather than primitives for new screens.
 
 ### Shadow Vocabulary
 
-- **Home navigation:** `0 12px 36px rgba(0, 0, 0, .16)` separates the fixed-dark foreground.
-- **Shared foreground:** `0 12px 40px rgba(17, 19, 24, 0.09)` lifts the mobile dropdown and shared navigation material.
 - **Floating contact:** `0 6px 22px rgba(17,19,24,.2)` separates the persistent circular action.
+- Legacy shared navigation elevation remains in the base stylesheet but is not the current home masthead treatment.
 
-### Named Rules
-
-**The Functional Glass Rule.** Use translucent material for the home navigation and small spatial-portrait controls. Keep reading, form, and legal-header surfaces opaque; preserve the opaque preference fallback.
 
 ## Shapes
 
-The signature eye uses unequal elliptical corners (78% 18% 78% 18%) and slight rotation. Cobalt and sky eyes overlap in the union; an elliptical clipping field expands the perspective scene. This optical language extends the portrait's gaze while soft rectangles distinguish usable controls.
+The signature eye uses unequal elliptical corners (78% 18% 78% 18%) and slight rotation. The three service marks express communication, technology, and their union within this same optical vocabulary. An elliptical clipping field expands the perspective scene. The irregular clearing ray remains an authored signature, not a shape for ordinary interface containers.
 
-The frontmatter radius scale describes concept canvases and status labels, fields, compact controls, buttons and nodes, reading surfaces, chapter containers, and navigation. Portfolio preview frames use one opposing enlarged corner (76px) within a (20px) frame. Stage markers and floating contact remain circular.
+The common home radius is gently squared (8px): buttons, preview frames, system nodes, and the perspective container share it. Inputs, inset perspective choices, concept canvases, and the small union mark use compact (4px) corners. Open rows, the masthead, publication-status text, and the transparent form container are unboxed. Stage markers and floating contact remain circular.
 
-Dividers mix active ink at (16%) with transparency; field borders strengthen the share to (35%). Fixed-dark fields use pale blue hairlines. Inline SVG icons normally use (21px) size, (1.7) stroke width, and rounded ends/joins. Theme icons use (20px) and (1.6). Logo lettering and the decorative typography specimen are identity/artwork, not an icon font.
+Dividers mix active ink at (16%) with transparency; field borders strengthen that share to (35%). Fixed-dark objects use pale blue hairlines. Inline SVG icons normally use (21px), stroke (1.7), and rounded ends/joins; service disclosure icons use (18px). Theme icons use (20px) and stroke (1.6). Logo lettering and decorative typography remain identity/artwork.
 
 ## Components
 
 ### Buttons
 
-Confident, readable actions with restrained lift.
+Confident, readable actions with restrained color changes.
 
-- Primary and outline variants have minimum height (52px) and internal gap (24px). Hover lifts (2px); primary fill darkens; active returns to rest. Outline hover introduces the active surface.
+- Primary and outline variants have minimum height (52px), padding (14px 22px), and internal gap (24px). Home buttons do not lift on hover; primary fill darkens and outline hover introduces the active surface. The supporting privacy route retains its separate base hover treatment.
 - Text actions remove horizontal padding, use an icon gap (14px), and hover to blue-text. The opening uses fixed pale text with sky hover.
-- Navigation actions have minimum height (44px). The contact WhatsApp action uses pale fill, dark ink, padding (18px 24px), and sky hover. The persistent contact circle is cobalt, sized (56px) desktop and (52px) mobile; it hides while contact is visible.
-- Keyboard focus uses a dark outline (3px), offset (3px), and pale halo (6px). Disabled controls use opacity (.65) and a waiting cursor. Normal state transitions take (180ms); reduced motion removes lift and reduces transitions.
+- Navigation actions keep minimum targets (44px). Shared keyboard focus remains visible; scene and station controls use their specific sky indicators.
+- Contact uses an active cobalt WhatsApp action with white text, direct email, and a labeled form on the same reading field.
+
+### Native Disclosures
+
+Service summaries reveal the existing service lists with native `details`/`summary`, so they remain usable without JavaScript. A blue-text summary and an (18px) plus icon identify the action; opening rotates the icon (45deg) over (180ms). All-capability and starting-path disclosures use full-width, divided rows with minimum height (76px). Preserve content in the HTML and native keyboard behavior.
 
 ### Chips
 
-Concept status is noninteractive evidence metadata: fine border, muted text, no filled promotional background. Its frontmatter token owns padding and shape. Service tags are plain wrapping text.
+Publication status is unboxed blue-text metadata in the current portfolio. Keep the conceptual status visible and noninteractive; it is not an action or decorative badge.
 
 ### Cards / Containers
 
-Project and discipline text stays open. Portfolio imagery carries asymmetric frames around opaque, slightly rotated concept canvases. Captions, scope, and conceptual-work disclosures sit outside the artwork. The combined pillar uses desktop padding (48px), reducing through (36px), (32px), and (28px). Form padding is (36px), then (24px) on mobile and (22px) at the smallest breakpoint; the form has no shadow.
+Ordinary service and team text remains on the continuous reading field. Portfolio frames use the active surface, a fine border, and common radius with (32px) padding, reducing to (24px) at (700px) and (18px) at (500px). The perspective scene is a bounded black container with (32px) padding, then (24px 20px) on mobile. The form container is transparent and square, starting after a fine top rule with (32px) inner top space, then (24px) at (700px); it has no shadow.
 
 ### Inputs / Fields
 
-Visible labels sit above fields with a gap (8px). Fields use active page background, active ink, stronger fine border, and the input type role. Focus changes the border to blue-text and preserves the shared indicator. Textareas resize vertically with minimum height (128px). Keep consent, validation, status, and sending states semantic and visible; errors use the error role.
+Visible labels sit above fields with a gap (8px). Fields use the active surface, active ink, compact field radius, stronger fine border, and the input type role. Focus changes the border to blue-text and preserves the shared indicator. Textareas resize vertically with minimum height (128px). Keep consent, validation, status, and sending states semantic and visible; errors use the error role.
 
 ### Navigation
 
-The home navigation now uses a compact, frameless television masthead, superseding the earlier home-island layout and glass treatment. It sits at the top edge, spans the viewport, and keeps an opaque encounter-black field, cobalt logo, fixed pale links, and quiet channel metadata in either appearance. Its inner layout is uncapped and follows the shared fluid page gutters, with minimum height (92px); below (700px), height becomes (80px) with (20px) gutters. Links and controls retain minimum targets (44px). Main links use Plex Sans; channel numbers and television labels use Plex Mono. Hover and active links gain a fine underline. The masthead retains the shared dark focus outline and pale halo; the station index uses a sky outline (2px), offset (5px).
+The home navigation now uses a compact, frameless television masthead, superseding the earlier home-island layout and glass treatment. It sits at the top edge, spans the viewport, and overlays the hero transparently with the cobalt logo and fixed pale links in either appearance. The existing dark field applies after scrolling or while the station menu is open. Redundant compact channel metadata is hidden in the masthead; the full-screen index keeps its numbered destinations. Its inner layout is uncapped and follows the shared fluid page gutters, with minimum height (92px); below (700px), height becomes (80px) with (20px) gutters. Links and controls retain minimum targets (44px). Main links use regular Plex Sans; station-index channel numbers and television labels use Plex Mono. Hover and active links gain a fine underline. The masthead retains the shared dark focus outline and pale halo; the station index uses a sky outline (2px), offset (5px).
 
 The menu opens a full-screen dark station index with large Bricolage section links, numbered channels, direct WhatsApp access, and an optional power-on replay. A geometric (4:3) television test card previews the focused or hovered channel beside the links; it is decorative and hides below (700px). At (1000px), the masthead's inline links yield to the menu control. Opening focuses the active channel, keeps background content inert, and contains keyboard focus in the masthead and index. Escape and the menu control close it and restore control focus; choosing a destination closes it and focuses the destination heading for menu or keyboard navigation.
 
@@ -350,7 +337,7 @@ Use `grey-alien-head-3d-model.zip` supplied at the project root as the homepage'
 
 One finite (2400ms) greeting runs on first visible initialization and is interrupted by input. It does not replay on resize or re-entry.
 
-The latest user direction confines `SiteTransmission` to the `#inicio` hero and requires full signal collapse, briefly making the alien unrecognizable. Its absolute layer is clipped by the hero and does not continue through reading sections, navigation, or the privacy route. At 24fps, a quieter coherent picture gives way to a (1080ms) failure in each (6800ms) cycle. Three (120ms) broken frames repeat three times, then the coherent view returns in one frame. The cycle also has a (600ms) tracking phase.
+The latest user direction confines `SiteTransmission` to the `#inicio` hero and requires full signal collapse, briefly making the alien unrecognizable. Its absolute layer fills the whole hero, including the text-side background, with no portrait-only clipping. The transparent top masthead lets that continuous scene show through. It does not continue beyond the hero into reading sections or the privacy route. This restores the user-confirmed full-width effect after the rejected portrait-only crop. At 24fps, a quieter coherent picture gives way to a (1080ms) failure in each (6800ms) cycle. Three (120ms) broken frames repeat three times, then the coherent view returns in one frame. The cycle also has a (600ms) tracking phase.
 
 `signal-pass.ts` caches the actual 3D scene in a `WebGLRenderTarget` and presents it through a full-screen `ShaderMaterial`. Eleven explicit UV bands enlarge, mirror, compress, and relocate distant parts of that rendered frame, with RGB splitting and tracking jumps. The former SVG backdrop-filter path is removed: Firefox can ignore SVG URL backdrop filters, as documented in [Mozilla bug 1961378](https://bugzilla.mozilla.org/show_bug.cgi?id=1961378). The target uses half-float color when supported, otherwise unsigned-byte color; tone mapping and output color conversion happen once in the final shader.
 
@@ -358,9 +345,9 @@ Signal-only changes reuse the cached scene without redrawing the 3D mesh. The ou
 
 A cyan ion rim surrounds a fully clear irregular hole. The ray keeps half the original base diameter. Twelve random radial anchors, amplified folds and overlapping lobes produce a more extreme organic contour using cubic B-splines in angle and time. All light follows the neon ring as a cobalt/cyan corona; there is no vertical shaft. Target intervals are 1100ms instead of 440ms, reducing morph speed by 60%, sampled into a 192-point contour. The same 192 radii map the hero-space aperture into the portrait shader and remove the 2D static; all beam light stays outside the hole, with the hero's CSS clipping containing both layers. The beam's core is pixel-identical to disabling the effect.
 
-The interference pause control stays inside the hero and synchronizes with the alien control. Pause removes interference and freezes the head. Intersection observers suspend the transmission and head when their regions leave view; the head also stops drawing when settled. Hidden pages suspend both, and reduced motion stops animation. Forced colors hides the CRT layer and its control. Reduced motion, absent JavaScript, loading, unavailable graphics, and failed alien assets leave a blank black image area with live text and actions intact; never substitute a raster alien. Initial reduced motion requests no 3D scene, model, maps, or WebGL context.
+The scripts retain a shared pause-event listener that removes interference and freezes the head. The current markup has no visible pause control or dispatcher; earlier descriptions of that control are historical and this source drift is not canonized as an approved removal. Intersection observers suspend the transmission and head when their regions leave view; the head also stops drawing when settled. Hidden pages suspend both, and reduced motion stops animation. Forced colors hides the CRT layer. Reduced motion, absent JavaScript, loading, unavailable graphics, and failed alien assets leave a blank black image area with live text and actions intact; never substitute a raster alien. Initial reduced motion requests no 3D scene, model, maps, or WebGL context.
 
-Desktop places the head to the right of live copy; mobile centers it below the opening actions. Validate responsive framing, detailed cobalt skin, readable dark eyes, clean anatomy during turns, and stable text/actions. Original-image pixel equivalence is a retired depth-reconstruction check. Touch preserves vertical pan and pinch zoom, and optional secure-context orientation permission is requested only on the explicit inclination action. The existing glass controls and native pixel cursor remain.
+Desktop places the head to the right of live copy; mobile centers it below the opening actions. Validate responsive framing, detailed cobalt skin, readable dark eyes, clean anatomy during turns, and stable text/actions. Original-image pixel equivalence is a retired depth-reconstruction check. Touch preserves vertical pan and pinch zoom. The current controller supports pointer/touch input but exposes no device-tilt action; the earlier inclination-control description is historical. The native pixel cursor remains.
 
 ### Native Pixel Cursor
 
@@ -374,10 +361,11 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 
 - **Do** preserve the L/ and LPM logo, fixed cobalt/sky artwork, and separate active theme roles.
 - **Do** carry the gaze into optical geometry instead of relying on the portrait alone.
-- **Do** pair expressive headings with readable Plex copy, bounded measures, and open content groups.
+- **Do** pair expressive headings with readable Plex copy, bounded measures, native disclosures, and open content groups.
 - **Do** keep the complete system readable in both perspective states and preserve live content without motion or JavaScript; the alien's fallback is a blank black image area.
 - **Do** preserve visible labels, consent, status feedback, keyboard focus, and direct WhatsApp access.
 - **Do** label illustrative portfolio work as conceptual until client material is approved for publication.
+- **Do** keep common home corners at (8px), fields at (4px), and reading chapters on one theme-aware field.
 - **Do** scope the native pixel cursor to fine hover pointers and preserve editing, waiting, disabled, and forced-colors affordances.
 
 ### Don't:
@@ -385,6 +373,7 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 - **Don't** restore the retired warm-paper editorial world when extending this identity.
 - **Don't** add fake telemetry, arbitrary coordinates, starfields, terminal styling, sound, cursor followers, trails, `cursor: none`, or hijacked scrolling.
 - **Don't** apply glass to reading or form surfaces.
+- **Don't** reintroduce decorative yellow, tilted service cards, or unrelated colored chapters into this approved refinement.
 - **Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, hero-scoped CRT interference, perspective scene, and finite television power-on/channel transitions.
 - **Don't** present concept imagery as approved client projects, results, or testimonials.
 - **Don't** promote miniature text inside decorative concept artwork into a reading or control type role.

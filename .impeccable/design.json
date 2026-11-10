@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-30T15:26:38.375348+00:00",
+  "generatedAt": "2026-11-10T00:55:37.454194+00:00",
   "title": "Design System: La Plata Marketing",
   "extensions": {
     "colorMeta": {
@@ -214,20 +214,6 @@
           "oklch(0.9500 0.0382 268.52)"
         ]
       },
-      "union-surface": {
-        "role": "neutral",
-        "displayName": "Union Surface",
-        "tonalRamp": [
-          "oklch(0.1500 0.0331 267.78)",
-          "oklch(0.2643 0.0331 267.78)",
-          "oklch(0.3786 0.0331 267.78)",
-          "oklch(0.4929 0.0331 267.78)",
-          "oklch(0.6071 0.0331 267.78)",
-          "oklch(0.7214 0.0331 267.78)",
-          "oklch(0.8357 0.0331 267.78)",
-          "oklch(0.9500 0.0331 267.78)"
-        ]
-      },
       "system-node": {
         "role": "neutral",
         "displayName": "System Node",
@@ -254,20 +240,6 @@
           "oklch(0.7214 0.0943 265.01)",
           "oklch(0.8357 0.0943 265.01)",
           "oklch(0.9500 0.0943 265.01)"
-        ]
-      },
-      "signal": {
-        "role": "tertiary",
-        "displayName": "Signal Yellow",
-        "tonalRamp": [
-          "oklch(0.1500 0.1598 89.19)",
-          "oklch(0.2643 0.1598 89.19)",
-          "oklch(0.3786 0.1598 89.19)",
-          "oklch(0.4929 0.1598 89.19)",
-          "oklch(0.6071 0.1598 89.19)",
-          "oklch(0.7214 0.1598 89.19)",
-          "oklch(0.8357 0.1598 89.19)",
-          "oklch(0.9500 0.1598 89.19)"
         ]
       },
       "error": {
@@ -426,7 +398,7 @@
       },
       "pillar-title": {
         "displayName": "Pillar Title",
-        "purpose": "The two disciplines and their union."
+        "purpose": "Three open service-row headings: communication/marketing, technology, and their connection."
       },
       "title-small": {
         "displayName": "Title Small",
@@ -450,7 +422,7 @@
       },
       "navigation": {
         "displayName": "Navigation",
-        "purpose": "Navigation, inline actions, and perspective choices."
+        "purpose": "Regular masthead links and perspective choices; action links use navigation-action."
       },
       "button": {
         "displayName": "Button",
@@ -464,22 +436,12 @@
         "displayName": "Metadata",
         "purpose": "Concept status, scope, and consent."
       },
-      "spatial-control": {
-        "displayName": "Spatial Control",
-        "purpose": "Compact pause and optional device-tilt actions over the 3D alien."
+      "navigation-action": {
+        "displayName": "Navigation Action",
+        "purpose": "Stronger masthead and inline action labels."
       }
     },
     "shadows": [
-      {
-        "name": "home-navigation",
-        "value": "0 12px 36px rgba(0, 0, 0, .16)",
-        "purpose": "Fixed-dark home foreground."
-      },
-      {
-        "name": "shared-foreground",
-        "value": "0 12px 40px rgba(17, 19, 24, 0.09)",
-        "purpose": "Shared navigation material and mobile dropdown."
-      },
       {
         "name": "floating-contact",
         "value": "0 6px 22px rgba(17,19,24,.2)",
@@ -490,12 +452,12 @@
       {
         "name": "control-time",
         "value": "180ms",
-        "purpose": "Control color, lift, and disclosure feedback."
+        "purpose": "Control color and disclosure feedback; home buttons do not lift."
       },
       {
         "name": "ease-out",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Action lift and perspective aperture."
+        "purpose": "Perspective aperture and finite interface feedback."
       },
       {
         "name": "perspective-expansion",
@@ -519,28 +481,28 @@
       },
       {
         "name": "alien-yaw-fine",
-        "value": "inputX * 0.38rad",
-        "purpose": "Actual rigged head yaw, with an additional inputX * 0.045rad at the neck."
+        "value": "inputX * 0.32rad",
+        "purpose": "Yaw of the centered supplied alien head volume; no skeletal rig."
       },
       {
         "name": "alien-yaw-coarse",
-        "value": "inputX * 0.28rad",
-        "purpose": "Bounded touch/tilt head yaw on the actual rig, with an additional inputX * 0.045rad at the neck."
+        "value": "inputX * 0.23rad",
+        "purpose": "Bounded touch yaw of the centered supplied alien head volume."
       },
       {
         "name": "alien-pitch-fine",
-        "value": "inputY * 0.11rad",
-        "purpose": "Actual rigged head pitch, with an additional inputY * 0.02rad at the neck."
+        "value": "inputY * 0.10rad",
+        "purpose": "Pitch of the supplied head volume."
       },
       {
         "name": "alien-pitch-coarse",
-        "value": "inputY * 0.11rad",
-        "purpose": "Actual rigged head pitch, with an additional inputY * 0.02rad at the neck."
+        "value": "inputY * 0.10rad",
+        "purpose": "Pitch of the supplied head volume."
       },
       {
         "name": "alien-roll",
-        "value": "-inputX * 0.025rad",
-        "purpose": "Restrained roll on the actual head bone."
+        "value": "-inputX * 0.018rad",
+        "purpose": "Restrained roll of the supplied head volume."
       }
     ],
     "breakpoints": [
@@ -558,13 +520,40 @@
       },
       {
         "name": "discipline-stack",
-        "value": "500px"
+        "value": "500px",
+        "purpose": "Service marks stack above the row copy; narrow capability grid becomes one column."
       },
       {
         "name": "compact-form",
         "value": "430px"
+      },
+      {
+        "name": "team-stack",
+        "value": "760px"
+      },
+      {
+        "name": "wide-density",
+        "value": "1600px"
       }
-    ]
+    ],
+    "documentation": {
+      "mode": "partial-source-refresh",
+      "reviewedOn": "2026-11-09",
+      "previousGeneratedAt": "2026-10-30T15:26:38.375348+00:00",
+      "evidence": [
+        "src/pages/index.astro",
+        "src/components/ServicesSection.astro",
+        "src/components/TeamRoster.astro",
+        "src/styles/alien.css",
+        "src/scripts/site-transmission.ts",
+        "src/styles/site-transmission.css",
+        "src/styles/tv-navigation.css",
+        "src/scripts/alien-spatial.js"
+      ],
+      "validation": "Source-observed refinement. The hero correction has current 1920px, 1440px and 390px captures with the real alien loaded, full-width CRT, and transparent top navigation. This validates the reported hero regression only; complete-page rendered verification remains pending.",
+      "inheritedMetadata": "Existing tonal ramps retained for unchanged colors; they were not re-extracted or remeasured. Unchanged metadata is inherited from the prior sidecar.",
+      "sourceDriftNotCanonized": "Pause listeners remain, but current markup exposes no pause dispatcher or inclination action. Earlier glass-control descriptions are historical, not an approved removal decision."
+    }
   },
   "components": [
     {
@@ -572,7 +561,7 @@
       "kind": "button",
       "description": "Theme-aware filled action; the opening uses fixed encounter cobalt.",
       "html": "<button type=\"button\" class=\"ds-primary\">Hablemos por WhatsApp <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></button>",
-      "css": ".ds-primary{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,12px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);background:var(--blue,#1536f1);color:#fff}.ds-primary svg{width:21px;height:21px}.ds-primary:hover{background:var(--blue-strong,#0d2ccf);transform:translateY(-2px)}.ds-primary:active{transform:translateY(0)}.ds-primary:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-primary:disabled{opacity:.65;cursor:wait}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}.ds-primary:hover{transform:none}}",
+      "css": ".ds-primary{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,8px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);background:var(--blue,#1536f1);color:#fff}.ds-primary svg{width:21px;height:21px}.ds-primary:hover{background:var(--blue-strong,#0d2ccf);transform:none}.ds-primary:active{transform:translateY(0)}.ds-primary:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-primary:disabled{opacity:.65;cursor:wait}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}.ds-primary:hover{transform:none}}",
       "refersTo": "button-primary"
     },
     {
@@ -580,7 +569,7 @@
       "kind": "button",
       "description": "Quiet secondary action on an open reading field.",
       "html": "<button type=\"button\" class=\"ds-outline\">Tengo un proyecto parecido <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></button>",
-      "css": ".ds-outline{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,12px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));background:transparent;color:var(--ink,#0b1430)}.ds-outline svg{width:21px;height:21px}.ds-outline:hover{background:var(--surface,#f8faff);transform:translateY(-2px)}.ds-outline:active{transform:translateY(0)}.ds-outline:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-motion:reduce){.ds-outline{transition:none}.ds-outline:hover{transform:none}}",
+      "css": ".ds-outline{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,8px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));background:transparent;color:var(--ink,#0b1430)}.ds-outline svg{width:21px;height:21px}.ds-outline:hover{background:var(--surface,#f8faff);transform:none}.ds-outline:active{transform:translateY(0)}.ds-outline:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-motion:reduce){.ds-outline{transition:none}.ds-outline:hover{transform:none}}",
       "refersTo": "button-outline"
     },
     {
@@ -588,7 +577,7 @@
       "kind": "button",
       "description": "Directional action without horizontal padding.",
       "html": "<button type=\"button\" class=\"ds-text\">Ver capacidades <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></button>",
-      "css": ".ds-text{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,12px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);justify-content:flex-start;padding-inline:0;gap:14px;background:transparent;color:var(--ink,#0b1430)}.ds-text svg{width:21px;height:21px}.ds-text:hover{color:var(--blue-text,#1536f1);transform:translateY(-2px)}.ds-text:active{transform:translateY(0)}.ds-text:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-motion:reduce){.ds-text{transition:none}.ds-text:hover{transform:none}}",
+      "css": ".ds-text{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:14px 22px;border:0;border-radius:var(--radius-small,8px);font-size:15px;font-weight:600;line-height:1.35;text-decoration:none;cursor:pointer;transition:background-color 180ms,color 180ms,transform 180ms cubic-bezier(.16,1,.3,1);justify-content:flex-start;padding-inline:0;gap:14px;background:transparent;color:var(--ink,#0b1430)}.ds-text svg{width:21px;height:21px}.ds-text:hover{color:var(--blue-text,#1536f1);transform:none}.ds-text:active{transform:translateY(0)}.ds-text:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-motion:reduce){.ds-text{transition:none}.ds-text:hover{transform:none}}",
       "refersTo": "button-text"
     },
     {
@@ -596,77 +585,84 @@
       "kind": "input",
       "description": "Visible label, active reading material, and distinct focus border.",
       "html": "<label class=\"ds-field\">Email<input type=\"email\" autocomplete=\"email\" required/></label>",
-      "css": ".ds-field{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:grid;gap:8px;color:var(--ink,#0b1430);font-size:13px;font-weight:600;max-width:360px}.ds-field input{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);width:100%;min-width:0;padding:12px 14px;background:var(--bg,#eef2ff);color:var(--ink,#0b1430);border:1px solid color-mix(in srgb,var(--ink,#0b1430) 35%,transparent);border-radius:8px;font-size:16px;font-weight:400;line-height:1.5}.ds-field input:focus{border-color:var(--blue-text,#1536f1)}.ds-field input:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-field input:disabled{opacity:.65;cursor:wait}",
+      "css": ".ds-field{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:grid;gap:8px;color:var(--ink,#0b1430);font-size:13px;font-weight:600;max-width:360px}.ds-field input{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);width:100%;min-width:0;padding:12px 14px;background:var(--surface,#f8faff);color:var(--ink,#0b1430);border:1px solid color-mix(in srgb,var(--ink,#0b1430) 35%,transparent);border-radius:4px;font-size:16px;font-weight:400;line-height:1.5}.ds-field input:focus{border-color:var(--blue-text,#1536f1)}.ds-field input:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-field input:disabled{opacity:.65;cursor:wait}",
       "refersTo": "input"
     },
     {
       "name": "Concept Status",
       "kind": "chip",
-      "description": "Noninteractive publication-status metadata.",
+      "description": "Unboxed, noninteractive conceptual-publication metadata in the portfolio.",
       "html": "<span class=\"ds-concept-label\">Estudio conceptual</span>",
-      "css": ".ds-concept-label{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-block;padding:4px 9px;border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));border-radius:6px;font-size:12px;line-height:1.55;color:var(--muted,#4f5e7d)}",
+      "css": ".ds-concept-label{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:inline-block;padding:0;border:0;border-radius:0;font-size:12px;line-height:1.55;color:var(--blue-text,#1536f1)}",
       "refersTo": "concept-label"
     },
     {
       "name": "Form Surface",
-      "kind": "card",
-      "description": "Opaque, flat reading container; the actual form uses responsive padding.",
+      "kind": "custom",
+      "description": "Transparent contact container, separated from direct contact by a fine rule.",
       "html": "<section class=\"ds-form-surface\"><h3>Tu consulta</h3></section>",
-      "css": ".ds-form-surface{padding:36px;background:var(--surface,#f8faff);color:var(--ink,#0b1430);border-radius:var(--radius,16px);max-width:480px}.ds-form-surface h3{margin:0;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:29px;font-weight:650;letter-spacing:-.02em;line-height:1.55}@media(max-width:700px){.ds-form-surface{padding:24px}}@media(max-width:430px){.ds-form-surface{padding:22px}}",
+      "css": ".ds-form-surface{padding:32px 0 0;border-top:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));background:transparent;color:var(--ink,#0b1430);border-radius:0;max-width:480px}.ds-form-surface h3{margin:0;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:29px;font-weight:650;letter-spacing:-.02em;line-height:1.55}@media(max-width:700px){.ds-form-surface{padding-top:24px}}",
       "refersTo": "form-surface"
     },
     {
       "name": "Home Navigation",
       "kind": "nav",
-      "description": "Fixed-dark functional glass with the preserved L/ and LPM treatment.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"NavegaciÃ³n de muestra\"><a class=\"ds-brand\" href=\"#inicio\"><span class=\"ds-brand-mark\">L/</span>LPM</a><a class=\"ds-nav-link\" href=\"#soluciones\">Enfoque</a><a class=\"ds-nav-action\" href=\"#contacto\">Hablemos <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></a></nav>",
-      "css": ".ds-nav{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:flex;align-items:center;gap:24px;min-height:76px;padding:12px 20px;border-radius:24px;background:rgba(5,9,20,.88);color:#eef3ff;box-shadow:0 12px 36px rgba(0,0,0,.16);backdrop-filter:blur(20px)}.ds-nav a{text-decoration:none;color:inherit}.ds-brand{display:inline-flex;align-items:center;gap:10px;margin-right:auto;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:23px;font-weight:750;letter-spacing:-.02em}.ds-brand-mark{display:grid;place-items:center;width:36px;height:36px;background:#1536f1;color:#fffdf7;border-radius:10px;font-size:21px;letter-spacing:-.04em}.ds-nav-link{display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:600;transition:color 180ms}.ds-nav-link:hover{color:#a5b9ff}.ds-nav-action{display:inline-flex;align-items:center;gap:22px;min-height:44px;padding:10px 16px;border-radius:12px;background:var(--blue,#1536f1);font-size:14px;font-weight:600;line-height:1.35;transition:background-color 180ms,transform 180ms}.ds-nav-action svg{width:21px;height:21px}.ds-nav-action:hover{background:var(--blue-strong,#0d2ccf);transform:translateY(-2px)}.ds-nav-action:active{transform:none}.ds-nav a:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-transparency:reduce){.ds-nav{background:#0b1123;backdrop-filter:none}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}.ds-nav-action:hover{transform:none}}"
+      "description": "Frameless masthead transparent over the hero at the top, with existing dark scrolled/menu states and regular links; the complete page retains its numbered station index.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Navegacion de muestra\"><a class=\"ds-brand\" href=\"#inicio\"><span class=\"ds-brand-mark\">L/</span>LPM</a><a class=\"ds-nav-link\" href=\"#soluciones\">Enfoque</a><a class=\"ds-nav-action\" href=\"#contacto\">Hablemos <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 19 19 5M5 5h14v14\"/></svg></a></nav>",
+      "css": ".ds-nav{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);display:flex;align-items:center;gap:24px;min-height:92px;padding:16px clamp(24px,4.2vw,80px);border-radius:0;background:#020307;color:#eef3ff;box-shadow:none;backdrop-filter:none}.ds-nav a{text-decoration:none;color:inherit}.ds-brand{display:inline-flex;align-items:center;gap:10px;margin-right:auto;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-size:23px;font-weight:750;letter-spacing:-.02em}.ds-brand-mark{display:grid;place-items:center;width:36px;height:36px;background:#1536f1;color:#fffdf7;border-radius:8px;font-size:21px;letter-spacing:-.04em}.ds-nav-link{display:flex;align-items:center;min-height:44px;font-size:14px;font-weight:400;transition:color 180ms}.ds-nav-link:hover{color:#a5b9ff}.ds-nav-action{display:inline-flex;align-items:center;gap:22px;min-height:44px;padding:10px 16px;border-radius:8px;background:var(--blue,#1536f1);font-size:14px;font-weight:600;line-height:1.35;transition:background-color 180ms,transform 180ms}.ds-nav-action svg{width:21px;height:21px}.ds-nav-action:hover{background:var(--blue-strong,#0d2ccf);transform:none}.ds-nav-action:active{transform:none}.ds-nav a:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-transparency:reduce){.ds-nav{background:#020307;backdrop-filter:none}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}.ds-nav-action:hover{transform:none}}"
     },
     {
       "name": "Perspective Choices",
       "kind": "custom",
       "description": "Pressed-state control for the piece/whole-system scene.",
       "html": "<div class=\"ds-perspective-controls\" role=\"group\" aria-label=\"Cambiar perspectiva\"><button type=\"button\" aria-pressed=\"false\">Una pieza</button><button type=\"button\" aria-pressed=\"true\">El sistema</button></div>",
-      "css": ".ds-perspective-controls{display:inline-flex;align-items:center;gap:4px;padding:5px;background:#10172b;border-radius:12px}.ds-perspective-controls button{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);min-height:44px;padding:10px 18px;border:0;border-radius:8px;background:transparent;color:#c2ceea;font-size:14px;font-weight:600;line-height:1.55;cursor:pointer}.ds-perspective-controls button[aria-pressed=true]{background:#1536f1;color:#fff}.ds-perspective-controls button:hover{color:#fff}.ds-perspective-controls button:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}",
+      "css": ".ds-perspective-controls{display:inline-flex;align-items:center;gap:4px;padding:4px;background:#10172b;border-radius:8px}.ds-perspective-controls button{font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);min-height:44px;padding:10px 18px;border:0;border-radius:4px;background:transparent;color:#c2ceea;font-size:14px;font-weight:400;line-height:1.55;cursor:pointer}.ds-perspective-controls button[aria-pressed=true]{background:#1536f1;color:#fff}.ds-perspective-controls button:hover{color:#fff}.ds-perspective-controls button:focus-visible{outline:2px solid #b7d7ee;outline-offset:4px;box-shadow:none}",
       "refersTo": "perspective-choice"
     },
     {
       "name": "Appearance Controls",
       "kind": "custom",
-      "description": "Light/dark buttons with pressed state and 44px targets.",
+      "description": "Dark masthead appearance buttons with pressed state and 44px targets.",
       "html": "<div class=\"ds-appearance\" role=\"group\" aria-label=\"Apariencia\"><button type=\"button\" aria-label=\"Modo claro\" aria-pressed=\"true\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3.5\"/><path d=\"M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42\"/></svg></button><button type=\"button\" aria-label=\"Modo oscuro\" aria-pressed=\"false\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20.4 15.1A8.5 8.5 0 0 1 8.9 3.6a8.5 8.5 0 1 0 11.5 11.5Z\"/></svg></button></div>",
-      "css": ".ds-appearance{display:inline-flex;padding-left:12px;border-left:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent))}.ds-appearance button{display:grid;place-items:center;width:44px;height:44px;padding:12px;background:transparent;border:0;border-radius:10px;color:var(--muted,#4f5e7d);cursor:pointer}.ds-appearance button[aria-pressed=true]{background:color-mix(in srgb,var(--ink,#0b1430) 7%,transparent);color:var(--ink,#0b1430)}.ds-appearance button:hover{color:var(--blue-text,#1536f1)}.ds-appearance button:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-appearance svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}"
+      "css": ".ds-appearance{display:inline-flex;padding-left:12px;border-left:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent))}.ds-appearance button{display:grid;place-items:center;width:44px;height:44px;padding:12px;background:transparent;border:0;border-radius:8px;color:#b5c3df;cursor:pointer}.ds-appearance button[aria-pressed=true]{background:color-mix(in srgb,#c2d3ff 12%,transparent);color:#eef3ff}.ds-appearance button:hover{color:#a5b9ff}.ds-appearance button:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-appearance svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}"
     },
     {
       "name": "Optical Union",
       "kind": "custom",
-      "description": "Fixed cobalt/sky geometry carries the portrait language into the service system.",
+      "description": "Compact overlapping cobalt/sky service mark, on the open reading field.",
       "html": "<div class=\"ds-union\" aria-hidden=\"true\"><span class=\"ds-eye ds-eye-one\"></span><span class=\"ds-eye ds-eye-two\"></span><span class=\"ds-union-center\">L/</span></div>",
-      "css": ".ds-union{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:290px;border-radius:20px;background:#070c1b;isolation:isolate}.ds-eye{position:absolute;width:260px;height:150px;border-radius:78% 18% 78% 18%}.ds-eye-one{background:#1536f1;transform:translate(-50px,-30px) rotate(15deg)}.ds-eye-two{background:#b7d7ee;transform:translate(50px,35px) rotate(-15deg);mix-blend-mode:screen}.ds-union-center{z-index:1;display:grid;place-items:center;width:70px;height:70px;background:#070c1b;color:#eef3ff;border-radius:16px;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-weight:650;font-size:43px;letter-spacing:-.04em}@media(max-width:500px){.ds-eye{width:200px;height:120px}.ds-eye-one{transform:translate(-28px,-28px) rotate(15deg)}.ds-eye-two{transform:translate(28px,30px) rotate(-15deg)}}"
+      "css": ".ds-union{position:relative;display:flex;align-items:center;justify-content:center;width:200px;height:160px;background:transparent;isolation:isolate}.ds-eye{position:absolute;width:112px;height:76px;border-radius:78% 18% 78% 18%}.ds-eye-one{background:#1536f1;transform:translate(-20px,-14px) rotate(15deg)}.ds-eye-two{background:#b7d7ee;transform:translate(20px,18px) rotate(-15deg)}.ds-union-center{z-index:1;display:grid;place-items:center;width:42px;height:42px;background:#1536f1;color:#eef3ff;border-radius:4px;font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-weight:600;font-size:28px;letter-spacing:-.04em}@media(max-width:700px){.ds-union{width:100px;height:100px}.ds-eye{width:68px;height:46px}.ds-eye-one{transform:translate(-10px,-10px) rotate(15deg)}.ds-eye-two{transform:translate(10px,10px) rotate(-15deg)}.ds-union-center{width:28px;height:28px;font-size:19px}}"
     },
     {
-      "name": "Spatial Portrait Control",
-      "kind": "button",
-      "refersTo": "spatial-control",
-      "description": "Compact functional glass action that freezes the current 3D alien pose while keeping the canvas visible; device tilt is separately opt-in when supported.",
-      "html": "<div class=\"ds-spatial-controls\"><button type=\"button\" aria-pressed=\"true\" aria-label=\"Pausar efecto espacial\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 2v5m0 10v5M2 12h5m10 0h5M5 5l3 3m8 8 3 3M5 19l3-3m8-8 3-3\"/></svg><span>Pausar efecto</span></button></div>",
-      "css": ".ds-spatial-controls{display:inline-flex}.ds-spatial-controls button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 14px;border:1px solid #7788ad;border-radius:12px;background:rgba(5,9,20,.88);color:#e5edff;font-family:var(--body,'IBM Plex Sans',Arial,sans-serif);font-size:12px;font-weight:400;line-height:1.4;cursor:pointer;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.ds-spatial-controls button:hover{background:#172743;border-color:#b7d7ee}.ds-spatial-controls button:focus-visible{outline:3px solid #b7d7ee;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}.ds-spatial-controls svg{width:16px;height:16px}@media(prefers-reduced-transparency:reduce){.ds-spatial-controls button{background:#0b1123;backdrop-filter:none;-webkit-backdrop-filter:none}}"
+      "name": "Concept Preview Frame",
+      "kind": "card",
+      "description": "Shared frame for the existing labeled conceptual work; inner artwork remains source content.",
+      "html": "<div class=\"ds-preview-frame\"><div class=\"ds-preview-canvas\"><strong>Estudio conceptual</strong></div></div>",
+      "css": ".ds-preview-frame{padding:32px;border:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent));border-radius:var(--radius,8px);background:var(--surface,#f8faff)}.ds-preview-canvas{padding:24px;border-radius:4px;background:#f8faff;color:#0b1430;font:400 17px/1.55 var(--body,'IBM Plex Sans',Arial,sans-serif)}.ds-preview-canvas strong{font-family:var(--display,'Bricolage Grotesque Variable','Arial Narrow',sans-serif);font-weight:650}@media(max-width:700px){.ds-preview-frame{padding:24px}}@media(max-width:500px){.ds-preview-frame{padding:18px}}"
+    },
+    {
+      "name": "Service Disclosure",
+      "kind": "custom",
+      "description": "Native service details retain the full offer in HTML without JavaScript.",
+      "html": "<details class=\"ds-service\"><summary>Ver servicios <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg></summary><ul><li>Contenido y presencia digital</li><li>Meta Ads y campanas</li><li>Medicion y optimizacion</li></ul></details>",
+      "css": ".ds-service{font:400 17px/1.55 var(--body,'IBM Plex Sans',Arial,sans-serif);color:var(--ink,#0b1430);max-width:620px;margin-top:16px}.ds-service summary{display:inline-flex;align-items:center;gap:24px;min-height:44px;color:var(--blue-text,#1536f1);font-size:14px;list-style:none;cursor:pointer}.ds-service summary::-webkit-details-marker{display:none}.ds-service svg{width:18px;height:18px;transition:transform 180ms}.ds-service[open] svg{transform:rotate(45deg)}.ds-service ul{margin:8px 0 16px;padding:0;list-style:none}.ds-service li{padding:10px 0;border-bottom:1px solid var(--line,color-mix(in srgb,#0b1430 16%,transparent))}.ds-service summary:hover{color:var(--ink,#0b1430)}.ds-service summary:focus-visible{outline:3px solid #111318;outline-offset:3px;box-shadow:0 0 0 6px #fffdf7}@media(prefers-reduced-motion:reduce){.ds-service svg{transition:none}}"
     }
   ],
   "narrative": {
     "northStar": "Otra perspectiva",
-    "overview": "A refined, licensed Grab3D alien head carries the cobalt identity through real volume and skeletal movement. Conservative cranial and cheek refinements preserve the original topology, UVs and rig, with authored smooth normals transported through the deformation. A seamless skin tile derived from the original portrait supplies triplanar blue pigment, correlated roughness and shallow physical relief; the portrait remains the complete static fallback. The live model is not pixel-identical to that artwork. A finite greeting and input-driven head/neck movement sit within black brand fields, cool reading surfaces, optical geometry and clear Spanish copy.",
+    "overview": "An unfamiliar blue gaze expresses a different way of understanding real client problems. The opening uses the user's supplied Joel Dcosta alien head with physically lit cobalt skin, a hero-scoped CRT transmission, and the irregular cyan clearing ray. Black brand fields, optical geometry, and cool reading surfaces carry the identity. Show only the actual 3D canvas when available; its image area remains black in loading, no-JavaScript, reduced-motion, and failure states. Preserve the L/ and LPM logo, native retro cursor, and television channel menu.\n\nThe alien supplies mystery; clear Spanish copy, visible service summaries, and direct contact supply confidence. Light and dark appearances share a continuous reading field after the opening. Dark interactive scenes sit inside that field as objects. Bricolage headings, open service rows, shared preview frames, and restrained controls organize the content without replacing the alien world. The 2026-11-09 source refinement merges the user's approved cleanup after the identity-removing redesign was rejected; Zentry informs hierarchy and restraint within the established world.\n\nThis refinement is source-observed. Complete-page rendered visual verification is pending; current hero-restored captures verify the hero correction only, and historical screenshots of the rejected design do not verify this refinement. The sidecar is a partial source refresh, not a new computed-style extraction.",
     "keyCharacteristics": [
-      "A refined cobalt alien with actual head volume, physical skin detail and skeletal movement; the detailed original portrait remains the static fallback.",
-      "Cold light and midnight reading appearances around fixed black brand fields.",
-      "Bricolage messages with quiet Plex explanations and controls.",
-      "Eye-shaped apertures, two disciplines plus their visible union, and open editorial groups.",
-      "Purposeful perspective and 3D-alien interactions, with complete static fallbacks."
+      "The supplied cobalt 3D extraterrestrial, hero-scoped CRT collapse, and cursor-controlled neon clearing ray; no raster alien fallback on the homepage.",
+      "Continuous cold-light and midnight reading fields around fixed black brand objects.",
+      "Bricolage messages at weight (650), quiet Plex explanations, and native disclosures for detail.",
+      "Eye-shaped apertures, three open service rows, consistent preview frames, and a clear contact path.",
+      "Native retro cursors and a numbered station index preserve the established retro identity.",
+      "Purposeful interactions with readable live content, direct actions, and accessible static behavior."
     ],
     "rules": [
       {
         "name": "The Fixed Encounter Rule",
-        "body": "Keep the portrait opening and optical brand fields dark in both appearances. Theme changes apply to reading surfaces and active control roles.",
+        "body": "Keep the portrait opening and bounded perspective scene dark in both appearances. Theme changes apply to the continuous reading field and active control roles.",
         "section": "colors"
       },
       {
@@ -678,30 +674,26 @@
         "name": "The Expressive Head, Quiet Body Rule",
         "body": "Use Bricolage for the message and Plex for explanation, navigation, and controls. Keep complete word boundaries at narrow widths.",
         "section": "typography"
-      },
-      {
-        "name": "The Functional Glass Rule",
-        "body": "Use translucent material for the home navigation and small spatial-portrait controls. Keep reading, form, and legal-header surfaces opaque; preserve the opaque preference fallback.",
-        "section": "elevation"
       }
     ],
     "dos": [
       "**Do** preserve the L/ and LPM logo, fixed cobalt/sky artwork, and separate active theme roles.",
       "**Do** carry the gaze into optical geometry instead of relying on the portrait alone.",
-      "**Do** pair expressive headings with readable Plex copy, bounded measures, and open content groups.",
-      "**Do** keep the complete system readable in both perspective states and preserve reduced-motion and no-JavaScript fallbacks for both authored interactions.",
+      "**Do** pair expressive headings with readable Plex copy, bounded measures, native disclosures, and open content groups.",
+      "**Do** keep the complete system readable in both perspective states and preserve live content without motion or JavaScript; the alien's fallback is a blank black image area.",
       "**Do** preserve visible labels, consent, status feedback, keyboard focus, and direct WhatsApp access.",
       "**Do** label illustrative portfolio work as conceptual until client material is approved for publication.",
+      "**Do** keep common home corners at (8px), fields at (4px), and reading chapters on one theme-aware field.",
       "**Do** scope the native pixel cursor to fine hover pointers and preserve editing, waiting, disabled, and forced-colors affordances."
     ],
     "donts": [
       "**Don't** restore the retired warm-paper editorial world when extending this identity.",
       "**Don't** add fake telemetry, arbitrary coordinates, starfields, terminal styling, sound, cursor followers, trails, `cursor: none`, or hijacked scrolling.",
       "**Don't** apply glass to reading or form surfaces.",
-      "**Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, and perspective scene.",
+      "**Don't** reintroduce decorative yellow, tilted service cards, or unrelated colored chapters into this approved refinement.",
+      "**Don't** add looping autoplay or unrelated animation sequences beyond the finite alien greeting, input-driven 3D character, hero-scoped CRT interference, perspective scene, and finite television power-on/channel transitions.",
       "**Don't** present concept imagery as approved client projects, results, or testimonials.",
       "**Don't** promote miniature text inside decorative concept artwork into a reading or control type role."
     ]
   }
 }
-

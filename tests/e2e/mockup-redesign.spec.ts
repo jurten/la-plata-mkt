@@ -10,6 +10,7 @@ test('presenta tres disciplinas sin perder las capacidades existentes', async ({
   await expect(page.locator('#nosotros')).toBeVisible();
   await expect(page.locator('#sistema .system-node')).toHaveCount(7);
   await expect(page.locator('#faq details')).toHaveCount(8);
+  await page.locator('#capacidades > summary').click();
   for (const service of ['Sitios institucionales', 'Landing pages', 'Ecommerce', 'Mantenimiento', 'Meta Ads', 'Setup de campañas', 'Medición', 'Optimización', 'CRM', 'Automatizaciones', 'Integraciones', 'Turnos y herramientas', 'Consultoría digital', 'Sistemas comerciales', 'Diseño de procesos', 'Diagnóstico']) {
     await expect(page.locator('#capacidades').getByText(service, { exact: true })).toBeVisible();
   }
@@ -21,6 +22,23 @@ test('el portfolio no publica identidades o resultados sin aprobación', async (
   await expect(portfolio.getByText('Estudio conceptual', { exact: true })).toHaveCount(2);
   await expect(portfolio).toContainText('Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.');
   for (const name of ['Mirta Libera Propiedades', 'María Laumann Asociados', 'Señal verificada']) await expect(page.getByText(name, { exact: true })).toHaveCount(0);
+});
+
+test('los servicios se pueden desplegar con teclado sin desbordar en móvil', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto('/#soluciones');
+  const details = page.locator('.service-disclosure');
+  await expect(details).toHaveCount(3);
+  for (const detail of await details.all()) {
+    await expect(detail.locator('.service-list')).toBeHidden();
+    await detail.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await expect(detail.locator('.service-list')).toBeVisible();
+    await expect(detail.getByRole('link')).toHaveAttribute('href', /^(https:\/\/wa\.me\/5491158861954|#sistema)$/);
+  }
+  await page.locator('#capacidades > summary').click();
+  const widths = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }));
+  expect(widths.content).toBeLessThanOrEqual(widths.viewport);
 });
 
 test('el formulario, el logo y los destinos de contacto siguen siendo reales', async ({ page, request }) => {
