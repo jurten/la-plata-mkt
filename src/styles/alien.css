@@ -143,7 +143,7 @@ input, textarea { caret-color: var(--blue-text); }
 .contact-section { padding-block: var(--section-space); background: var(--bg); color: var(--ink); }
 .contact-section > .wrap { border-top: 1px solid var(--line); padding-top: 64px; }
 .contact-title h2 { font-size: clamp(48px, 5.3vw, 76px); }
-.contact-title h2 > span { color: var(--blue-text); }
+.contact-title h2 span { color: var(--blue-text); }
 .contact-section .contact-side > p { color: var(--muted); }
 .contact-section .contact-whatsapp { background: var(--blue); color: #fff; }
 .contact-section .contact-whatsapp:hover { background: var(--blue-strong); }

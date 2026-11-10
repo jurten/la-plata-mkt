@@ -1,0 +1,32 @@
+.text-reveal-run { display: inline-block; min-width: 0; max-width: 100%; vertical-align: bottom; }
+.text-reveal-line { display: block; }
+/* Keep accents and descenders inside the line mask. */
+.text-reveal-line-mask { display: block; overflow-clip-margin: .12em; }
+
+/* Codrops button 03 / Mimas: a skewed fill slides out to the right. */
+.alien-hero .button-mimas {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #b7d7ee;
+  color: #fff;
+  transition: color .4s cubic-bezier(.3, 1, .8, 1);
+}
+.alien-hero .button-mimas::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 -10%;
+  width: 120%;
+  background: #1536f1;
+  transform: skew(30deg);
+  transition: transform .4s cubic-bezier(.3, 1, .8, 1);
+}
+.alien-hero .button-mimas:is(:hover, :focus-visible) { background: #b7d7ee; color: #0b1430; }
+.alien-hero .button-mimas:is(:hover, :focus-visible)::before { transform: translate3d(100%, 0, 0); }
+@media (prefers-reduced-motion: reduce) {
+  .alien-hero .button-mimas::before { transition: none; }
+}
+@media (forced-colors: active) {
+  .alien-hero .button-mimas::before { display: none; }
+}

@@ -13,6 +13,7 @@ function enhancePortrait(portrait) {
   let failed = false;
   let settled = false;
   let paused = false;
+  let revealing = false;
   let signalHeld = false;
   let signal = {
     enabled: false, phase: 'locked', frame: -1, present: true,
@@ -29,7 +30,7 @@ function enhancePortrait(portrait) {
   let bounds;
   let drag;
   const clamp = (value) => Math.max(-1, Math.min(1, value));
-  const canRun = () => !failed && !paused && !signalHeld && !reduceMotion && inView && !document.hidden;
+  const canRun = () => !failed && !paused && !revealing && !signalHeld && !reduceMotion && inView && !document.hidden;
   const reportProgress = (value) => {
     const progress = Math.max(0, Math.min(100, Math.round(value)));
     portrait.dataset.spatialProgress = String(progress);
@@ -203,6 +204,7 @@ function enhancePortrait(portrait) {
   window.addEventListener('blur', endDrag);
   screen.orientation?.addEventListener('change', () => move(0, 0));
   window.addEventListener('lpm:transmission-pause', (event) => { paused = event.detail; synchronize(); });
+  hero.addEventListener('lpm:hero-reveal', (event) => { revealing = event.detail; synchronize(); });
   hero.addEventListener('lpm:signal-skip', (event) => {
     signalHeld = Boolean(event.detail);
     if (signalHeld) stop();

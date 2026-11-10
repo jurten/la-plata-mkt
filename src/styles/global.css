@@ -243,7 +243,7 @@ summary::-webkit-details-marker { display: none; }
 .contact-section { padding-block: 88px; background: #1536F1; color: #FFFDF7; }
 .contact-layout { display: grid; grid-template-columns: 1fr 1.08fr; gap: 80px; align-items: start; }
 .contact-title h2 { font-size: clamp(52px, 5.3vw, 76px); }
-.contact-title h2 > span { color: #B7D7EE; }
+.contact-title h2 span { color: #B7D7EE; }
 .contact-side { margin-top: 36px; }
 .contact-side > p { max-width: 38ch; color: #FFFDF7; }
 .contact-whatsapp { display: flex; margin-top: 28px; justify-content: space-between; padding: 18px 24px; background: #F4C430; color: #111318; max-width: 390px; }
@@ -447,7 +447,7 @@ summary::-webkit-details-marker { display: none; }
   .contact-intro { grid-template-columns: 1fr; gap: 28px; }
   .contact-title h2 { font-size: 60px; }
   .contact-title h2 br { display: none; }
-  .contact-title h2 > span { display: block; }
+  .contact-title h2 span { display: block; }
   .contact-direct { margin-top: 24px; padding-top: 20px; }
   .contact-layout { gap: 40px; }
   .form-surface { padding: 24px; }

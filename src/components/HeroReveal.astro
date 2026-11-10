@@ -1,0 +1,24 @@
+---
+import logo from '../../public/brand/lpm-logo.svg?raw';
+import '../styles/hero-reveal.css';
+
+// The first closed subpath is the exact outer silhouette of the supplied logo.
+// Keep the official mark untouched; the mask contains neither letters nor its hole.
+const silhouette = logo.match(/\bd="([^"]+)"/)![1].split(/\s+M\s/)[0] + ' Z';
+---
+<div class="hero-reveal" data-hero-reveal>
+  <svg class="hero-reveal-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs><clipPath id="lpm-hero-silhouette" clipPathUnits="userSpaceOnUse"><path data-hero-silhouette d={silhouette} /></clipPath></defs>
+  </svg>
+  <div class="hero-reveal-track" data-hero-track>
+    <div class="hero-reveal-stage">
+      <div class="hero-reveal-window" data-hero-window>
+        <div class="hero-reveal-visual" data-hero-visual>
+          <div class="hero-reveal-parallax" data-hero-parallax><slot name="hero" /></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-reveal-services" data-services-track><slot /></div>
+</div>
+<script>import '../scripts/hero-reveal';</script>

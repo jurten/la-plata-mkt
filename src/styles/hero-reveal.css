@@ -1,0 +1,25 @@
+/* One continuous scene: the opening recedes inside the official LPM silhouette. */
+.hero-reveal { position: relative; margin-top: -92px; background: var(--bg); }
+.hero-reveal-defs { position: absolute; overflow: hidden; pointer-events: none; }
+.site-home .hero-reveal .alien-hero { margin-top: 0; }
+.hero-reveal[data-reveal-enabled] .hero-reveal-track {
+  position: relative; z-index: 2; pointer-events: none;
+}
+.hero-reveal[data-reveal-enabled] .hero-reveal-stage {
+  position: sticky; top: var(--reveal-top); height: var(--reveal-height); overflow: clip;
+  perspective: 1000px; perspective-origin: 50% var(--reveal-pivot-y, 50%);
+}
+.hero-reveal[data-reveal-state='moving'] .hero-reveal-window { will-change: transform; }
+.hero-reveal[data-reveal-state='moving'] .hero-reveal-parallax { will-change: transform; }
+.hero-reveal[data-reveal-enabled] .hero-reveal-visual { pointer-events: auto; background: #020307; }
+.hero-reveal[data-reveal-state='moving'] .hero-reveal-visual {
+  clip-path: url('#lpm-hero-silhouette'); pointer-events: none;
+  will-change: transform, opacity;
+}
+.hero-reveal[data-reveal-state='complete'] .hero-reveal-visual {
+  visibility: hidden; pointer-events: none;
+}
+.hero-reveal[data-reveal-enabled] .hero-reveal-services {
+  position: relative; z-index: 1;
+}
+@media (max-width: 700px) { .hero-reveal { margin-top: -80px; } }

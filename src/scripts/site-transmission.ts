@@ -30,12 +30,12 @@ function enhanceTransmission(surface: HTMLElement) {
     return ((1 - t) ** 3 * a + (3 * t3 - 6 * t2 + 4) * b
       + (-3 * t3 + 3 * t2 + 3 * t + 1) * c + t3 * d) / 6;
   };
-  let paused = false, suspended = false, inView = false, active = false, frame = 0, lastDraw = 0;
+  let paused = false, suspended = false, revealing = false, inView = false, active = false, frame = 0, lastDraw = 0;
   let width = hero.clientWidth, height = hero.clientHeight, x = width * .7, y = height * .45;
   let clientX = 0, clientY = 0, signalTime = 0, lastTick = 0, frozen = false;
   let signalTick = 0;
   let beamRadii = new Float32Array(192);
-  const allowed = () => inView && !paused && !suspended && !reduced.matches && !forced.matches && !document.hidden;
+  const allowed = () => inView && !paused && !suspended && !revealing && !reduced.matches && !forced.matches && !document.hidden;
   const outerPath = () => `M0 0H${width}V${height}H0Z`;
   function freezeHead(value: boolean) {
     if (value === frozen) return;
@@ -197,6 +197,7 @@ function enhanceTransmission(surface: HTMLElement) {
   document.addEventListener('visibilitychange', () => { if (document.hidden) leave(); synchronize(); });
   reduced.addEventListener('change', synchronize); forced.addEventListener('change', synchronize);
   window.addEventListener('lpm:transmission-pause', ((event: CustomEvent<boolean>) => { paused = event.detail; leave(); synchronize(); }) as EventListener);
+  hero.addEventListener('lpm:hero-reveal', ((event: CustomEvent<boolean>) => { revealing = event.detail; leave(); synchronize(); }) as EventListener);
   new ResizeObserver(resize).observe(hero);
   new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;

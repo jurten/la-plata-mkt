@@ -1,4 +1,5 @@
 node_modules/
+.cache/npm/
 dist/
 .astro/
 playwright-report/

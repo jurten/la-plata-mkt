@@ -196,7 +196,9 @@ function enhanceNavigation(header: HTMLElement) {
     scrollFrame = 0;
     header.dataset.scrolled = String(window.scrollY > 0);
     const line = header.getBoundingClientRect().bottom + 100;
-    const current = [...channels].reverse().find(channel => channel.section.getBoundingClientRect().top <= line) ?? channels[0];
+    const reveal = document.querySelector<HTMLElement>('[data-reveal-enabled]');
+    const inOpening = reveal && window.scrollY < Number(reveal.dataset.revealEnd);
+    const current = inOpening ? channels[0] : [...channels].reverse().find(channel => channel.section.getBoundingClientRect().top <= line) ?? channels[0];
     if (current !== active) setActive(current);
   }
 
@@ -221,13 +223,15 @@ function enhanceNavigation(header: HTMLElement) {
     event.preventDefault();
     const fromMenu = menu.contains(link);
     const keyboard = event.detail === 0;
-    const targetTop = target.getBoundingClientRect().top;
-    const channel = [...channels].reverse().find(item => item.section.getBoundingClientRect().top <= targetTop + 1) ?? channels[0];
+    const channel = [...channels].reverse().find(item => item.section.contains(target)) ?? channels[0];
     closeMenu();
     setActive(channel);
     const tune = () => {
       if (location.hash !== link.hash) history.pushState(null, '', link.hash);
-      target.scrollIntoView({ block: 'start', behavior: 'instant' });
+      const destination: { target: HTMLElement; top?: number } = { target };
+      window.dispatchEvent(new CustomEvent('lpm:resolve-anchor', { detail: destination }));
+      if (destination.top !== undefined) window.scrollTo({ top: destination.top, behavior: 'instant' });
+      else target.scrollIntoView({ block: 'start', behavior: 'instant' });
       if (fromMenu || keyboard) {
         const focusTarget = target.querySelector<HTMLElement>('h1, h2, h3') ?? target;
         if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');

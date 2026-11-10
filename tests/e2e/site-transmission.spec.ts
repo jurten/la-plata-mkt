@@ -22,10 +22,11 @@ test('la interferencia pertenece al hero y se suspende fuera de pantalla', async
   expect(await hero.evaluate(element => ['clip', 'hidden'].includes(getComputedStyle(element).overflowY))).toBe(true);
   await expectHeroBounds(hero, surface);
 
-  // Scrolling moves the effect with the hero instead of holding it over the page.
+  // During the authored exit the effect stays inside the hero and stops its
+  // own animation, leaving the scroll-driven silhouette as the focal motion.
   await page.evaluate(() => window.scrollTo({ top: 160, behavior: 'instant' }));
   await expectHeroBounds(hero, surface);
-  expect((await surface.boundingBox())!.y).toBeLessThan(0);
+  await expect(surface).toHaveAttribute('data-transmission-state', 'suspended');
   await page.locator('#trabajo').evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }));
   await expect(surface).toHaveAttribute('data-transmission-state', 'suspended');
   await expect(surface).not.toBeInViewport();
@@ -154,6 +155,8 @@ test('el framebuffer colapsa, repite cuadros y recupera la imagen sin filtros CS
 });
 
 test('el rayo usa coordenadas del hero y la pausa y movimiento reducido detienen el efecto', async ({ page }) => {
+  // A short viewport leaves a natural reading scroll before the reveal starts.
+  await page.setViewportSize({ width: 1440, height: 600 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/#inicio');
   const hero = page.locator('#inicio');

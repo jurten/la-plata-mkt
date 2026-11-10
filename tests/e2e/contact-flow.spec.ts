@@ -28,7 +28,7 @@ test('una consulta válida se procesa sin abandonar la página y declara el modo
   expect(response.status()).toBe(200);
 
   await expect(page).toHaveURL(/#contacto$/);
-  await expect(page.getByRole('status')).toContainText(
+  await expect(page.locator('form').getByRole('status')).toContainText(
     'Modo demo: la consulta fue validada, pero el email todavía no fue enviado.',
   );
   await expect(page.getByLabel('Empresa')).toHaveValue('');
@@ -66,7 +66,7 @@ test('el celular opcional se normaliza y viaja en la consulta', async ({ page })
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Enviar consulta' }).click();
 
-  await expect(page.getByRole('status')).toContainText('Modo demo');
+  await expect(page.locator('form').getByRole('status')).toContainText('Modo demo');
   expect(submittedPayload).toMatchObject({ phone: '+54 9 221 555-1234' });
   await expect(phone).toHaveValue('');
 });
@@ -117,7 +117,7 @@ test('el éxito live confirma la recepción sin prometer una autorespuesta', asy
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Enviar consulta' }).click();
 
-  const status = page.getByRole('status');
+  const status = page.locator('form').getByRole('status');
   await expect(status).toHaveText('¡Listo! Recibimos tu consulta.');
   await expect(status).not.toContainText('te enviamos una confirmación');
 });
@@ -149,7 +149,7 @@ test('reinicia Turnstile también cuando el servidor rechaza la consulta', async
   await page.getByRole('checkbox').check();
   await page.getByRole('button', { name: 'Enviar consulta' }).click();
 
-  await expect(page.getByRole('status')).toContainText('No pudimos enviar la consulta.');
+  await expect(page.locator('form').getByRole('status')).toContainText('No pudimos enviar la consulta.');
   expect(
     await page.evaluate(() => (window as typeof window & { __turnstileResetCount: number }).__turnstileResetCount),
   ).toBe(1);
