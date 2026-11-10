@@ -12,6 +12,8 @@ for (const width of [1440, 390]) {
     await expect(title.locator('.text-reveal-line').first()).toBeAttached();
     await expect(title.locator('.text-reveal-line').first()).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
     await expect(title).toHaveAccessibleName('Ideas de otro planeta.');
+    await expect(page.locator('.hero-subtitle .text-reveal-line').first()).toBeAttached();
+    await expect(page.locator('.hero-lede .text-reveal-line, .button .text-reveal-line, .primary-nav .text-reveal-line, label .text-reveal-line')).toHaveCount(0);
     const animatedHeight = await title.evaluate(el => el.clientHeight);
     await expect(page.locator('.button-mimas')).toHaveAttribute('href', 'https://wa.me/5491158861954');
     await page.locator('.button-mimas').hover();
@@ -27,14 +29,22 @@ for (const width of [1440, 390]) {
   });
 }
 
-test('el contenido de desplegables y privacidad también recibe la entrada', async ({ page }) => {
+test('los desplegables mantienen el texto estático y privacidad anima sus títulos', async ({ page }) => {
   await page.goto('/#soluciones');
   const disclosure = page.locator('#soluciones details').first();
   await disclosure.locator('summary').click();
-  await expect(disclosure.locator('li .text-reveal-line').first()).toBeAttached();
+  await expect(disclosure.locator('li').first()).toBeVisible();
+  await expect(disclosure.locator('.text-reveal-line')).toHaveCount(0);
   await page.goto('/privacidad/');
   await expect(page.locator('h1 .text-reveal-line').first()).toBeAttached();
   await expect(page.locator('.legal-cta').getByRole('link', { name: 'Volver al formulario' })).toHaveAttribute('href', '/#contacto');
+});
+
+test('el texto decorativo se anima y las descripciones quedan estáticas', async ({ page }) => {
+  await page.goto('/#trabajo');
+  await page.locator('.estate-type').scrollIntoViewIfNeeded();
+  await expect(page.locator('.estate-type .text-reveal-line').first()).toBeAttached();
+  await expect(page.locator('.concept-description p .text-reveal-line, .concept-caption .text-reveal-line')).toHaveCount(0);
 });
 
 test('las máscaras conservan los colores del título y las etiquetas del formulario', async ({ page }) => {

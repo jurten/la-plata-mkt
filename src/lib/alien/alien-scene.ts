@@ -48,6 +48,18 @@ export async function createAlienScene(canvas: HTMLCanvasElement, onProgress?: (
   camera.lookAt(0, 0, 0);
   const environment = lightAlienStudio(scene, renderer);
   const signalPass = createSignalPass(renderer, context);
+  const heroElement = canvas.closest<HTMLElement>('.alien-hero')!;
+  const portraitBounds = new Vector4();
+  const measureSignalBounds = () => {
+    const box = canvas.getBoundingClientRect();
+    const hero = heroElement.getBoundingClientRect();
+    // The mask consumes hero-local CSS pixels, independently of a projected
+    // scroll-exit frame. A text/font reflow can move the canvas without resizing it.
+    const scaleX = hero.width / heroElement.clientWidth || 1;
+    const scaleY = hero.height / heroElement.clientHeight || 1;
+    return portraitBounds.set((box.left - hero.left) / scaleX, (box.top - hero.top) / scaleY,
+      canvas.clientWidth, canvas.clientHeight);
+  };
 
   try {
     const alien = await createSuppliedAlien(onProgress);
@@ -64,9 +76,7 @@ export async function createAlienScene(canvas: HTMLCanvasElement, onProgress?: (
         skyWidth = width; skyHeight = height;
         skyCanvas.width = Math.round(width * ratio);
         skyCanvas.height = Math.round(height * ratio);
-        const box = canvas.getBoundingClientRect();
-        const hero = canvas.closest('.alien-hero')!.getBoundingClientRect();
-        signalPass.resize(canvas.width, canvas.height, new Vector4(box.left - hero.left, box.top - hero.top, width, height));
+        signalPass.resize(canvas.width, canvas.height, measureSignalBounds());
         dirty = true;
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
@@ -87,6 +97,7 @@ export async function createAlienScene(canvas: HTMLCanvasElement, onProgress?: (
       },
       signal(signal: AlienSignal, drawAllowed = true) {
         if (disposed || context.isContextLost()) throw new Error('3D context unavailable');
+        if (drawAllowed && signal.enabled && signal.beam.active) signalPass.setPortrait(measureSignalBounds());
         return signalPass.signal(signal, drawAllowed);
       },
       destroy() {

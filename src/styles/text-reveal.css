@@ -1,4 +1,3 @@
-.text-reveal-run { display: inline-block; min-width: 0; max-width: 100%; vertical-align: bottom; }
 .text-reveal-line { display: block; }
 /* Keep accents and descenders inside the line mask. */
 .text-reveal-line-mask { display: block; overflow-clip-margin: .12em; }

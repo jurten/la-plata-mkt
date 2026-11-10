@@ -74,6 +74,13 @@ function enhanceTransmission(surface: HTMLElement) {
     frame = requestAnimationFrame(draw);
     if (time - lastDraw < 1000 / 24) return;
     lastDraw = time;
+    // Reflow may move the hero beneath a stationary pointer without firing
+    // pointermove or scroll. Keep the canvas cutout and WebGL aperture together.
+    if (active) {
+      const box = hero!.getBoundingClientRect();
+      x = clientX - box.left; y = clientY - box.top;
+      if (x < 0 || y < 0 || x > width || y > height) leave();
+    }
     if (lastTick) signalTime += Math.min(time - lastTick, 120);
     lastTick = time;
     const seconds = signalTime / 1000;

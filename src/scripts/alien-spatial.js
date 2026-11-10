@@ -132,7 +132,7 @@ function enhancePortrait(portrait) {
     bounds = portrait.getBoundingClientRect();
     if (!renderer || !bounds.width || !bounds.height) return;
     try {
-      renderer.resize(bounds.width, bounds.height);
+      renderer.resize(portrait.clientWidth, portrait.clientHeight);
       draw();
     } catch { fallback(); }
   };

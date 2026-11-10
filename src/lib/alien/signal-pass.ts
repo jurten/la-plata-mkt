@@ -114,6 +114,11 @@ export function createSignalPass(renderer: WebGLRenderer, context: WebGL2Renderi
     return true;
   }
   return {
+    setPortrait(portrait: Vector4) {
+      if (uniforms.uPortrait.value.equals(portrait)) return;
+      uniforms.uPortrait.value.copy(portrait);
+      needsPresent = true;
+    },
     resize(width: number, height: number, portrait: Vector4) {
       target.setSize(width, height);
       uniforms.uPortrait.value.copy(portrait);

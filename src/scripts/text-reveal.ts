@@ -17,31 +17,18 @@ async function initializeTextReveal() {
     media.add('(prefers-reduced-motion: no-preference) and (forced-colors: none)', () => {
       const splits: SplitText[] = [];
       const animations: gsap.core.Tween[] = [];
-      const wrappers: HTMLElement[] = [];
       const pending = new Set<HTMLElement>();
-      const excluded = 'svg, script, style, noscript, textarea, input, select, [aria-live], [role="status"], [role="alert"], .field-error, .hp-field, [data-current-channel], [data-preview-title], [data-preview-description], [data-preview-channel], [data-perspective-caption], [data-perspective-explore-label], #mode-label, [data-tv-transition]';
-      const selector = 'h1, h2, h3, h4, h5, h6, p, li, dt, dd, figcaption, a, button, label, summary, span, strong, em, small';
+      // Only headings, editorial subtitles and explicitly chosen decorative type.
+      // Body copy and interface labels stay in their original, static markup.
+      const excluded = 'svg, [aria-live], [role="status"], [role="alert"]';
+      const selector = 'h1, h2, h3, h4, h5, h6, .hero-subtitle, .about-statement, .estate-type, .legal-large, .legal-symbol, .communication-eye > span, .perspective-bottom > p';
       const candidates = [...document.body.querySelectorAll<HTMLElement>(selector)]
         .filter(el => el.textContent?.trim() && !el.closest(excluded));
       const selected = new Set<HTMLElement>();
 
       for (const el of candidates) {
         if ([...selected].some(parent => parent.contains(el))) continue;
-        // Keep flex children, SVG icons, nested actions, and native controls intact.
-        const layout = getComputedStyle(el).display;
-        if (el.querySelector('svg, input, button, p, h2, h3, ul, ol, details') || /flex|grid/.test(layout)) {
-          for (const node of [...el.childNodes]) {
-            if (node.nodeType !== Node.TEXT_NODE || !node.textContent?.trim()) continue;
-            const wrapper = document.createElement('span');
-            wrapper.className = 'text-reveal-run';
-            node.before(wrapper);
-            wrapper.append(node);
-            wrappers.push(wrapper);
-            selected.add(wrapper);
-          }
-        } else {
-          selected.add(el);
-        }
+        selected.add(el);
       }
 
       const observer = new IntersectionObserver(entries => {
@@ -85,7 +72,7 @@ async function initializeTextReveal() {
       });
 
       for (const el of selected) { pending.add(el); observer.observe(el); }
-      // Menus, disclosures and the sticky hero can expose previously hidden text.
+      // Disclosures and the sticky hero can expose previously hidden headings.
       const visibility = new MutationObserver(() => {
         for (const el of pending) { observer.unobserve(el); observer.observe(el); }
       });
@@ -103,7 +90,6 @@ async function initializeTextReveal() {
         document.removeEventListener('focusin', focus);
         animations.forEach(animation => { animation.scrollTrigger?.kill(); animation.revert(); });
         splits.forEach(split => split.revert());
-        wrappers.forEach(wrapper => wrapper.replaceWith(...wrapper.childNodes));
       };
     });
   };

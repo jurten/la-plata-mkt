@@ -10,6 +10,47 @@ const expectHeroBounds = async (hero: Locator, surface: Locator) => {
   }
 };
 
+for (const width of [1440, 390]) {
+  test(`el borde y la máscara WebGL se realinean tras redistribuir la hero sin recargar, ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.addInitScript(() => {
+      const names = new WeakMap<WebGLUniformLocation, string>();
+      const get = WebGL2RenderingContext.prototype.getUniformLocation;
+      WebGL2RenderingContext.prototype.getUniformLocation = function (program, name) {
+        const location = get.call(this, program, name);
+        if (location) names.set(location, name);
+        return location;
+      };
+      const set = WebGL2RenderingContext.prototype.uniform4f;
+      WebGL2RenderingContext.prototype.uniform4f = function (location, x, y, z, w) {
+        if (location && names.get(location) === 'uPortrait') {
+          (window as typeof window & { beamBounds: number[] }).beamBounds = [x, y, z, w];
+        }
+        return set.call(this, location, x, y, z, w);
+      };
+    });
+    await page.route('https://js.hs-scripts.com/**', route => route.fulfill({ body: '' }));
+    await page.goto('/#inicio');
+    const portrait = page.locator('[data-spatial-portrait]');
+    await expect(portrait).toHaveAttribute('data-spatial-state', 'ready', { timeout: 15_000 });
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(width * .5, width < 700 ? 650 : 300);
+    await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-beam', 'active');
+    // Neither change resizes the portrait: its ResizeObserver cannot repair
+    // the old mask origin. This previously left a second dark patch beside it.
+    if (width < 700) await portrait.evaluate(el => { el.style.marginTop = '72px'; });
+    else await portrait.evaluate(el => { el.style.translate = '36px 44px'; });
+    await expect.poll(() => page.evaluate(() => {
+      const uniform = (window as typeof window & { beamBounds?: number[] }).beamBounds;
+      if (!uniform) return Infinity;
+      const canvas = document.querySelector('.spatial-canvas')!.getBoundingClientRect();
+      const hero = document.querySelector('#inicio')!.getBoundingClientRect();
+      return Math.max(Math.abs(uniform[0] - (canvas.left - hero.left)), Math.abs(uniform[1] - (canvas.top - hero.top)));
+    })).toBeLessThan(1);
+    await expect(page.locator('[data-site-transmission]')).toHaveAttribute('data-transmission-state', 'running');
+  });
+}
+
 test('la interferencia pertenece al hero y se suspende fuera de pantalla', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/#inicio');
