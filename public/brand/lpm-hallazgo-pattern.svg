@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none" stroke="#b7d7ee" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Geometric adaptation of Hallazgo from the supplied LPM iconography. -->
+  <ellipse cx="30" cy="30" rx="20" ry="12" transform="rotate(-32 30 30)"/>
+  <path d="M30 22v16m-8-8h16m-13.7-5.7 11.4 11.4m-11.4 0 11.4-11.4"/>
+</svg>

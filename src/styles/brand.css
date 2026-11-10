@@ -16,6 +16,14 @@
 .television-nav .primary-nav > a::after { inset: 0; height: auto; z-index: -1; background: #e5e5f5; mask: url('/brand/lpm-eye.svg') center / contain no-repeat; transform: none; opacity: 0; transition: opacity 180ms ease-out; }
 .television-nav .primary-nav > a:is(:hover, :focus-visible, [aria-current='location'])::after { opacity: 1; transform: none; }
 .site-home .television-nav .primary-nav > a:is(:hover, :focus-visible, [aria-current='location']) { color: #0b1430; }
+/* Codrops example 18: a rotating field, using LPM's Hallazgo orbital mark. */
+.alien-hero .button-text { isolation: isolate; overflow: hidden; min-height: 52px; padding: 14px 22px; justify-content: center; border: 1px solid rgb(183 215 238 / 45%); border-radius: 999px; transition: border-color 180ms ease-out, background-color 180ms ease-out; }
+.alien-hero .button-text::after { content: ''; position: absolute; width: 300%; aspect-ratio: 1; top: 50%; left: 50%; z-index: -1; transform: translate(-50%, -50%); background: url('/brand/lpm-hallazgo-pattern.svg') center / 60px 60px repeat; opacity: 0; animation: approach-orbit 16s linear infinite paused; transition: opacity 240ms ease-out; pointer-events: none; }
+.alien-hero .button-text:is(:hover, :focus-visible) { border-color: #b7d7ee; background-color: #0b1428; color: #eef3ff; }
+.alien-hero .button-text:is(:hover, :focus-visible)::after { opacity: .18; animation-play-state: running; }
+@keyframes approach-orbit { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) { .alien-hero .button-text::after { animation: none; } }
+@media (forced-colors: active) { .alien-hero .button-text { border-color: LinkText; } .alien-hero .button-text::after { display: none; } }
 .television-nav .theme-switcher { padding-left: 0; border-left: 0; }
 .television-nav .theme-switcher button { width: 72px; padding: 6px 4px; background: color-mix(in srgb, var(--ink) 5%, transparent); }
 .television-nav .theme-switcher__thumb { top: 6px; width: 32px; height: 32px; background: color-mix(in srgb, var(--ink) 12%, transparent); }

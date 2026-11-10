@@ -47,7 +47,7 @@ input, textarea { caret-color: var(--blue-text); }
 .alien-hero .actions { gap: 12px 24px; margin-top: 28px; }
 .alien-hero .button-primary { background: #1536f1; color: #fff; }
 .alien-hero .button-primary:hover { background: #284bff; }
-.alien-hero .button-text { color: #e5edff; }
+.alien-hero .button-text { position: relative; color: #e5edff; }
 .alien-hero .button-text:hover { color: #b7d7ee; }
 .alien-hero .hero-footer { position: relative; z-index: 6; margin-top: auto; display: grid; place-items: center; border-color: rgba(194, 211, 255, .2); color: #c2ceea; padding-block: 18px; }
 .hero-scroll-cue { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; color: inherit; font-size: 13px; text-decoration: none; }
