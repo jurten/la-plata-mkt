@@ -1,0 +1,30 @@
+﻿.site-home .alien-hero.optical-hero { min-height: 100svh; padding-top: 140px; background: #030717; }
+.atmosphere { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: radial-gradient(ellipse at 20% 80%, #1748b9, transparent 65%), radial-gradient(ellipse at 85% 30%, #5268af, transparent 60%), #030717; }
+.atmosphere canvas { width: 100%; height: 100%; display: block; }
+.optical-hero .hero-stage { width: 100%; justify-content: center; padding-block: 65px; }
+.site-home .optical-hero .hero-copy { width: 100%; max-width: 1200px; padding: 0; }
+.optical-heading { position: relative; isolation: isolate; padding: 25px; }
+.site-home .optical-hero .optical-heading h1 { margin: 0; font: 500 clamp(46px, 7.1vw, 96px)/1.1 var(--display); letter-spacing: -.035em; }
+.optical-heading h1 span { display: block; }
+.optical-heading h1 span:nth-child(1) { text-align: left; }
+.optical-heading h1 span:nth-child(2) { text-align: right; }
+.optical-heading h1 span:nth-child(3) { text-align: center; }
+.optical-heading canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.optical-heading[data-warp-ready] h1 { opacity: 0; }
+.site-home .optical-hero .actions { justify-content: center; margin-top: 38px; flex-direction: row; }
+.site-home .optical-hero .hero-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; padding-block: 30px; border: 0; font-size: 14px; align-items: end; }
+.optical-footer-copy { line-height: 1.45; margin: 0; }
+.optical-footer-copy:last-of-type { text-align: right; }
+.optical-hero .hero-scroll-cue { justify-self: center; }
+@media (max-width: 700px) {
+ .site-home .alien-hero.optical-hero { padding-top: 110px; min-height: 100svh; }
+ .optical-hero .hero-stage { padding-block: 60px; }
+ .optical-heading { padding: 15px 24px; }
+ .site-home .optical-hero .optical-heading h1 { font-size: clamp(29px, 8.6vw, 60px); line-height: 1.2; }
+ .site-home .optical-hero .hero-footer { grid-template-columns: 1fr 1fr; gap: 26px; padding-block: 24px; }
+ .optical-hero .hero-scroll-cue { grid-column: 1 / -1; grid-row: 1; }
+ .optical-footer-copy:last-of-type { padding-right: 40px; font-size: 12px; }
+ .site-home .optical-hero .actions { flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+ .site-home .optical-hero .button-primary { width: auto; }
+}
+@media (forced-colors: active) { .atmosphere, .optical-heading canvas { display: none; } .optical-heading[data-warp-ready] h1 { opacity: 1; } }

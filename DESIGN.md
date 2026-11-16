@@ -203,6 +203,16 @@ components:
 
 # Design System: La Plata Marketing
 
+## Staggered WarpText hero, 2026-11-16
+
+The latest correction replaces the circular cursor, secondary revealed phrase and toggle with the supplied React Bits WarpText effect. The Spanish headline now reads “Somos una marca / de creatividad / colectiva.” with lines aligned left, right and centre, following the user's screenshot. `warp-text-shaders.ts` retains the supplied GLSL source; `warp-text.ts` adapts its texture, lens deformation, RGB dispersion, idle drift and click shockwaves to Astro using OGL without adding React. Rasterisation follows the live DOM line layout and local brand font. This heading is excluded from the general SplitText animation. The semantic heading remains available without JavaScript or graphics. Reduced motion holds the text still. The background retains its cobalt field and faint stars, removes the grain pass and increases the drawing resolution to avoid the previous pixelated texture. The hero retains the shared native retro arrow, hand and text cursors; only the circular magnifying lens is removed. This supersedes the optical lens requirements immediately below.
+
+## Centered optical hero, 2026-11-16
+
+The user's latest direction removes the alien from the homepage and replaces its headline and composition with a Monopo London inspired opening. This supersedes all historical alien, CRT, cursor and sky requirements for the hero below. Keep the existing logo, reading sections, contact paths and silhouette scroll exit. The opening now uses a centered three-line Spanish statement, a single WhatsApp action and small supporting text along the bottom. A custom two-dimensional WebGL color field blends cobalt, cool blue and deep navy with flowing noise, grain and faint stars; no model or 3D scene is loaded on the homepage. The old alien study route is historical.
+
+A 230px pointer lens magnifies the color field, separates RGB channels and reveals a second Spanish phrase through a circular text mask. Hide the native cursor only while the lens is active on a fine pointer; controls restore their ordinary pointer. Touch and keyboard visitors use the explicit “Otra perspectiva” toggle to read the complete second phrase. Reduced motion renders a static field and preserves both ways to read the message; offscreen and hidden-page states suspend drawing. Missing WebGL retains the CSS background, live text, toggle and links. No JavaScript retains the main statement and contact action. `AtmosphereHero.astro`, `atmosphere-hero.css` and `atmosphere-hero.ts` own this opening.
+
 ## Quieter stars, live starlight and approaching alien, 2026-11-15
 
 The latest user correction specifies a small-to-large alien entrance. Start at 38% of the final size and approach to 100% over Galaxy's existing 2.2-second opening flight, with a fast approach that settles smoothly. Use the same reveal clock; pause and visibility suspension freeze both, and resize, pointer input and click warp never replay the arrival. Preserve the final full-height framing below the navigation and above the hero footer.
