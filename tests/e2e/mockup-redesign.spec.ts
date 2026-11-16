@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-test('presenta tres disciplinas sin perder las capacidades existentes', async ({ page }) => {
+test('presenta las dos disciplinas y su método sin perder las capacidades existentes', async ({ page }) => {
   await page.goto('/');
-  const pillars = page.locator('.pillars');
+  const pillars = page.locator('.approach-panels');
   await expect(pillars.locator('article')).toHaveCount(3);
-  for (const name of [/Comunicación.*y marketing\./, 'Tecnología.', /La conexión.*entre ambas\./]) {
+  for (const name of [/Comunicación.*y marketing\./, 'Tecnología.', 'Nuestro método.']) {
     await expect(pillars.getByRole('heading', { name })).toBeVisible();
   }
   await expect(page.locator('#nosotros')).toBeVisible();

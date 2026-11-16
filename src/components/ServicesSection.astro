@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import BrandLogo from './BrandLogo.astro';
+import '../styles/approach.css';
 interface Props {
   capabilities: readonly (readonly [string, readonly string[]])[];
   solutionPaths: { title: string; question: string; tags: string[]; action: string }[];
@@ -8,24 +9,59 @@ interface Props {
 }
 const { capabilities, solutionPaths, whatsappHref } = Astro.props;
 ---
-<section class="pillars-section alien-pillars" id="soluciones" aria-labelledby="pillars-title">
-  <div class="wrap">
-    <header class="section-head"><h2 id="pillars-title" class="display">Miramos distinto.<br /><span class="text-muted">Conectamos todo.</span></h2><p>Comunicación, marketing y tecnología.<br />Cada parte, al servicio de tu negocio.</p></header>
-    <div class="pillars">
-      <article class="pillar pillar-marketing">
-        <div class="pillar-art marketing-art" aria-hidden="true"><span class="communication-eye"><span>Aa</span></span></div>
-        <div class="pillar-copy"><h3>Comunicación y marketing.</h3><p>Una presencia que te representa. Campañas que generan consultas.</p><details class="service-disclosure"><summary>Ver servicios <Icon name="plus" /></summary><ul class="service-list"><li>Contenido y presencia digital</li><li>Meta Ads y campañas</li><li>Medición y optimización</li></ul><a class="inline-link" href={whatsappHref}>Mejorar mi presencia <Icon /></a></details></div>
-      </article>
-      <article class="pillar pillar-technology">
-        <div class="pillar-art technology-art" aria-hidden="true"><span class="technology-eye"><Icon name="code" /></span></div>
-        <div class="pillar-copy"><h3>Tecnología.</h3><p>Webs y herramientas que hacen más simple tu día a día.</p><details class="service-disclosure"><summary>Ver servicios <Icon name="plus" /></summary><ul class="service-list"><li>Web, landing pages y ecommerce</li><li>CRM, integraciones y turnos</li><li>Automatización de procesos</li><li>Mantenimiento y modernización</li></ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></details></div>
-      </article>
-      <article class="pillar pillar-combined">
-        <div class="pillar-art combined-art" aria-hidden="true"><span class="combine-eye eye-one"></span><span class="combine-eye eye-two"></span><span class="combined-center"><BrandLogo variant="compact" /></span></div>
-        <div class="pillar-copy"><h3>La conexión entre ambas.</h3><p>Del primer clic al seguimiento. Las piezas, trabajando juntas.</p><details class="service-disclosure"><summary>Ver cómo se conectan <Icon name="plus" /></summary><ul class="service-list"><li>Estrategia y diagnóstico</li><li>Sistemas comerciales</li><li>Diseño de procesos</li></ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></details></div>
-      </article>
+<section class="pillars-section alien-pillars approach-section" id="soluciones" aria-labelledby="pillars-title" data-approach>
+  <div class="approach-track" data-approach-track>
+    <div class="approach-stage" data-approach-stage>
+      <header class="approach-head wrap">
+        <h2 id="pillars-title">Miramos distinto.<br /><span class="text-muted">Conectamos todo.</span></h2>
+        <p>Comunicación, marketing y tecnología.<br />Cada parte, al servicio de tu negocio.</p>
+      </header>
+
+      <div class="approach-art" aria-hidden="true">
+        <div class="approach-eye" data-approach-eye>
+          <span class="approach-eye__fill"></span>
+          <span class="approach-eye__outline"></span>
+          <span class="approach-eye__letters">Aa</span>
+          <span class="approach-eye__code"><Icon name="code" /></span>
+        </div>
+        <div class="approach-eye approach-eye--return" data-approach-return>
+          <span class="approach-eye__fill"></span>
+          <span class="approach-eye__letters">Aa</span>
+        </div>
+        <div class="approach-brand" data-approach-brand><BrandLogo variant="compact" /></div>
+      </div>
+
+      <div class="approach-panels wrap">
+        <article class="approach-panel approach-panel--marketing" id="enfoque-marketing" data-approach-panel>
+          <div class="approach-static-art" aria-hidden="true"><span class="communication-eye"><span>Aa</span></span></div>
+          <div class="approach-copy"><h3>Comunicación<br />y marketing.</h3><p>Una presencia que te representa.<br />Campañas que generan consultas.</p></div>
+        </article>
+        <article class="approach-panel approach-panel--technology" id="enfoque-tecnologia" data-approach-panel>
+          <div class="approach-static-art" aria-hidden="true"><span class="technology-eye"><Icon name="code" /></span></div>
+          <div class="approach-copy"><h3>Tecnología.</h3><p>Webs y herramientas que hacen más simple tu día a día.</p></div>
+        </article>
+        <article class="approach-panel approach-panel--method" id="enfoque-metodo" data-approach-panel>
+          <div class="approach-static-art" aria-hidden="true"><BrandLogo variant="compact" /></div>
+          <div class="approach-copy"><h3>Nuestro método.</h3><p>Del primer clic al seguimiento.<br />Las piezas, trabajando juntas.</p></div>
+        </article>
+      </div>
+
+      <nav class="approach-nav wrap" aria-label="Recorrido de nuestro enfoque">
+        <a href="#enfoque-marketing" data-approach-step>Marketing</a>
+        <a href="#enfoque-tecnologia" data-approach-step>Tecnología</a>
+        <a href="#enfoque-metodo" data-approach-step>Nuestro método</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="approach-details wrap">
+    <div class="approach-services" role="group" aria-label="Servicios de marketing, tecnología y conexión">
+      <details class="service-disclosure" id="servicios-marketing"><summary>Comunicación y marketing <Icon name="plus" /></summary><ul class="service-list"><li>Contenido y presencia digital</li><li>Meta Ads y campañas</li><li>Medición y optimización</li></ul><a class="inline-link" href={whatsappHref}>Mejorar mi presencia <Icon /></a></details>
+      <details class="service-disclosure" id="servicios-tecnologia"><summary>Tecnología <Icon name="plus" /></summary><ul class="service-list"><li>Web, landing pages y ecommerce</li><li>CRM, integraciones y turnos</li><li>Automatización de procesos</li><li>Mantenimiento y modernización</li></ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></details>
+      <details class="service-disclosure" id="servicios-conexion"><summary>La conexión entre ambas <Icon name="plus" /></summary><ul class="service-list"><li>Estrategia y diagnóstico</li><li>Sistemas comerciales</li><li>Diseño de procesos</li></ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></details>
     </div>
     <details class="section-disclosure capabilities-section" id="capacidades"><summary><h3>Todas las capacidades</h3><Icon name="plus" /></summary><div class="capability-grid">{capabilities.map(([title, items]) => <article class="capability"><h4>{title}</h4><ul>{items.map(item => <li>{item}</li>)}</ul></article>)}</div></details>
     <details class="section-disclosure"><summary><span>¿Por dónde empezamos?</span><Icon name="plus" /></summary><div class="solution-paths" aria-label="Tres maneras de empezar">{solutionPaths.map(path => <article class="solution-path"><div><h3>{path.title}</h3><p>{path.question}</p></div><div class="path-details"><div class="tags">{path.tags.map(tag => <span>{tag}</span>)}</div><a href={whatsappHref} class="inline-link">{path.action} <Icon /></a></div></article>)}</div></details>
   </div>
 </section>
+<script>import '../scripts/approach';</script>

@@ -9,6 +9,12 @@ related_targets: ["src/pages/privacidad.astro"]
 
 Mode: Persuade. Primary route: `src/pages/index.astro`; supporting route: `src/pages/privacidad.astro`.
 
+## Full-screen approach, 2026-11-16
+
+The user approved the marketing → technology → LPM scroll sequence based on https://tympanus.net/Development/OnScrollShapeMorph/. Replace the approach's open rows with a full-viewport sticky scene: communication eye and marketing copy, left-to-right travel and masked copy swap into the technology eye, then both eyes collide to reveal the unmodified official logo and “Nuestro método”. Keep the existing descriptions and all service information. Service disclosures, capabilities and solution paths remain in normal flow beneath the scene. The detailed method and complete system remain at their existing destinations.
+
+Use the current cobalt, theme-aware outline, brand type and eye contours. One reversible GSAP timeline owns this scene and its masks, with readable stops and an accessible three-link index. Coordinate the hero handoff and direct section hashes. On mobile, stack eye and copy; with insufficient height, reduced motion, forced colours, pause or no JavaScript, show all three semantic articles in normal flow. No global text entrance may compete with scene text. See `docs/approach-scroll.md` for implementation and validation.
+
 ## Latest star lighting and arrival, 2026-11-15
 
 The user corrected the entrance direction: the alien starts small and grows. Scale its cached image from 38% to the existing full-height fit during Galaxy's shared 2.2-second opening flight, settling smoothly without restarting on resize, re-entry or click warp. Keep only 42% of procedural star cells. The user's subsequent correction restores the original glow (.015), flare gain (.3), opacity (.8), twinkle (.3) and static brightness (.09–.43), retaining the reduced counts of 140 desktop / 60 mobile static stars. Use the real animated sky texture and cached mesh normals for directional light and reflections on the alien, preserving matte skin and dark eyes. Filter sky radiance with mipmaps inside the existing 24fps composite so settled geometry does not redraw. Preserve pause, offscreen/reveal suspension, reduced motion and forced colors. These details supersede the older density and independent-lighting notes below.

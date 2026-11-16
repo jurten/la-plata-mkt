@@ -39,8 +39,8 @@ test('el hero omite la imagen plana, mantiene el CTA visible y lo prioriza en m�
     if (width === 390) {
       const art = (await page.locator('.alien-portrait').boundingBox())!;
       expect(art.y).toBeGreaterThanOrEqual(copy.y + copy.height);
-      await expect(page.locator('.pillars').getByRole('heading', { name: 'Comunicación y marketing.', exact: true })).toBeVisible();
-      await expect(page.locator('.pillars').getByRole('heading', { name: 'La conexión entre ambas.', exact: true })).toBeVisible();
+      await expect(page.locator('.approach-panels').getByRole('heading', { name: 'Comunicación y marketing.', exact: true })).toBeVisible();
+      await expect(page.locator('.approach-panels').getByRole('heading', { name: 'Nuestro método.', exact: true })).toBeVisible();
     }
   }
 });

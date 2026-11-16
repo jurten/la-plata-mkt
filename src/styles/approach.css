@@ -1,0 +1,92 @@
+/* One optical scene: communication crosses into technology, then both become LPM. */
+.alien-pillars.approach-section { padding-block: 0 var(--section-space); }
+.approach-stage { position: relative; background: var(--bg); }
+.approach-head { display: flex; justify-content: space-between; align-items: start; gap: 32px; padding-top: 48px; }
+.approach-head h2 { margin: 0; font: 700 clamp(22px, 2vw, 28px)/1.12 var(--display); letter-spacing: -.03em; }
+.approach-head > p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.approach-panels { padding-block: 48px; }
+.approach-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; align-items: center; min-height: 420px; padding-block: 48px; }
+.approach-panel--technology .approach-static-art { grid-column: 2; grid-row: 1; }
+.approach-panel--technology .approach-copy { grid-column: 1; grid-row: 1; }
+.approach-static-art { display: grid; place-items: center; color: var(--blue-text); }
+.approach-static-art :is(.communication-eye, .technology-eye) { width: min(32vw, 460px); height: auto; aspect-ratio: 1.48; }
+.approach-static-art .communication-eye > span { font-size: clamp(72px, 10vw, 180px); }
+.approach-static-art .technology-eye .icon { width: 35%; height: auto; }
+.approach-static-art .brand-logo__symbol { width: min(30vw, 380px); }
+.approach-copy h3 { margin: 0; font: 700 clamp(40px, 5.2vw, 76px)/1.02 var(--display); letter-spacing: -.035em; text-wrap: balance; }
+.approach-copy p { max-width: 34ch; margin: 24px 0 0; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+.approach-art, .approach-nav { display: none; }
+.approach-details { padding-top: 32px; }
+.approach-services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; padding-bottom: 48px; }
+.approach-services .service-disclosure { min-width: 0; max-width: none; margin: 0; border-top: 1px solid var(--line); }
+.approach-services .service-disclosure summary { display: flex; justify-content: space-between; gap: 16px; min-height: 76px; font-size: 16px; color: var(--ink); }
+.approach-services .inline-link { color: var(--blue-text); }
+
+/* The readable, normal-flow articles above are the no-script / reduced-motion default. */
+.approach-section[data-approach-enabled] .approach-track { height: calc(100svh + var(--approach-distance)); }
+[data-approach-enabled] .approach-stage { position: sticky; top: 0; height: 100svh; overflow: clip; isolation: isolate; }
+[data-approach-enabled] .approach-head { position: absolute; top: 104px; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); padding-top: 24px; border-top: 1px solid var(--line); }
+[data-approach-enabled] .approach-art { display: block; position: absolute; inset: 0; pointer-events: none; }
+[data-approach-enabled] .approach-panels { width: 100%; margin: 0; padding: 0; }
+[data-approach-enabled] .approach-panel { position: absolute; inset: 0; display: block; min-height: 0; padding: 0; pointer-events: none; }
+/* Scroll progress is still zero while the hero exposes this scene. These
+   defaults must already be correct before GSAP renders its first frame. */
+[data-approach-enabled] :is(.approach-panel--technology, .approach-panel--method) { opacity: 0; }
+[data-approach-enabled] .approach-static-art { display: none; }
+[data-approach-enabled] .approach-copy { position: absolute; top: 51%; left: 55%; width: calc(45% - var(--page-gutter)); transform: translateY(-50%); }
+[data-approach-enabled] .approach-panel--technology .approach-copy { left: var(--page-gutter); width: 40%; }
+[data-approach-enabled] .approach-panel--method .approach-copy { top: 69%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); text-align: center; }
+[data-approach-enabled] .approach-panel--method .approach-copy p { margin-inline: auto; }
+[data-approach-enabled] .approach-panel--method h3 { font-size: clamp(40px, 4.6vw, 64px); }
+.approach-eye { position: absolute; top: 51%; left: 0; width: var(--approach-eye-width); aspect-ratio: 1.48; border-radius: 78% 18% 78% 18%; transform: translate(var(--approach-eye-start), -50%) rotate(-12deg); transform-origin: center; }
+.approach-eye--return { opacity: 0; }
+.approach-eye__fill, .approach-eye__outline { position: absolute; inset: 0; border-radius: inherit; }
+.approach-eye__fill { background: #1536f1; }
+.approach-eye__outline { border: clamp(2px, .25vw, 4px) solid var(--blue-text); }
+.approach-eye__outline, .approach-eye__code { opacity: 0; }
+.approach-eye__letters, .approach-eye__code { position: absolute; inset: 0; display: grid; place-items: center; }
+.approach-eye__letters { font: 700 calc(var(--approach-eye-width) * .4)/1 var(--display); letter-spacing: -.04em; color: #eef3ff; transform: rotate(12deg); }
+.approach-eye__code { color: var(--blue-text); }
+.approach-eye__code .icon { width: 34%; height: auto; stroke-width: 1.2; }
+.approach-brand { position: absolute; top: 41%; left: 50%; color: var(--blue-text); opacity: 0; transform: translate(-50%, -50%); }
+.approach-brand .brand-logo__symbol { width: min(30vw, 40svh, 440px); }
+[data-approach-enabled] .approach-nav { position: absolute; left: var(--page-gutter); bottom: 32px; display: flex; align-items: center; gap: clamp(24px, 4vw, 64px); border-top: 1px solid var(--line); padding-top: 16px; }
+.approach-nav a { position: relative; display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); font-size: 14px; text-decoration: none; }
+.approach-nav a::before { content: ''; position: absolute; top: -17px; left: 0; width: 100%; height: 2px; background: var(--blue-text); transform: scaleX(0); transform-origin: left; transition: transform 180ms ease-out; }
+.approach-nav a:is([aria-current='step'], :hover, :focus-visible) { color: var(--ink); }
+.approach-nav a[aria-current='step']::before { transform: scaleX(1); }
+[data-approach-moving] .approach-eye { will-change: transform; }
+
+@media (max-width: 1000px) {
+  .approach-services { gap: 24px; }
+  .approach-services .service-disclosure summary { font-size: 14px; }
+}
+@media (max-width: 700px) {
+  .approach-head { padding-top: 32px; }
+  .approach-head > p { display: none; }
+  .approach-panel { grid-template-columns: 1fr; gap: 40px; min-height: 0; padding-block: 40px 56px; }
+  .approach-panel--technology .approach-static-art, .approach-panel--technology .approach-copy { grid-column: auto; grid-row: auto; }
+  .approach-static-art :is(.communication-eye, .technology-eye) { width: min(65vw, 320px); }
+  .approach-static-art .communication-eye > span { font-size: 100px; }
+  .approach-static-art .brand-logo__symbol { width: min(60vw, 300px); }
+  .approach-copy h3 { font-size: clamp(36px, 9vw, 56px); }
+  .approach-copy p { margin-top: 20px; font-size: 17px; }
+  .approach-services { grid-template-columns: 1fr; gap: 0; padding-bottom: 24px; }
+  .approach-services .service-disclosure summary { font-size: 16px; }
+  .approach-services .service-disclosure { padding-bottom: 16px; }
+  [data-approach-enabled] .approach-head { top: 80px; padding-top: 20px; }
+  .approach-eye { top: 37%; }
+  [data-approach-enabled] .approach-copy,
+  [data-approach-enabled] .approach-panel--technology .approach-copy { top: 65%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); }
+  [data-approach-enabled] .approach-panel--method .approach-copy { top: 65%; }
+  [data-approach-enabled] .approach-panel--method h3 { font-size: clamp(36px, 9vw, 56px); }
+  .approach-brand { top: 37%; }
+  .approach-brand .brand-logo__symbol { width: min(65vw, 300px); }
+  [data-approach-enabled] .approach-nav { bottom: 88px; gap: 0; justify-content: space-between; }
+  .approach-nav a { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .approach-nav a::before { transition: none; } }
+@media (forced-colors: active) {
+  .approach-static-art .communication-eye { background: CanvasText; color: Canvas; }
+  .approach-static-art .technology-eye { border-color: CanvasText; color: CanvasText; }
+}

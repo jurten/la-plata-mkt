@@ -20,7 +20,7 @@ async function initializeTextReveal() {
       const pending = new Set<HTMLElement>();
       // Only headings, editorial subtitles and explicitly chosen decorative type.
       // Body copy and interface labels stay in their original, static markup.
-      const excluded = 'svg, [aria-live], [role="status"], [role="alert"], [data-warp-text]';
+      const excluded = 'svg, [aria-live], [role="status"], [role="alert"], [data-warp-text], [data-approach-stage]';
       const selector = 'h1, h2, h3, h4, h5, h6, .hero-subtitle, .about-statement, .estate-type, .legal-large, .legal-symbol, .communication-eye > span, .perspective-bottom > p';
       const candidates = [...document.body.querySelectorAll<HTMLElement>(selector)]
         .filter(el => el.textContent?.trim() && !el.closest(excluded));

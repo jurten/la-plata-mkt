@@ -96,8 +96,8 @@ function enhanceReveal(root: HTMLElement) {
         lead = Math.max(0, height - viewport);
         distance = Math.round(viewport * (width <= 700 ? 1.08 : 1.25));
         centerY = lead + Math.min(viewport, height) / 2;
-        const portrait = hero.querySelector<HTMLElement>('[data-spatial-portrait]')!;
-        focusY = width <= 700 ? centerY - (portrait.offsetTop + portrait.offsetHeight * .62) : 0;
+        const portrait = hero.querySelector<HTMLElement>('[data-spatial-portrait]');
+        focusY = width <= 700 && portrait ? centerY - (portrait.offsetTop + portrait.offsetHeight * .62) : 0;
         cover = Math.max(width / 1154, height / 752) * 4;
         fit = Math.min(width * .94 / 1154, viewport * .88 / 752);
         start = root.getBoundingClientRect().top + scrollY + lead;
@@ -167,6 +167,9 @@ function enhanceReveal(root: HTMLElement) {
 
       function resolveAnchor(event: Event) {
         const detail = (event as CustomEvent<AnchorRequest>).detail;
+        // The full-screen approach has its own semantic reading destinations.
+        // Its resolver handles these regardless of module evaluation order.
+        if (services.hasAttribute('data-approach-enabled') && detail.target.closest('[data-approach-panel]')) return;
         if (detail.target === hero) detail.top = start - lead;
         else if (services.contains(detail.target)) {
           detail.top = servicesTop + (detail.target === services ? 0 : detail.target.getBoundingClientRect().top - services.getBoundingClientRect().top - 120);
