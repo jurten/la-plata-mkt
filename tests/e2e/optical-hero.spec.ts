@@ -4,6 +4,11 @@ test('warped headline renders, responds to input and preserves contact', async (
  const errors: string[]=[];page.on('pageerror', e=>errors.push(e.message));
  await page.goto('/');
  await expect(page.locator('[data-warp-ready]')).toHaveCount(1);
+ // The headline has its own graphics context; also verify the smoke actually renders.
+ expect(await page.locator('[data-atmosphere]').evaluate((canvas: HTMLCanvasElement) => {
+  const gl = canvas.getContext('webgl');
+  return !!gl?.getParameter(gl.CURRENT_PROGRAM) && gl.getError() === gl.NO_ERROR;
+ })).toBe(true);
  await expect(page.locator('#hero-title')).toHaveText('Somos una marca de creatividad colectiva.');
  expect(await page.locator('#hero-title > span').evaluateAll(lines=>lines.map(line=>getComputedStyle(line).textAlign))).toEqual(['left','right','center']);
  await expect(page.locator('[data-optical-lens], .optical-secondary, .optical-switch, [data-spatial-portrait]')).toHaveCount(0);

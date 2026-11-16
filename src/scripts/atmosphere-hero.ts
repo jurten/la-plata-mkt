@@ -1,17 +1,48 @@
+import { SmokeDisplacement } from './smoke-displacement';
+
 const hero = document.querySelector<HTMLElement>('.optical-hero');
 if (hero) {
  const canvas = hero.querySelector<HTMLCanvasElement>('[data-atmosphere]')!;
 
  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
- let visible = true, frame = 0, time = 0, last = 0;
+ let visible = true, frame = 0, time = 0, last = 0, lastDraw = 0;
+ const flow = new SmokeDisplacement();
+ const pointer = { x: .5, y: .5, lastX: .5, lastY: .5, inside: false, fresh: true };
+ let cssWidth = 1, cssHeight = 1;
+ function releasePointer() { pointer.inside = false; pointer.fresh = true; }
+ hero.addEventListener('pointermove', event => {
+  if (event.pointerType === 'touch' || reduced.matches) return;
+  const bounds = canvas.getBoundingClientRect();
+  pointer.x = (event.clientX - bounds.left) / Math.max(1, bounds.width);
+  pointer.y = 1 - (event.clientY - bounds.top) / Math.max(1, bounds.height);
+  pointer.inside = pointer.x >= 0 && pointer.x <= 1 && pointer.y >= 0 && pointer.y <= 1;
+  if (pointer.fresh || !pointer.inside) {
+   pointer.lastX = pointer.x; pointer.lastY = pointer.y; pointer.fresh = false;
+  }
+ });
+ hero.addEventListener('pointerleave', releasePointer);
+ hero.addEventListener('pointercancel', releasePointer);
+ window.addEventListener('blur', releasePointer);
+ function updateFlow(dt: number) {
+  const moved = pointer.inside && (pointer.x !== pointer.lastX || pointer.y !== pointer.lastY);
+  if (moved || flow.energy > 0) {
+   flow.step(dt, moved ? pointer.lastX : pointer.x, moved ? pointer.lastY : pointer.y, pointer.x, pointer.y, cssWidth, cssHeight);
+  }
+  pointer.lastX = pointer.x; pointer.lastY = pointer.y;
+ }
  const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
  const vertex = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
  const fragment = `precision highp float;
  uniform vec2 res; uniform float clock;
+ uniform sampler2D flowMap;
  float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
  float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(7.2,3.1);a*=.5;}return v;}
- vec3 field(vec2 uv){float t=clock*.055;vec2 p=uv*2.6;vec2 q=vec2(fbm(p+t),fbm(p+vec2(5.2,1.3)-t));float n=fbm(p+2.5*q+vec2(t,-t));float ribbon=sin(uv.x*3.5+uv.y*4.8+n*4.5-t);
+ vec3 field(vec2 uv){
+ vec4 flowSample=texture2D(flowMap,uv);
+ vec2 displacement=(vec2(dot(flowSample.rg,vec2(65280.,255.)),dot(flowSample.ba,vec2(65280.,255.)))/65535.-.5)*.3;
+ vec2 smokeUv=uv-displacement;
+ float t=clock*.055;vec2 p=smokeUv*2.6;vec2 q=vec2(fbm(p+t),fbm(p+vec2(5.2,1.3)-t));float n=fbm(p+2.5*q+vec2(t,-t));float ribbon=sin(smokeUv.x*3.5+smokeUv.y*4.8+n*4.5-t);
  vec3 col=mix(vec3(.008,.018,.055),vec3(.025,.13,.70),smoothstep(-.5,.85,ribbon));
  col=mix(col,vec3(.38,.61,.87),pow(smoothstep(.60,1.,ribbon),3.)*.8);
  col+=vec3(.12,.035,.24)*pow(n,3.);
@@ -19,17 +50,38 @@ if (hero) {
  return col;}
  void main(){vec2 uv=gl_FragCoord.xy/res;gl_FragColor=vec4(field(uv),1.);}`;
  let program: WebGLProgram | null = null;
+ let flowTexture: WebGLTexture | null = null;
  const uniforms: Record<string, WebGLUniformLocation | null> = {};
  if (gl) {
   const shader = (type: number, source: string) => { const s = gl.createShader(type)!; gl.shaderSource(s, source); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; } return s; };
   const vs = shader(gl.VERTEX_SHADER, vertex), fs = shader(gl.FRAGMENT_SHADER, fragment);
   if (vs && fs) { program = gl.createProgram()!; gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program); if (!gl.getProgramParameter(program, gl.LINK_STATUS)) program = null; }
-  if (program) { gl.useProgram(program); const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW); const p = gl.getAttribLocation(program,'p'); gl.enableVertexAttribArray(p); gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0); for (const key of ['res','clock']) uniforms[key] = gl.getUniformLocation(program,key); }
+  if (program) {
+   gl.useProgram(program); const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW); const p = gl.getAttribLocation(program,'p'); gl.enableVertexAttribArray(p); gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
+   for (const key of ['res','clock','flowMap']) uniforms[key] = gl.getUniformLocation(program,key);
+   flowTexture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
+   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,flow.width,flow.height,0,gl.RGBA,gl.UNSIGNED_BYTE,flow.pixels);
+  }
  }
- function draw() { if (!gl || !program) return; gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.res,canvas.width,canvas.height); gl.uniform1f(uniforms.clock,time); gl.drawArrays(gl.TRIANGLES,0,6); }
- function animate(now: number) { frame=0; if (!visible || document.hidden || reduced.matches) return; if (now-last>40) { time+=Math.min((now-last)/1000,.05); last=now; draw(); } frame=requestAnimationFrame(animate); }
- function resume() { cancelAnimationFrame(frame); frame=0; last=performance.now(); if (visible && !document.hidden && !reduced.matches && program) frame=requestAnimationFrame(animate); else draw(); }
- new ResizeObserver(() => { const r=hero!.getBoundingClientRect(); const scale=Math.min(devicePixelRatio,1.5,2200/r.width); canvas.width=Math.round(r.width*scale); canvas.height=Math.round(r.height*scale); draw(); }).observe(hero);
+ function draw() {
+  if (!gl || !program) return;
+  gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.res,canvas.width,canvas.height); gl.uniform1f(uniforms.clock,time);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
+  gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,flow.width,flow.height,gl.RGBA,gl.UNSIGNED_BYTE,flow.pixels);
+  gl.uniform1i(uniforms.flowMap,0); gl.drawArrays(gl.TRIANGLES,0,6);
+ }
+ function animate(now: number) {
+  frame=0;
+  if (!visible || document.hidden || reduced.matches) return;
+  const elapsed=Math.max(.001,(now-last)/1000); last=now;
+  time+=Math.min(elapsed,.05); updateFlow(Math.min(elapsed,.25));
+  if (now-lastDraw>(flow.energy>.0001 ? 16 : 40)) { lastDraw=now; draw(); }
+  frame=requestAnimationFrame(animate);
+ }
+ function resume() { cancelAnimationFrame(frame); frame=0; last=performance.now(); if (!visible || document.hidden || reduced.matches) { releasePointer(); flow.clear(); } if (visible && !document.hidden && !reduced.matches && program) frame=requestAnimationFrame(animate); else draw(); }
+ new ResizeObserver(() => { const r=hero!.getBoundingClientRect(); cssWidth=Math.max(1,r.width); cssHeight=Math.max(1,r.height); const scale=Math.min(devicePixelRatio,1.5,2200/cssWidth); canvas.width=Math.round(cssWidth*scale); canvas.height=Math.round(cssHeight*scale); releasePointer(); flow.clear(); draw(); }).observe(hero);
  new IntersectionObserver(([entry]) => {visible=entry.isIntersecting;resume();}).observe(hero);
  document.addEventListener('visibilitychange',resume); reduced.addEventListener('change',resume);
  canvas.addEventListener('webglcontextlost', e=>{e.preventDefault();cancelAnimationFrame(frame);program=null;});
