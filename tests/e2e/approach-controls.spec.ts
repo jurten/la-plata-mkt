@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
-  test(`el enfoque integra servicios y sus controles animan sin cambiar de canal a ${viewport.width}px`, async ({ page }) => {
+for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }, { width: 390, height: 740 }, { width: 320, height: 780 }]) {
+  test(`el enfoque integra servicios y sus controles animan sin cambiar de canal a ${viewport.width}×${viewport.height}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/#soluciones');
     const root = page.locator('[data-approach]');

@@ -1,5 +1,19 @@
 # Enfoque: marketing → tecnología → LPM
 
+## Smooth motion and idle playback, 2026-11-16
+
+The latest refinement keeps the same eye sequence and adds a 480ms eased catch-up to scroll progress. Text leaves and enters with opacity and a short vertical movement instead of rectangular article masks. The eye remains transparent CSS geometry with its contents clipped to its own rounded contour; the final logo is the original SVG. No raster rectangle or blurred image background is introduced. The convergence, compression and logo arrival now have gentler easing and more room to settle. These changes supersede the older masking and transition timing below.
+
+A visible six-second countdown advances from marketing to the technology reading stop, then from technology to the method stop. Each automatic transition takes 2.8 seconds through the same native scroll positions and reversible timeline. It stops at the final composition without looping, changing the URL or scrolling into the following section. Local scene links use a 1.6-second transition.
+
+Wheel, touch, pointer input, scroll keys, scrollbar drags and external scroll changes interrupt playback and restart the idle countdown. The visitor can pause or resume with the countdown control. Reading-link focus, a hidden document, an inert main element/menu, or an offscreen stage suspends automatic playback. Reduced motion, forced colors, shared pause and short screens retain the static articles and hide playback controls. The countdown uses the existing GSAP ticker only while needed. Timers, smoothing, navigation, observers, events and component-owned styles are removed on teardown.
+
+Initial fragment arrival waits for document loading and fonts and has its own animation-frame handle, so a resize or font refresh cannot cancel navigation to a reading stop. Section headings omit final periods.
+
+`tests/e2e/approach-playback.spec.ts` covers the complete finite sequence on desktop/mobile, interruption, countdown reset, pause/resume, focus, menu inert state, offscreen suspension and reduced motion. Updated viewport captures are in the ignored `artifacts/approach-refinement/` directory.
+
+Validation: all 16 approach/controls/playback browser tests and the production build passed. Rendered captures at 1440×1000, 390×844, 320×844, 768×900, 1440×620, 390×740 and 320×780 show no horizontal overflow or overlap between reading content and the bottom index. Dark appearance and the reduced-motion articles were also inspected. The wider legacy hero/layout run has eight pre-existing failures against removed CRT/alien elements, former service disclosures/hero links, and the intentionally screen-reader-only approach heading; those fixtures remain outside this refinement.
+
 ## Single-screen refinement
 
 The user's subsequent annotated screenshot removes both introductory slogans and all below-stage content from this section. Each discipline now includes its relevant service summary and contact action inside its scene. Repetitive capability and starting-point disclosures are removed. The scene still follows native scroll, but the three local controls animate the scroll position through the same timeline over 1.2 seconds, intercepting their clicks before the television navigation. Wheel/touch interruption cancels that movement. Only the current panel's links are interactive. Reduced motion and no script preserve the normal-flow articles with their integrated information. This supersedes the earlier notes about separate disclosures below the track.

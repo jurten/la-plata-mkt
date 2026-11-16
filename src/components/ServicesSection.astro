@@ -16,6 +16,12 @@ const methodServices = capabilities.filter(([title]) => title === 'Estrategia').
   <div class="approach-track" data-approach-track>
     <div class="approach-stage" data-approach-stage>
       <h2 id="pillars-title" class="approach-sr-only">Nuestro enfoque</h2>
+      <p id="approach-playback-help" hidden>El recorrido avanza después de seis segundos sin desplazarte. Podés pausarlo o recorrerlo con scroll.</p>
+      <button class="approach-playback" type="button" data-approach-playback-toggle aria-label="Pausar avance automático" aria-pressed="false" aria-describedby="approach-playback-help">
+        <svg class="approach-playback__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="approach-playback__pause" d="M9 5v14M15 5v14" /><path class="approach-playback__play" d="m9 5 10 7-10 7Z" /></svg>
+        <span data-approach-countdown aria-hidden="true">Siguiente en 6 s</span>
+        <span class="approach-playback__track" aria-hidden="true"><span data-approach-countdown-bar></span></span>
+      </button>
 
       <div class="approach-art" aria-hidden="true">
         <div class="approach-eye" data-approach-eye>
@@ -34,15 +40,15 @@ const methodServices = capabilities.filter(([title]) => title === 'Estrategia').
       <div class="approach-panels wrap">
         <article class="approach-panel approach-panel--marketing" id="enfoque-marketing" data-approach-panel>
           <div class="approach-static-art" aria-hidden="true"><span class="communication-eye"><span>Aa</span></span></div>
-          <div class="approach-copy"><h3>Comunicación<br />y marketing.</h3><p>Una presencia que te representa.<br />Campañas que generan consultas.</p><ul class="approach-service-list">{marketingServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href={whatsappHref}>Mejorar mi presencia <Icon /></a></div>
+          <div class="approach-copy"><h3>Comunicación<br />y marketing</h3><p>Una presencia que te representa.<br />Campañas que generan consultas.</p><ul class="approach-service-list">{marketingServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href={whatsappHref}>Mejorar mi presencia <Icon /></a></div>
         </article>
         <article class="approach-panel approach-panel--technology" id="enfoque-tecnologia" data-approach-panel>
           <div class="approach-static-art" aria-hidden="true"><span class="technology-eye"><Icon name="code" /></span></div>
-          <div class="approach-copy"><h3>Tecnología.</h3><p>Webs y herramientas que hacen más simple tu día a día.</p><ul class="approach-service-list">{technologyServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></div>
+          <div class="approach-copy"><h3>Tecnología</h3><p>Webs y herramientas que hacen más simple tu día a día.</p><ul class="approach-service-list">{technologyServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href={whatsappHref}>Ordenar mi operación <Icon /></a></div>
         </article>
         <article class="approach-panel approach-panel--method" id="enfoque-metodo" data-approach-panel>
           <div class="approach-static-art" aria-hidden="true"><BrandLogo variant="compact" /></div>
-          <div class="approach-copy"><h3>Nuestro método.</h3><p>Del primer clic al seguimiento.<br />Las piezas, trabajando juntas.</p><ul class="approach-service-list">{methodServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></div>
+          <div class="approach-copy"><h3>Nuestro método</h3><p>Del primer clic al seguimiento.<br />Las piezas, trabajando juntas.</p><ul class="approach-service-list">{methodServices.map(service => <li>{service}</li>)}</ul><a class="inline-link" href="#sistema">Explorar el sistema <Icon name="right" /></a></div>
         </article>
       </div>
 

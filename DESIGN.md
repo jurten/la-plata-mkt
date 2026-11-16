@@ -203,6 +203,12 @@ components:
 
 # Design System: La Plata Marketing
 
+## Smooth approach and idle playback, 2026-11-16
+
+The user's latest approach refinement adds a 480ms eased catch-up to native scroll, softer eye convergence and logo arrival, and short opacity/vertical text transitions in place of full-article rectangular masks. Optical artwork stays transparent CSS geometry clipped to its own contour, and the official SVG remains intact; no rectangular raster background or blur is added. Approach headings omit final periods.
+
+A restrained pause/countdown control sits at the upper right of the scene. Six seconds without scrolling advances to the next reading stop over 2.8 seconds, waits again for technology, and finishes at “Nuestro método” without looping or leaving the section. Native scene links travel over 1.6 seconds. Scroll, touch, pointer and keyboard input interrupt playback and restart the timer. Focused reading links, an open menu/inert main, hidden document and offscreen scene suspend it. Static accessibility fallbacks hide the timer. Existing GSAP owns the finite countdown and easing; teardown removes all component-owned work. Initial fragment arrival waits for load/fonts independently of resize refreshes. See `docs/approach-scroll.md` and `tests/e2e/approach-playback.spec.ts`.
+
 ## Full-screen approach and converging eyes, 2026-11-16
 
 The user approved a scroll-controlled sequence inspired by Codrops' On-Scroll Shape Morph: the communication eye starts large on the left with marketing copy on the right, crosses to the right while its fill and Aa become the technology outline and code symbol, then meets a returning communication eye in the centre. Compression at contact reveals the intact official LPM logo and “Nuestro método”, using the existing connection description. This supersedes the former three service rows for the approach presentation. Preserve the three service lists and contact links as normal-flow disclosures below the scene, followed by the existing capabilities and solution paths.

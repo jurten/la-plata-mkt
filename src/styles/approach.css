@@ -19,7 +19,7 @@
 .approach-static-art .brand-logo__symbol { width: min(30vw, 380px); }
 .approach-copy h3 { margin: 0; font: 700 clamp(40px, 5.2vw, 76px)/1.02 var(--display); letter-spacing: -.035em; text-wrap: balance; }
 .approach-copy p { max-width: 34ch; margin: 24px 0 0; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; color: var(--muted); text-wrap: pretty; }
-.approach-art, .approach-nav { display: none; }
+.approach-art, .approach-nav, .approach-playback { display: none; }
 .approach-details { padding-top: 32px; }
 .approach-services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; padding-bottom: 48px; }
 .approach-services .service-disclosure { min-width: 0; max-width: none; margin: 0; border-top: 1px solid var(--line); }
@@ -44,7 +44,7 @@
 [data-approach-enabled] .approach-panel--method .approach-copy p { margin-inline: auto; }
 [data-approach-enabled] .approach-panel--method .approach-service-list { justify-content: center; margin-inline: auto; }
 [data-approach-enabled] .approach-panel--method h3 { font-size: clamp(40px, 4.6vw, 64px); }
-.approach-eye { position: absolute; top: 51%; left: 0; width: var(--approach-eye-width); aspect-ratio: 1.48; border-radius: 78% 18% 78% 18%; transform: translate(var(--approach-eye-start), -50%) rotate(-12deg); transform-origin: center; }
+.approach-eye { position: absolute; top: 51%; left: 0; width: var(--approach-eye-width); aspect-ratio: 1.48; border-radius: 78% 18% 78% 18%; transform: translate(var(--approach-eye-start), -50%) rotate(-12deg); transform-origin: center; overflow: clip; }
 .approach-eye--return { opacity: 0; }
 .approach-eye__fill, .approach-eye__outline { position: absolute; inset: 0; border-radius: inherit; }
 .approach-eye__fill { background: #1536f1; }
@@ -62,6 +62,16 @@
 .approach-nav a:is([aria-current='step'], :hover, :focus-visible) { color: var(--ink); }
 .approach-nav a[aria-current='step']::before { transform: scaleX(1); }
 [data-approach-moving] .approach-eye { will-change: transform; }
+[data-approach-enabled] .approach-playback { position: absolute; z-index: 2; top: 112px; right: var(--page-gutter); display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: var(--muted); font: 400 12px/1.5 var(--body); font-variant-numeric: tabular-nums; }
+.approach-playback:hover, .approach-playback:focus-visible { color: var(--blue-text); }
+.approach-playback__icon { width: 16px; height: 16px; }
+.approach-playback__play { display: none; }
+.approach-playback__track { position: absolute; right: 0; bottom: 3px; left: 24px; height: 2px; background: var(--line); overflow: clip; }
+.approach-playback__track > span { display: block; width: 100%; height: 100%; background: var(--blue-text); transform-origin: left; }
+[data-approach-autoplay-paused] .approach-playback__pause { display: none; }
+[data-approach-autoplay-paused] .approach-playback__play { display: block; }
+.approach-playback:disabled { color: var(--muted); cursor: default; }
+.approach-playback:disabled :is(.approach-playback__icon, .approach-playback__track) { visibility: hidden; }
 
 @media (max-width: 1000px) {
   .approach-services { gap: 24px; }
@@ -82,6 +92,7 @@
   .approach-services .service-disclosure summary { font-size: 16px; }
   .approach-services .service-disclosure { padding-bottom: 16px; }
   [data-approach-enabled] .approach-head { top: 80px; padding-top: 20px; }
+  [data-approach-enabled] .approach-playback { top: 96px; }
   .approach-eye { top: 37%; }
   [data-approach-enabled] .approach-copy,
   [data-approach-enabled] .approach-panel--technology .approach-copy { top: 65%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); }
@@ -94,12 +105,18 @@
 }
 @media (min-width: 701px) and (max-height: 850px) {
   .approach-brand { top: 34%; }
-  [data-approach-enabled] .approach-panel--method .approach-copy { top: 67%; }
+  [data-approach-enabled] .approach-panel--method .approach-copy { top: 65%; }
   [data-approach-enabled] .approach-panel--method h3 { font-size: 40px; }
   .approach-brand .brand-logo__symbol { width: min(26vw, 30svh); }
   .approach-copy h3 { font-size: clamp(40px, 4.5vw, 64px); }
   .approach-copy p { font-size: 17px; margin-top: 16px; }
   .approach-service-list { margin-top: 16px; font-size: 12px; gap: 4px 14px; }
+}
+@media (max-width: 700px) and (max-height: 800px) {
+  [data-approach-enabled] .approach-playback { top: 88px; }
+  .approach-eye, .approach-brand { top: 29%; }
+  [data-approach-enabled] .approach-panel .approach-copy { top: 61%; }
+  [data-approach-enabled] .approach-nav { bottom: 80px; }
 }
 @media (prefers-reduced-motion: reduce) { .approach-nav a::before { transition: none; } }
 @media (forced-colors: active) {
