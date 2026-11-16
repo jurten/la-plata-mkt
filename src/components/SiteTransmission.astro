@@ -1,14 +1,5 @@
----
-import '../styles/site-transmission.css';
----
-<div class="site-transmission" data-site-transmission data-transmission-state="static" data-beam="inactive" data-signal-phase="locked" aria-hidden="true">
-  <svg class="transmission-definitions" width="0" height="0" focusable="false">
-    <defs>
-      <clipPath id="site-crt-cutout" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" data-crt-cutout /></clipPath>
-    </defs>
-  </svg>
-  <canvas class="transmission-static"></canvas>
-</div>
+<!-- Shared Galaxy clock and input state; no visual overlay. -->
+<div data-site-transmission data-transmission-state="static" data-galaxy-pointer="inactive" hidden aria-hidden="true"></div>
 <script>
   import '../scripts/site-transmission';
 </script>

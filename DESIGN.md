@@ -203,6 +203,26 @@ components:
 
 # Design System: La Plata Marketing
 
+## Quieter stars, live starlight and approaching alien, 2026-11-15
+
+The latest user correction specifies a small-to-large alien entrance. Start at 38% of the final size and approach to 100% over Galaxy's existing 2.2-second opening flight, with a fast approach that settles smoothly. Use the same reveal clock; pause and visibility suspension freeze both, and resize, pointer input and click warp never replay the arrival. Preserve the final full-height framing below the navigation and above the hero footer.
+
+Keep 42% of procedural star cells. The user's subsequent correction restores the original brightness: core glow .015, flare gain .3, opacity .8 and twinkle .3. The static approximation keeps 140 desktop stars / 60 mobile stars with its original brightness range (.09–.43). The actual animated Galaxy texture also lights the alien: cached view-space surface normals direct diffuse illumination and roughness-filtered reflections, keeping the skin matte and the eyes dark. Sky mipmaps provide filtered radiance; the settled mesh and normals remain cached while the existing 24fps composite updates. No extra animation loop, context or CPU pixel readback is needed. This supersedes the previous density and entirely independent model-lighting descriptions below.
+
+## Full-height head between navigation and hero footer, 2026-11-15
+
+The user clarified that the head must use the full vertical space, rejecting the previous generous empty margins. The render frame now has only 8px clearance below the actual navbar and above the hero-footer line. An off-axis perspective projection measures the real mesh in its current pose, fills 99% of that frame height, and aligns the crown and chin without changing proportions. Desktop height takes priority over fitting inside the narrow text-column remainder; the head remains centered on the right. Mobile fills its existing portrait area. Galaxy remains full size and independently animated. This supersedes the previous 24px/16px margins and conservative all-pose camera fit.
+
+## Clean hero, 2026-11-15
+
+The user explicitly removed the CRT effect shown in their screenshot. Remove all noise, scanlines, tracking bands, RGB splitting, UV corruption and periodic head holds from the hero. The alien and Galaxy are now composited directly and stay clear. Galaxy's shared clock, repulsion, warp, pause and offscreen/reveal suspension remain; its controller is a hidden state node with no visual canvas or overlay. This supersedes all historical CRT requirements below. Television navigation retains its separate channel transitions.
+
+## React Bits Galaxy background, 2026-11-15
+
+The user selected https://reactbits.dev/backgrounds/galaxy after rejecting the attraction experiment. The live sky now uses the actual React Bits Galaxy shader, adapted to the existing Three.js renderer with blue-white colors, four desktop layers (three on mobile), flight, rotation, twinkle, star flares, damped cursor repulsion and a click warp on noninteractive hero space. Links and controls never trigger warp. The official shader's license and attribution are retained in `public/licenses/react-bits-galaxy.txt`.
+
+Galaxy renders into a separate target capped at 500,000 pixels and uses the existing 24fps hero transmission clock. The alien is cached independently with a transparent background; the CRT pass composites the animated sky and cached model before distortion. Settled head geometry stays idle while the sky moves. Pause freezes the current sky; reveal, hidden/offscreen states and reduced motion suspend it. Forced colors hides the stars. The established 2D seeded sky remains the lightweight static approximation for loading, reduced motion and graphics failures. No React runtime, extra dependency, WebGL context or animation loop is added. This replaces all local attraction/clearing-ray requirements below; content, typography, navigation and scroll exit stay within their existing design.
+
 ## Scroll exit through the official silhouette, 2026-11-10
 
 Latest spacing and 2.5D refinement: services remains in normal flow, with its heading immediately below the silhouette's closing point. Its existing section padding and the masthead height determine the handoff; a 16px allowance protects the final frames. This replaces the previous 90%-viewport blank interval. The outer window now uses a 1000px perspective, fine-pointer rotation up to 10.8 degrees on both axes, and bounded translation up to 30px x / 20px y. A separate inner media layer counter-translates by 60% of that travel, so the content follows at 40% of the frame's movement. GSAP quickTo smooths rotation over 500ms and position over 650ms. These relationships follow inspection of Zentry's public Intro and Frame modules, which combine a projected mask, pointer-driven Euler rotation, damping, and gentler media translation; LPM implements its own CSS perspective around the approved semioval. The pivot follows the shrinking window. Touch, reduced motion, cursor leave and exit retain their centering behavior. Direct section links land at the real services position.

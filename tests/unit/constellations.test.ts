@@ -12,7 +12,7 @@ describe('generative hero sky', () => {
   it('keeps stars in frame across many generated skies', () => {
     for (let seed = 0; seed < 100; seed++) {
       const field = generateConstellations(seed);
-      expect(field.stars).toHaveLength(300);
+      expect(field.stars).toHaveLength(140);
       for (const star of field.stars) {
         expect(star.x).toBeGreaterThan(0);
         expect(star.x).toBeLessThan(1);

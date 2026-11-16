@@ -9,6 +9,22 @@ related_targets: ["src/pages/privacidad.astro"]
 
 Mode: Persuade. Primary route: `src/pages/index.astro`; supporting route: `src/pages/privacidad.astro`.
 
+## Latest star lighting and arrival, 2026-11-15
+
+The user corrected the entrance direction: the alien starts small and grows. Scale its cached image from 38% to the existing full-height fit during Galaxy's shared 2.2-second opening flight, settling smoothly without restarting on resize, re-entry or click warp. Keep only 42% of procedural star cells. The user's subsequent correction restores the original glow (.015), flare gain (.3), opacity (.8), twinkle (.3) and static brightness (.09–.43), retaining the reduced counts of 140 desktop / 60 mobile static stars. Use the real animated sky texture and cached mesh normals for directional light and reflections on the alien, preserving matte skin and dark eyes. Filter sky radiance with mipmaps inside the existing 24fps composite so settled geometry does not redraw. Preserve pause, offscreen/reveal suspension, reduced motion and forced colors. These details supersede the older density and independent-lighting notes below.
+
+## Use the full available head height, 2026-11-15
+
+The user rejected the conservative head size and explicitly requires using all the height between the navbar and the footer that says "Desliz? para descubrir". Leave 8px clearance at those boundaries and fill 99% of the remaining height using the projected mesh in its actual pose. Keep proportions and the right-hand desktop center; horizontal column containment must no longer shrink the head vertically. On mobile, fill the current portrait area. Preserve live text, Galaxy and scroll exit. This supersedes the previous generous framing margins.
+
+## Remove hero CRT, 2026-11-15
+
+The user rejected the screenshot's full-width interference. Remove the hero's noise canvas, scanlines, tracking bands, RGB split, UV corruption and periodic head holds. Keep the alien and Galaxy clear through direct compositing, retaining Galaxy input, warp, pause and suspension. The shared clock remains in a hidden nonvisual node. This overrides all CRT requirements below; the navigation's separate television transitions remain.
+
+## React Bits Galaxy, 2026-11-15
+
+The user rejected local attraction and explicitly chose https://reactbits.dev/backgrounds/galaxy. Adapt its actual shader to the existing renderer: blue-white layered flight, rotation, twinkle and star flares, cursor/touch repulsion with damped release, and click warp only on noninteractive hero space. Use four desktop layers and three mobile layers with a 500,000-pixel target. The shared 24fps transmission clock animates Galaxy while the alien model remains independently cached. Both are composited before the existing CRT distortion. Pause freezes the sky; offscreen/hidden, reveal, reduced motion and forced colors suspend work. Preserve a lightweight 2D static sky for loading/accessibility/graphics failure and retain the upstream license. This supersedes the attraction experiment and all clearing-ray requirements below. Preserve layout, text, contact, navigation and scroll exit.
+
 ## Hero exit through the brand semioval, 2026-11-10
 
 The final refinement removes the 90%-viewport blank interval. Services remains in normal flow with its heading immediately below the closing silhouette; the masthead height, existing section padding and a 16px clearance determine the handoff. Inspection of Zentry's public Intro and Frame modules informed a 2.5D treatment: the outer window tilts up to 10.8 degrees around both axes with a 1000px perspective, translates up to 30px x / 20px y, and the inner media counter-translates by 60% so it moves more gently. GSAP quickTo smooths rotation over 500ms and position over 650ms. The pivot follows the shrinking window, independently of scroll scale and the exact semioval contour. The effect centers on exit and pointer leave and is omitted for touch or reduced motion. Anchors resolve the actual services position.

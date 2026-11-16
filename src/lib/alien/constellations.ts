@@ -21,7 +21,7 @@ export function generateConstellations(seed: number): ConstellationField {
     return ((value ^ value >>> 14) >>> 0) / 4294967296;
   };
   const stars: Star[] = [];
-  while (stars.length < 300) {
+  while (stars.length < 140) {
     stars.push({
       x: .015 + random() * .97, y: .025 + random() * .95,
       radius: .56 + random() ** 2 * 1.44,
@@ -42,7 +42,7 @@ export function paintConstellations(
   field: ConstellationField, pointerX = 0, pointerY = 0,
 ) {
   const compact = width <= 700;
-  const stars = field.stars.slice(0, compact ? 128 : 300);
+  const stars = field.stars.slice(0, compact ? 60 : 140);
   context.fillStyle = '#020307';
   context.fillRect(0, 0, width, height);
   const points = stars.map(star => {

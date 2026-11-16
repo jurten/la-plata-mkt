@@ -1,5 +1,0 @@
-.site-transmission { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; contain: strict; }
-.site-transmission:not([data-transmission-state='running']) { visibility: hidden; }
-.transmission-definitions { position: absolute; }
-.transmission-static { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-@media (prefers-reduced-motion: reduce), (forced-colors: active) { .site-transmission { display: none; } }

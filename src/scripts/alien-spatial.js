@@ -14,10 +14,9 @@ function enhancePortrait(portrait) {
   let settled = false;
   let paused = false;
   let revealing = false;
-  let signalHeld = false;
   let signal = {
-    enabled: false, phase: 'locked', frame: -1, present: true,
-    beam: { active: false, x: 0, y: 0, radii: new Float32Array(192) },
+    enabled: false, present: true, time: 0, warp: 0,
+    pointer: { active: false, x: 0, y: 0 },
   };
   let inView = false;
   let frame = 0;
@@ -30,7 +29,7 @@ function enhancePortrait(portrait) {
   let bounds;
   let drag;
   const clamp = (value) => Math.max(-1, Math.min(1, value));
-  const canRun = () => !failed && !paused && !revealing && !signalHeld && !reduceMotion && inView && !document.hidden;
+  const canRun = () => !failed && !paused && !revealing && !reduceMotion && inView && !document.hidden;
   const reportProgress = (value) => {
     const progress = Math.max(0, Math.min(100, Math.round(value)));
     portrait.dataset.spatialProgress = String(progress);
@@ -57,22 +56,17 @@ function enhancePortrait(portrait) {
     canvas.setAttribute('aria-hidden', 'true');
     reportSettled('unavailable');
   };
-  const recordPresentation = () => {
-    portrait.dataset.spatialSignal = signal.enabled ? signal.phase : 'locked';
-    portrait.dataset.spatialSignalFrame = signal.enabled ? String(signal.frame) : '-1';
-  };
   const presentSignal = () => {
     if (!renderer || failed) return;
-    // Holding the pose must not hold the postprocess which corrupts that pose.
+    // Galaxy keeps moving while the head is settled, using the shared clock.
     const visible = inView && !document.hidden && !reduceMotion && signal.present !== false;
     try {
-      if (renderer.signal(signal, visible && (!paused || !signal.enabled))) recordPresentation();
+      renderer.signal(signal, visible && (!paused || !signal.enabled));
     } catch { fallback(); }
   };
   const draw = () => {
     try {
       if (renderer?.draw(current.x, current.y, coarse.matches)) {
-        recordPresentation();
         reportProgress(100);
         reportSettled('ready');
       }
@@ -81,8 +75,7 @@ function enhancePortrait(portrait) {
   const tick = (time) => {
     frame = 0;
     if (!renderer || !canRun()) return stop();
-    // The hero transmission distorts the cached view. Only redraw the head
-    // while its pose changes, and hold that view during a skipping burst.
+    // Only redraw the head while its pose changes; Galaxy has its own cached pass.
     if (time - lastDraw < 1000 / 24) { frame = requestAnimationFrame(tick); return; }
     lastDraw = time;
     if (greeting) {
@@ -102,7 +95,7 @@ function enhancePortrait(portrait) {
       else { current = target = { x: 0, y: 0 }; stop(); }
       return;
     }
-    const elapsed = lastTime ? Math.min(time - lastTime, 64) : 16;
+    const elapsed = lastTime ? Math.min(time - lastTime, 120) : 16;
     lastTime = time;
     const amount = 1 - Math.exp(-elapsed / 110);
     current.x += (target.x - current.x) * amount;
@@ -162,7 +155,7 @@ function enhancePortrait(portrait) {
     if (failed) return;
     if (reduceMotion || paused) {
       stop();
-      signal = { ...signal, enabled: false, phase: 'locked', frame: -1 };
+      signal = { ...signal, enabled: false };
       presentSignal();
       if (paused) draw();
       if (reduceMotion) current = target = { x: 0, y: 0 };
@@ -205,11 +198,6 @@ function enhancePortrait(portrait) {
   screen.orientation?.addEventListener('change', () => move(0, 0));
   window.addEventListener('lpm:transmission-pause', (event) => { paused = event.detail; synchronize(); });
   hero.addEventListener('lpm:hero-reveal', (event) => { revealing = event.detail; synchronize(); });
-  hero.addEventListener('lpm:signal-skip', (event) => {
-    signalHeld = Boolean(event.detail);
-    if (signalHeld) stop();
-    else if (canRun() && Math.abs(target.x - current.x) + Math.abs(target.y - current.y) >= .001) move(target.x, target.y);
-  });
   hero.addEventListener('lpm:signal-frame', (event) => {
     signal = event.detail;
     presentSignal();
@@ -223,8 +211,13 @@ function enhancePortrait(portrait) {
   document.addEventListener('visibilitychange', synchronize);
   window.addEventListener('pagehide', stop);
   window.addEventListener('pageshow', synchronize);
-  if ('ResizeObserver' in window) new ResizeObserver(geometry).observe(portrait);
-  else window.addEventListener('resize', geometry, { passive: true });
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(geometry);
+    observer.observe(portrait);
+    for (const element of [hero, hero.querySelector('.hero-footer'), hero.querySelector('.hero-copy'), document.querySelector('.television-nav')]) {
+      if (element) observer.observe(element);
+    }
+  } else window.addEventListener('resize', geometry, { passive: true });
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((entries) => { inView = entries.some((entry) => entry.isIntersecting); synchronize(); }, { threshold: 0 }).observe(portrait);
   } else { inView = true; synchronize(); }

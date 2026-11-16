@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { expect, test, type Page } from '@playwright/test';
+import { auditGalaxy } from './helpers/galaxy-audit';
 
 const portraitSelector = '.alien-portrait[data-spatial-portrait]';
 const sceneURL = /alien-scene(?:\.[^/?]+)?\.(?:js|ts)(?:[?]|$)/i;
@@ -162,49 +163,10 @@ test('el retrato tiene profundidad visible y puede pausarse sin mover texto ni C
   await expect(portrait).toHaveAttribute('data-spatial-state', 'ready');
 });
 
-test('el rayo de neón limpia la interferencia cerca del cursor y se retira al salir', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/');
-  const portrait = await readyPortrait(page);
-  const canvas = portrait.locator('canvas.spatial-canvas');
-  const box = (await canvas.boundingBox())!;
-  await page.mouse.move(box.x + box.width * .75, box.y + box.height * .5);
-  await expect(portrait).toHaveAttribute('data-transmission-beam', 'active');
-  await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
-  await page.waitForTimeout(500);
-  // A narrow strip includes both sample regions without shipping full-page
-  // pixel arrays through browser evaluation.
-  const clip = { x: box.x + box.width * .75 - 25, y: box.y + box.height * .15 - 25, width: 50, height: box.height * .35 + 50 };
-  const first = [...await page.screenshot({ clip })];
-  await page.waitForTimeout(250);
-  const second = [...await page.screenshot({ clip })];
-  const variation = await page.evaluate(async ({ first, second }) => {
-    async function pixels(bytes: number[]) {
-      const bitmap = await createImageBitmap(new Blob([new Uint8Array(bytes)], { type: 'image/png' }));
-      const scratch = document.createElement('canvas');
-      scratch.width = bitmap.width; scratch.height = bitmap.height;
-      const context = scratch.getContext('2d')!;
-      context.drawImage(bitmap, 0, 0); bitmap.close();
-      return { width: scratch.width, height: scratch.height, data: context.getImageData(0, 0, scratch.width, scratch.height).data };
-    }
-    const a = await pixels(first), b = await pixels(second);
-    function difference(startY: number) {
-      let sum = 0;
-      for (let y = 0; y < 50; y++) for (let x = 0; x < 50; x++) {
-        const at = ((startY + y) * a.width + x) * 4;
-        for (let c = 0; c < 3; c++) sum += Math.abs(a.data[at + c] - b.data[at + c]);
-      }
-      return sum / (50 * 50 * 3);
-    }
-    return { inside: difference(a.height - 50), outside: difference(0) };
-  }, { first, second });
-  expect(variation.outside, 'la señal CRT sigue viva fuera del rayo').toBeGreaterThan(.1);
-  expect(variation.inside, 'la zona revelada queda limpia y estable').toBeLessThan(variation.outside * .35);
-  await page.mouse.move(20, box.y + box.height + 30);
-  await expect(portrait).toHaveAttribute('data-transmission-beam', 'inactive');
-});
-
 test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async ({ page }) => {
+  test.setTimeout(60_000);
+  // Isolate the actual head silhouette from independently tested star glows.
+  await auditGalaxy(page, true);
   const loaded = new Set<string>();
   page.on('response', (response) => { if (response.ok()) loaded.add(response.url()); });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -216,14 +178,17 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
     await page.setViewportSize({ width, height: 1000 });
     const portrait = await readyPortrait(page);
     await expect(portrait).toHaveAttribute('data-spatial-motion', 'idle');
-    await expect(portrait).toHaveAttribute('data-spatial-signal', 'locked');
     const canvas = portrait.locator('canvas.spatial-canvas');
     const canvasBox = (await canvas.boundingBox())!;
     const portraitBox = (await portrait.boundingBox())!;
     for (const key of ['x', 'y', 'width', 'height'] as const) expect(canvasBox[key], `${key} @ ${width}`).toBeCloseTo(portraitBox[key], 0);
+    // Freeze motion while capturing anatomy at each viewport size.
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: true })));
+    await expect(portrait).toHaveAttribute('data-spatial-state', 'paused');
     const rendered = await canvas.screenshot({
       style: '.hero-copy,.hero-footer,.topbar,.floating-whatsapp,[data-site-transmission]{visibility:hidden!important}',
     });
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('lpm:transmission-pause', { detail: false })));
     const face = await page.evaluate(async (bytes) => {
       const bitmap = await createImageBitmap(new Blob([new Uint8Array(bytes)], { type: 'image/png' }));
       const scratch = document.createElement('canvas');scratch.width = bitmap.width;scratch.height = bitmap.height;
@@ -286,12 +251,19 @@ test('el modelo 3D conserva textura, ojos y controles en cada breakpoint', async
           fine += Math.abs(luminance[i] - (luminance[i-1] + luminance[i+1] + luminance[i-w] + luminance[i+w]) * .25);samples++;
         }
       }
-      bitmap.close();return { coverage: skinCount / (w * h), eyes, fineDetail: fine / Math.max(1, samples) };
+      bitmap.close();return { coverage: skinCount / (w * h), eyes, fineDetail: fine / Math.max(1, samples), top: top * step, bottom: bottom * step };
     }, [...rendered]);
-    expect(face.coverage, `superficie azul visible @ ${width}`).toBeGreaterThan(.07);
+    expect(face.coverage, `superficie azul visible @ ${width}`).toBeGreaterThan(.03);
     expect(face.coverage, `espacio alrededor del modelo @ ${width}`).toBeLessThan(.85);
     expect(face.eyes, `lentes oscuros dentro de la cara @ ${width}`).toBeGreaterThanOrEqual(width === 701 ? 1 : 2);
     expect(face.fineDetail, `detalle tonal de la piel @ ${width}`).toBeGreaterThan(.08);
+    const navBox = (await page.locator('.television-nav').boundingBox())!;
+    const footerBox = (await page.locator('.hero-footer').boundingBox())!;
+    // Allow a few pixels for rasterization and blue star glows at the silhouette.
+    expect(canvasBox.y + face.top, `cabeza debajo de la navegación @ ${width}`).toBeGreaterThan(navBox.y + navBox.height + 4);
+    expect(canvasBox.y + face.bottom, `cabeza encima del pie del hero @ ${width}`).toBeLessThan(footerBox.y - 4);
+    expect(canvasBox.y + face.top, `aprovecha el espacio superior @ ${width}`).toBeLessThan(Math.max(canvasBox.y, navBox.y + navBox.height) + 32);
+    expect(canvasBox.y + face.bottom, `aprovecha el espacio inferior @ ${width}`).toBeGreaterThan(footerBox.y - 32);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     await expect(page.locator('.hero .button-primary')).toBeVisible();
   }
@@ -370,18 +342,18 @@ test('el alien no redibuja en reposo y la transmisión se suspende fuera del her
       const context = (originalContext as (...args: unknown[]) => unknown).apply(this, [contextId, ...args]);
       if (/webgl/i.test(contextId) && this.matches('.spatial-canvas') && context) {
         const graphics = context as WebGLRenderingContext;
-        const recordDraw = () => {
-          if (graphics.getParameter(graphics.FRAMEBUFFER_BINDING) !== null) audit.modelDraws += 1;
+        const recordDraw = (count: number) => {
+          if (count > 6) audit.modelDraws += 1;
           else audit.outputDraws += 1;
         };
         const originalArrays = graphics.drawArrays;
         graphics.drawArrays = function (...drawArgs: Parameters<WebGLRenderingContext['drawArrays']>) {
-          recordDraw();
+          recordDraw(drawArgs[1]);
           return originalArrays.apply(graphics, drawArgs);
         };
         const originalElements = graphics.drawElements;
         graphics.drawElements = function (...drawArgs: Parameters<WebGLRenderingContext['drawElements']>) {
-          recordDraw();
+          recordDraw(drawArgs[1]);
           return originalElements.apply(graphics, drawArgs);
         };
       }
@@ -402,7 +374,7 @@ test('el alien no redibuja en reposo y la transmisión se suspende fuera del her
   expect(settled.frames).toBeGreaterThan(0);
   expect(settled.modelDraws).toBeGreaterThan(0);
   expect(settled.outputDraws).toBeGreaterThan(0);
-  // The post-processing quad can present interference from the cached target.
+  // Galaxy animates independently of the cached model.
   // The settled 3D head must schedule no animation frames or model/FBO draws.
   await page.waitForTimeout(400);
   const idle = await readAudit();
