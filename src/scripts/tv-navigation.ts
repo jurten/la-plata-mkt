@@ -1,3 +1,5 @@
+import { enhanceGooeyNavigation } from './gooey-navigation';
+
 const masthead = document.querySelector<HTMLElement>('[data-tv-navigation]');
 
 function enhanceNavigation(header: HTMLElement) {
@@ -280,6 +282,8 @@ function enhanceNavigation(header: HTMLElement) {
   setActive(active);
   syncScroll();
   updateMotion();
+  const primaryNav = header.querySelector<HTMLElement>('.primary-nav');
+  if (primaryNav) enhanceGooeyNavigation(primaryNav, motionAllowed);
   // Direct links arrive at their destination without an unrelated opening.
   let bootSeen = false;
   try {
