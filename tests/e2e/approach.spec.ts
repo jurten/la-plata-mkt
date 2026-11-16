@@ -136,24 +136,7 @@ test('los enlaces del recorrido, hashes directos e historial llegan al acto corr
   await page.locator('.hero-scroll-cue').click();
   await expect(page.locator('[data-hero-reveal]')).toHaveAttribute('data-reveal-state', 'complete');
   await expect(root).toHaveAttribute('data-approach-state', 'marketing');
-  await expect(page.locator('#pillars-title')).toBeInViewport();
-});
-
-test('teclado y enlaces permiten recorrer la escena y acceder a servicios en flujo normal', async ({ page }) => {
-  await page.goto('/#soluciones');
-  const link = page.locator('.approach-nav a').nth(1);
-  await link.focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('[data-approach]')).toHaveAttribute('data-approach-state', 'technology');
-  for (const detail of await page.locator('.approach-services details').all()) {
-    await detail.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    await expect(detail).toHaveAttribute('open', '');
-    await expect(detail.locator('.service-list')).toBeVisible();
-    await expect(detail.locator('summary')).toBeInViewport();
-  }
-  await page.locator('#servicios-conexion .inline-link').click();
-  await expect(page.locator('#system-title')).toBeInViewport();
+  await expect(page.locator('#enfoque-marketing h3')).toBeInViewport();
 });
 
 test('movimiento reducido, pausa y poca altura conservan los tres actos y los servicios', async ({ page }) => {
@@ -192,12 +175,8 @@ test('sin JavaScript los tres actos y las capacidades siguen disponibles', async
     await expect(panel.locator('h3')).toBeVisible();
     await expect(panel.locator('.approach-static-art')).toBeVisible();
   }
-  await page.locator('#servicios-marketing summary').focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('#servicios-marketing .service-list')).toBeVisible();
-  await page.locator('#capacidades summary').focus();
-  await page.keyboard.press('Enter');
-  await expect(page.locator('#capacidades')).toContainText('Consultoría digital');
+  await expect(page.locator('.approach-service-list')).toHaveCount(3);
+  await expect(page.locator('#enfoque-marketing .inline-link')).toHaveAttribute('href', /^https:/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
   await context.close();
 });

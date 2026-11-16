@@ -1,5 +1,9 @@
 # Enfoque: marketing → tecnología → LPM
 
+## Single-screen refinement
+
+The user's subsequent annotated screenshot removes both introductory slogans and all below-stage content from this section. Each discipline now includes its relevant service summary and contact action inside its scene. Repetitive capability and starting-point disclosures are removed. The scene still follows native scroll, but the three local controls animate the scroll position through the same timeline over 1.2 seconds, intercepting their clicks before the television navigation. Wheel/touch interruption cancels that movement. Only the current panel's links are interactive. Reduced motion and no script preserve the normal-flow articles with their integrated information. This supersedes the earlier notes about separate disclosures below the track.
+
 Implemented on 2026-11-16 from the user's approved plan.
 
 The reference is [Codrops — On-Scroll Shape Morph](https://tympanus.net/Development/OnScrollShapeMorph/) ([upstream source](https://github.com/codrops/OnScrollShapeMorph)). LPM's implementation is authored locally using the existing eye geometry, official logo, GSAP and ScrollTrigger; no source, imagery, font or additional dependency from the demo is imported.

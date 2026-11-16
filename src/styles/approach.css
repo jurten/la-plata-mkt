@@ -1,5 +1,9 @@
 /* One optical scene: communication crosses into technology, then both become LPM. */
-.alien-pillars.approach-section { padding-block: 0 var(--section-space); }
+.alien-pillars.approach-section { padding: 0; }
+.approach-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.approach-service-list { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0; margin: 24px 0 12px; list-style: none; max-width: 52ch; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.approach-service-list li { padding: 0; }
+.approach-copy > .inline-link { color: var(--blue-text); }
 .approach-stage { position: relative; background: var(--bg); }
 .approach-head { display: flex; justify-content: space-between; align-items: start; gap: 32px; padding-top: 48px; }
 .approach-head h2 { margin: 0; font: 700 clamp(22px, 2vw, 28px)/1.12 var(--display); letter-spacing: -.03em; }
@@ -29,14 +33,16 @@
 [data-approach-enabled] .approach-art { display: block; position: absolute; inset: 0; pointer-events: none; }
 [data-approach-enabled] .approach-panels { width: 100%; margin: 0; padding: 0; }
 [data-approach-enabled] .approach-panel { position: absolute; inset: 0; display: block; min-height: 0; padding: 0; pointer-events: none; }
+[data-approach-enabled] .approach-panel:not([inert]) .approach-copy > a { pointer-events: auto; }
 /* Scroll progress is still zero while the hero exposes this scene. These
    defaults must already be correct before GSAP renders its first frame. */
 [data-approach-enabled] :is(.approach-panel--technology, .approach-panel--method) { opacity: 0; }
 [data-approach-enabled] .approach-static-art { display: none; }
 [data-approach-enabled] .approach-copy { position: absolute; top: 51%; left: 55%; width: calc(45% - var(--page-gutter)); transform: translateY(-50%); }
 [data-approach-enabled] .approach-panel--technology .approach-copy { left: var(--page-gutter); width: 40%; }
-[data-approach-enabled] .approach-panel--method .approach-copy { top: 69%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); text-align: center; }
+[data-approach-enabled] .approach-panel--method .approach-copy { top: 71%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); text-align: center; }
 [data-approach-enabled] .approach-panel--method .approach-copy p { margin-inline: auto; }
+[data-approach-enabled] .approach-panel--method .approach-service-list { justify-content: center; margin-inline: auto; }
 [data-approach-enabled] .approach-panel--method h3 { font-size: clamp(40px, 4.6vw, 64px); }
 .approach-eye { position: absolute; top: 51%; left: 0; width: var(--approach-eye-width); aspect-ratio: 1.48; border-radius: 78% 18% 78% 18%; transform: translate(var(--approach-eye-start), -50%) rotate(-12deg); transform-origin: center; }
 .approach-eye--return { opacity: 0; }
@@ -71,6 +77,7 @@
   .approach-static-art .brand-logo__symbol { width: min(60vw, 300px); }
   .approach-copy h3 { font-size: clamp(36px, 9vw, 56px); }
   .approach-copy p { margin-top: 20px; font-size: 17px; }
+  .approach-service-list { gap: 4px 14px; font-size: 12px; margin-top: 16px; }
   .approach-services { grid-template-columns: 1fr; gap: 0; padding-bottom: 24px; }
   .approach-services .service-disclosure summary { font-size: 16px; }
   .approach-services .service-disclosure { padding-bottom: 16px; }
@@ -84,6 +91,15 @@
   .approach-brand .brand-logo__symbol { width: min(65vw, 300px); }
   [data-approach-enabled] .approach-nav { bottom: 88px; gap: 0; justify-content: space-between; }
   .approach-nav a { font-size: 12px; }
+}
+@media (min-width: 701px) and (max-height: 850px) {
+  .approach-brand { top: 34%; }
+  [data-approach-enabled] .approach-panel--method .approach-copy { top: 67%; }
+  [data-approach-enabled] .approach-panel--method h3 { font-size: 40px; }
+  .approach-brand .brand-logo__symbol { width: min(26vw, 30svh); }
+  .approach-copy h3 { font-size: clamp(40px, 4.5vw, 64px); }
+  .approach-copy p { font-size: 17px; margin-top: 16px; }
+  .approach-service-list { margin-top: 16px; font-size: 12px; gap: 4px 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .approach-nav a::before { transition: none; } }
 @media (forced-colors: active) {

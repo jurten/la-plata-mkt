@@ -33,6 +33,7 @@ function enhanceApproach(root: HTMLElement) {
       let current = -1;
       let frame = 0;
       let alive = true;
+      let navigation: gsap.core.Tween | undefined;
       const stops = [.1, .55, .95];
 
       function measure() {
@@ -85,8 +86,8 @@ function enhanceApproach(root: HTMLElement) {
         .to(returningEye, { opacity: 1, duration: .06 }, .66)
         .to(eye, { scale: .76, duration: .08, ease: 'power2.out' }, .66)
         .fromTo(returningEye, { scale: .65 }, { scale: .76, duration: .08, ease: 'power2.out' }, .66)
-        .to(eye, { x: center, y: () => mobile() ? 0 : -stage.clientHeight * .10, rotation: 0, duration: .10, ease: 'power2.in' }, .74)
-        .to(returningEye, { x: center, y: () => mobile() ? 0 : -stage.clientHeight * .10, rotation: 0, duration: .10, ease: 'power2.in' }, .74)
+        .to(eye, { x: center, y: () => mobile() ? 0 : -stage.clientHeight * (stage.clientHeight <= 850 ? .17 : .10), rotation: 0, duration: .10, ease: 'power2.in' }, .74)
+        .to(returningEye, { x: center, y: () => mobile() ? 0 : -stage.clientHeight * (stage.clientHeight <= 850 ? .17 : .10), rotation: 0, duration: .10, ease: 'power2.in' }, .74)
         // Contact compresses the two contours; the official mark is revealed intact.
         .to([eye, returningEye], { scaleX: .36, scaleY: .82, duration: .025, ease: 'power2.out' }, .84)
         .to([eye, returningEye], { scale: .15, opacity: 0, duration: .045, ease: 'power2.in' }, .865)
@@ -103,6 +104,7 @@ function enhanceApproach(root: HTMLElement) {
         root.toggleAttribute('data-approach-moving', (progress > .20 && progress < .47) || (progress > .65 && progress < .91));
         if (current !== next) {
           current = next;
+          panels.forEach((panel, index) => { panel.inert = index !== next; });
           steps.forEach((step, index) => {
             if (index === next) step.setAttribute('aria-current', 'step');
             else step.removeAttribute('aria-current');
@@ -118,6 +120,29 @@ function enhanceApproach(root: HTMLElement) {
         onUpdate: self => render(self.progress),
       });
 
+      const stopNavigation = () => { navigation?.kill(); navigation = undefined; };
+      const navigate = (event: MouseEvent) => {
+        const link = (event.target as Element).closest<HTMLAnchorElement>('[data-approach-step]');
+        if (!link || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        event.stopPropagation();
+        stopNavigation();
+        const index = steps.indexOf(link);
+        const position = { top: scrollY };
+        history.pushState(null, '', link.hash);
+        navigation = gsap.to(position, {
+          top: start + distance * stops[index], duration: 1.2, ease: 'power2.inOut',
+          onUpdate: () => {
+            window.scrollTo({ top: position.top, behavior: 'instant' });
+            ScrollTrigger.update();
+          },
+          onComplete: () => { navigation = undefined; },
+        });
+      };
+      stage.addEventListener('click', navigate);
+      window.addEventListener('wheel', stopNavigation, { passive: true });
+      window.addEventListener('touchstart', stopNavigation, { passive: true });
+
       function resolveAnchor(event: Event) {
         const detail = (event as CustomEvent<AnchorRequest>).detail;
         const index = panels.findIndex(panel => panel === detail.target || panel.contains(detail.target));
@@ -125,6 +150,7 @@ function enhanceApproach(root: HTMLElement) {
         else if (detail.target === root) detail.top = start;
       }
       function arrive() {
+        stopNavigation();
         const target = document.getElementById(location.hash.slice(1));
         if (!target || !panels.some(panel => panel === target || panel.contains(target))) return;
         const detail: AnchorRequest = { target };
@@ -159,6 +185,11 @@ function enhanceApproach(root: HTMLElement) {
 
       return () => {
         alive = false;
+        stopNavigation();
+        stage.removeEventListener('click', navigate);
+        window.removeEventListener('wheel', stopNavigation);
+        window.removeEventListener('touchstart', stopNavigation);
+        panels.forEach(panel => { panel.inert = false; });
         trigger.kill();
         timeline.revert();
         cancelAnimationFrame(frame);
