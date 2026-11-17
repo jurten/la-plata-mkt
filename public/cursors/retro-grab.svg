@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs><path id="palm" d="M10 13V5h4v8h2V3h4v10h2V7h4v10h2v-6h2v14h-2v4H12v-2h-2v-2H8v-4H6v-2H4v-6h2v2h2v2h2Z"/></defs>
+  <use href="#palm" fill="#eef3ff" stroke="#020307" stroke-width="4" stroke-linejoin="miter"/>
+  <use href="#palm" fill="#eef3ff" stroke="#1536f1" stroke-width="2" stroke-linejoin="miter"/>
+  <path d="M14 13v6m6-6v6m6-2v4M10 21h4v4" fill="none" stroke="#1536f1" stroke-width="2"/>
+</svg>

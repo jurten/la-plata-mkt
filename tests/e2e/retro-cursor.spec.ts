@@ -26,7 +26,7 @@ test('el cursor retro distingue acciones y texto y conserva la espera nativa', a
   await expect(page.locator('.hero .button-primary')).toHaveCSS('cursor', handCursor);
 
   // Confirm the native cursor sources are real 32px PNGs, not missing URLs.
-  for (const name of ['retro-arrow', 'retro-hand', 'retro-text']) {
+  for (const name of ['retro-arrow', 'retro-hand', 'retro-text', 'retro-grab', 'retro-grabbing']) {
     const response = await page.request.get(`/cursors/${name}.png`);
     expect(response.ok()).toBeTruthy();
     expect(response.headers()['content-type']).toContain('image/png');

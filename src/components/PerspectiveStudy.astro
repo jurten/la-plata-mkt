@@ -1,19 +1,30 @@
 ---
-import Icon from './Icon.astro';
-import SystemFlow from './SystemFlow.astro';
+const concepts = [['Atraer', 'Publicidad'], ['Recibir', 'Web'], ['Convertir', 'Consulta'], ['Conversar', 'WhatsApp'], ['Registrar', 'CRM'], ['Seguir', 'Proceso'], ['Resultado', 'Venta']];
 ---
-<div class="perspective-study" data-perspective-study data-view="whole">
-  <div class="perspective-toolbar">
-    <div class="perspective-controls" role="group" aria-label="Cambiar la perspectiva del recorrido" data-perspective-controls hidden>
-      <button type="button" data-perspective-view="piece" aria-pressed="false">Una pieza</button>
-      <button type="button" data-perspective-view="whole" aria-pressed="true">El sistema</button>
-    </div>
-    <p class="perspective-caption" aria-live="polite" aria-atomic="true" data-perspective-caption>Las piezas se potencian cuando trabajan juntas.</p>
+<div class="perspective-study" data-system-orbit>
+  <div class="system-orbit-stage" data-orbit-stage data-draggable>
+    <svg class="system-orbit-path" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-orbit-path data-orbit-stroke fill="none" /></svg>
+    <svg class="system-orbit-path system-orbit-path-front" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs><clipPath id="system-orbit-front" clipPathUnits="userSpaceOnUse"><rect data-orbit-clip /></clipPath></defs>
+      <g clip-path="url(#system-orbit-front)"><path data-orbit-stroke fill="none" /></g>
+    </svg>
+    <div class="system-orbit-center" data-orbit-center><h2 id="system-title">El sistema<br />completo</h2></div>
+    <ol class="system-orbit-concepts" aria-label="Recorrido de publicidad a venta">
+      {concepts.map(([action, title], index) => (
+        <li class="system-orbit-item" data-orbit-item={index}>
+          <button type="button" class="system-orbit-card" aria-label={`Traer ${title} al frente`}>
+            <span class="system-orbit-number">{String(index + 1).padStart(2, '0')}</span>
+            <span class="system-orbit-copy"><span>{action}</span><strong>{title}</strong></span>
+          </button>
+        </li>
+      ))}
+    </ol>
   </div>
-  <div class="perspective-canvas">
-    <div class="perspective-field" aria-hidden="true"></div>
-    <svg class="perspective-orbit" viewBox="0 0 1200 320" fill="none" aria-hidden="true" focusable="false"><ellipse cx="600" cy="160" rx="580" ry="145" /><ellipse cx="600" cy="160" rx="440" ry="110" /></svg>
-    <SystemFlow />
+  <div class="system-orbit-footer">
+    <p>Conectamos marketing, tecnología y operación comercial</p>
+    <button type="button" data-orbit-toggle aria-pressed="false" hidden>Pausar órbita</button>
   </div>
-  <div class="perspective-bottom"><p>Hacemos que todo trabaje como un sistema.</p><button type="button" data-perspective-explore hidden><span data-perspective-explore-label>Ampliar la mirada</span><Icon name="arrow" /></button></div>
 </div>
+<script>
+  import '../scripts/system-orbit';
+</script>

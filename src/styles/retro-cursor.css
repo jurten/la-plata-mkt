@@ -32,4 +32,18 @@
   :is(.site-home, .legal-body) [aria-busy='true'] {
     cursor: url('/cursors/retro-arrow.png') 4 1, default;
   }
+
+  /* Advertise dragging before pressing, including the concept buttons. */
+  .site-home [data-system-orbit] [data-orbit-ready][data-draggable],
+  .site-home [data-system-orbit] [data-orbit-ready][data-draggable] * {
+    cursor: url('/cursors/retro-grab.png') 16 16, grab;
+  }
+
+  /* Close immediately on press and keep it throughout pointer capture. */
+  .site-home [data-system-orbit] [data-orbit-stage]:active,
+  .site-home [data-system-orbit] [data-orbit-stage]:active *,
+  .site-home [data-system-orbit] [data-orbit-stage][data-dragging],
+  .site-home [data-system-orbit] [data-orbit-stage][data-dragging] * {
+    cursor: url('/cursors/retro-grabbing.png') 16 16, grabbing;
+  }
 }

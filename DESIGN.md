@@ -203,6 +203,13 @@ components:
 
 # Design System: La Plata Marketing
 
+## Supplied React Bits Orbit Images, 2026-11-16
+
+The user's supplied integration prompt supersedes the earlier custom orbit and both hover-tilt experiments. `orbit-images-engine.js` retains the supplied JavaScript engine (arc-length LUT, rotated coordinates, bounds fitting, depth scaling/dimming, intro fan-out, horizontal drag rate, fling inertia and click/focus-to-front). `system-orbit.ts` replaces React lifecycle hooks with Astro DOM setup and teardown. Desktop uses exactly radiusX 340, radiusY 80, rotation -8, duration 30, itemSize 90 and depth .6. Hover speed is 1, preserving the user's explicit no-slowdown instruction. Concepts remain upright as the path tilts in two dimensions; there is no pointer-driven 3D rotation.
+
+The seven semantic concepts and original actions replace the image elements. Native buttons expose click-to-front through keyboard as well as pointer input. Depth places back concepts behind the central title and front concepts above it. Mobile uses a taller ellipse to keep the text readable, with the title above it. No JavaScript and forced colours retain an ordered normal-flow grid. Reduced motion disables the intro and autoplay and makes click-to-front instant. Explicit pause and hidden/offscreen suspension remain. The supplied engine is hardened only for lifecycle suspension and reduced-motion seeking; the upstream notice remains in `public/licenses/react-bits-orbit-images.txt`. No React dependency is added.
+
+
 ## Smooth approach and idle playback, 2026-11-16
 
 The user's latest approach refinement adds a 480ms eased catch-up to native scroll, softer eye convergence and logo arrival, and short opacity/vertical text transitions in place of full-article rectangular masks. Optical artwork stays transparent CSS geometry clipped to its own contour, and the official SVG remains intact; no rectangular raster background or blur is added. Approach headings omit final periods.
@@ -436,6 +443,10 @@ The scripts retain a shared pause-event listener that removes interference and f
 Desktop places the head to the right of live copy; mobile centers it below the opening actions. Validate responsive framing, detailed cobalt skin, readable dark eyes, clean anatomy during turns, and stable text/actions. Original-image pixel equivalence is a retired depth-reconstruction check. Touch preserves vertical pan and pinch zoom. The current controller supports pointer/touch input but exposes no device-tilt action; the earlier inclination-control description is historical. The native pixel cursor remains.
 
 ### Native Pixel Cursor
+
+The orbit advertises dragging on hover with the open pixel palm `retro-grab.png` (editable SVG source, 32px, hotspot 16/16). Pressing closes it immediately via `:active`; active dragging retains the closed palm through pointer capture. Release restores the open palm. Both assets follow the existing cobalt/white/dark pixel style and apply only to fine hover pointers outside forced colours.
+
+While the system orbit is actively dragged, `retro-grabbing.png` uses a closed 32px pixel hand with a (16px, 16px) hotspot, matching the existing blue/white fill and dark outline. `retro-grabbing.svg` is its editable source. The cursor applies to the stage and all descendants during pointer capture, then restores the normal cursor on release/cancellation. Touch and forced-colours modes keep the native grabbing fallback.
 
 The user-requested old-school treatment uses native PNG cursors (32px), shared by the homepage and privacy route when a fine pointer can hover and forced colors are off. The arrow hotspot is (4px, 1px); interactive targets use the pixel hand with hotspot (14px, 1px). Selectable text and editable fields use the matching cobalt/white pixel I-beam with hotspot (16px, 16px). Each URL includes its standard `default` or `pointer` fallback. Coarse pointers and forced-colors mode retain native cursors.
 

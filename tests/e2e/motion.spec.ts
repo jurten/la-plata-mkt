@@ -10,51 +10,6 @@ test('los textos esenciales permanecen visibles y sin animación', async ({ page
   for (const style of styles) expect(style).toEqual({ opacity: '1', visibility: 'visible', animation: 'none' });
 });
 
-test('la perspectiva se explora con botones y teclado y respeta movimiento reducido', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/');
-  const study = page.locator('.perspective-study');
-  const controls = study.getByRole('group', { name: 'Cambiar la perspectiva del recorrido' });
-  const piece = controls.getByRole('button', { name: 'Una pieza', exact: true });
-  const whole = controls.getByRole('button', { name: 'El sistema', exact: true });
-  const caption = study.locator('[data-perspective-caption]');
-  await expect(controls).toBeVisible();
-  await expect(study).toHaveAttribute('data-view', 'piece');
-  await expect(piece).toHaveAttribute('aria-pressed', 'true');
-  await expect(whole).toHaveAttribute('aria-pressed', 'false');
-  const pieceCaption = await caption.textContent();
-  await whole.click();
-  await expect(study).toHaveAttribute('data-view', 'whole');
-  await expect(whole).toHaveAttribute('aria-pressed', 'true');
-  await expect(piece).toHaveAttribute('aria-pressed', 'false');
-  await expect(caption).not.toHaveText(pieceCaption ?? '');
-  await expect(caption).toHaveAttribute('aria-live', 'polite');
-  await piece.focus();
-  await page.keyboard.press('Enter');
-  await expect(study).toHaveAttribute('data-view', 'piece');
-  await study.locator('[data-perspective-explore]').click();
-  await expect(study).toHaveAttribute('data-view', 'whole');
-  await study.locator('[data-perspective-explore]').click();
-  await expect(study).toHaveAttribute('data-view', 'piece');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(study).toHaveAttribute('data-view', 'whole');
-  await expect(whole).toHaveAttribute('aria-pressed', 'true');
-  await expect.poll(() => study.evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);
-  await expect(page.locator('html')).toHaveCSS('scroll-behavior', 'auto');
-  for (const step of await study.locator('.system-node strong').all()) await expect(step).toBeVisible();
-});
-
-test('con movimiento reducido la perspectiva comienza completa y el contenido queda disponible', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
-  const study = page.locator('.perspective-study');
-  await expect(study).toHaveAttribute('data-view', 'whole');
-  await expect(study.locator('[data-perspective-view="whole"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(study.locator('.system-node')).toHaveCount(7);
-  await expect(study.locator('[data-perspective-caption]')).not.toBeEmpty();
-  expect(await study.evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);
-});
-
 test('las preguntas funcionan con teclado y clics repetidos', async ({ page }) => {
   await page.goto('/#faq');
   const details = page.locator('#faq details').first();

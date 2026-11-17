@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <defs><path id="grip" d="M10 11V9h4V7h4v2h4v2h4v4h2v10h-2v4H12v-2h-2v-2H8v-2H6v-8h4Z"/></defs>
+  <use href="#grip" fill="#eef3ff" stroke="#020307" stroke-width="4" stroke-linejoin="miter"/>
+  <use href="#grip" fill="#eef3ff" stroke="#1536f1" stroke-width="2" stroke-linejoin="miter"/>
+  <path d="M14 11v6m4-6v6m4-4v6M6 17h6v4h6v2h-8" fill="none" stroke="#1536f1" stroke-width="2" stroke-linejoin="miter"/>
+</svg>

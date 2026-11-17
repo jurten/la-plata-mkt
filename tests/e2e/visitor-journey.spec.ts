@@ -35,7 +35,7 @@ test('la lectura y el contacto básico funcionan sin JavaScript', async ({ brows
   await expect(page.locator('.hero .button-primary')).toHaveAttribute('href', 'https://wa.me/5491158861954');
   await expect(page.locator('.alien-portrait img')).toHaveCount(0);
   await expect(page.locator('.alien-portrait .spatial-canvas')).toHaveCSS('opacity', '0');
-  await expect(page.locator('.perspective-study')).toHaveAttribute('data-view', 'whole');
+  await expect(page.locator('[data-system-orbit] [data-orbit-item]')).toHaveCount(7);
   await expect(page.getByRole('group', { name: 'Cambiar la perspectiva del recorrido', includeHidden: true })).toBeHidden();
   await page.locator('#faq summary').first().click();
   await expect(page.locator('#faq details').first()).toHaveAttribute('open', '');
