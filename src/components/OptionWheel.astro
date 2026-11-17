@@ -1,0 +1,96 @@
+---
+interface Props {
+  id: string;
+  items: string[];
+  defaultSelected?: number;
+  label?: string;
+  targets?: string[];
+  loop?: boolean;
+  class?: string;
+}
+
+const { id, items, defaultSelected = 0, label = 'Seleccionar una opción', targets = [], loop = false, class: className = '' } = Astro.props;
+const selected = Math.min(Math.max(defaultSelected, 0), Math.max(items.length - 1, 0));
+---
+
+<div id={id} class:list={['option-wheel', className]} data-option-wheel data-selected={selected} data-loop={String(loop)} data-label={label} data-no-split>
+  {items.map((item, index) => (
+    <a
+      id={`${id}-option-${index}`}
+      href={targets[index] ? `#${targets[index]}` : undefined}
+      class:list={['option-wheel__item', { 'option-wheel__item--selected': index === selected }]}
+      data-wheel-option
+      data-target={targets[index]}
+      draggable="false"
+    >{item}</a>
+  ))}
+</div>
+
+<script>
+  import { initOptionWheels } from '../scripts/option-wheel';
+  initOptionWheels();
+</script>
+
+<style>
+  .option-wheel {
+    --ow-font-size: clamp(1.5rem, 3.5vw, 3.5rem);
+    --ow-inset: 48px;
+    --ow-text-color: var(--muted);
+    --ow-active-color: var(--blue-text);
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .option-wheel__item {
+    display: block;
+    padding-block: 12px;
+    color: var(--ow-text-color);
+    font-family: var(--display);
+    font-size: var(--ow-font-size);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .option-wheel[data-ow-ready] {
+    height: var(--ow-height, 400px);
+    overflow: hidden;
+    cursor: grab;
+    user-select: none;
+    touch-action: pan-x pinch-zoom;
+  }
+
+  .option-wheel[data-ow-ready] .option-wheel__item {
+    position: absolute;
+    top: 50%;
+    left: var(--ow-inset);
+    max-width: calc(100% - var(--ow-inset) - 12px);
+    padding-block: 8px;
+    transform-origin: left center;
+    color: color-mix(in srgb, var(--ow-active-color) calc(var(--ow-p, 0) * 100%), var(--ow-text-color));
+    cursor: pointer;
+  }
+
+  .option-wheel__item--selected { font-weight: 700; }
+  .option-wheel[data-ow-dragging] { cursor: grabbing; }
+  .option-wheel[data-ow-ready][aria-disabled='true'] { touch-action: pan-y pinch-zoom; cursor: default; }
+  .option-wheel:focus-visible { outline: 2px solid var(--blue-text); outline-offset: 4px; border-radius: 4px; }
+  .option-wheel__item:focus-visible { outline: 2px solid var(--blue-text); outline-offset: 4px; }
+
+  @media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+    .option-wheel[data-ow-ready] { cursor: url('/cursors/retro-grab.png') 16 16, grab; }
+    .option-wheel[data-ow-dragging], .option-wheel[data-ow-dragging] * { cursor: url('/cursors/retro-grabbing.png') 16 16, grabbing; }
+  }
+
+  @media (max-width: 700px) {
+    .option-wheel { --ow-font-size: clamp(1.5rem, 6vw, 2.5rem); --ow-inset: 24px; }
+  }
+
+  @media (forced-colors: active) {
+    .option-wheel__item { color: LinkText; }
+    .option-wheel__item--selected { text-decoration: underline; }
+  }
+</style>

@@ -23,5 +23,10 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium', use: { viewport: { width: 1440, height: 1000 } } },
+    {
+      name: 'firefox',
+      testMatch: ['team-roster.spec.ts', 'portfolio-reveal.spec.ts'],
+      use: { browserName: 'firefox', channel: process.env.LPM_FIREFOX_CHANNEL, viewport: { width: 1440, height: 1000 } },
+    },
   ],
 });

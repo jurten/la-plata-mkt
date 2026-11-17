@@ -1,14 +1,27 @@
 import { SmokeDisplacement } from './smoke-displacement';
+import { heroClickShader } from './hero-click-shader';
 
 const hero = document.querySelector<HTMLElement>('.optical-hero');
 if (hero) {
  const canvas = hero.querySelector<HTMLCanvasElement>('[data-atmosphere]')!;
 
  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+ const forced = matchMedia('(forced-colors: active)');
+ const heading = hero.querySelector<HTMLElement>('[data-warp-text]')!;
+ const clicks = new Float32Array(16);
+ let clickSlot = 0;
+ const hasClicks = () => clicks.some((value, index) => index % 4 === 3 && value > 0);
+ hero.addEventListener('pointerdown', event => {
+  if (reduced.matches || forced.matches || event.button !== 0 || (event.target as Element).closest('a, button, input, textarea, select, summary, label')) return;
+  const bounds = canvas.getBoundingClientRect();
+  const slot = (clickSlot++ % 4) * 4;
+  clicks.set([(event.clientX - bounds.left) / bounds.width, 1 - (event.clientY - bounds.top) / bounds.height, 0, 1], slot);
+ });
  let visible = true, frame = 0, time = 0, last = 0, lastDraw = 0;
  const flow = new SmokeDisplacement();
  const pointer = { x: .5, y: .5, lastX: .5, lastY: .5, inside: false, fresh: true };
- let cssWidth = 1, cssHeight = 1;
+ let cssWidth = 1, cssHeight = 1, rippleHeight = 1;
+ new ResizeObserver(() => { rippleHeight = Math.max(1,heading.getBoundingClientRect().height); }).observe(heading);
  function releasePointer() { pointer.inside = false; pointer.fresh = true; }
  hero.addEventListener('pointermove', event => {
   if (event.pointerType === 'touch' || reduced.matches) return;
@@ -34,14 +47,18 @@ if (hero) {
  const vertex = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
  const fragment = `precision highp float;
  uniform vec2 res; uniform float clock;
+ uniform float rippleHeight;
  uniform sampler2D flowMap;
+ ${heroClickShader}
  float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
  float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(7.2,3.1);a*=.5;}return v;}
  vec3 field(vec2 uv){
  vec4 flowSample=texture2D(flowMap,uv);
  vec2 displacement=(vec2(dot(flowSample.rg,vec2(65280.,255.)),dot(flowSample.ba,vec2(65280.,255.)))/65535.-.5)*.3;
- vec2 smokeUv=uv-displacement;
+ // The click wave pushes the same blue field as the cursor's flow map.
+ // Stars stay in place: this is a deformation of the smoke, not an overlay.
+ vec2 smokeUv=uv-displacement+clickShock(uv,res,rippleHeight).xy;
  float t=clock*.055;vec2 p=smokeUv*2.6;vec2 q=vec2(fbm(p+t),fbm(p+vec2(5.2,1.3)-t));float n=fbm(p+2.5*q+vec2(t,-t));float ribbon=sin(smokeUv.x*3.5+smokeUv.y*4.8+n*4.5-t);
  vec3 col=mix(vec3(.008,.018,.055),vec3(.025,.13,.70),smoothstep(-.5,.85,ribbon));
  col=mix(col,vec3(.38,.61,.87),pow(smoothstep(.60,1.,ribbon),3.)*.8);
@@ -58,7 +75,7 @@ if (hero) {
   if (vs && fs) { program = gl.createProgram()!; gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program); if (!gl.getProgramParameter(program, gl.LINK_STATUS)) program = null; }
   if (program) {
    gl.useProgram(program); const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW); const p = gl.getAttribLocation(program,'p'); gl.enableVertexAttribArray(p); gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
-   for (const key of ['res','clock','flowMap']) uniforms[key] = gl.getUniformLocation(program,key);
+   for (const key of ['res','clock','flowMap','rippleHeight','uClicks[0]']) uniforms[key] = gl.getUniformLocation(program,key);
    flowTexture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -68,22 +85,25 @@ if (hero) {
  function draw() {
   if (!gl || !program) return;
   gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.res,canvas.width,canvas.height); gl.uniform1f(uniforms.clock,time);
+  gl.uniform1f(uniforms.rippleHeight,rippleHeight*canvas.height/cssHeight);
+  gl.uniform4fv(uniforms['uClicks[0]'],clicks);
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
   gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,flow.width,flow.height,gl.RGBA,gl.UNSIGNED_BYTE,flow.pixels);
   gl.uniform1i(uniforms.flowMap,0); gl.drawArrays(gl.TRIANGLES,0,6);
  }
  function animate(now: number) {
   frame=0;
-  if (!visible || document.hidden || reduced.matches) return;
+  if (!visible || document.hidden || reduced.matches || forced.matches) return;
   const elapsed=Math.max(.001,(now-last)/1000); last=now;
   time+=Math.min(elapsed,.05); updateFlow(Math.min(elapsed,.25));
-  if (now-lastDraw>(flow.energy>.0001 ? 16 : 40)) { lastDraw=now; draw(); }
+  for (let i=0;i<16;i+=4) if(clicks[i+3]>0) { clicks[i+2]+=Math.min(elapsed,.05); if(clicks[i+2]>1.6) clicks[i+3]=0; }
+  if (now-lastDraw>(flow.energy>.0001 || hasClicks() ? 16 : 40)) { lastDraw=now; draw(); }
   frame=requestAnimationFrame(animate);
  }
- function resume() { cancelAnimationFrame(frame); frame=0; last=performance.now(); if (!visible || document.hidden || reduced.matches) { releasePointer(); flow.clear(); } if (visible && !document.hidden && !reduced.matches && program) frame=requestAnimationFrame(animate); else draw(); }
+ function resume() { cancelAnimationFrame(frame); frame=0; last=performance.now(); if (!visible || document.hidden || reduced.matches || forced.matches) { releasePointer(); flow.clear(); clicks.fill(0); } if (visible && !document.hidden && !reduced.matches && !forced.matches && program) frame=requestAnimationFrame(animate); else draw(); }
  new ResizeObserver(() => { const r=hero!.getBoundingClientRect(); cssWidth=Math.max(1,r.width); cssHeight=Math.max(1,r.height); const scale=Math.min(devicePixelRatio,1.5,2200/cssWidth); canvas.width=Math.round(cssWidth*scale); canvas.height=Math.round(cssHeight*scale); releasePointer(); flow.clear(); draw(); }).observe(hero);
  new IntersectionObserver(([entry]) => {visible=entry.isIntersecting;resume();}).observe(hero);
- document.addEventListener('visibilitychange',resume); reduced.addEventListener('change',resume);
+ document.addEventListener('visibilitychange',resume); reduced.addEventListener('change',resume); forced.addEventListener('change',resume);
  canvas.addEventListener('webglcontextlost', e=>{e.preventDefault();cancelAnimationFrame(frame);program=null;});
  resume();
 }

@@ -1,4 +1,5 @@
 // Shader source from the React Bits WarpText component supplied by the user.
+import { heroClickShader } from './hero-click-shader';
 const vertex = `#version 300 es
 in vec2 position;
 in vec2 uv;
@@ -30,7 +31,7 @@ uniform float uLens;
 uniform float uIntro;
 uniform float uReveal;
 uniform float uBackdrop;
-uniform vec4 uClicks[4];
+${heroClickShader}
 
 in vec2 vUv;
 out vec4 fragColor;
@@ -107,22 +108,9 @@ void main() {
     pointerWarp -= dir * side * bulge * uPointerStrength * 0.045;
   }
 
-  vec2 shock = vec2(0.0);
-  float shockLight = 0.0;
-  for (int i = 0; i < 4; i++) {
-    vec4 click = uClicks[i];
-    if (click.w <= 0.0) continue;
-    vec2 clickDelta = uv - click.xy;
-    vec2 clickAspect = vec2(clickDelta.x * aspect, clickDelta.y);
-    float clickDist = length(clickAspect);
-    float age = click.z;
-    float offset = (clickDist - age * 0.9) / (0.06 + age * 0.06);
-    float fade = 1.0 - smoothstep(0.0, 1.6, age);
-    float energy = exp(-offset * offset) * fade * smoothstep(0.0, 0.08, age) * click.w;
-    vec2 clickDir = clickDist > 0.0001 ? vec2(clickAspect.x / aspect, clickAspect.y) / clickDist : vec2(0.0);
-    shock -= clickDir * offset * energy * 0.09;
-    shockLight += energy;
-  }
+  vec3 wave = clickShock(uv, uResolution, uResolution.y);
+  vec2 shock = wave.xy;
+  float shockLight = wave.z;
 
   vec2 bend = pointerWarp + shock;
   vec2 rest = uv + ambient;

@@ -4,13 +4,14 @@ function initialize(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>('[data-orbit-stage]')!;
   const path = stage.querySelector<SVGPathElement>('[data-orbit-path]')!;
   const toggle = root.querySelector<HTMLButtonElement>('[data-orbit-toggle]')!;
-  const mobile = matchMedia('(max-width: 700px)');
+  const toggleLabel = toggle.querySelector<HTMLElement>('[data-orbit-toggle-label]')!;
+  const mobile = matchMedia('(max-width: 1250px)');
   const forced = matchMedia('(forced-colors: active)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const config = { current: {
-    baseWidth: 1400, rotation: -8, duration: 30, itemSize: 90,
+    baseWidth: 1400, rotation: -8, duration: 30, itemSize: 110,
     direction: 'normal', fill: true, pathWidth: 1, pathDash: 0,
-    easing: 'linear', paused: false, depth: .6, hoverScale: 1.08,
+    easing: 'linear', paused: false, depth: .05, hoverScale: 1.01,
     hoverSpeed: 1, draggable: true, clickToFront: true,
     alignToPath: false, intro: true, sources: [] as string[],
   } };
@@ -20,8 +21,8 @@ function initialize(root: HTMLElement) {
   function controls() {
     config.current.paused = paused || sharedPause;
     root.dataset.orbitPaused = String(config.current.paused);
-    toggle.hidden = reduced.matches || forced.matches;
-    toggle.textContent = paused ? 'Reanudar órbita' : 'Pausar órbita';
+    toggle.hidden = reduced.matches || forced.matches || mobile.matches;
+    toggleLabel.textContent = paused ? 'Reanudar órbita' : 'Pausar órbita';
     toggle.setAttribute('aria-pressed', String(paused));
     engine?.wake();
   }
@@ -33,20 +34,21 @@ function initialize(root: HTMLElement) {
     stage.removeAttribute('data-dragging');
     stage.style.removeProperty('aspect-ratio');
     stage.querySelectorAll<HTMLElement>('[data-orbit-item]').forEach(item => item.removeAttribute('style'));
-    if (forced.matches) { controls(); return; }
-    const rx = mobile.matches ? 82 : 340;
-    const ry = mobile.matches ? 240 : 80;
+    if (forced.matches || mobile.matches) { controls(); return; }
+    const rx = 340;
+    const ry = 110;
     path.setAttribute('d', `M ${700-rx} 700 A ${rx} ${ry} 0 1 0 ${700+rx} 700 A ${rx} ${ry} 0 1 0 ${700-rx} 700`);
     path.setAttribute('transform', 'rotate(-8 700 700)');
     stage.querySelectorAll<SVGPathElement>('[data-orbit-stroke]').forEach(stroke => {
       stroke.setAttribute('d', path.getAttribute('d')!);
       stroke.setAttribute('transform', 'rotate(-8 700 700)');
     });
-    config.current.intro = !reduced.matches;
+    // Start in the spaced layout; the fan-out intro stacks these text cards.
+    config.current.intro = false;
     stage.dataset.orbitReady = '';
     if (config.current.intro) stage.dataset.intro = '';
     // The supplied engine measures the rotated path plus its item margins.
-    stage.style.aspectRatio = mobile.matches ? '.5' : '2.4';
+    stage.style.aspectRatio = '2.4';
     engine = createEngine(stage, config, (aspect: number) => { stage.style.aspectRatio = String(aspect); });
     engine.refresh();
     controls();

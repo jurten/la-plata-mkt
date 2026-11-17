@@ -55,6 +55,7 @@
 .portfolio-reveal[data-enhanced] .featured-opening { justify-content: center; }
 .portfolio-reveal[data-enhanced] .featured-closing { justify-content: center; }
 .portfolio-reveal[data-enhanced] .featured-about { position: relative; z-index: 1; margin-top: -100svh; }
+.featured-stage[data-featured-exited], .featured-stage[data-featured-exited] * { visibility: hidden !important; pointer-events: none !important; }
 .portfolio-reveal[data-enhanced] .featured-progress { position: absolute; bottom: 26px; left: var(--page-gutter); right: var(--page-gutter); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 11px; color: var(--muted); }
 .featured-progress > div { width: 120px; height: 2px; background: var(--line); }
 .featured-progress i { display: block; width: 100%; height: 100%; background: var(--blue-text); transform: scaleX(0); transform-origin: left; }

@@ -18,6 +18,12 @@ async function initializePortfolio() {
 
   media.add('(min-width: 701px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) and (forced-colors: none)', () => {
     root.dataset.enhanced = 'true';
+    let aboutLocked: boolean | undefined;
+    const lockAbout = (locked: boolean) => {
+      if (aboutLocked === locked) return;
+      aboutLocked = locked;
+      about.toggleAttribute('data-team-locked', locked);
+    };
     let start = 0, travel = 0, exitDistance = 0, distance = 0;
     const measure = () => {
       travel = innerWidth * 1.5;
@@ -29,7 +35,8 @@ async function initializePortfolio() {
     const render = (progress: number) => {
       const position = progress * distance;
       const rail = Math.min(position, travel);
-      const exit = gsap.utils.clamp(0, 1, (position - travel) / exitDistance);
+      // Keep ScrollTrigger's exact endpoint: recomputing it can yield 0.9999999999999999.
+      const exit = progress >= 1 ? 1 : gsap.utils.clamp(0, 1, (position - travel) / exitDistance);
       gsap.set(belt, { x: -rail });
       // The entire rail withdraws to the left, uncovering About at rest.
       gsap.set(stage, { x: -exit * innerWidth });
@@ -45,8 +52,11 @@ async function initializePortfolio() {
         const left = index * innerWidth * .5 - rail - exit * innerWidth;
         panel.inert = left + innerWidth * .5 <= 0 || left >= innerWidth;
       });
-      stage.inert = exit >= 1;
-      about.inert = position < travel;
+      const exitComplete = exit >= 1;
+      stage.inert = exitComplete;
+      stage.toggleAttribute('data-featured-exited', exitComplete);
+      // Leave page scrolling native while the team controls wait for the full exit.
+      lockAbout(!exitComplete);
     };
     measure();
     const trigger = ScrollTrigger.create({
@@ -61,7 +71,8 @@ async function initializePortfolio() {
       const detail = (event as CustomEvent<{ target: HTMLElement; top?: number }>).detail;
       if (detail.target === section) detail.top = start;
       else if (about.contains(detail.target)) {
-        detail.top = start + distance + (detail.target.getBoundingClientRect().top - about.getBoundingClientRect().top);
+        // Native scroll positions round to CSS pixels; never land short of the full exit.
+        detail.top = Math.ceil(start + distance + (detail.target.getBoundingClientRect().top - about.getBoundingClientRect().top));
       } else {
         const panelIndex = panels.findIndex(panel => panel === detail.target || panel.contains(detail.target));
         if (panelIndex >= 0) detail.top = start + Math.max(0, panelIndex - .5) * innerWidth * .5;
@@ -93,9 +104,19 @@ async function initializePortfolio() {
     window.addEventListener('popstate', followHash);
     root.addEventListener('click', followLink);
     ScrollTrigger.refresh();
-    const frame = requestAnimationFrame(followHash);
+    let frame = 0;
+    const initialArrival = () => {
+      // Run after native fragment positioning and its scroll-padding adjustment.
+      frame = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        followHash();
+      });
+    };
+    if (document.readyState === 'complete') initialArrival();
+    else window.addEventListener('load', initialArrival, { once: true });
     return () => {
       cancelAnimationFrame(frame);
+      window.removeEventListener('load', initialArrival);
       trigger.kill();
       window.removeEventListener('lpm:resolve-anchor', resolveAnchor);
       window.removeEventListener('hashchange', followHash);
@@ -105,7 +126,8 @@ async function initializePortfolio() {
       root.style.removeProperty('--featured-distance');
       for (const panel of panels) panel.inert = false;
       stage.inert = false;
-      about.inert = false;
+      stage.removeAttribute('data-featured-exited');
+      lockAbout(false);
       gsap.set([belt, stage, about, progressBar, ...projects.map(p => p.firstElementChild)], { clearProps: 'transform,clipPath' });
     };
   });

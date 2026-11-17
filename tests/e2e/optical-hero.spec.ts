@@ -9,7 +9,7 @@ test('warped headline renders, responds to input and preserves contact', async (
   const gl = canvas.getContext('webgl');
   return !!gl?.getParameter(gl.CURRENT_PROGRAM) && gl.getError() === gl.NO_ERROR;
  })).toBe(true);
- await expect(page.locator('#hero-title')).toHaveText('Somos una marca de creatividad colectiva.');
+ await expect(page.locator('#hero-title')).toHaveText('Somos un equipo con ideas de otro planeta');
  expect(await page.locator('#hero-title > span').evaluateAll(lines=>lines.map(line=>getComputedStyle(line).textAlign))).toEqual(['left','right','center']);
  await expect(page.locator('[data-optical-lens], .optical-secondary, .optical-switch, [data-spatial-portrait]')).toHaveCount(0);
  const canvas=page.locator('[data-warp-canvas]');

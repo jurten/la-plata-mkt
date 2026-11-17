@@ -47,13 +47,6 @@ const solutionPaths = [
   },
 ];
 
-const methodSteps = [
-  ['Entendemos', 'Nos contás cómo funciona hoy tu negocio y qué necesitás mejorar.'],
-  ['Diagnosticamos', 'Identificamos el punto que frena el recorrido o desconecta las piezas.'],
-  ['Proponemos', 'Definimos alcance, herramientas, tiempos y presupuesto con claridad.'],
-  ['Implementamos', 'Construimos, conectamos y ponemos en funcionamiento la solución.'],
-];
-
 const capabilities = [
   ['Web', ['Sitios institucionales', 'Landing pages', 'Ecommerce', 'Mantenimiento']],
   ['Captación', ['Meta Ads', 'Setup de campañas', 'Medición', 'Optimización']],
@@ -175,10 +168,7 @@ const structuredData = {
 
       <PortfolioReveal whatsappHref={whatsappHref}>
       <section id="nosotros" class="about-section"><div class="wrap">
-        <div class="about-intro"><h2 class="display">Para entender,<br /><span class="text-muted">hay que mirar distinto</span></h2><div><p class="about-statement">Primero entendemos el problema. Después elegimos las herramientas.</p><p>Ser un poco extraterrestres es tomar distancia, hacer otras preguntas y conectar lo que parecía separado.</p></div></div>
         <TeamRoster />
-        <div id="metodo" class="method-block"><h3 class="method-heading">De un problema a una solución.</h3><ol class="method-steps" data-method-flow>{methodSteps.map(([title, description]) => (<li class="method-step"><h4>{title}</h4><p>{description}</p></li>))}</ol></div>
-        <div id="problemas" class="problems-block"><details class="business-problems"><summary><span>Tu negocio funciona. ¿Su sistema digital también?</span><Icon name="plus" /></summary><p>A veces el problema parece ser una web, una campaña o una planilla. Muchas veces es la forma en que esas piezas se conectan.</p><ul class="problems"><li class="problem-item">Tu web ya no representa el nivel real de tu negocio.</li><li class="problem-item">Invertís en publicidad, pero no sabés qué pasa con las consultas.</li><li class="problem-item">Los clientes llegan por distintos canales y el seguimiento se dispersa.</li><li class="problem-item">Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</li><li class="problem-item">Dependés demasiado de Instagram, WhatsApp o tareas manuales.</li><li class="problem-item">Sabés que podrías captar más, pero no tenés un recorrido claro.</li></ul></details></div>
       </div></section>
 
       </PortfolioReveal>

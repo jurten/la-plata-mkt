@@ -1,5 +1,14 @@
 ---
-const concepts = [['Atraer', 'Publicidad'], ['Recibir', 'Web'], ['Convertir', 'Consulta'], ['Conversar', 'WhatsApp'], ['Registrar', 'CRM'], ['Seguir', 'Proceso'], ['Resultado', 'Venta']];
+const concepts = [
+  { title: 'Publicidad', description: 'Llegá a quienes necesitan lo que ofrecés.', points: ['Campañas en Meta Ads', 'Contenido y anuncios', 'Medición y ajustes'] },
+  { title: 'Web', description: 'Presentá tu negocio y facilitá el siguiente paso.', points: ['Sitios y landing pages', 'Oferta y servicios', 'Accesos a la consulta'] },
+  { title: 'Consulta', description: 'Convertí el interés en una consulta.', points: ['Formularios de contacto', 'Pedidos y reservas', 'Datos para responder'] },
+  { title: 'Comunicación', description: 'Atendé cada consulta por el canal adecuado.', points: ['WhatsApp y correo', 'Atención de consultas', 'Continuidad del contacto'] },
+  { title: 'CRM', description: 'Registrá quién consultó y en qué quedó.', points: ['Contactos centralizados', 'Historial de consultas', 'Estado de oportunidades'] },
+  { title: 'Proceso', description: 'Dale continuidad a cada consulta.', points: ['Etapas y responsables', 'Tareas y recordatorios', 'Automatizaciones'] },
+  { title: 'Venta', description: 'Medí los resultados para entender qué mejorar.', points: ['Registro de resultados', 'Seguimiento comercial', 'Medición del recorrido'] },
+];
+const blobPath = 'M0 0H1440V72C1400 70 1380 98 1320 91S1240 80 1200 83S1120 105 1080 78S1000 56 960 60S880 77 840 55S760 30 720 34S640 6 600 24S520 67 480 57S400 38 360 62S280 90 240 73S160 53 120 80S40 109 0 94Z';
 // A stable, irregular sky that needs neither a canvas nor an animation loop.
 let seed = 1637;
 const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
@@ -10,30 +19,38 @@ const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random(
     {stars.map(star => <span style={`left:${star.x}%;top:${star.y}%;width:${star.size}px;height:${star.size}px;opacity:${star.opacity}`}></span>)}
   </div>
   <svg class="system-orbit-transition" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path data-orbit-blob d="M0 0H1440V72C1400 70 1380 98 1320 91S1240 80 1200 83S1120 105 1080 78S1000 56 960 60S880 77 840 55S760 30 720 34S640 6 600 24S520 67 480 57S400 38 360 62S280 90 240 73S160 53 120 80S40 109 0 94Z" />
+    <path data-orbit-blob d={blobPath} />
   </svg>
   <div class="system-orbit-stage" data-orbit-stage data-draggable>
+    <div class="system-orbit-center" data-orbit-center>
+      <h2 id="system-title">El sistema<br />completo</h2>
+    </div>
     <svg class="system-orbit-path" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-orbit-path data-orbit-stroke fill="none" /></svg>
     <svg class="system-orbit-path system-orbit-path-front" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false">
       <defs><clipPath id="system-orbit-front" clipPathUnits="userSpaceOnUse"><rect data-orbit-clip /></clipPath></defs>
       <g clip-path="url(#system-orbit-front)"><path data-orbit-stroke fill="none" /></g>
     </svg>
-    <div class="system-orbit-center" data-orbit-center><h2 id="system-title">El sistema<br />completo</h2></div>
     <ol class="system-orbit-concepts" aria-label="Recorrido de publicidad a venta">
-      {concepts.map(([action, title], index) => (
+      {concepts.map(({ title, description, points }, index) => (
         <li class="system-orbit-item" data-orbit-item={index}>
-          <button type="button" class="system-orbit-card" aria-label={`Traer ${title} al frente`}>
+          <button type="button" class="system-orbit-card" aria-label={`Traer ${title} al frente`} aria-describedby={`system-orbit-description-${index} system-orbit-points-${index}`}>
             <span class="system-orbit-number">{String(index + 1).padStart(2, '0')}</span>
-            <span class="system-orbit-copy"><span>{action}</span><strong>{title}</strong></span>
+            <span class="system-orbit-copy">
+              <strong>{title}</strong>
+              <span class="system-orbit-description" id={`system-orbit-description-${index}`}>{description}</span>
+              <span class="system-orbit-points" id={`system-orbit-points-${index}`}>{points.map(point => <span><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4" /></svg>{point}</span>)}</span>
+            </span>
           </button>
         </li>
       ))}
     </ol>
   </div>
   <div class="system-orbit-footer">
-    <p>Conectamos marketing, tecnología y operación comercial</p>
-    <button type="button" data-orbit-toggle aria-pressed="false" hidden>Pausar órbita</button>
+    <button type="button" data-orbit-toggle aria-pressed="false" hidden><span data-orbit-toggle-label>Pausar órbita</span></button>
   </div>
+  <svg class="system-orbit-transition system-orbit-transition-bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path data-orbit-blob d={blobPath} />
+  </svg>
 </div>
 <script>
   import '../scripts/system-orbit';
