@@ -92,8 +92,7 @@ input, textarea { caret-color: var(--blue-text); }
 .section-disclosure .solution-path:last-child { border-bottom: 0; }
 
 /* A dark optical scene is an object inside the continuous reading field. */
-.system-section { padding-block: var(--section-space); background: var(--bg); color: var(--ink); }
-.system-section > .wrap { border-top: 1px solid var(--line); padding-top: 64px; }
+.system-section { padding: 0; background: #020307; color: #eef3ff; }
 /* Concepts keep their content, within one shared frame and palette. */
 .portfolio-section .experience-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
 .portfolio-section .concept-preview { border-radius: var(--radius); background: var(--surface); padding: 32px; border: 1px solid var(--line); }
@@ -171,7 +170,7 @@ input, textarea { caret-color: var(--blue-text); }
   .service-disclosure { margin-top: 8px; }
   .service-disclosure .service-list { font-size: 14px; }
   .section-disclosure .capability-grid { gap: 28px; }
-  .system-section > .wrap, .contact-section > .wrap { padding-top: 48px; }
+  .contact-section > .wrap { padding-top: 48px; }
   .portfolio-section .experience-grid { grid-template-columns: 1fr; gap: 48px; }
   .portfolio-section .concept-preview { padding: 24px; }
   .about-intro > h2 { max-width: 16ch; }

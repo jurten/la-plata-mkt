@@ -1,5 +1,32 @@
 import { expect, test } from '@playwright/test';
 
+test('la escena ocupa todo el ancho y el borde orgánico respeta pausa y movimiento reducido', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/#sistema');
+  const scene = page.locator('[data-system-orbit]');
+  const blob = scene.locator('[data-orbit-blob]');
+  await scene.locator('.system-orbit-transition').scrollIntoViewIfNeeded();
+  const box = (await scene.boundingBox())!;
+  expect(box.x).toBe(0);
+  expect(box.width).toBe(1920);
+  await expect(scene).toHaveCSS('border-radius', '0px');
+  await expect(scene.locator('.system-orbit-stars span')).toHaveCount(170);
+  const initial = await blob.getAttribute('d');
+  await expect.poll(() => blob.getAttribute('d')).not.toBe(initial);
+  await scene.locator('[data-orbit-toggle]').focus();
+  await page.keyboard.press('Enter');
+  await scene.locator('.system-orbit-transition').scrollIntoViewIfNeeded();
+  const frozen = await blob.getAttribute('d');
+  await page.waitForTimeout(180);
+  expect(await blob.getAttribute('d')).toBe(frozen);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const reduced = await blob.getAttribute('d');
+  await page.waitForTimeout(180);
+  expect(await blob.getAttribute('d')).toBe(reduced);
+  await page.screenshot({ path: 'artifacts/system-orbit/full-width-stars.png' });
+});
+
 test('usa la elipse inclinada del prompt y sigue girando al pasar el cursor', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/#sistema');

@@ -1,7 +1,17 @@
 ---
 const concepts = [['Atraer', 'Publicidad'], ['Recibir', 'Web'], ['Convertir', 'Consulta'], ['Conversar', 'WhatsApp'], ['Registrar', 'CRM'], ['Seguir', 'Proceso'], ['Resultado', 'Venta']];
+// A stable, irregular sky that needs neither a canvas nor an animation loop.
+let seed = 1637;
+const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random() * 100, size: .7 + random() * 1.6, opacity: .18 + random() * .5 }));
 ---
 <div class="perspective-study" data-system-orbit>
+  <div class="system-orbit-stars" aria-hidden="true">
+    {stars.map(star => <span style={`left:${star.x}%;top:${star.y}%;width:${star.size}px;height:${star.size}px;opacity:${star.opacity}`}></span>)}
+  </div>
+  <svg class="system-orbit-transition" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path data-orbit-blob d="M0 0H1440V72C1400 70 1380 98 1320 91S1240 80 1200 83S1120 105 1080 78S1000 56 960 60S880 77 840 55S760 30 720 34S640 6 600 24S520 67 480 57S400 38 360 62S280 90 240 73S160 53 120 80S40 109 0 94Z" />
+  </svg>
   <div class="system-orbit-stage" data-orbit-stage data-draggable>
     <svg class="system-orbit-path" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-orbit-path data-orbit-stroke fill="none" /></svg>
     <svg class="system-orbit-path system-orbit-path-front" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -27,4 +37,5 @@ const concepts = [['Atraer', 'Publicidad'], ['Recibir', 'Web'], ['Convertir', 'C
 </div>
 <script>
   import '../scripts/system-orbit';
+  import '../scripts/system-orbit-atmosphere';
 </script>

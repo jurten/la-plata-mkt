@@ -1,0 +1,51 @@
+---
+import ConceptPreview from './ConceptPreview.astro';
+import FeaturedLink from './FeaturedLink.astro';
+import Icon from './Icon.astro';
+import { getCaseStudies } from '../lib/case-studies';
+import '../styles/portfolio-reveal.css';
+interface Props { whatsappHref: string }
+const { whatsappHref } = Astro.props;
+const [estate, legal] = getCaseStudies(false);
+const projects = [
+  { type: 'real-estate' as const, title: 'Demanda, atención y seguimiento', category: 'Proyecto inmobiliario', summary: estate.summary, scope: estate.scope },
+  { type: 'legal' as const, title: 'Credibilidad que convierte', category: 'Proyecto jurídico', summary: legal.summary, scope: legal.scope },
+  { type: 'automation' as const, title: 'Cada consulta, un próximo paso', category: 'Sistema comercial', summary: 'Un ejemplo de cómo conectar el ingreso de consultas, la organización de contactos y el seguimiento en un mismo recorrido.', scope: 'CRM, automatizaciones e integración de canales.' },
+];
+---
+<div class="portfolio-reveal" data-portfolio-reveal>
+  <section id="trabajo" class="portfolio-section featured-work" aria-labelledby="experience-title">
+    <div class="featured-stage">
+      <div class="featured-belt">
+        <header class="featured-panel featured-opening">
+          <div class="featured-opening-copy">
+            <h2 id="experience-title">Ideas que<br />toman <span>forma</span></h2>
+            <p>Así podrían conectarse las piezas.</p>
+            <p class="content-disclosure">Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.</p>
+            <FeaturedLink href="#proyecto-inmobiliario" label="Explorá los ejemplos" />
+          </div>
+        </header>
+        {projects.map((project, index) => (
+          <article id={['proyecto-inmobiliario', 'proyecto-juridico', 'proyecto-sistema'][index]} class="featured-panel featured-project experience-card" data-featured-project>
+            <div class="featured-project-inner">
+              <ConceptPreview type={project.type} />
+              <div class="concept-description">
+                <div class="concept-caption"><span>{project.category}</span><span class="concept-label">Estudio conceptual</span></div>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+                <p class="concept-scope">{project.scope}</p>
+                <FeaturedLink href={whatsappHref} label="Tengo un proyecto parecido" />
+              </div>
+            </div>
+          </article>
+        ))}
+        <div class="featured-panel featured-closing">
+          <div><p>Cada negocio necesita<br />una conexión distinta</p><FeaturedLink href="#nosotros" label="Conocé al equipo" /></div>
+        </div>
+      </div>
+      <div class="featured-progress" aria-hidden="true"><span>Explorá las conexiones</span><div><i></i></div><span>Nosotros <Icon name="right" /></span></div>
+    </div>
+  </section>
+  <div class="featured-about"><slot /></div>
+</div>
+<script>import '../scripts/portfolio-reveal';</script>

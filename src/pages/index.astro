@@ -1,13 +1,12 @@
 ---
 import '../styles/fonts.css';
-import { getCaseStudies } from '../lib/case-studies';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import TelevisionNavigation from '../components/TelevisionNavigation.astro';
 import Icon from '../components/Icon.astro';
 import AtmosphereHero from '../components/AtmosphereHero.astro';
 import PerspectiveStudy from '../components/PerspectiveStudy.astro';
-import ConceptPreview from '../components/ConceptPreview.astro';
+import PortfolioReveal from '../components/PortfolioReveal.astro';
 import TeamRoster from '../components/TeamRoster.astro';
 import ServicesSection from '../components/ServicesSection.astro';
 import BrandLogo from '../components/BrandLogo.astro';
@@ -75,10 +74,6 @@ const faqs = [
 
 const turnstileSiteKey =
   readRuntimeEnv('PUBLIC_TURNSTILE_SITE_KEY', import.meta.env.PUBLIC_TURNSTILE_SITE_KEY) ?? '';
-// No portfolio publication approval has been supplied for this redesign.
-// Keep the existing approval-aware data source, using anonymous concepts only.
-const [realEstateCase, legalCase] = getCaseStudies(false);
-
 const pageTitle = 'Marketing, tecnología y ventas como un sistema | La Plata Marketing';
 const pageDescription =
   'La Plata Marketing conecta marketing, tecnología y ventas para que los negocios puedan crecer y organizarse.';
@@ -174,24 +169,19 @@ const structuredData = {
       <ServicesSection capabilities={capabilities} solutionPaths={solutionPaths} whatsappHref={whatsappHref} />
       </HeroReveal>
 
-      <section class="system-section" id="sistema" aria-labelledby="system-title"><div class="wrap">
+      <section class="system-section" id="sistema" aria-labelledby="system-title">
         <PerspectiveStudy />
-      </div></section>
+      </section>
 
-      <section id="trabajo" class="portfolio-section" aria-labelledby="experience-title"><div class="wrap">
-        <header class="section-head"><h2 id="experience-title" class="display">Ideas que toman<br /><span class="text-muted">forma.</span></h2><div><p>Así podrían conectarse las piezas.</p><p class="content-disclosure">Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.</p></div></header>
-        <div class="experience-grid">
-          <article class="experience-card experience-real-estate"><ConceptPreview type="real-estate" /><div class="concept-description"><h3>Demanda, atención<br />y seguimiento.</h3><div class="concept-caption"><span>Proyecto inmobiliario</span><span class="concept-label">Estudio conceptual</span></div><p>{realEstateCase.summary}</p><p class="concept-scope">{realEstateCase.scope}</p></div></article>
-          <article class="experience-card experience-professional"><ConceptPreview type="legal" /><div class="concept-description"><h3>Credibilidad<br />que convierte.</h3><div class="concept-caption"><span>Proyecto jurídico</span><span class="concept-label">Estudio conceptual</span></div><p>{legalCase.summary}</p><p class="concept-scope">{legalCase.scope}</p></div></article>
-        </div><div class="experience-action"><p>Cada negocio necesita una conexión distinta.</p><a class="button button-outline" href={whatsappHref}>Tengo un proyecto parecido <Icon /></a></div>
-      </div></section>
-
+      <PortfolioReveal whatsappHref={whatsappHref}>
       <section id="nosotros" class="about-section"><div class="wrap">
-        <div class="about-intro"><h2 class="display">Para entender,<br /><span class="text-muted">hay que mirar distinto.</span></h2><div><p class="about-statement">Primero entendemos el problema. Después elegimos las herramientas.</p><p>Ser un poco extraterrestres es tomar distancia, hacer otras preguntas y conectar lo que parecía separado.</p></div></div>
+        <div class="about-intro"><h2 class="display">Para entender,<br /><span class="text-muted">hay que mirar distinto</span></h2><div><p class="about-statement">Primero entendemos el problema. Después elegimos las herramientas.</p><p>Ser un poco extraterrestres es tomar distancia, hacer otras preguntas y conectar lo que parecía separado.</p></div></div>
         <TeamRoster />
         <div id="metodo" class="method-block"><h3 class="method-heading">De un problema a una solución.</h3><ol class="method-steps" data-method-flow>{methodSteps.map(([title, description]) => (<li class="method-step"><h4>{title}</h4><p>{description}</p></li>))}</ol></div>
         <div id="problemas" class="problems-block"><details class="business-problems"><summary><span>Tu negocio funciona. ¿Su sistema digital también?</span><Icon name="plus" /></summary><p>A veces el problema parece ser una web, una campaña o una planilla. Muchas veces es la forma en que esas piezas se conectan.</p><ul class="problems"><li class="problem-item">Tu web ya no representa el nivel real de tu negocio.</li><li class="problem-item">Invertís en publicidad, pero no sabés qué pasa con las consultas.</li><li class="problem-item">Los clientes llegan por distintos canales y el seguimiento se dispersa.</li><li class="problem-item">Tu empresa creció, pero sus herramientas digitales no crecieron con ella.</li><li class="problem-item">Dependés demasiado de Instagram, WhatsApp o tareas manuales.</li><li class="problem-item">Sabés que podrías captar más, pero no tenés un recorrido claro.</li></ul></details></div>
       </div></section>
+
+      </PortfolioReveal>
 
       <section class="contact-section" id="contacto" aria-labelledby="contact-title"><div class="wrap">
         <div class="contact-layout"><div class="contact-intro"><div class="contact-title"><h2 id="contact-title" class="display">Contanos qué <br />necesitás <br /><span>resolver.</span></h2></div><div role="group" aria-label="Canales de contacto directo"><div class="contact-side"><p>La primera reunión es gratuita. Vemos cómo funciona hoy tu negocio y evaluamos qué solución tiene sentido.</p><a class="button contact-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}><span>Hablemos por WhatsApp<strong>{whatsappDisplay}</strong></span><Icon /></a></div><div class="contact-direct"><p>O escribinos por email</p><a href={`mailto:${contactEmail}`}>{contactEmail} <Icon /></a></div></div></div>

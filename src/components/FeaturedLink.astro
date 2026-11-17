@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+interface Props { href: string; label: string }
+const { href, label } = Astro.props;
+---
+<a class="featured-text-link" href={href} aria-label={label} style={`--link-last:${Math.max(0, Array.from(label).length - 1)};--link-reentry:${Math.max(120, Math.round((300 + Math.max(0, Array.from(label).length - 1) * 60) * .5))}ms`}>
+  <span class="featured-link-word" aria-hidden="true">{Array.from(label).map((letter, index) => <span style={`--letter-index:${index}`}>{letter === ' ' ? '\u00a0' : letter}</span>)}</span>
+  <span class="featured-link-arrow featured-link-arrow--right" aria-hidden="true"><Icon name="right" /></span>
+  <span class="featured-link-arrow featured-link-arrow--left" aria-hidden="true"><Icon name="right" /></span>
+</a>

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('el portfolio no publica identidades o resultados sin aprobación', async ({ page }) => {
   await page.goto('/');
   const portfolio = page.locator('#trabajo');
-  await expect(portfolio.getByText('Estudio conceptual', { exact: true })).toHaveCount(2);
+  await expect(portfolio.getByText('Estudio conceptual', { exact: true })).toHaveCount(3);
   await expect(portfolio).toContainText('Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.');
   for (const name of ['Mirta Libera Propiedades', 'María Laumann Asociados', 'Señal verificada']) await expect(page.getByText(name, { exact: true })).toHaveCount(0);
 });

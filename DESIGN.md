@@ -205,6 +205,8 @@ components:
 
 ## Supplied React Bits Orbit Images, 2026-11-16
 
+Full-width refinement: the system scene now spans the viewport with no outer reading-field gutters, rounded container or divider line. An original irregular SVG boundary, informed by the supplied A24 Backrooms reference, connects the reading field to the fixed dark sky. Its six-second GSAP morph suspends offscreen, on hidden documents, with the orbit's pause state, reduced motion and forced colours. A deterministic static field of 170 blue-white stars (85 on mobile) needs no canvas or continuous rendering. Inner page gutters protect the orbit's cards. The orbit's original engine and drag/click behavior remain intact.
+
 The user's supplied integration prompt supersedes the earlier custom orbit and both hover-tilt experiments. `orbit-images-engine.js` retains the supplied JavaScript engine (arc-length LUT, rotated coordinates, bounds fitting, depth scaling/dimming, intro fan-out, horizontal drag rate, fling inertia and click/focus-to-front). `system-orbit.ts` replaces React lifecycle hooks with Astro DOM setup and teardown. Desktop uses exactly radiusX 340, radiusY 80, rotation -8, duration 30, itemSize 90 and depth .6. Hover speed is 1, preserving the user's explicit no-slowdown instruction. Concepts remain upright as the path tilts in two dimensions; there is no pointer-driven 3D rotation.
 
 The seven semantic concepts and original actions replace the image elements. Native buttons expose click-to-front through keyboard as well as pointer input. Depth places back concepts behind the central title and front concepts above it. Mobile uses a taller ellipse to keep the text readable, with the title above it. No JavaScript and forced colours retain an ordered normal-flow grid. Reduced motion disables the intro and autoplay and makes click-to-front instant. Explicit pause and hidden/offscreen suspension remain. The supplied engine is hardened only for lifecycle suspension and reduced-motion seeking; the upstream notice remains in `public/licenses/react-bits-orbit-images.txt`. No React dependency is added.
@@ -475,3 +477,10 @@ Reading text and editable fields use the retro I-beam PNG with the native `text`
 - **Don't** present concept imagery as approved client projects, results, or testimonials.
 - **Don't** promote miniature text inside decorative concept artwork into a reading or control type role.
 
+
+
+## Portfolio con recorrido horizontal
+
+La referencia de Trionn elegida por el usuario reemplaza la grilla del portfolio por una banda editorial de paneles de medio viewport: apertura, tres ejemplos conceptuales y cierre. El scroll vertical desplaza los paneles horizontalmente y el tramo final retira la banda hacia la izquierda para revelar Nosotros. Conserva Radio Canada Big, las superficies del tema activo y los azules de LPM. Los proyectos entran con una breve inclinación y se estabilizan para su lectura.
+
+La secuencia usa scroll nativo y posiciones absolutas de progreso para poder invertirse. Los paneles fuera de pantalla quedan fuera del foco. En móvil, pantallas bajas, movimiento reducido, colores forzados o sin JavaScript, se presenta una lista vertical completa. No se copian assets de Trionn. El tercer ejemplo de CRM y automatización se identifica como estudio conceptual. Contrato y revisión en `docs/portfolio-trionn.md`.

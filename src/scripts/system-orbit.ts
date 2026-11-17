@@ -19,6 +19,7 @@ function initialize(root: HTMLElement) {
   let sharedPause = false;
   function controls() {
     config.current.paused = paused || sharedPause;
+    root.dataset.orbitPaused = String(config.current.paused);
     toggle.hidden = reduced.matches || forced.matches;
     toggle.textContent = paused ? 'Reanudar órbita' : 'Pausar órbita';
     toggle.setAttribute('aria-pressed', String(paused));
