@@ -45,17 +45,16 @@ test('el hero omite la imagen plana, mantiene el CTA visible y lo prioriza en m�
   }
 });
 
-test('el contacto se apila y muestra el formulario completo en móvil', async ({ page }) => {
+test('el footer mantiene el contacto directo dentro de las pantallas estrechas', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const width of [320, 390, 900]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/#contacto');
-    await expect(page.locator('#contact-title')).toHaveText('Contanos qué necesitás resolver.');
+    await expect(page.locator('#contact-title')).toHaveText('Hablemos');
     await expect(page.locator('[data-floating-whatsapp]')).toBeHidden();
-    const intro = (await page.locator('.contact-intro').boundingBox())!;
-    const form = (await page.locator('.form-surface').boundingBox())!;
-    expect(form.y - (intro.y + intro.height)).toBeGreaterThanOrEqual(32);
-    expect(form.x).toBeGreaterThanOrEqual(0);
-    expect(form.x + form.width).toBeLessThanOrEqual(width);
+    const contact = (await page.locator('.footer-direct').boundingBox())!;
+    expect(contact.x).toBeGreaterThanOrEqual(0);
+    expect(contact.x + contact.width).toBeLessThanOrEqual(width);
+    await expect(page.locator('form, #faq')).toHaveCount(0);
   }
 });

@@ -29,7 +29,7 @@ The third pillar must explain the connected offering; it must not be presented a
 ## Operating Context
 
 - One continuous Spanish-language website, including About, Portfolio, and Contact sections. The existing privacy page remains a supporting route.
-- WhatsApp is the primary contact channel. The existing email and contact form remain part of the site's information and functionality.
+- WhatsApp is the primary contact channel, with direct email also available. On 2026-11-18 the user removed the public contact form and FAQ, moving key answers into the site journey. A future `/contact/` form is a possibility, not approved work for now.
 - Existing implementation: Astro, TypeScript, original CSS, Fontsource, Cloudflare Workers, Turnstile, and Resend.
 - Preserve working contact handling and publication controls during a visual redesign.
 

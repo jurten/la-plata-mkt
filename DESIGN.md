@@ -203,6 +203,16 @@ components:
 
 # Design System: La Plata Marketing
 
+## Simple contact footer, 2026-11-18
+
+The user's final direction removes the FAQ and public form. `ContactFooter.astro` is a compact three-column directory: site navigation, location/remote collaboration and direct WhatsApp/email. Contact navigation in the footer opens email; the address remains visible and selectable. WhatsApp remains the main conversation channel. Preserve the official logo, type, theme roles, native keyboard links and no-JavaScript behavior. No new social profiles or external destinations are invented.
+
+Key former answers now appear in `#como-trabajamos`, a concise normal-flow block within the approach: audience, standalone services, ongoing work, initial diagnosis, and agreed scope/timing/budget. The footer retains the free initial meeting and local/remote availability. Footer navigation links to this information; it is not another FAQ. A future `/contact/` with a form is undecided and is not implemented.
+
+Remove the homepage Turnstile script and unused browser form handler. The unmodified server contact API and its validation remain available for future work. The privacy page describes the current direct channels and links back to contact. `footer-arrival.ts` resolves initial contact/working-method fragments after upstream scene layout, cancelling on visitor input. Old `#faq` arrivals lead to the working-method information.
+
+Styles: `contact-footer.css` and the compact `.approach-context` rules in `approach.css`. Audit: `scripts/contact-footer-audit.mjs`, captures and measurements in `artifacts/contact-footer/`. Headings have no final periods.
+
 ## Supplied React Bits Orbit Images, 2026-11-16
 
 Full-width refinement: the system scene now spans the viewport with no outer reading-field gutters, rounded container or divider line. An original irregular SVG boundary, informed by the supplied A24 Backrooms reference, connects the reading field to the fixed dark sky. Its six-second GSAP morph suspends offscreen, on hidden documents, with the orbit's pause state, reduced motion and forced colours. A deterministic static field of 170 blue-white stars (85 on mobile) needs no canvas or continuous rendering. Inner page gutters protect the orbit's cards. The orbit's original engine and drag/click behavior remain intact.

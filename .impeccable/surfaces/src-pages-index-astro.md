@@ -9,6 +9,10 @@ related_targets: ["src/pages/privacidad.astro"]
 
 Mode: Persuade. Primary route: `src/pages/index.astro`; supporting route: `src/pages/privacidad.astro`.
 
+## Simple footer, 2026-11-18
+
+The user's final direction removes the FAQ and public form and defers any `/contact/` route. Use a compact directory footer with direct WhatsApp and email, navigation, location and privacy. Move useful answers into the approach's `#como-trabajamos` block, linked from footer navigation; keep the free first meeting and remote/local availability near contact. Preserve the official identity and light/dark behavior. No extra hero CTA, FAQ list, form, or invented social/external links. Remove the unused homepage form script/Turnstile widget; retain the server API for potential future work. Update privacy descriptions and back links to match current channels.
+
 ## Full-screen approach, 2026-11-16
 
 The user approved the marketing → technology → LPM scroll sequence based on https://tympanus.net/Development/OnScrollShapeMorph/. Replace the approach's open rows with a full-viewport sticky scene: communication eye and marketing copy, left-to-right travel and masked copy swap into the technology eye, then both eyes collide to reveal the unmodified official logo and “Nuestro método”. Keep the existing descriptions and all service information. Service disclosures, capabilities and solution paths remain in normal flow beneath the scene. The detailed method and complete system remain at their existing destinations.

@@ -134,102 +134,11 @@ if (toggle && nav && !toggle.closest('[data-tv-navigation]')) {
   window.matchMedia?.('(min-width: 1001px)').addEventListener?.('change', () => closeMenu());
 }
 
-const contactForm = document.querySelector('[data-contact-form]');
 const floatingContact = document.querySelector('[data-floating-whatsapp]');
 const contactSection = document.querySelector('#contacto');
 if (floatingContact && contactSection && 'IntersectionObserver' in window) {
-  // Contact has its own action; keep the floating control clear of form fields.
+  // The footer has its own direct action; avoid showing a duplicate floating link.
   new IntersectionObserver((entries) => {
     floatingContact.hidden = entries.some((entry) => entry.isIntersecting);
   }, { threshold: 0 }).observe(contactSection);
 }
-
-contactForm?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  contactForm
-    .querySelectorAll('input[name="company"], input[name="contactName"], input[name="email"], input[name="phone"], textarea[name="issue"]')
-    .forEach((field) => {
-      const normalizedValue = field.value.trim();
-      field.setCustomValidity('');
-
-      if (field.minLength >= 0 && normalizedValue.length < field.minLength) {
-        field.setCustomValidity(`Ingresá al menos ${field.minLength} caracteres sin contar espacios al principio o al final.`);
-      } else if (field.maxLength >= 0 && normalizedValue.length > field.maxLength) {
-        field.setCustomValidity(`Usá como máximo ${field.maxLength} caracteres.`);
-      } else if (field.name === 'phone' && normalizedValue !== '') {
-        const digitCount = normalizedValue.replace(/\D/g, '').length;
-        const hasValidPhoneSyntax = /^\+?[\d\s().-]+$/.test(normalizedValue);
-        if (!hasValidPhoneSyntax || digitCount < 7 || digitCount > 15) {
-          field.setCustomValidity('Ingresá un celular válido con código de área (7 a 15 dígitos).');
-        }
-      }
-
-      field.value = normalizedValue;
-    });
-
-  if (!contactForm.checkValidity()) {
-    contactForm.reportValidity();
-    return;
-  }
-
-  const button = contactForm.querySelector('button[type="submit"]');
-  const status = contactForm.querySelector('[role="status"]');
-  const formData = new FormData(contactForm);
-  const originalLabel = button?.innerHTML ?? '';
-
-  const payload = {
-    company: formData.get('company'),
-    contactName: formData.get('contactName'),
-    email: formData.get('email'),
-    phone: formData.get('phone') ?? '',
-    issue: formData.get('issue'),
-    privacyAccepted: formData.get('privacyAccepted') === 'true',
-    website: formData.get('website') ?? '',
-    turnstileToken: formData.get('cf-turnstile-response') ?? '',
-  };
-
-  if (button) {
-    button.disabled = true;
-    button.textContent = 'Enviando…';
-  }
-  contactForm.dataset.submissionState = 'sending';
-  contactForm.setAttribute('aria-busy', 'true');
-  if (status) status.textContent = '';
-
-  try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const result = await response.json();
-
-    if (!response.ok || !result.ok) {
-      throw new Error(result.error ?? 'request_failed');
-    }
-
-    if (status) {
-      status.textContent = result.delivery === 'demo'
-        ? 'Modo demo: la consulta fue validada, pero el email todavía no fue enviado.'
-        : '¡Listo! Recibimos tu consulta.';
-      status.focus();
-    }
-    contactForm.dataset.submissionState = 'success';
-    contactForm.reset();
-    window.history.replaceState(null, '', '#contacto');
-  } catch {
-    contactForm.dataset.submissionState = 'error';
-    if (status) {
-      status.textContent = 'No pudimos enviar la consulta. Probá de nuevo o escribinos a ceo@laplatamarketing.com.';
-      status.focus();
-    }
-  } finally {
-    window.turnstile?.reset?.();
-    if (button) {
-      button.disabled = false;
-      button.innerHTML = originalLabel;
-    }
-    contactForm.removeAttribute('aria-busy');
-  }
-});

@@ -10,15 +10,13 @@ test('los textos esenciales permanecen visibles y sin animación', async ({ page
   for (const style of styles) expect(style).toEqual({ opacity: '1', visibility: 'visible', animation: 'none' });
 });
 
-test('las preguntas funcionan con teclado y clics repetidos', async ({ page }) => {
-  await page.goto('/#faq');
-  const details = page.locator('#faq details').first();
-  await details.locator('summary').focus();
+test('la navegación del footer permite llegar a la información clave con teclado', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/#contacto');
+  await page.locator('footer').getByRole('link', { name: 'Cómo trabajamos' }).focus();
   await page.keyboard.press('Enter');
-  await expect(details).toHaveAttribute('open', '');
-  await expect(details.locator('p')).toBeVisible();
-  await page.keyboard.press('Enter');
-  await expect(details).not.toHaveAttribute('open', '');
+  await expect(page.locator('#working-title')).toBeInViewport();
+  await expect(page.locator('#working-title')).toBeFocused();
 });
 
 test('el modo automático sigue cambios de apariencia del sistema', async ({ page }) => {

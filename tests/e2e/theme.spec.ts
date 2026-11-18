@@ -47,7 +47,7 @@ test('la nueva identidad ignora antiguas URLs de paleta y conserva el modo autom
   await expect(page.locator('script[src="/scripts/site.js"]')).toHaveCount(1);
 });
 
-test('la nueva identidad conserva foco visible en navegación, tema y formulario', async ({ page }) => {
+test('la nueva identidad conserva foco visible en navegación, tema y contacto', async ({ page }) => {
   await page.goto('/');
   await page.emulateMedia({ colorScheme: 'light' });
   await page.reload();
@@ -93,7 +93,11 @@ test('la nueva identidad conserva foco visible en navegación, tema y formulario
   });
   expect(focusPaint.clipped).toBe(false);
 
-  await assertKeyboardFocus(page.getByLabel('Email'));
+  const contact = page.locator('footer .footer-email');
+  await contact.focus();
+  await expect(contact).toBeFocused();
+  await expect(contact).toHaveCSS('outline-style', 'solid');
+  await expect(contact).toHaveCSS('outline-width', '2px');
 });
 
 test('el selector de apariencia conserva objetivos táctiles de 44px en pantallas estrechas', async ({ page }) => {

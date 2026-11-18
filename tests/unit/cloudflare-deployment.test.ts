@@ -56,12 +56,12 @@ describe('Cloudflare Workers deployment contract', () => {
       readme,
       text('src/pages/index.astro'),
       text('src/pages/api/contact.ts'),
-      text('public/scripts/site.js'),
       text('.dev.vars.example'),
     ];
 
     expect(privacy).toContain('Justina Rosa Guiñazú');
-    expect(privacy).toContain('Cloudflare, Turnstile, Resend y Google Workspace');
+    expect(privacy).toContain('Cloudflare y Google Workspace');
+    expect(privacy).toContain('El sitio no tiene un formulario de contacto activo.');
     expect(privacy).toContain('eliminamos o anonimizamos');
     expect(privacy).not.toContain('Borrador pendiente');
     expect(privacy).not.toContain('deben incorporarse a este aviso');

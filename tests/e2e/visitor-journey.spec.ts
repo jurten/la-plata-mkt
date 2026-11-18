@@ -23,7 +23,8 @@ test('recorre enfoque, problemas, método y contacto en una misma página', asyn
   await expect(page.locator('.method-step')).toHaveCount(4);
   await page.locator('.primary-nav').getByRole('link', { name: 'Contacto', exact: true }).click();
   await expect(page).toHaveURL(/#contacto$/);
-  for (const label of ['Empresa', 'Nombre de contacto', 'Email', '¿Qué problema querés resolver?']) await expect(page.getByLabel(label)).toBeVisible();
+  await expect(page.locator('footer .footer-whatsapp')).toBeVisible();
+  await expect(page.locator('footer .footer-email')).toBeVisible();
 });
 
 test('la lectura y el contacto básico funcionan sin JavaScript', async ({ browser }) => {
@@ -37,7 +38,7 @@ test('la lectura y el contacto básico funcionan sin JavaScript', async ({ brows
   await expect(page.locator('.alien-portrait .spatial-canvas')).toHaveCSS('opacity', '0');
   await expect(page.locator('[data-system-orbit] [data-orbit-item]')).toHaveCount(7);
   await expect(page.getByRole('group', { name: 'Cambiar la perspectiva del recorrido', includeHidden: true })).toBeHidden();
-  await page.locator('#faq summary').first().click();
-  await expect(page.locator('#faq details').first()).toHaveAttribute('open', '');
+  await expect(page.locator('#como-trabajamos')).toContainText('alcance, los tiempos y el presupuesto');
+  await expect(page.locator('#faq, form')).toHaveCount(0);
   await context.close();
 });

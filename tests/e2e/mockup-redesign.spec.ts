@@ -8,9 +8,9 @@ test('el portfolio no publica identidades o resultados sin aprobación', async (
   for (const name of ['Mirta Libera Propiedades', 'María Laumann Asociados', 'Señal verificada']) await expect(page.getByText(name, { exact: true })).toHaveCount(0);
 });
 
-test('el formulario, el logo y los destinos de contacto siguen siendo reales', async ({ page, request }) => {
+test('el logo y los destinos de contacto directo siguen siendo reales', async ({ page, request }) => {
   await page.goto('/');
-  await expect(page.locator('[data-contact-form]')).toHaveAttribute('action', '/api/contact');
+  await expect(page.locator('[data-contact-form]')).toHaveCount(0);
   await expect(page.locator('.hero .button-primary')).toHaveAttribute('href', 'https://wa.me/5491158861954');
   await expect(page.locator('[data-floating-whatsapp]')).toHaveCSS('position', 'fixed');
   const links = page.locator('a[href^="https://wa.me"]');
