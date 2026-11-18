@@ -32,6 +32,40 @@ test('los enlaces internos llegan a los ejemplos y al equipo', async ({ page }) 
   await expect(page.locator('#nosotros [data-team-roster]')).toBeInViewport();
 });
 
+test('Nosotros permanece inmóvil mientras el portfolio se retira', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 966 });
+  await page.goto('/#trabajo');
+  await expect(page.locator('[data-portfolio-reveal]')).toHaveAttribute('data-enhanced', 'true');
+  await page.evaluate(() => {
+    const section = document.getElementById('trabajo')!;
+    const start = section.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: start + innerWidth * 1.5 + document.documentElement.clientHeight * .85 * .25, behavior: 'instant' });
+  });
+  await expect(page.locator('.featured-about')).toHaveAttribute('data-team-locked');
+  await page.waitForTimeout(150);
+  await page.evaluate(() => {
+    const image = document.querySelector('[data-team-profile]:not([hidden]) img')!;
+    const samples: number[] = [];
+    const record = () => samples.push(image.getBoundingClientRect().top);
+    window.addEventListener('scroll', record, { passive: true });
+    record();
+    Object.assign(window, { portfolioMotionSamples: samples, stopPortfolioMotion: () => window.removeEventListener('scroll', record) });
+  });
+  await page.mouse.move(100, 450);
+  for (let index = 0; index < 4; index++) {
+    await page.mouse.wheel(0, 60);
+    await page.waitForTimeout(120);
+  }
+  const samples = await page.evaluate(() => {
+    const state = window as unknown as { portfolioMotionSamples: number[]; stopPortfolioMotion: () => void };
+    state.stopPortfolioMotion();
+    return state.portfolioMotionSamples;
+  });
+  expect(samples.length).toBeGreaterThan(2);
+  expect(Math.max(...samples) - Math.min(...samples)).toBeLessThan(1);
+  await expect(page.locator('.featured-about')).toHaveAttribute('data-team-locked');
+});
+
 test('Nosotros se habilita solo cuando la sección anterior desaparece por completo', async ({ page }) => {
   await page.goto('/#trabajo');
   await expect(page.locator('[data-portfolio-reveal]')).toHaveAttribute('data-enhanced', 'true');

@@ -11,6 +11,7 @@ async function initializePortfolio() {
   const stage = root.querySelector<HTMLElement>('.featured-stage')!;
   const belt = root.querySelector<HTMLElement>('.featured-belt')!;
   const about = root.querySelector<HTMLElement>('.featured-about')!;
+  const aboutContent = root.querySelector<HTMLElement>('.featured-about__content')!;
   const projects = [...root.querySelectorAll<HTMLElement>('[data-featured-project]')];
   const panels = [...belt.children] as HTMLElement[];
   const progressBar = root.querySelector<HTMLElement>('.featured-progress i')!;
@@ -30,6 +31,7 @@ async function initializePortfolio() {
       exitDistance = document.documentElement.clientHeight * .85;
       distance = travel + exitDistance;
       root.style.setProperty('--featured-distance', `${distance}px`);
+      root.style.setProperty('--featured-exit-distance', `${exitDistance}px`);
       start = section.getBoundingClientRect().top + scrollY;
     };
     const render = (progress: number) => {
@@ -40,7 +42,6 @@ async function initializePortfolio() {
       gsap.set(belt, { x: -rail });
       // The entire rail withdraws to the left, uncovering About at rest.
       gsap.set(stage, { x: -exit * innerWidth });
-      gsap.set(about, { y: position >= travel ? -(distance - position) : -exitDistance });
       gsap.set(progressBar, { scaleX: progress });
       projects.forEach((project, index) => {
         const entry = gsap.utils.clamp(0, 1, (rail - (index - .65) * innerWidth * .5) / (innerWidth * .45));
@@ -72,7 +73,7 @@ async function initializePortfolio() {
       if (detail.target === section) detail.top = start;
       else if (about.contains(detail.target)) {
         // Native scroll positions round to CSS pixels; never land short of the full exit.
-        detail.top = Math.ceil(start + distance + (detail.target.getBoundingClientRect().top - about.getBoundingClientRect().top));
+        detail.top = Math.ceil(start + distance + (detail.target.getBoundingClientRect().top - aboutContent.getBoundingClientRect().top));
       } else {
         const panelIndex = panels.findIndex(panel => panel === detail.target || panel.contains(detail.target));
         if (panelIndex >= 0) detail.top = start + Math.max(0, panelIndex - .5) * innerWidth * .5;
@@ -124,6 +125,7 @@ async function initializePortfolio() {
       root.removeEventListener('click', followLink);
       delete root.dataset.enhanced;
       root.style.removeProperty('--featured-distance');
+      root.style.removeProperty('--featured-exit-distance');
       for (const panel of panels) panel.inert = false;
       stage.inert = false;
       stage.removeAttribute('data-featured-exited');

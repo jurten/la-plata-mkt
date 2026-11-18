@@ -24,6 +24,12 @@ Los dos primeros ejemplos provienen del contenido conceptual existente. El terce
 
 Verificación visual: apertura, recorrido, cierre y transición final en escritorio; móvil y movimiento reducido con lectura vertical. Pruebas de reversibilidad, navegación por anclas y contenido sin JavaScript en `tests/e2e/portfolio-reveal.spec.ts`.
 
+## Nosotros fijo durante la salida
+
+La sección del equipo usa una fijación nativa con `position: sticky`. Su contenedor comienza al iniciar la salida del portfolio y reserva el recorrido restante mediante un espaciador en flujo; al terminar, el equipo continúa con el desplazamiento normal de la página. No se compensan los desplazamientos verticales del navegador con transformaciones de JavaScript en cada frame. Las anclas se calculan respecto del contenido fijo, manteniendo su destino al final de la salida.
+
+En Firefox 160, a 1920 × 966 px, el retrato mantuvo su borde superior en 144 px al 25%, 55% y 90% de la salida. La prueba de scroll real comprueba su estabilidad durante el recorrido. Las capturas están en `.impeccable/review/team/portfolio-sticky-{25,55,90,100}.png`.
+
 Resultado: revisión visual aprobada en 1440 × 1000, 1366 × 768 y 390 × 844, incluidos ambos temas. Sin desbordes horizontales ni excepciones de página en el recorrido capturado. Las cinco pruebas específicas del portfolio pasan y el build termina correctamente. La ejecución ampliada detectó dos fallos en pruebas existentes fuera de este alcance: expectativa antigua del color del favicon y estado de encendido de la navegación.
 
 ## Enlaces de la referencia
