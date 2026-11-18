@@ -9,8 +9,8 @@ for (const width of [1440, 390]) {
   const state = () => background.evaluate((canvas: HTMLCanvasElement) => {
    const gl = canvas.getContext('webgl')!;
    const program = gl.getParameter(gl.CURRENT_PROGRAM);
-   const clicks = Array.from(gl.getUniform(program, gl.getUniformLocation(program, 'uClicks[0]')) as Float32Array);
-   const height = gl.getUniform(program, gl.getUniformLocation(program, 'rippleHeight')) as number;
+   const clicks = Array.from(gl.getUniform(program, gl.getUniformLocation(program, 'uClicks[0]')!) as Float32Array);
+   const height = gl.getUniform(program, gl.getUniformLocation(program, 'rippleHeight')!) as number;
    return { clicks, height, error: gl.getError(), scale: canvas.height / canvas.getBoundingClientRect().height };
   });
   expect((await state()).clicks[3]).toBe(0);

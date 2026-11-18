@@ -39,30 +39,32 @@ for (const container of document.querySelectorAll<HTMLElement>('[data-warp-text]
  async function rasterize() {
   await document.fonts.ready;
   if (lost) return;
-  const rect = container.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-  renderer.setSize(rect.width, rect.height);
-  uniforms.uResolution.value.set([rect.width, rect.height]);
+  // Scroll exit scales/tilts the whole hero. Rasterise in layout coordinates,
+  // so a resize or HMR update offscreen cannot bake that tiny pose into text.
+  const width = container.clientWidth, height = container.clientHeight;
+  if (!width || !height) return;
+  renderer.setSize(width, height);
+  uniforms.uResolution.value.set([width, height]);
   const dpr = Math.min(devicePixelRatio,2);
   const image = document.createElement('canvas');
-  image.width = Math.ceil(rect.width*dpr); image.height = Math.ceil(rect.height*dpr);
+  image.width = Math.ceil(width*dpr); image.height = Math.ceil(height*dpr);
   const ctx = image.getContext('2d')!;
   ctx.scale(dpr,dpr);
   ctx.fillStyle = getComputedStyle(container).color;
   ctx.textBaseline = 'alphabetic';
   // Rasterise each live DOM line, preserving the left/right/centre composition.
-  for (const line of heading.querySelectorAll(':scope > span')) {
-   const style = getComputedStyle(line), bounds = line.getBoundingClientRect();
+  for (const line of heading.querySelectorAll<HTMLElement>(':scope > span')) {
+   const style = getComputedStyle(line);
    const size = parseFloat(style.fontSize), tracking = parseFloat(style.letterSpacing) || 0;
    ctx.font = `${style.fontWeight} ${size}px ${style.fontFamily}`;
    const text = line.textContent!.trim();
    const chars = Array.from(text);
-   const width = chars.reduce((sum,c)=>sum+ctx.measureText(c).width,0)+tracking*(chars.length-1);
-   let x = bounds.left-rect.left;
-   if (style.textAlign==='right') x += bounds.width-width;
-   if (style.textAlign==='center') x += (bounds.width-width)/2;
+   const textWidth = chars.reduce((sum,c)=>sum+ctx.measureText(c).width,0)+tracking*(chars.length-1);
+   let x = line.offsetLeft;
+   if (style.textAlign==='right') x += line.offsetWidth-textWidth;
+   if (style.textAlign==='center') x += (line.offsetWidth-textWidth)/2;
    const metrics = ctx.measureText(text);
-   const y = bounds.top-rect.top+(bounds.height+metrics.actualBoundingBoxAscent-metrics.actualBoundingBoxDescent)/2;
+   const y = line.offsetTop+(line.offsetHeight+metrics.actualBoundingBoxAscent-metrics.actualBoundingBoxDescent)/2;
    for (const char of chars) { ctx.fillText(char,x,y); x += ctx.measureText(char).width+tracking; }
   }
   texture.image=image; texture.needsUpdate=true; ready=true; render();

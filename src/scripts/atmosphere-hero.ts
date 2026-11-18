@@ -21,7 +21,7 @@ if (hero) {
  const flow = new SmokeDisplacement();
  const pointer = { x: .5, y: .5, lastX: .5, lastY: .5, inside: false, fresh: true };
  let cssWidth = 1, cssHeight = 1, rippleHeight = 1;
- new ResizeObserver(() => { rippleHeight = Math.max(1,heading.getBoundingClientRect().height); }).observe(heading);
+ new ResizeObserver(([entry]) => { rippleHeight = Math.max(1,entry.borderBoxSize[0].blockSize); }).observe(heading);
  function releasePointer() { pointer.inside = false; pointer.fresh = true; }
  hero.addEventListener('pointermove', event => {
   if (event.pointerType === 'touch' || reduced.matches) return;
@@ -101,7 +101,8 @@ if (hero) {
   frame=requestAnimationFrame(animate);
  }
  function resume() { cancelAnimationFrame(frame); frame=0; last=performance.now(); if (!visible || document.hidden || reduced.matches || forced.matches) { releasePointer(); flow.clear(); clicks.fill(0); } if (visible && !document.hidden && !reduced.matches && !forced.matches && program) frame=requestAnimationFrame(animate); else draw(); }
- new ResizeObserver(() => { const r=hero!.getBoundingClientRect(); cssWidth=Math.max(1,r.width); cssHeight=Math.max(1,r.height); const scale=Math.min(devicePixelRatio,1.5,2200/cssWidth); canvas.width=Math.round(cssWidth*scale); canvas.height=Math.round(cssHeight*scale); releasePointer(); flow.clear(); draw(); }).observe(hero);
+ // Keep drawing resolution independent of the ancestor's scroll-exit transform.
+ new ResizeObserver(() => { cssWidth=Math.max(1,canvas.clientWidth); cssHeight=Math.max(1,canvas.clientHeight); const scale=Math.min(devicePixelRatio,1.5,2200/cssWidth); canvas.width=Math.round(cssWidth*scale); canvas.height=Math.round(cssHeight*scale); releasePointer(); flow.clear(); draw(); }).observe(hero);
  new IntersectionObserver(([entry]) => {visible=entry.isIntersecting;resume();}).observe(hero);
  document.addEventListener('visibilitychange',resume); reduced.addEventListener('change',resume); forced.addEventListener('change',resume);
  canvas.addEventListener('webglcontextlost', e=>{e.preventDefault();cancelAnimationFrame(frame);program=null;});

@@ -1,5 +1,45 @@
 ﻿import { test, expect } from '@playwright/test';
 
+for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+ test(`hero survives changes below the fold, ${viewport.width}px`, async ({ page }) => {
+  await page.route('https://js.hs-scripts.com/**', route => route.fulfill({ body: '' }));
+  await page.setViewportSize(viewport);
+  // Dev reloads can restore a lower-section hash before the shaders initialise.
+  await page.goto('/#contacto', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('[data-warp-ready]')).toHaveCount(1);
+  await page.locator('#contacto').evaluate(el => el.scrollIntoView({ behavior: 'instant' }));
+  await expect(page.locator('[data-hero-reveal]')).toHaveAttribute('data-reveal-state', 'complete');
+  // A stylesheet update can resize text while its ancestor is scaled down.
+  await page.addStyleTag({ content: '.optical-heading { padding-bottom: 27px; }' });
+  await page.setViewportSize({ width: viewport.width - 40, height: viewport.height - 40 });
+  for (const selector of ['[data-warp-canvas]', '[data-atmosphere]']) {
+   await expect.poll(() => page.locator(selector).evaluate((canvas: HTMLCanvasElement) =>
+    Math.min(canvas.width / canvas.clientWidth, canvas.height / canvas.clientHeight))).toBeGreaterThanOrEqual(.99);
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect(page.locator('[data-hero-reveal]')).toHaveAttribute('data-reveal-state', 'idle');
+  await expect(page.locator('.hero-copy')).toHaveCSS('opacity', '1');
+  // Read after a rendered frame, before WebGL discards its buffer. All three
+  // lines must contain visible text, rather than the reported white sliver.
+  await expect.poll(() => page.locator('[data-warp-canvas]').evaluate((canvas: HTMLCanvasElement) =>
+   new Promise<number>(resolve => requestAnimationFrame(() => {
+    const copy = document.createElement('canvas');
+    copy.width = canvas.width; copy.height = canvas.height;
+    const ctx = copy.getContext('2d')!;
+    ctx.drawImage(canvas, 0, 0);
+    const { data } = ctx.getImageData(0, 0, copy.width, copy.height);
+    const counts = [0, 0, 0];
+    for (let y = 0; y < copy.height; y++) {
+     for (let x = 0; x < copy.width; x++) {
+      if (data[(y * copy.width + x) * 4 + 3] > 128) counts[Math.min(2, Math.floor(y * 3 / copy.height))]++;
+     }
+    }
+    resolve(Math.min(...counts) / (copy.width * copy.height / 3));
+   })))).toBeGreaterThan(.025);
+  await expect(page.locator('#inicio a[href^="https://wa.me/"]')).toBeVisible();
+ });
+}
+
 test('warped headline renders, responds to input and preserves contact', async ({ page }) => {
  const errors: string[]=[];page.on('pageerror', e=>errors.push(e.message));
  await page.goto('/');
