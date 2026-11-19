@@ -59,7 +59,7 @@
 .approach-eye__letters { font: 700 calc(var(--approach-eye-width) * .4)/1 var(--display); letter-spacing: -.04em; color: #eef3ff; transform: rotate(12deg); }
 .approach-eye__code { color: var(--blue-text); }
 .approach-eye__code .icon { width: 34%; height: auto; stroke-width: 1.2; }
-.approach-brand { position: absolute; top: 41%; left: 50%; color: var(--blue-text); opacity: 0; transform: translate(-50%, -50%); }
+.approach-brand { position: absolute; top: 41%; left: 0; width: 100%; display: grid; place-items: center; color: var(--blue-text); opacity: 0; transform: translateY(-50%); }
 .approach-brand .brand-logo__symbol { width: min(30vw, 40svh, 440px); }
 [data-approach-enabled] .approach-nav { position: absolute; left: var(--page-gutter); bottom: 32px; display: flex; align-items: center; gap: clamp(24px, 4vw, 64px); border-top: 1px solid var(--line); padding-top: 16px; }
 .approach-nav a { position: relative; display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); font-size: 14px; text-decoration: none; }

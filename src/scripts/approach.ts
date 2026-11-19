@@ -11,6 +11,7 @@ function enhanceApproach(root: HTMLElement) {
   const eye = root.querySelector<HTMLElement>('[data-approach-eye]')!;
   const returningEye = root.querySelector<HTMLElement>('[data-approach-return]')!;
   const brand = root.querySelector<HTMLElement>('[data-approach-brand]')!;
+  const brandMark = brand.querySelector<HTMLElement>('.brand-logo')!;
   const panels = [...root.querySelectorAll<HTMLElement>('[data-approach-panel]')];
   const steps = [...root.querySelectorAll<HTMLAnchorElement>('[data-approach-step]')];
   const playback = root.querySelector<HTMLButtonElement>('[data-approach-playback-toggle]')!;
@@ -78,7 +79,7 @@ function enhanceApproach(root: HTMLElement) {
         .set([outline, code, panels[1], panels[2], returningEye, brand], { opacity: 0 })
         .set(returningEye, { x: left, y: 0, yPercent: -50, scale: .65, rotation: -12, borderRadius: '78% 18% 78% 18%' })
         .set(returnLetters, { rotation: 12, opacity: 1 })
-        .set(brand, { scale: .82 })
+        .set(brandMark, { scale: .82 })
         .set(panels[0], { opacity: 1, y: 0 })
         .set([panels[1], panels[2]], { y: 18 })
         // Hold marketing, then sweep the eye across the whole composition.
@@ -103,7 +104,8 @@ function enhanceApproach(root: HTMLElement) {
         .to([eye, returningEye], { scaleX: .46, scaleY: .78, duration: .04, ease: 'sine.inOut' }, .84)
         .to([eye, returningEye], { opacity: 0, duration: .05, ease: 'power2.inOut' }, .86)
         .to([eye, returningEye], { scale: .2, duration: .03, ease: 'power2.inOut' }, .88)
-        .to(brand, { opacity: 1, scale: 1, duration: .05, ease: 'power3.out' }, .89)
+        .to(brand, { opacity: 1, duration: .05, ease: 'power3.out' }, .89)
+        .to(brandMark, { scale: 1, duration: .05, ease: 'power3.out' }, .89)
         .to(panels[2], { opacity: 1, y: 0, duration: .07, ease: 'power2.out' }, .87)
         .to({}, { duration: .05 }, .95);
 
@@ -331,7 +333,7 @@ function enhanceApproach(root: HTMLElement) {
         // GSAP invalidation during resize can retain intermediate inline styles
         // as its revert baseline. These elements belong exclusively to this
         // controller: restore the original readable HTML on every teardown.
-        for (const element of [eye, returningEye, fill, outline, letters, code, returnLetters, brand, ...panels, ...copy, countdownBar]) {
+        for (const element of [eye, returningEye, fill, outline, letters, code, returnLetters, brand, brandMark, ...panels, ...copy, countdownBar]) {
           element.removeAttribute('style');
         }
         root.style.removeProperty('--approach-eye-width');
