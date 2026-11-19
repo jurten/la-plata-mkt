@@ -1,6 +1,6 @@
 /* A compact directory and direct contact on one closing surface. */
 .site-home .closing-footer { padding-block: clamp(48px, 5vw, 80px) 24px; background: var(--surface); color: var(--ink); border-top: 1px solid var(--line); }
-.closing-footer .footer-directory { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; gap: clamp(32px, 5vw, 80px); }
+.closing-footer .footer-directory { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, .8fr); align-items: start; gap: clamp(32px, 5vw, 80px); }
 .closing-footer .footer-directory > * { min-width: 0; }
 .closing-footer h2 { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line); font: 700 23px/1.2 var(--display); letter-spacing: -.025em; }
 .closing-footer .footer-directory p { max-width: 36ch; font-size: 16px; color: var(--muted); }
@@ -20,13 +20,14 @@
 .closing-footer :focus-visible { outline: 2px solid var(--blue-text); outline-offset: 4px; box-shadow: none; }
 .closing-footer ::selection { color: #fff; background: var(--blue); }
 @media (max-width: 1000px) {
-  .closing-footer .footer-directory { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 40px; }
-  .closing-footer .footer-location { grid-column: 1; grid-row: 2; }
-  .closing-footer .footer-direct { grid-column: 2; grid-row: 1 / 3; }
+  .closing-footer .footer-directory { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; }
+  .closing-footer .footer-location { grid-column: 2; grid-row: 2; }
+  .closing-footer .footer-direct { grid-column: 1; grid-row: 1 / 3; }
+  .closing-footer .footer-explore { grid-column: 2; grid-row: 1; }
 }
 @media (max-width: 700px) {
   .closing-footer .footer-directory { grid-template-columns: 1fr; gap: 32px; }
-  .closing-footer .footer-location, .closing-footer .footer-direct { grid-column: auto; grid-row: auto; }
+  .closing-footer .footer-location, .closing-footer .footer-direct, .closing-footer .footer-explore { grid-column: auto; grid-row: auto; }
   .closing-footer h2 { margin-bottom: 16px; }
   .closing-footer .footer-explore { grid-template-columns: 1fr 1fr; column-gap: 16px; }
   .closing-footer .footer-explore h2 { grid-column: 1 / -1; }
