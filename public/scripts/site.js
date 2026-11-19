@@ -136,9 +136,30 @@ if (toggle && nav && !toggle.closest('[data-tv-navigation]')) {
 
 const floatingContact = document.querySelector('[data-floating-whatsapp]');
 const contactSection = document.querySelector('#contacto');
-if (floatingContact && contactSection && 'IntersectionObserver' in window) {
-  // The footer has its own direct action; avoid showing a duplicate floating link.
-  new IntersectionObserver((entries) => {
-    floatingContact.hidden = entries.some((entry) => entry.isIntersecting);
-  }, { threshold: 0 }).observe(contactSection);
+if (floatingContact && 'IntersectionObserver' in window) {
+  const hero = document.querySelector('#inicio');
+  const reveal = document.querySelector('[data-hero-reveal]');
+  let pastHero = !hero || hero.getBoundingClientRect().bottom <= 0;
+  const contactBounds = contactSection?.getBoundingClientRect();
+  let contactVisible = !!contactBounds && contactBounds.top < innerHeight && contactBounds.bottom > 0;
+  const syncFloatingContact = () => {
+    // Reveal the contact action as soon as the hero opens its masked edge.
+    const heroOpened = reveal?.hasAttribute('data-reveal-enabled')
+      ? ['moving', 'complete'].includes(reveal.dataset.revealState) : pastHero;
+    const hidden = !heroOpened || contactVisible;
+    if (floatingContact.hidden !== hidden) floatingContact.hidden = hidden;
+  };
+  const sections = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.target === hero) pastHero = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+      if (entry.target === contactSection) contactVisible = entry.isIntersecting;
+    }
+    syncFloatingContact();
+  }, { threshold: 0 });
+  if (hero) sections.observe(hero);
+  if (contactSection) sections.observe(contactSection);
+  if (reveal) new MutationObserver(syncFloatingContact).observe(reveal, {
+    attributes: true, attributeFilter: ['data-reveal-enabled', 'data-reveal-state'],
+  });
+  syncFloatingContact();
 }

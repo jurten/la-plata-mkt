@@ -44,7 +44,7 @@ test('Nosotros permanece inmóvil mientras el portfolio se retira', async ({ pag
   await expect(page.locator('.featured-about')).toHaveAttribute('data-team-locked');
   await page.waitForTimeout(150);
   await page.evaluate(() => {
-    const image = document.querySelector('[data-team-profile]:not([hidden]) img')!;
+    const image = document.querySelector('[data-team-list]')!;
     const samples: number[] = [];
     const record = () => samples.push(image.getBoundingClientRect().top);
     window.addEventListener('scroll', record, { passive: true });
@@ -70,9 +70,7 @@ test('Nosotros se habilita solo cuando la sección anterior desaparece por compl
   await page.goto('/#trabajo');
   await expect(page.locator('[data-portfolio-reveal]')).toHaveAttribute('data-enhanced', 'true');
   const about = page.locator('.featured-about');
-  const wheel = page.locator('#team-wheel');
-  const next = page.locator('[data-team-next]');
-  const selected = await wheel.getAttribute('data-selected');
+  const choices = page.locator('[data-team-choice]');
   const setExit = async (exit: number) => {
     await page.evaluate(fraction => {
       const section = document.getElementById('trabajo')!;
@@ -80,47 +78,28 @@ test('Nosotros se habilita solo cuando la sección anterior desaparece por compl
       const distance = section.offsetHeight - innerHeight;
       const travel = innerWidth * 1.5;
       const end = start + distance;
-      // Leave two CSS pixels before the end so integer scroll rounding cannot finish the exit.
-      const top = fraction < 1 ? Math.min(end - 2, start + travel + (distance - travel) * fraction) : Math.ceil(end);
-      scrollTo({ top, behavior: 'instant' });
+      scrollTo({ top: fraction < 1 ? Math.min(end - 2, start + travel + (distance - travel) * fraction) : Math.ceil(end), behavior: 'instant' });
     }, exit);
   };
-
   for (const exit of [.55, .999]) {
     await setExit(exit);
     await expect(about).toHaveAttribute('data-team-locked');
-    expect(await page.locator('.featured-stage').evaluate(element => element.getBoundingClientRect().right)).toBeGreaterThan(0);
-    const button = (await next.boundingBox())!;
-    await page.mouse.click(button.x + button.width / 2, button.y + button.height / 2);
-    await wheel.evaluate(element => element.focus({ preventScroll: true }));
-    await expect(wheel).not.toBeFocused();
-    await expect(wheel).toHaveAttribute('data-selected', selected!);
-    if (exit > .9) {
-      const name = (await page.locator('[data-wheel-option]').first().boundingBox())!;
-      await page.mouse.click(name.x + name.width / 2, name.y + name.height / 2);
-      await expect(page).toHaveURL(/#trabajo$/);
-      await expect(about).toHaveAttribute('data-team-locked');
-    }
+    await expect(choices.last()).toHaveAttribute('aria-disabled', 'true');
+    await choices.last().dispatchEvent('click');
+    await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-selected', '-1');
+    await choices.last().evaluate(element => element.focus({ preventScroll: true }));
+    await expect(choices.last()).not.toBeFocused();
+    await expect(page).toHaveURL(/#trabajo$/);
   }
-
-  await setExit(.55);
-  await expect(about).toHaveAttribute('data-team-locked');
-  const box = (await wheel.boundingBox())!;
-  await page.mouse.move(box.x + box.width - 12, box.y + box.height / 2);
-  const scrollBefore = await page.evaluate(() => scrollY);
-  await page.mouse.wheel(0, 30);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(scrollBefore);
-  await expect(wheel).toHaveAttribute('data-selected', selected!);
-
   await setExit(1);
   await expect(about).not.toHaveAttribute('data-team-locked');
   await expect(page.locator('.featured-stage')).toHaveAttribute('inert');
-  await next.click();
-  await expect(wheel).toHaveAttribute('data-selected', '2');
+  await choices.last().click();
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-selected', '2');
+  await expect(page).toHaveURL(/#trabajo$/);
   await setExit(.999);
   await expect(about).toHaveAttribute('data-team-locked');
-  await wheel.evaluate(element => element.focus({ preventScroll: true }));
-  await expect(wheel).not.toBeFocused();
+  await expect(choices.last()).toHaveAttribute('aria-disabled', 'true');
 });
 
 test('el enlace conserva el hover y el clic durante la salida del panel', async ({ page }) => {

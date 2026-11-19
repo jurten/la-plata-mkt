@@ -90,6 +90,7 @@ async function initializePortfolio() {
       }
     };
     const followLink = (event: MouseEvent) => {
+      if (event.defaultPrevented) return;
       const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
       if (!link || !root.contains(link)) return;
       const target = document.getElementById(link.hash.slice(1));
@@ -133,6 +134,49 @@ async function initializePortfolio() {
       gsap.set([belt, stage, about, progressBar, ...projects.map(p => p.firstElementChild)], { clearProps: 'transform,clipPath' });
     };
   });
+
+  // On touch/reduced-motion layouts the rail is ordinary document flow. The
+  // upstream scenes still resize at startup, so restore team arrivals only
+  // after that layout, and never after a visitor has started interacting.
+  const staticArrival = () => {
+    if (root.hasAttribute('data-enhanced')) return;
+    let target: HTMLElement | null;
+    try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); }
+    catch { return; }
+    if (!target || !about.contains(target)) return;
+    window.scrollTo({ top: target.getBoundingClientRect().top + scrollY, behavior: 'instant' });
+  };
+  const resolveStaticAnchor = (event: Event) => {
+    if (root.hasAttribute('data-enhanced')) return;
+    const detail = (event as CustomEvent<{ target: HTMLElement; top?: number }>).detail;
+    if (about.contains(detail.target)) detail.top = detail.target.getBoundingClientRect().top + scrollY;
+  };
+  const arrivalEvents = new AbortController();
+  const cancelArrival = () => arrivalEvents.abort();
+  for (const type of ['wheel', 'pointerdown', 'touchstart', 'keydown']) window.addEventListener(type, cancelArrival, { once: true, passive: true, signal: arrivalEvents.signal });
+  const initialHash = location.hash;
+  const loaded = document.readyState === 'complete' ? Promise.resolve()
+    : new Promise<void>(resolve => window.addEventListener('load', () => resolve(), { once: true }));
+  let arrivalFrame = 0;
+  void loaded.then(() => {
+    arrivalFrame = requestAnimationFrame(() => {
+      arrivalFrame = requestAnimationFrame(() => {
+        if (!arrivalEvents.signal.aborted && location.hash === initialHash) staticArrival();
+        arrivalEvents.abort();
+      });
+    });
+  });
+  window.addEventListener('lpm:resolve-anchor', resolveStaticAnchor);
+  window.addEventListener('hashchange', staticArrival);
+  window.addEventListener('popstate', staticArrival);
+  document.addEventListener('astro:before-swap', () => {
+    cancelAnimationFrame(arrivalFrame);
+    arrivalEvents.abort();
+    window.removeEventListener('lpm:resolve-anchor', resolveStaticAnchor);
+    window.removeEventListener('hashchange', staticArrival);
+    window.removeEventListener('popstate', staticArrival);
+    media.revert();
+  }, { once: true });
 }
 
 initializePortfolio();

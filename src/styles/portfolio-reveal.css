@@ -56,7 +56,10 @@
 .portfolio-reveal[data-enhanced] .featured-closing { justify-content: center; }
 .portfolio-reveal[data-enhanced] .featured-about { position: relative; z-index: 1; margin-top: calc(-100svh - var(--featured-exit-distance)); }
 .portfolio-reveal[data-enhanced] .featured-about__content { position: sticky; top: 0; }
-.portfolio-reveal[data-enhanced] .featured-about::after { display: block; height: var(--featured-exit-distance); content: ''; pointer-events: none; }
+.portfolio-reveal[data-enhanced] { --team-hold-distance: 250svh; }
+/* The viewport-sized team stays still for a long native-scroll interval after
+   the horizontal rail leaves. Only then does its sticky container release. */
+.portfolio-reveal[data-enhanced] .featured-about::after { display: block; height: calc(var(--featured-exit-distance) + var(--team-hold-distance)); content: ''; pointer-events: none; }
 .featured-stage[data-featured-exited], .featured-stage[data-featured-exited] * { visibility: hidden !important; pointer-events: none !important; }
 .portfolio-reveal[data-enhanced] .featured-progress { position: absolute; bottom: 26px; left: var(--page-gutter); right: var(--page-gutter); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 11px; color: var(--muted); }
 .featured-progress > div { width: 120px; height: 2px; background: var(--line); }

@@ -6,7 +6,7 @@ if (button) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const forced = matchMedia('(forced-colors: active)');
-  const allowed = () => fine.matches && !reduced.matches && !forced.matches && !document.hidden;
+  const allowed = () => !button.hidden && fine.matches && !reduced.matches && !forced.matches && !document.hidden;
   const anchors = 12;
   const followRadius = 96;
   const maxTravel = 84;
@@ -104,7 +104,7 @@ if (button) {
   window.addEventListener('resize', release, { passive: true });
   window.addEventListener('pagehide', reset);
   document.addEventListener('visibilitychange', () => { if (document.hidden) reset(); });
-  new MutationObserver(() => { if (button.inert) reset(); }).observe(button, { attributes: true, attributeFilter: ['inert'] });
+  new MutationObserver(() => { if (button.inert || button.hidden) reset(); }).observe(button, { attributes: true, attributeFilter: ['inert', 'hidden'] });
   for (const media of [reduced, fine, forced]) media.addEventListener('change', reset);
   reset();
 }

@@ -1,5 +1,7 @@
 # Equipo con OptionWheel
 
+Documento histórico: esta presentación fue reemplazada el 19 de noviembre de 2026 por el [índice de equipo con retrato flotante](team-hover.md).
+
 La sección Nosotros presenta el equipo en este orden:
 
 - Justina Guiñazú — Cofundadora y directora creativa

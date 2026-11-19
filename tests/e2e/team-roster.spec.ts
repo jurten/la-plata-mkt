@@ -1,190 +1,231 @@
 import { expect, test } from '@playwright/test';
 
 const members = [
-  { name: 'Justina Guiñazú', role: 'Cofundadora y directora creativa' },
-  { name: 'Santiago Laumann', role: 'Asistente creativo' },
-  { name: 'Joaquín Laumann', role: 'Cofundador y director general' },
+  { name: 'Joaquín Laumann', role: 'Director general' },
+  { name: 'Santiago Laumann', role: 'Director creativo' },
+  { name: 'Justina Guiñazú', role: 'Directora de marketing' },
 ];
-
-test('la rueda vincula cada nombre con su cargo y retrato', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+const arrival = async (page: import('@playwright/test').Page) => {
   await page.goto('/#nosotros');
-  const roster = page.locator('[data-team-roster]');
-  const wheel = roster.getByRole('listbox', { name: 'Integrantes del equipo' });
-  await roster.scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-ready');
+  await page.evaluate(() => document.fonts.ready);
+  if (await page.locator('[data-portfolio-reveal]').getAttribute('data-enhanced')) {
+    await expect(page.locator('.featured-stage')).toHaveAttribute('inert');
+  }
+  await expect.poll(() => page.locator('#nosotros').evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(2);
+};
+
+test('los nombres y cargos están siempre visibles y cada uno presenta su retrato', async ({ page }) => {
+  await arrival(page);
   for (const member of members) {
-    await wheel.getByRole('option', { name: member.name }).click();
-    await expect(wheel.getByRole('option', { name: member.name })).toHaveAttribute('aria-selected', 'true');
-    const profile = roster.locator('[data-team-profile]:visible');
-    await expect(profile).toHaveCount(1);
-    await expect(profile.getByRole('heading')).toHaveText(member.name);
-    await expect(profile.locator('[data-team-current-role]')).toHaveText(member.role);
-    const image = profile.getByRole('img');
-    await expect(image).toBeVisible();
-    await expect(image).toHaveAttribute('alt', 'Retrato alienígena de relleno, provisorio');
-    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    const choice = page.getByRole('button', { name: `${member.name} ${member.role}`, exact: true });
+    await expect(choice).toBeInViewport();
+    await choice.click();
+    await expect(choice).toHaveAttribute('aria-pressed', 'true');
+    await expect(page).toHaveURL(/#nosotros$/);
+    const band = page.locator('[data-team-row][data-current] [data-team-band]');
+    await expect(band).toBeVisible();
+    await expect(band.locator('[data-team-part]').first()).toContainText(member.name);
+    const img = band.locator('img').first();
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
   }
 });
 
-test('teclado, límites y botones mantienen la selección sincronizada', async ({ page }) => {
-  await page.goto('/#nosotros');
-  const wheel = page.getByRole('listbox', { name: 'Integrantes del equipo' });
-  const previous = page.getByRole('button', { name: 'Ver integrante anterior' });
-  const next = page.getByRole('button', { name: 'Ver siguiente integrante' });
-  await wheel.focus();
-  await wheel.press('Home');
-  await expect(previous).toBeDisabled();
-  await wheel.press('ArrowDown');
-  await expect(wheel).toHaveAttribute('aria-activedescendant', 'team-wheel-option-1');
-  await expect(page.locator('[data-team-status]')).toHaveText('Santiago Laumann, Asistente creativo');
-  await wheel.press('End');
-  await expect(next).toBeDisabled();
-  await wheel.press('ArrowDown');
-  await expect(wheel).toHaveAttribute('data-selected', '2');
-  await previous.click();
-  await expect(wheel).toHaveAttribute('data-selected', '1');
-  await wheel.focus();
-  await wheel.press('Home');
-  await expect(previous).toBeDisabled();
-  await next.click();
-  await expect(wheel).toHaveAttribute('data-selected', '1');
+test('teclado y foco recorren los integrantes sin desplazar la página', async ({ page }) => {
+  await arrival(page);
+  const choices = page.locator('[data-team-choice]');
+  await choices.first().focus();
+  const top = await page.evaluate(() => scrollY);
+  await choices.first().press('ArrowDown');
+  await expect(choices.nth(1)).toBeFocused();
+  await expect(choices.nth(1)).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-team-status]')).toHaveText('Santiago Laumann, Director creativo');
+  await choices.nth(1).press('End');
+  await expect(choices.last()).toBeFocused();
+  await choices.last().press(' ');
+  await expect(choices.last()).toHaveAttribute('aria-pressed', 'true');
+  expect(Math.abs(await page.evaluate(() => scrollY) - top)).toBeLessThan(2);
 });
 
-test('scroll y arrastre cambian de integrante y liberan el scroll en los extremos', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/#nosotros');
-  const wheel = page.getByRole('listbox', { name: 'Integrantes del equipo' });
-  await wheel.scrollIntoViewIfNeeded();
-  await wheel.focus();
-  await wheel.press('Home');
-  const canceled = await wheel.evaluate(element => {
-    const box = element.getBoundingClientRect();
-    return !element.dispatchEvent(new WheelEvent('wheel', { deltaY: 160, cancelable: true, bubbles: true, clientX: box.x + box.width / 2, clientY: box.y + box.height / 2 }));
-  });
-  expect(canceled).toBe(true);
-  await expect(wheel).toHaveAttribute('data-selected', '1');
-  const box = (await wheel.boundingBox())!;
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 - 130, { steps: 8 });
-  await page.mouse.up();
-  await expect(wheel).toHaveAttribute('data-selected', '2');
-  await expect(wheel).not.toHaveAttribute('data-ow-dragging');
-  const edgeCanceled = await wheel.evaluate(element => {
-    const box = element.getBoundingClientRect();
-    return !element.dispatchEvent(new WheelEvent('wheel', { deltaY: 160, cancelable: true, bubbles: true, clientX: box.x + box.width / 2, clientY: box.y + box.height / 2 }));
-  });
-  expect(edgeCanceled).toBe(false);
+test('Nosotros mide una pantalla y reserva un recorrido quieto antes del footer', async ({ browser }) => {
+  for (const [width, height] of [[1920,966], [1440,1000], [1100,900], [768,900], [390,844], [320,740]]) {
+    const context = await browser.newContext({ viewport: { width, height } });
+    const page = await context.newPage();
+    // Each width checks a fresh direct arrival. Reusing the same fragment URL
+    // asks the browser for a same-document jump into a sticky reveal instead.
+    await arrival(page);
+    const geometry = await page.evaluate(() => {
+      const section = document.querySelector('#nosotros')!.getBoundingClientRect();
+      const footer = document.querySelector('#contacto')!.getBoundingClientRect();
+      const visibleText = [...document.querySelectorAll('[data-team-current-name], [data-team-current-role]')].every(el => {
+        const box = el.getBoundingClientRect();
+        return box.top >= 0 && box.bottom <= innerHeight && box.left >= 0 && box.right <= innerWidth && el.scrollWidth <= el.clientWidth + 1;
+      });
+      const holding = document.querySelector('[data-portfolio-reveal]')!.hasAttribute('data-enhanced');
+      const contact = document.querySelector('.team-roster__footer a')!.getBoundingClientRect();
+      const whatsapp = document.querySelector('[data-floating-whatsapp]')!.getBoundingClientRect();
+      const actionsClear = contact.right <= whatsapp.left || contact.left >= whatsapp.right || contact.bottom <= whatsapp.top || contact.top >= whatsapp.bottom;
+      return { height: section.height, footerTop: footer.top, pageWidth: document.documentElement.scrollWidth, visibleText, holding, actionsClear };
+    });
+    expect(geometry.height).toBe(height);
+    expect(Math.abs(geometry.footerTop - height * (geometry.holding ? 3.5 : 1))).toBeLessThan(2);
+    expect(geometry.pageWidth).toBe(width);
+    expect(geometry.visibleText).toBe(true);
+    expect(geometry.actionsClear).toBe(true);
+    await context.close();
+  }
 });
 
-test('en celular se puede cambiar el perfil', async ({ browser, browserName }) => {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: browserName !== 'firefox', reducedMotion: 'reduce' });
-  const page = await context.newPage();
-  await page.goto('/#nosotros');
+test('hover abre una banda recta con retratos blob en forma de pastilla', async ({ page }) => {
+  await arrival(page);
+  const choice = page.locator('[data-team-choice]').nth(1);
+  await choice.hover({position:{x:200,y:70}});
+  await expect(choice).toHaveAttribute('aria-pressed', 'true');
+  await page.waitForTimeout(700);
+  const band = page.locator('[data-team-row]').nth(1).locator('[data-team-band]');
+  await expect(band).toBeVisible();
+  expect(await band.evaluate(el => getComputedStyle(el).clipPath)).toContain('inset');
+  expect(await band.locator('.flowing-team__portrait').first().evaluate(el => getComputedStyle(el).clipPath)).toContain('C');
+  const track = page.locator('[data-team-row]').nth(1).locator('[data-team-track]');
+  const transform = await track.getAttribute('style');
+  await expect.poll(() => track.getAttribute('style')).not.toBe(transform);
+});
+
+test('la rueda conserva su distancia nativa mientras Nosotros permanece quieto', async ({ page }) => {
+  await arrival(page);
   const roster = page.locator('[data-team-roster]');
-  await roster.scrollIntoViewIfNeeded();
-  const wheel = page.getByRole('listbox');
-  await expect(wheel).toBeVisible();
-  await page.getByRole('button', { name: 'Ver siguiente integrante' }).tap();
-  await expect(roster.locator('[data-team-profile]:visible [data-team-current-name]')).toHaveText('Joaquín Laumann');
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.mouse.move(700,180);
+  const selected = await roster.getAttribute('data-team-selected');
+  const start = await page.evaluate(() => scrollY);
+  await page.mouse.wheel(0,240);
+  await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin - 240), start)).toBeLessThan(3);
+  expect(Math.abs(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().top))).toBeLessThan(2);
+  await expect(roster).toHaveAttribute('data-team-selected', selected!);
+  expect(await page.locator('#contacto').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThan(1000);
+  await page.mouse.wheel(0,-240);
+  await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin), start)).toBeLessThan(3);
+});
+
+test('la escena no se mueve durante el recorrido largo y luego sale al footer', async ({ page }) => {
+  await arrival(page);
+  const roster = page.locator('[data-team-roster]');
+  const start = await page.evaluate(() => scrollY);
+  await page.mouse.move(700,180);
+  const selected = await roster.getAttribute('data-team-selected');
+  await page.waitForTimeout(750);
+  const initial = await page.locator('[data-team-list]').boundingBox();
+  for (let gesture = 0; gesture < 8; gesture++) await page.mouse.wheel(0,240);
+  await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin - 1920), start)).toBeLessThan(3);
+  const still = await page.locator('[data-team-list]').boundingBox();
+  expect(Math.abs(still!.y - initial!.y)).toBeLessThan(1);
+  expect(Math.abs(still!.x - initial!.x)).toBeLessThan(1);
+  expect(Math.abs(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().top))).toBeLessThan(2);
+  expect(await page.locator('#contacto').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThan(1000);
+  await expect(roster).toHaveAttribute('data-team-selected', selected!);
+  for (let gesture = 0; gesture < 6; gesture++) await page.mouse.wheel(0,240);
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - innerHeight - scrollY)).toBeLessThan(2);
+  await expect(page.locator('#contact-title')).toBeInViewport();
+  // Reverse into the hold: the exact same stationary scene is restored.
+  await page.mouse.wheel(0,-1200);
+  await expect.poll(() => page.locator('#nosotros').evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(2);
+  expect(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().height)).toBe(1000);
+});
+
+test('los impulsos pequeños del trackpad mantienen la velocidad nativa', async ({ page }) => {
+  await arrival(page);
+  await page.mouse.move(700,180);
+  const start = await page.evaluate(() => scrollY);
+  for (let impulse = 0; impulse < 24; impulse++) await page.mouse.wheel(0,1);
+  await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin - 24), start)).toBeLessThan(2);
+  expect(Math.abs(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().top))).toBeLessThan(2);
+});
+
+test('el enlace al contacto omite la permanencia y el modo reducido la elimina', async ({ page }) => {
+  await arrival(page);
+  const roster = page.locator('[data-team-roster]');
+  await roster.getByRole('link', {name:'Sigamos en contacto'}).click();
+  await expect(page).toHaveURL(/#contacto$/);
+  await expect(page.locator('#contact-title')).toBeInViewport();
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect(page.locator('[data-portfolio-reveal]')).not.toHaveAttribute('data-enhanced');
+  await page.locator('[data-team-choice]').last().click();
+  await expect(roster).toHaveAttribute('data-team-selected','2');
+});
+
+for (const [width,height] of [[390,844],[320,740]]) test(`el equipo puede elegirse con toque y permanece dentro de una pantalla móvil de ${width}px`, async ({ browser, browserName }) => {
+  const context = await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:browserName !== 'firefox'});
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4321/#nosotros');
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-ready');
+  await page.evaluate(() => document.fonts.ready);
+  const choices = page.locator('[data-team-choice]');
+  await expect(choices.last()).toBeInViewport();
+  await choices.first().tap();
+  await expect(choices.first()).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','active');
+  await choices.last().tap();
+  await expect(choices.last()).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','active');
+  expect(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().height)).toBe(height);
   await context.close();
 });
 
-test('el scroll real y los pasos de una línea cambian la persona después de la transición', async ({ page }) => {
-  await page.goto('/#nosotros');
-  const wheel = page.getByRole('listbox', { name: 'Integrantes del equipo' });
-  await expect(wheel).toBeVisible();
-  await expect(page.locator('.featured-about')).not.toHaveAttribute('data-team-locked');
-  await expect(page.locator('.featured-stage')).toHaveAttribute('inert');
-  const pointerBounds = (await wheel.boundingBox())!;
-  await page.mouse.move(pointerBounds.x + pointerBounds.width / 2, pointerBounds.y + pointerBounds.height / 2);
-  await page.mouse.wheel(0, 120);
-  await expect(wheel).toHaveAttribute('data-selected', '2');
-  await page.mouse.wheel(0, -120);
-  await expect(wheel).toHaveAttribute('data-selected', '1');
-  const box = (await wheel.boundingBox())!;
-  await wheel.dispatchEvent('wheel', { deltaY: -1, deltaMode: 1, cancelable: true, clientX: box.x + box.width / 2, clientY: box.y + box.height / 2 });
-  await expect(wheel).toHaveAttribute('data-selected', '0');
-  await expect(page.locator('[data-team-profile]:visible [data-team-current-name]')).toHaveText('Justina Guiñazú');
-});
-
-test('sin JavaScript quedan todos los nombres, cargos y retratos en el documento', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+test('sin JavaScript los enlaces conservan los tres perfiles en flujo normal', async ({ browser }) => {
+  const context = await browser.newContext({javaScriptEnabled:false});
   const page = await context.newPage();
-  await page.goto('/#nosotros');
-  const roster = page.locator('[data-team-roster]');
-  await expect(roster.locator('[data-team-profile]')).toHaveCount(3);
-  for (const member of members) await expect(roster.getByRole('heading', { name: member.name })).toBeVisible();
-  await expect(roster.locator('[data-team-navigation]')).toBeHidden();
-  await context.close();
-});
-
-test('una altura de 966 píxeles no deja bloqueadas las flechas ni el scroll', async ({ page }) => {
-  await page.setViewportSize({ width: 1920, height: 966 });
-  await page.goto('/#nosotros');
-  const wheel = page.locator('#team-wheel');
-  const next = page.locator('[data-team-next]');
-  await expect.poll(() => page.locator('.featured-stage').evaluate(element => Math.abs(element.getBoundingClientRect().right))).toBeLessThan(0.01);
-  await expect(next).toBeEnabled();
-  await expect(page.locator('.featured-about')).not.toHaveAttribute('data-team-locked');
-  const arrow = (await next.boundingBox())!;
-  await page.mouse.click(arrow.x + arrow.width / 2, arrow.y + arrow.height / 2);
-  await expect(wheel).toHaveAttribute('data-selected', '2');
-  const bounds = (await wheel.boundingBox())!;
-  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-  await page.mouse.wheel(0, -120);
-  await expect(wheel).toHaveAttribute('data-selected', '1');
-});
-
-test('la rueda recibe scroll continuo desde el portfolio sin mover el mouse', async ({ page }) => {
-  await page.goto('/#trabajo');
-  await expect(page.locator('[data-portfolio-reveal]')).toHaveAttribute('data-enhanced', 'true');
-  await page.evaluate(() => {
-    const section = document.querySelector<HTMLElement>('#trabajo')!;
-    const end = section.getBoundingClientRect().top + scrollY + section.offsetHeight - innerHeight;
-    scrollTo({ top: Math.ceil(end) - 100, behavior: 'instant' });
-  });
-  const about = page.locator('.featured-about');
-  const wheel = page.locator('#team-wheel');
-  await expect(about).toHaveAttribute('data-team-locked');
-  const box = (await wheel.boundingBox())!;
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-  await page.mouse.wheel(0, 120);
-  await expect(about).not.toHaveAttribute('data-team-locked');
-  await page.mouse.wheel(0, 120);
-  await expect(wheel).toHaveAttribute('data-selected', '2');
-  await expect(page.locator('[data-team-profile]:visible [data-team-current-name]')).toHaveText('Joaquín Laumann');
-});
-
-test('colores forzados conserva los perfiles y permite volver a la rueda', async ({ page }) => {
-  await page.goto('/#nosotros');
-  await expect(page.getByRole('listbox')).toBeVisible();
-  await page.emulateMedia({ forcedColors: 'active' });
-  await expect(page.getByRole('listbox')).toHaveCount(0);
+  await page.goto('http://127.0.0.1:4321/#nosotros');
+  for (const member of members) await expect(page.getByRole('heading', {name:`${member.name} ${member.role}`,exact:true})).toBeVisible();
   await expect(page.locator('[data-team-profile]:visible')).toHaveCount(3);
-  await expect(page.locator('[data-wheel-option]').first()).not.toHaveAttribute('style');
-  await page.emulateMedia({ forcedColors: 'none' });
-  await expect(page.getByRole('listbox')).toBeVisible();
-  await expect(page.locator('[data-team-profile]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-team-choice]').first()).toHaveAttribute('href','#team-joaquin-laumann');
+  await context.close();
 });
 
-test('los tres nombres completos caben en ambos extremos de la rueda', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/#nosotros');
-  const wheel = page.getByRole('listbox');
-  for (const width of [320, 390, 768, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    await wheel.focus();
-    for (const key of ['Home', 'End']) {
-      await wheel.press(key);
-      await expect.poll(() => wheel.evaluate(root => {
-        const box = root.getBoundingClientRect();
-        return [...root.querySelectorAll('[data-wheel-option]')].every(item => {
-          const bounds = item.getBoundingClientRect();
-          return bounds.top >= box.top && bounds.bottom <= box.bottom && bounds.left >= box.left && bounds.right <= box.right;
-        });
-      })).toBe(true);
-    }
+test('colores forzados muestra todos los perfiles y permite volver a la presentación', async ({ page }) => {
+  await arrival(page);
+  await page.emulateMedia({forcedColors:'active'});
+  await expect(page.locator('[data-team-roster]')).not.toHaveAttribute('data-team-ready');
+  await expect(page.locator('[data-team-profile]:visible')).toHaveCount(3);
+  await page.emulateMedia({forcedColors:'none'});
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-ready');
+  await expect(page.locator('[data-team-profile]:visible')).toHaveCount(0);
+});
+
+test('volver a Trabajos desactiva y restablece la banda en vez de congelarla', async ({ page }) => {
+  await arrival(page);
+  const root=page.locator('[data-team-roster]');
+  const choice=page.locator('[data-team-choice]').nth(1);
+  await choice.hover({position:{x:200,y:70}});
+  await expect(root).toHaveAttribute('data-team-flow-state','active');
+  const track=page.locator('[data-team-row]').nth(1).locator('[data-team-track]');
+  await expect.poll(()=>track.getAttribute('style')).toContain('translate3d');
+  await page.mouse.wheel(0,-240);
+  await expect(page.locator('.featured-about')).toHaveAttribute('data-team-locked');
+  await expect(root).toHaveAttribute('data-team-flow-state','disabled');
+  await expect(root).toHaveAttribute('data-team-selected','-1');
+  for(const band of await page.locator('[data-team-band]').all()){
+    await expect(band).toBeHidden();
+    await expect(band).not.toHaveAttribute('style');
   }
+  for(const item of await page.locator('[data-team-track]').all())await expect(item).not.toHaveAttribute('style');
+  await page.waitForTimeout(500);
+  await expect(track).not.toHaveAttribute('style');
+  await page.mouse.wheel(0,240);
+  await expect(page.locator('.featured-about')).not.toHaveAttribute('data-team-locked');
+  await expect(root).toHaveAttribute('data-team-flow-state','idle');
+  await expect(page.locator('[data-team-row][data-current]')).toHaveCount(0);
+  await choice.hover({position:{x:240,y:80}});
+  await expect(root).toHaveAttribute('data-team-flow-state','active');
+  await expect(choice).toHaveAttribute('aria-pressed','true');
+});
+
+test('salir al footer también limpia la interacción y Trabajos reemplaza Portfolio', async ({ page }) => {
+  await arrival(page);
+  await expect(page.locator('.primary-nav a[href="#trabajo"]')).toContainText('Trabajos');
+  await expect(page.locator('.footer-explore a[href="#trabajo"]')).toHaveText('Trabajos');
+  await page.locator('[data-team-choice]').last().click();
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','active');
+  await page.locator('.team-roster__footer a').click();
+  await expect(page.locator('#contact-title')).toBeInViewport();
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-selected','-1');
+  await expect(page.locator('[data-team-row][data-current]')).toHaveCount(0);
 });

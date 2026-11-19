@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test('WhatsApp activates on hover, follows within bounds, and returns to a circle', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#como-trabajamos');
   const button = page.locator('[data-floating-whatsapp]');
+  await expect(button).toBeVisible();
   const visual = button.locator('.whatsapp-visual');
   const contour = button.locator('[data-whatsapp-contour]');
   await expect(button).toHaveAttribute('data-splash-state', 'idle');
@@ -76,7 +77,7 @@ test('WhatsApp activates on hover, follows within bounds, and returns to a circl
 });
 
 test('WhatsApp stays static with reduced motion and resets if the preference changes', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#como-trabajamos');
   const button = page.locator('[data-floating-whatsapp]');
   await button.hover();
   await expect(button).toHaveAttribute('data-splash-state', 'active');
@@ -90,8 +91,9 @@ test('WhatsApp remains static and usable on touch screens', async ({ browser }) 
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   try {
     const page = await context.newPage();
-    await page.goto('/');
+    await page.goto('/#como-trabajamos');
     const button = page.locator('[data-floating-whatsapp]');
+    await expect(button).toBeVisible();
     await button.dispatchEvent('pointerenter', { pointerType: 'touch' });
     await expect(button).toHaveAttribute('data-splash-state', 'idle');
     await expect(button).toHaveAttribute('href', 'https://wa.me/5491158861954');
