@@ -203,6 +203,14 @@ components:
 
 # Design System: La Plata Marketing
 
+## Touch portfolio Coverflow, 2026-11-20
+
+The user selected Swiper Coverflow as the only mobile/tablet treatment and removed the comparison selector, navigation arrows, visible counter, swipe hint and team link beneath the gallery. At widths up to 1250px or with coarse/non-hover input, horizontal swipes explore the three existing conceptual projects while vertical panning stays native. The closing desktop panel is hidden in this touch presentation. Keep only the gallery and existing project information/actions, with a modest gap before Nosotros; desktop retains its Trionn sequence.
+
+Keyboard arrow navigation, project fragments, inactive-slide inert state, reduced-motion instant sliding and forced-colors/no-JavaScript normal-flow fallbacks remain. Tablet side previews stay inside their visual lane. Swiper is bundled locally and cleaned up on responsive changes and Astro navigation. Preserve the independent existing team hold and resolve team anchors against its normal-flow wrapper.
+
+Validation: `docs/portfolio-touch.md` and `tests/e2e/portfolio-reveal.spec.ts`. Touch evidence comes from synthesized Chromium input rather than physical devices.
+
 ## Spanish and English navigation, 2026-11-19
 
 The user replaced the public light/dark control with an ESP / ENG selector. `LanguageSwitcher.astro` uses native links, local SVG flags for Argentina and the United Kingdom, explicit language names for assistive technology, a visible active state and 44px minimum touch targets. The existing saved/system appearance still resolves automatically. Shared home and privacy components render complete Spanish and English documents at `/`, `/en/`, `/privacidad/` and `/en/privacy/`, including animation controls, conceptual artwork copy, team roles, contact, metadata and language alternates. Language changes retain the current section fragment. Preserve the existing brand and all scene behavior; headings and subheadings have no final periods.

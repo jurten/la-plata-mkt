@@ -11,6 +11,7 @@ export function localizedPath(pathname: string, locale: Locale): string {
 
 // Spanish is the source copy. Both routes render their complete content on the server.
 const english: Record<string, string> = {
+  'Deslizá para explorar o seguí bajando': 'Swipe to explore or keep scrolling',
   'Marketing, tecnología y ventas como un sistema | La Plata Marketing': 'Marketing, technology and sales as one system | La Plata Marketing',
   'La Plata Marketing conecta marketing, tecnología y ventas para que los negocios puedan crecer y organizarse.': 'La Plata Marketing connects marketing, technology and sales to help businesses grow and stay organized.',
   'Servicios de marketing, tecnología y ventas': 'Marketing, technology and sales services',

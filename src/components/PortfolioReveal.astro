@@ -27,6 +27,8 @@ const projects = [
             <FeaturedLink href="#proyecto-inmobiliario" label={t("Explorá los ejemplos")} />
           </div>
         </header>
+        <div class="featured-gallery" role="group" aria-label={t("Trabajos")}>
+        <div class="featured-slides">
         {projects.map((project, index) => (
           <article id={['proyecto-inmobiliario', 'proyecto-juridico', 'proyecto-sistema'][index]} class="featured-panel featured-project experience-card" data-featured-project>
             <div class="featured-project-inner">
@@ -41,6 +43,8 @@ const projects = [
             </div>
           </article>
         ))}
+        </div>
+        </div>
         <div class="featured-panel featured-closing">
           <div><p>{t("Cada negocio necesita")}<br />{t("una conexión distinta")}</p><FeaturedLink href="#nosotros" label={t("Conocé al equipo")} /></div>
         </div>
