@@ -31,7 +31,7 @@ const { whatsappHref, whatsappDisplay, contactEmail } = Astro.props;
         <h2>{t("Navegá")}</h2>
         {(['home', 'work', 'about', 'contact', 'privacy'] as PageId[]).map(id => <a href={pagePath(id, locale)}>{t(pages[id].label)}</a>)}
         <a href={`${pagePath('home', locale)}#que-hacemos`}>{t("Qu\u00e9 hacemos")}</a>
-        <a href={`${pagePath('about', locale)}#como-trabajamos`}>{t("C\u00f3mo trabajamos")}</a>
+        <a href={`${pagePath('home', locale)}#como-trabajamos`}>{t("C\u00f3mo trabajamos")}</a>
       </nav>
     </div>
     <div class="footer-signoff">

@@ -3,10 +3,10 @@ test('a visitor can explore work and the team before opening contact', async ({ 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.locator('.primary-nav a[href="/trabajos/"]').click();
-  await expect(page.locator('.project-card')).toHaveCount(3);
+  await expect(page.locator('[data-work-item]')).toHaveCount(3);
   await page.locator('.primary-nav a[href="/nosotros/"]').click();
   await expect(page.locator('.team-profile')).toHaveCount(3);
-  await page.locator('.conversation-cta a[href="/contacto/"]').click();
+  await page.locator('.primary-nav a[href="/contacto/"]').click();
   await expect(page.locator('[data-contact-form]')).toBeVisible();
   await expect(page.locator('.contact-intro a[href="https://wa.me/5491158861954"]').first()).toBeVisible();
 });
