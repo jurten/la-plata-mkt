@@ -48,13 +48,13 @@ describe('Cloudflare Workers deployment contract', () => {
   });
 
   it('publica el aviso de privacidad final sin marcadores de borrador', () => {
-    const privacy = text('src/pages/privacidad.astro');
+    const privacy = text('src/components/PrivacyPage.astro');
     const readme = text('README.md');
     const expectedContact = 'ceo@laplatamarketing.com';
     const contactSurfaces = [
       privacy,
       readme,
-      text('src/pages/index.astro'),
+      text('src/components/HomePage.astro'),
       text('src/pages/api/contact.ts'),
       text('.dev.vars.example'),
     ];

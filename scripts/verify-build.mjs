@@ -6,6 +6,8 @@ import { parse } from 'parse5';
 const pageFiles = [
   { path: 'dist/client/index.html', pathname: '/' },
   { path: 'dist/client/privacidad/index.html', pathname: '/privacidad/' },
+  { path: 'dist/client/en/index.html', pathname: '/en/' },
+  { path: 'dist/client/en/privacy/index.html', pathname: '/en/privacy/' },
 ];
 const localHosts = new Set(['localhost', '127.0.0.1', '[::1]']);
 const htmlNamespace = 'http://www.w3.org/1999/xhtml';

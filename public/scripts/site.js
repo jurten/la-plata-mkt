@@ -1,38 +1,7 @@
 const root = document.documentElement;
 
-// A single authored scene: widen the view from one inquiry to the whole system.
-const study = document.querySelector('[data-perspective-study]');
-const motionPreference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-if (study) {
-  const controls = study.querySelector('[data-perspective-controls]');
-  const choices = [...study.querySelectorAll('[data-perspective-view]')];
-  const caption = study.querySelector('[data-perspective-caption]');
-  const explore = study.querySelector('[data-perspective-explore]');
-  const exploreLabel = study.querySelector('[data-perspective-explore-label]');
-  const setPerspective = (view) => {
-    const safeView = view === 'piece' ? 'piece' : 'whole';
-    study.dataset.view = safeView;
-    choices.forEach((choice) => choice.setAttribute('aria-pressed', String(choice.dataset.perspectiveView === safeView)));
-    if (caption) caption.textContent = safeView === 'piece'
-      ? 'Una consulta aislada cuenta sólo una parte.'
-      : 'Las piezas se potencian cuando trabajan juntas.';
-    if (exploreLabel) exploreLabel.textContent = safeView === 'piece' ? 'Ampliar la mirada' : 'Volver a una pieza';
-  };
-  if (controls) controls.hidden = false;
-  if (explore) explore.hidden = false;
-  choices.forEach((choice) => choice.addEventListener('click', () => setPerspective(choice.dataset.perspectiveView)));
-  explore?.addEventListener('click', () => setPerspective(study.dataset.view === 'piece' ? 'whole' : 'piece'));
-  setPerspective(motionPreference?.matches ? 'whole' : 'piece');
-  requestAnimationFrame(() => { study.dataset.enhanced = 'true'; });
-  motionPreference?.addEventListener?.('change', () => {
-    if (motionPreference.matches) {
-      setPerspective('whole');
-      study.getAnimations?.({ subtree: true }).forEach((animation) => animation.finish());
-    }
-  });
-}
+const english = root.lang === 'en';
 
-const themeButtons = [...document.querySelectorAll('[data-theme-toggle]')];
 const themeMeta = document.querySelector('meta[name="theme-color"]');
 const themeLabel = document.querySelector('#mode-label');
 const explicitThemes = new Set(['light', 'dark']);
@@ -54,35 +23,21 @@ const systemPrefersDark = () => {
   }
 };
 
-const applyTheme = (theme, persist = false) => {
+const applyTheme = (theme) => {
   const safeTheme = explicitThemes.has(theme) ? theme : 'auto';
   const resolvedTheme = safeTheme === 'auto'
     ? (systemPrefersDark() ? 'dark' : 'light')
     : safeTheme;
   root.dataset.theme = safeTheme;
 
-  if (persist) {
-    try {
-      localStorage.setItem('lpm-theme', safeTheme);
-    } catch {
-      // Theme persistence is optional; the controls still work for this page view.
-    }
-  }
-
-  themeButtons.forEach((button) => {
-    button.removeAttribute('disabled');
-    button.setAttribute('aria-checked', String(resolvedTheme === 'dark'));
-    button.title = resolvedTheme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
-  });
-
   const dark = resolvedTheme === 'dark';
   if (themeMeta) themeMeta.setAttribute('content', dark ? '#11151C' : '#EEF2FF');
   if (themeLabel) {
     themeLabel.textContent = safeTheme === 'auto'
-      ? `Identidad visual / Sistema ${dark ? 'oscuro' : 'claro'}`
+      ? (english ? `Visual identity / System ${dark ? 'dark' : 'light'}` : `Identidad visual / Sistema ${dark ? 'oscuro' : 'claro'}`)
       : dark
-        ? 'Identidad visual / Pantalla nocturna'
-        : 'Identidad visual / Señal viva';
+        ? (english ? 'Visual identity / Night screen' : 'Identidad visual / Pantalla nocturna')
+        : (english ? 'Visual identity / Live signal' : 'Identidad visual / Señal viva');
   }
 };
 
@@ -93,10 +48,6 @@ try {
   storedTheme = 'auto';
 }
 applyTheme(storedTheme);
-
-themeButtons.forEach((button) => {
-  button.addEventListener('click', () => applyTheme(button.getAttribute('aria-checked') === 'true' ? 'light' : 'dark', true));
-});
 
 try {
   colorPreference?.addEventListener?.('change', () => {

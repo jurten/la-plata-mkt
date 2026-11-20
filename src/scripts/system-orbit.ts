@@ -1,5 +1,8 @@
+import { getTranslator } from '../lib/i18n';
 import { createEngine } from '../lib/orbit-images-engine.js';
 import { createSystemGallery } from './system-circular-gallery';
+
+const t = getTranslator(window.location.pathname);
 
 function initialize(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>('[data-orbit-stage]')!;
@@ -26,8 +29,8 @@ function initialize(root: HTMLElement) {
     root.dataset.orbitPaused = String(config.current.paused);
     toggle.hidden = reduced.matches || forced.matches || compact.matches;
     toggleLabel.textContent = compact.matches
-      ? (paused ? 'Reanudar recorrido' : 'Pausar recorrido')
-      : (paused ? 'Reanudar órbita' : 'Pausar órbita');
+      ? (paused ? t("Reanudar recorrido") : t("Pausar recorrido"))
+      : (paused ? t('Reanudar órbita') : t('Pausar órbita'));
     toggle.setAttribute('aria-pressed', String(paused));
     engine?.wake();
     gallery?.pause(config.current.paused);

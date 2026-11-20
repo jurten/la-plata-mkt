@@ -62,7 +62,9 @@
 .portfolio-reveal[data-enhanced] { --team-hold-distance: 250svh; }
 /* The stationary team has a Monopo-inspired vertical scroll ruler. */
 .portfolio-reveal[data-enhanced] .featured-about::after { display: block; height: calc(var(--featured-exit-distance) + var(--team-hold-distance)); content: ''; pointer-events: none; }
-.portfolio-reveal[data-enhanced] .team-roster__scroll { position: absolute; inset-block: 1px; left: calc(var(--page-gutter) * -.65); width: 18px; display: block; container-type: size; pointer-events: none; }
+.portfolio-reveal:is([data-enhanced], [data-team-scroll-mobile]) .team-roster__scroll { position: absolute; inset-block: 1px; left: calc(var(--page-gutter) * -.65); width: 18px; display: block; container-type: size; pointer-events: none; }
+.portfolio-reveal[data-team-scroll-mobile] .featured-about__content { position: sticky; top: 0; }
+.portfolio-reveal[data-team-scroll-mobile] .featured-about::after { display: block; height: 250svh; content: ''; pointer-events: none; }
 .team-roster__scroll-ticks { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; height: 100%; }
 .team-roster__scroll-ticks i { display: block; flex: 0 0 1px; width: 2px; background: var(--muted); opacity: .65; }
 .team-roster__scroll-ticks .is-major { width: 7px; opacity: 1; }

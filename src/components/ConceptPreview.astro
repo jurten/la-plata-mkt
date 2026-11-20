@@ -1,4 +1,6 @@
 ---
+import { getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
 import Icon from './Icon.astro';
 interface Props { type: 'real-estate' | 'legal' | 'automation'; }
 const { type } = Astro.props;
@@ -6,24 +8,24 @@ const { type } = Astro.props;
 <div class:list={['concept-preview', `preview-${type}`]} aria-hidden="true">
   {type === 'real-estate' ? (
     <div class="concept-canvas estate-canvas">
-      <div class="mock-nav"><span>Habitar.</span><span>Espacios para conectar <Icon name="arrow" /></span></div>
+      <div class="mock-nav"><span>{t("Habitar.")}</span><span>{t("Espacios para conectar")} <Icon name="arrow" /></span></div>
       <div class="estate-layout">
-        <div class="estate-type">Un lugar<br />Muchas<br /><em>posibilidades</em></div>
+        <div class="estate-type">{t("Un lugar")}<br />{t("Muchas")}<br /><em>{t("posibilidades")}</em></div>
         <div class="estate-shapes"><div class="arch arch-back"></div><div class="arch arch-front"></div><span class="estate-circle"></span></div>
       </div>
-      <div class="mock-bottom"><span>Presencia + consultas + seguimiento</span><span>Todo conectado <Icon name="right" /></span></div>
+      <div class="mock-bottom"><span>{t("Presencia + consultas + seguimiento")}</span><span>{t("Todo conectado")} <Icon name="right" /></span></div>
     </div>
   ) : type === 'legal' ? (
     <div class="concept-canvas legal-canvas">
-      <div class="mock-nav"><span>Estudio.</span><span>Claridad en cada paso <Icon name="arrow" /></span></div>
-      <div class="legal-composition"><span class="legal-large">La confianza<br />empieza en<br /><em>los detalles</em></span><span class="legal-symbol">E<span>.</span></span></div>
-      <div class="mock-bottom"><span>Contenido + experiencia web</span><span>Un contacto directo <Icon name="right" /></span></div>
+      <div class="mock-nav"><span>{t("Estudio.")}</span><span>{t("Claridad en cada paso")} <Icon name="arrow" /></span></div>
+      <div class="legal-composition"><span class="legal-large">{t("La confianza")}<br />{t("empieza en")}<br /><em>{t("los detalles")}</em></span><span class="legal-symbol">E<span>.</span></span></div>
+      <div class="mock-bottom"><span>{t("Contenido + experiencia web")}</span><span>{t("Un contacto directo")} <Icon name="right" /></span></div>
     </div>
   ) : (
     <div class="concept-canvas automation-canvas">
-      <div class="mock-nav"><span>Conecta</span><span>Un recorrido compartido <Icon name="arrow" /></span></div>
-      <div class="automation-composition"><strong>Menos tareas sueltas<br />Más conexiones</strong><div class="automation-flow"><span><b>Consulta</b>Un nuevo contacto</span><Icon name="right" /><span><b>Organización</b>Todo en un lugar</span><Icon name="right" /><span><b>Seguimiento</b>El próximo paso</span></div></div>
-      <div class="mock-bottom"><span>Contactos + procesos + automatización</span><span>Todo conectado <Icon name="right" /></span></div>
+      <div class="mock-nav"><span>{t("Conecta")}</span><span>{t("Un recorrido compartido")} <Icon name="arrow" /></span></div>
+      <div class="automation-composition"><strong>{t("Menos tareas sueltas")}<br />{t("Más conexiones")}</strong><div class="automation-flow"><span><b>{t("Consulta")}</b>{t("Un nuevo contacto")}</span><Icon name="right" /><span><b>{t("Organización")}</b>{t("Todo en un lugar")}</span><Icon name="right" /><span><b>{t("Seguimiento")}</b>{t("El próximo paso")}</span></div></div>
+      <div class="mock-bottom"><span>{t("Contactos + procesos + automatización")}</span><span>{t("Todo conectado")} <Icon name="right" /></span></div>
     </div>
   )}
 </div>

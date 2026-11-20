@@ -1,5 +1,8 @@
+import { getTranslator } from '../lib/i18n';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+const t = getTranslator(window.location.pathname);
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -158,9 +161,9 @@ function enhanceApproach(root: HTMLElement) {
         const complete = targetProgress >= .94;
         playback.disabled = complete;
         playback.setAttribute('aria-pressed', String(autoplayPaused));
-        playback.setAttribute('aria-label', complete ? 'Recorrido completo' : autoplayPaused ? 'Reanudar avance automático' : 'Pausar avance automático');
+        playback.setAttribute('aria-label', complete ? t("Recorrido completo") : autoplayPaused ? t('Reanudar avance automático') : t('Pausar avance automático'));
         root.toggleAttribute('data-approach-autoplay-paused', autoplayPaused);
-        countdownLabel.textContent = complete ? 'Recorrido completo' : autoplayPaused ? 'Continuar recorrido' : 'Siguiente en 6 s';
+        countdownLabel.textContent = complete ? t("Recorrido completo") : autoplayPaused ? t("Continuar recorrido") : t("Siguiente en 6 s");
         root.dataset.approachPlayback = complete ? 'complete' : autoplayPaused ? 'paused' : 'idle';
         if (complete || !canAutoplay()) return;
         root.dataset.approachPlayback = 'countdown';
@@ -173,7 +176,7 @@ function enhanceApproach(root: HTMLElement) {
             const second = Math.ceil(clock.remaining);
             if (second !== lastSecond) {
               lastSecond = second;
-              countdownLabel.textContent = `Siguiente en ${second} s`;
+              countdownLabel.textContent = t("Siguiente en {seconds} s", { seconds: second });
             }
           },
           onComplete: () => {
@@ -201,7 +204,7 @@ function enhanceApproach(root: HTMLElement) {
         stopNavigation();
         stopCountdown();
         root.dataset.approachPlayback = automatic ? 'playing' : 'navigating';
-        countdownLabel.textContent = 'Avanzando';
+        countdownLabel.textContent = t("Avanzando");
         const position = navigationPosition = { top: scrollY };
         navigation = gsap.to(position, {
           top: start + distance * progress, duration, ease: 'power2.inOut',

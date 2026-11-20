@@ -1,4 +1,7 @@
+import { getTranslator } from '../lib/i18n';
 import { createCircularGallery } from '../lib/circular-gallery-engine.js';
+
+const t = getTranslator(window.location.pathname);
 
 // Render the existing text cards into sharp local textures for the supplied
 // WebGL component. Their original HTML remains the accessible source of truth.
@@ -66,7 +69,7 @@ export function createSystemGallery(stage: HTMLElement) {
     host.dataset.galleryActive = String(index);
     buttons.forEach((button, i) => {
       button.tabIndex = index === i ? 0 : -1;
-      button.setAttribute('aria-label', `Ver ${button.querySelector('strong')!.textContent}, etapa ${i + 1} de 7`);
+      button.setAttribute('aria-label', t('Ver {title}, etapa {step} de 7', { title: button.querySelector('strong')!.textContent ?? '', step: i + 1 }));
       if (i === index) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');
     });
@@ -80,7 +83,7 @@ export function createSystemGallery(stage: HTMLElement) {
     buttons.forEach(button => {
       button.removeAttribute('tabindex');
       button.removeAttribute('aria-current');
-      button.setAttribute('aria-label', `Traer ${button.querySelector('strong')!.textContent} al frente`);
+      button.setAttribute('aria-label', t('Traer {title} al frente', { title: button.querySelector('strong')!.textContent ?? '' }));
     });
   };
   let engine: ReturnType<typeof createCircularGallery>;

@@ -1,4 +1,7 @@
+import { getTranslator } from '../lib/i18n';
 import { enhanceGooeyNavigation } from './gooey-navigation';
+
+const t = getTranslator(window.location.pathname);
 
 const masthead = document.querySelector<HTMLElement>('[data-tv-navigation]');
 
@@ -55,7 +58,7 @@ function enhanceNavigation(header: HTMLElement) {
     const portrait = document.querySelector<HTMLElement>('[data-spatial-portrait]');
     const showProgress = (value: number) => {
       const progress = Math.max(0, Math.min(100, Math.round(value)));
-      loadingLabel.textContent = `CARGANDO ${progress}%`;
+      loadingLabel.textContent = t("CARGANDO {progress}%", { progress });
     };
     showProgress(Number(portrait?.dataset.spatialProgress ?? 0));
     overlay.hidden = false;
@@ -119,7 +122,7 @@ function enhanceNavigation(header: HTMLElement) {
     clearTransition();
     if (!motionAllowed() || !shutter.animate) { onTune?.(); return; }
     overlay.querySelector('[data-tv-osd-number]')!.textContent = `CH ${channel.number}`;
-    overlay.querySelector('[data-tv-osd-label]')!.textContent = channel.label.toLocaleUpperCase('es-AR');
+    overlay.querySelector('[data-tv-osd-label]')!.textContent = channel.label.toLocaleUpperCase(document.documentElement.lang);
     overlay.hidden = false;
     root.dataset.tvTransitionState = kind;
     const duration = kind === 'power' ? 720 : 460;
@@ -239,7 +242,7 @@ function enhanceNavigation(header: HTMLElement) {
         if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
         focusTarget.focus({ preventScroll: true });
       }
-      document.querySelector('[data-channel-announcement]')!.textContent = `Canal ${channel.number}: ${channel.label}.`;
+      document.querySelector('[data-channel-announcement]')!.textContent = t("Canal {number}: {label}.", { number: channel.number, label: channel.label });
     };
     playTransition('channel', channel, tune);
   });

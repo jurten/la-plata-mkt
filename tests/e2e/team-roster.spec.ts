@@ -61,7 +61,7 @@ test('Nosotros mide una pantalla y reserva un recorrido antes del footer', async
         const box = el.getBoundingClientRect();
         return box.top >= 0 && box.bottom <= innerHeight && box.left >= 0 && box.right <= innerWidth && el.scrollWidth <= el.clientWidth + 1;
       });
-      const holding = document.querySelector('[data-portfolio-reveal]')!.hasAttribute('data-enhanced');
+      const holding = document.querySelector('[data-portfolio-reveal]')!.matches('[data-enhanced], [data-team-scroll-mobile]');
       const contact = document.querySelector('.team-roster__footer a')!.getBoundingClientRect();
       const whatsapp = document.querySelector('[data-floating-whatsapp]')!.getBoundingClientRect();
       const actionsClear = contact.right <= whatsapp.left || contact.left >= whatsapp.right || contact.bottom <= whatsapp.top || contact.top >= whatsapp.bottom;
@@ -181,7 +181,7 @@ test('el enlace al contacto omite la permanencia y el modo reducido la elimina',
   await expect(roster).toHaveAttribute('data-team-selected','2');
 });
 
-for (const [width,height] of [[390,844],[320,740]]) test(`el equipo puede elegirse con toque y permanece dentro de una pantalla móvil de ${width}px`, async ({ browser, browserName }) => {
+for (const [width,height] of [[390,844],[320,740]]) test(`el toque no activa bandas en el inicio del recorrido móvil de ${width}px`, async ({ browser, browserName }) => {
   const context = await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:browserName !== 'firefox'});
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4321/#nosotros');
@@ -190,11 +190,11 @@ for (const [width,height] of [[390,844],[320,740]]) test(`el equipo puede elegir
   const choices = page.locator('[data-team-choice]');
   await expect(choices.last()).toBeInViewport();
   await choices.first().tap();
-  await expect(choices.first()).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','active');
+  await expect(choices.first()).toHaveAttribute('aria-pressed','false');
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','idle');
   await choices.last().tap();
-  await expect(choices.last()).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','active');
+  await expect(choices.last()).toHaveAttribute('aria-pressed','false');
+  await expect(page.locator('[data-team-roster]')).toHaveAttribute('data-team-flow-state','idle');
   expect(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().height)).toBe(height);
   await context.close();
 });

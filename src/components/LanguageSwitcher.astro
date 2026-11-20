@@ -1,0 +1,78 @@
+---
+import { getLocale, localizedPath } from '../lib/i18n';
+import '../styles/language-switcher.css';
+const locale = getLocale(Astro.url.pathname);
+---
+<nav class="language-switcher" aria-label={locale === 'en' ? 'Language' : 'Idioma'} data-language-switcher>
+  <button class="language-trigger" type="button" aria-expanded="false" aria-controls="language-dropdown-menu" hidden><span data-language-face></span><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" /></svg></button>
+  <div id="language-dropdown-menu" class="language-dropdown">
+  <a href={localizedPath(Astro.url.pathname, 'es')} lang="es-AR" hreflang="es-AR" aria-label="Español" aria-current={locale === 'es' ? 'true' : undefined}>
+    <svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#75aadb" d="M0 0h24v16H0z" /><path fill="#fff" d="M0 5.33h24v5.34H0z" /><g stroke="#d99b25" stroke-width=".6"><path d="M12 5.5v5m-2.5-2.5h5M10.23 6.23l3.54 3.54m0-3.54-3.54 3.54" /><circle cx="12" cy="8" r="1" fill="#f6b40e" /></g></svg>
+    <span>ESP</span>
+  </a>
+  <a href={localizedPath(Astro.url.pathname, 'en')} lang="en" hreflang="en" aria-label="English" aria-current={locale === 'en' ? 'true' : undefined}>
+    <svg class="language-flag" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path fill="#21468b" d="M0 0h24v16H0z" /><path stroke="#fff" stroke-width="3.6" d="m0 0 24 16M24 0 0 16" /><path stroke="#c8102e" stroke-width="1.2" d="m0 0 24 16M24 0 0 16" /><path stroke="#fff" stroke-width="5.5" d="M12 0v16M0 8h24" /><path stroke="#c8102e" stroke-width="3" d="M12 0v16M0 8h24" /></svg>
+    <span>ENG</span>
+  </a>
+  </div>
+</nav>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-language-switcher]').forEach(root => {
+    const trigger = root.querySelector<HTMLButtonElement>('button')!;
+    const panel = root.querySelector<HTMLElement>('.language-dropdown')!;
+    const links = [...panel.querySelectorAll<HTMLAnchorElement>('a')];
+    const face = trigger.querySelector<HTMLElement>('[data-language-face]')!;
+    const current = links.find(link => link.hasAttribute('aria-current'))!;
+    face.innerHTML = current.innerHTML;
+    trigger.setAttribute('aria-label', document.documentElement.lang === 'en' ? 'Change language' : 'Cambiar idioma');
+    trigger.hidden = false;
+    panel.hidden = true;
+    root.dataset.enhanced = '';
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let animation: Animation | undefined;
+    let open = false;
+    let selecting = false;
+    async function setOpen(next: boolean, focus = false) {
+      open = next;
+      trigger.setAttribute('aria-expanded', String(next));
+      animation?.cancel();
+      panel.hidden = false;
+      const frames = [{ opacity: 0, transform: 'translateY(-8px) scale(.96)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }];
+      animation = panel.animate(next ? frames : [...frames].reverse(), { duration: reduced.matches ? 0 : next ? 260 : 180, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+      if (next && focus) links[0].focus();
+      try { await animation.finished; } catch { return; }
+      if (!open) panel.hidden = true;
+    }
+    trigger.addEventListener('click', () => { if (!selecting) void setOpen(!open); });
+    root.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { void setOpen(false); trigger.focus(); }
+      if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+        event.preventDefault();
+        if (!open) { void setOpen(true, true); return; }
+        const index = links.indexOf(document.activeElement as HTMLAnchorElement);
+        links[event.key === 'Home' ? 0 : event.key === 'End' ? links.length - 1 : (index + (event.key === 'ArrowUp' ? -1 : 1) + links.length) % links.length].focus();
+      }
+    });
+    document.addEventListener('pointerdown', event => { if (!root.contains(event.target as Node) && open) void setOpen(false); });
+    root.addEventListener('focusout', event => { if (!root.contains(event.relatedTarget as Node) && open) void setOpen(false); });
+    links.forEach(link => link.addEventListener('click', async event => {
+      if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      if (selecting) return;
+      if (link === current) { void setOpen(false); trigger.focus(); return; }
+      selecting = true;
+      link.dataset.selected = '';
+      face.innerHTML = link.innerHTML;
+      const feedback = face.animate([{ opacity: 0, transform: 'translateY(7px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: reduced.matches ? 0 : 220, easing: 'ease-out' });
+      await Promise.all([feedback.finished.catch(() => {}), setOpen(false)]);
+      window.location.assign(link.href);
+    }));
+  });
+  document.querySelectorAll<HTMLAnchorElement>('[data-language-switcher] a').forEach(link => {
+    // The two versions share section IDs, including direct arrivals into animated scenes.
+    const syncFragment = () => { link.hash = window.location.hash; };
+    syncFragment();
+    window.addEventListener('hashchange', syncFragment);
+    link.addEventListener('click', syncFragment);
+  });
+</script>

@@ -1,4 +1,6 @@
 ---
+import { getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
 import ConceptPreview from './ConceptPreview.astro';
 import FeaturedLink from './FeaturedLink.astro';
 import Icon from './Icon.astro';
@@ -8,9 +10,9 @@ interface Props { whatsappHref: string }
 const { whatsappHref } = Astro.props;
 const [estate, legal] = getCaseStudies(false);
 const projects = [
-  { type: 'real-estate' as const, title: 'Demanda, atención y seguimiento', category: 'Proyecto inmobiliario', summary: estate.summary, scope: estate.scope },
-  { type: 'legal' as const, title: 'Credibilidad que convierte', category: 'Proyecto jurídico', summary: legal.summary, scope: legal.scope },
-  { type: 'automation' as const, title: 'Cada consulta, un próximo paso', category: 'Sistema comercial', summary: 'Un ejemplo de cómo conectar el ingreso de consultas, la organización de contactos y el seguimiento en un mismo recorrido.', scope: 'CRM, automatizaciones e integración de canales.' },
+  { type: 'real-estate' as const, title: t("Demanda, atención y seguimiento"), category: t("Proyecto inmobiliario"), summary: t(estate.summary), scope: t(estate.scope) },
+  { type: 'legal' as const, title: t("Credibilidad que convierte"), category: t("Proyecto jurídico"), summary: t(legal.summary), scope: t(legal.scope) },
+  { type: 'automation' as const, title: t("Cada consulta, un próximo paso"), category: t("Sistema comercial"), summary: t("Un ejemplo de cómo conectar el ingreso de consultas, la organización de contactos y el seguimiento en un mismo recorrido."), scope: t("CRM, automatizaciones e integración de canales.") },
 ];
 ---
 <div class="portfolio-reveal" data-portfolio-reveal>
@@ -19,10 +21,10 @@ const projects = [
       <div class="featured-belt">
         <header class="featured-panel featured-opening">
           <div class="featured-opening-copy">
-            <h2 id="experience-title">Ideas que<br />toman <span>forma</span></h2>
-            <p>Así podrían conectarse las piezas.</p>
-            <p class="content-disclosure">Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.</p>
-            <FeaturedLink href="#proyecto-inmobiliario" label="Explorá los ejemplos" />
+            <h2 id="experience-title">{t("Ideas que")}<br />{t("toman")} <span>{t("forma")}</span></h2>
+            <p>{t("Así podrían conectarse las piezas.")}</p>
+            <p class="content-disclosure">{t("Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.")}</p>
+            <FeaturedLink href="#proyecto-inmobiliario" label={t("Explorá los ejemplos")} />
           </div>
         </header>
         {projects.map((project, index) => (
@@ -30,20 +32,20 @@ const projects = [
             <div class="featured-project-inner">
               <ConceptPreview type={project.type} />
               <div class="concept-description">
-                <div class="concept-caption"><span>{project.category}</span><span class="concept-label">Estudio conceptual</span></div>
+                <div class="concept-caption"><span>{project.category}</span><span class="concept-label">{t("Estudio conceptual")}</span></div>
                 <h3>{project.title}</h3>
                 <p>{project.summary}</p>
                 <p class="concept-scope">{project.scope}</p>
-                <FeaturedLink href={whatsappHref} label="Tengo un proyecto parecido" />
+                <FeaturedLink href={whatsappHref} label={t("Tengo un proyecto parecido")} />
               </div>
             </div>
           </article>
         ))}
         <div class="featured-panel featured-closing">
-          <div><p>Cada negocio necesita<br />una conexión distinta</p><FeaturedLink href="#nosotros" label="Conocé al equipo" /></div>
+          <div><p>{t("Cada negocio necesita")}<br />{t("una conexión distinta")}</p><FeaturedLink href="#nosotros" label={t("Conocé al equipo")} /></div>
         </div>
       </div>
-      <div class="featured-progress" aria-hidden="true"><span>Explorá las conexiones</span><div><i></i></div><span>Nosotros <Icon name="right" /></span></div>
+      <div class="featured-progress" aria-hidden="true"><span>{t("Explorá las conexiones")}</span><div><i></i></div><span>{t("Nosotros")} <Icon name="right" /></span></div>
     </div>
   </section>
   <div class="featured-about"><div class="featured-about__content"><slot /></div></div>

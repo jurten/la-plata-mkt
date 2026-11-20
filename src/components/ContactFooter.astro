@@ -1,4 +1,6 @@
 ---
+import { getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
 import BrandLogo from './BrandLogo.astro';
 import Icon from './Icon.astro';
 interface Props {
@@ -12,35 +14,35 @@ const { whatsappHref, whatsappDisplay, contactEmail, privacyHref } = Astro.props
 <footer class="site-footer closing-footer" id="contacto" aria-labelledby="contact-title">
   <div class="wrap">
     <div class="footer-directory">
-      <div class="footer-direct" role="group" aria-label="Canales de contacto directo">
-        <h2 id="contact-title">Hablemos</h2>
-        <p>La primera reunión es gratuita.</p>
-        <a class="footer-whatsapp" href={whatsappHref} aria-label={`Escribir a La Plata Marketing por WhatsApp al ${whatsappDisplay}`}>
-          <span>Por WhatsApp<strong>{whatsappDisplay}</strong></span><Icon />
+      <div class="footer-direct" role="group" aria-label={t("Canales de contacto directo")}>
+        <h2 id="contact-title">{t("Hablemos")}</h2>
+        <p>{t("La primera reunión es gratuita.")}</p>
+        <a class="footer-whatsapp" href={whatsappHref} aria-label={t("Escribir a La Plata Marketing por WhatsApp al {phone}", { phone: whatsappDisplay })}>
+          <span>{t("Por WhatsApp")}<strong>{whatsappDisplay}</strong></span><Icon />
         </a>
-        <a class="footer-email" href={`mailto:${contactEmail}`} aria-label={`Escribir por email a ${contactEmail}`}><span>{contactEmail}</span><Icon /></a>
+        <a class="footer-email" href={`mailto:${contactEmail}`} aria-label={t("Escribir por email a {email}", { email: contactEmail })}><span>{contactEmail}</span><Icon /></a>
       </div>
       <div class="footer-location">
-        <h2>Desde La Plata</h2>
-        <p>Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.</p>
+        <h2>{t("Desde La Plata")}</h2>
+        <p>{t("Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.")}</p>
       </div>
-      <nav class="footer-explore" aria-label="Explorá La Plata Marketing">
-        <h2>Navegá</h2>
-        <a href="#soluciones">Nuestro enfoque</a>
-        <a href="#como-trabajamos">Cómo trabajamos</a>
-        <a href="#trabajo">Trabajos</a>
-        <a href="#nosotros">Nosotros</a>
-        <a href={`mailto:${contactEmail}`} aria-label="Contacto por email">Contacto <Icon /></a>
-        <a href={privacyHref}>Privacidad</a>
+      <nav class="footer-explore" aria-label={t("Explorá La Plata Marketing")}>
+        <h2>{t("Navegá")}</h2>
+        <a href="#soluciones">{t("Nuestro enfoque")}</a>
+        <a href="#como-trabajamos">{t("Cómo trabajamos")}</a>
+        <a href="#trabajo">{t("Trabajos")}</a>
+        <a href="#nosotros">{t("Nosotros")}</a>
+        <a href={`mailto:${contactEmail}`} aria-label={t("Contacto por email")}>{t("Contacto")} <Icon /></a>
+        <a href={privacyHref}>{t("Privacidad")}</a>
       </nav>
     </div>
     <div class="footer-signoff">
-      <a class="footer-brand" href="#inicio" aria-label="La Plata Marketing, volver arriba"><BrandLogo variant="horizontal" /></a>
+      <a class="footer-brand" href="#inicio" aria-label={t("La Plata Marketing, volver arriba")}><BrandLogo variant="horizontal" /></a>
     </div>
     <div class="footer-bottom">
       <span>© 2026 LPM / La Plata, Argentina</span>
-      <span id="mode-label">Identidad visual / Sistema automático</span>
-      <a href="#inicio">Volver arriba <Icon name="arrow" /></a>
+      <span id="mode-label">{t("Identidad visual / Sistema automático")}</span>
+      <a href="#inicio">{t("Volver arriba")} <Icon name="arrow" /></a>
     </div>
   </div>
 </footer>

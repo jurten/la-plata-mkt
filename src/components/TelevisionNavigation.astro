@@ -1,36 +1,38 @@
 ---
-import ThemeSwitcher from './ThemeSwitcher.astro';
+import { getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
+import LanguageSwitcher from './LanguageSwitcher.astro';
 import Icon from './Icon.astro';
 import BrandLogo from './BrandLogo.astro';
 import '../styles/tv-navigation.css';
 
 const channels = [
-  { id: 'inicio', number: '01', label: 'Inicio', description: 'Ideas de otro planeta. Para problemas de acá.' },
-  { id: 'soluciones', number: '02', label: 'Enfoque', description: 'Comunicación, marketing y tecnología. Las piezas, conectadas.' },
-  { id: 'trabajo', number: '03', label: 'Trabajos', description: 'Estudios conceptuales. Ideas que empiezan a tomar forma.' },
-  { id: 'nosotros', number: '04', label: 'Nosotros', description: 'Otra perspectiva para entender lo que necesita tu negocio.' },
-  { id: 'contacto', number: '05', label: 'Contacto', description: 'Contanos qué querés mejorar. Empezamos por escucharte.' },
+  { id: 'inicio', number: '01', label: t("Inicio"), description: t("Ideas de otro planeta. Para problemas de acá.") },
+  { id: 'soluciones', number: '02', label: t("Enfoque"), description: t("Comunicación, marketing y tecnología. Las piezas, conectadas.") },
+  { id: 'trabajo', number: '03', label: t("Trabajos"), description: t("Estudios conceptuales. Ideas que empiezan a tomar forma.") },
+  { id: 'nosotros', number: '04', label: t("Nosotros"), description: t("Otra perspectiva para entender lo que necesita tu negocio.") },
+  { id: 'contacto', number: '05', label: t("Contacto"), description: t("Contanos qué querés mejorar. Empezamos por escucharte.") },
 ];
 ---
 <header class="topbar television-nav" data-tv-navigation>
   <div class="nav">
-    <a class="brand" href="#inicio" aria-label="La Plata Marketing, ir al inicio"><BrandLogo variant="compact" /></a>
+    <a class="brand" href="#inicio" aria-label={t("La Plata Marketing, ir al inicio")}><BrandLogo variant="compact" /></a>
     <span class="current-channel" data-current-channel aria-hidden="true">CH 01</span>
-    <nav class="primary-nav" id="primary-nav" aria-label="Enlaces de sección">
+    <nav class="primary-nav" id="primary-nav" aria-label={t("Enlaces de sección")}>
       {channels.slice(1).map(channel => <a href={`#${channel.id}`}><span class="nav-channel-number" aria-hidden="true">{channel.number}</span>{channel.label}</a>)}
     </nav>
-    <ThemeSwitcher />
-    <button class="menu-toggle station-toggle" type="button" aria-label="Menú" aria-expanded="false" aria-controls="station-menu" hidden>
-      <span>Menú</span><span class="station-toggle-icon" aria-hidden="true"><span></span><span></span></span>
+    <LanguageSwitcher />
+    <button class="menu-toggle station-toggle" type="button" aria-label={t("Menú")} aria-expanded="false" aria-controls="station-menu" hidden>
+      <span>{t("Menú")}</span><span class="station-toggle-icon" aria-hidden="true"><span></span><span></span></span>
     </button>
   </div>
 </header>
 
-<div class="station-menu" id="station-menu" data-station-menu role="region" aria-label="Navegación por canales" hidden>
+<div class="station-menu" id="station-menu" data-station-menu role="region" aria-label={t("Navegación por canales")} hidden>
   <div class="station-menu-inner">
-    <div class="station-menu-heading"><p>Una señal distinta.</p><span aria-hidden="true">LPM / CANALES</span></div>
+    <div class="station-menu-heading"><p>{t("Una señal distinta")}</p><span aria-hidden="true">{t("LPM / CANALES")}</span></div>
     <div class="station-menu-grid">
-      <nav class="station-links" aria-label="Navegación principal">
+      <nav class="station-links" aria-label={t("Navegación principal")}>
         {channels.map(channel => (
           <a href={`#${channel.id}`} data-station-link data-channel-number={channel.number} data-channel-label={channel.label} data-channel-description={channel.description}>
             <span class="station-number" aria-hidden="true">{channel.number}</span><span>{channel.label}</span><Icon name="right" />
@@ -54,14 +56,14 @@ const channels = [
             <circle cx="240" cy="160" r="119" stroke="currentColor" />
             <path d="M16 16h24M16 16v24m448-24h-24m24 0v24M16 304h24m-24 0v-24m448 24h-24m24 0v-24" stroke="currentColor" />
           </svg>
-          <div class="station-screen-bottom"><span>OTRA PERSPECTIVA</span><span class="station-led"></span></div>
+          <div class="station-screen-bottom"><span>{t("OTRA PERSPECTIVA")}</span><span class="station-led"></span></div>
         </div>
-        <div class="station-preview-copy"><span data-preview-title>Inicio</span><p data-preview-description>{channels[0].description}</p></div>
+        <div class="station-preview-copy"><span data-preview-title>{t("Inicio")}</span><p data-preview-description>{channels[0].description}</p></div>
       </div>
     </div>
     <div class="station-menu-footer">
-      <a class="station-contact" href="https://wa.me/5491158861954">Hablemos por WhatsApp <Icon /></a>
-      <button type="button" class="power-replay" data-power-replay><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v8m-5.4-6a8 8 0 1 0 10.8 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg><span>Repetir encendido</span></button>
+      <a class="station-contact" href="https://wa.me/5491158861954">{t("Hablemos por WhatsApp")} <Icon /></a>
+      <button type="button" class="power-replay" data-power-replay><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v8m-5.4-6a8 8 0 1 0 10.8 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg><span>{t("Repetir encendido")}</span></button>
     </div>
   </div>
 </div>
@@ -70,7 +72,7 @@ const channels = [
   <div class="tv-shutter" data-tv-shutter></div>
   <div class="tv-tuning" data-tv-tuning></div>
   <div class="tv-phosphor" data-tv-phosphor></div>
-  <div class="tv-osd" data-tv-osd><span data-tv-osd-number>CH 01</span><span data-tv-osd-label>INICIO</span></div>
+  <div class="tv-osd" data-tv-osd><span data-tv-osd-number>CH 01</span><span data-tv-osd-label>{t("INICIO")}</span></div>
 </div>
 <span class="tv-channel-announcement" role="status" aria-live="polite" data-channel-announcement></span>
 <script>

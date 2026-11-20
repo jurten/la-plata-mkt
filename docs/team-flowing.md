@@ -1,5 +1,11 @@
 # Nosotros con Flowing Menu y respuesta al scroll
 
+## Selección por scroll en pantallas táctiles
+
+La actualización del 19 de noviembre de 2026 conecta la posición de la regla con las bandas en teléfonos y tablets con puntero táctil. En 0% y 100% no hay selección ni bucle de animación; entre 1% y 99% se activa la fila señalada, también al volver hacia arriba. La selección usa el mismo motor de hover y se restablece en los extremos. En teléfonos el portfolio sigue vertical y Nosotros incorpora su propia permanencia nativa de 250svh. En escritorio se conserva el hover del mouse. Movimiento reducido, colores forzados, pantallas de menos de 600px de alto y ausencia de JavaScript conservan sus alternativas estáticas. Esto reemplaza las indicaciones anteriores de no seleccionar personas por scroll y de omitir la regla en todos los móviles.
+
+Los retratos confirmados están en `public/team/`; las bandas usan roles grandes y una estrella blanca de cuatro puntas curvas entre repeticiones. `team-touch-scroll.spec.ts` comprueba extremos, selección, movimiento, reversión y movimiento reducido a 390, 768 y 1024px.
+
 ## Respuesta al scroll y retratos sin blob
 
 Los nombres se mantienen grandes tanto en reposo como en las bandas. Los cargos de dirección se reemplazan por Tecnología (Joaquín Laumann), Creatividad (Santiago Laumann) y Marketing (Justina Guiñazú), como texto secundario y en los perfiles de respaldo. Los identificadores de los perfiles no cambian.

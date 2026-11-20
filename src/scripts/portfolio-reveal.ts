@@ -16,6 +16,9 @@ async function initializePortfolio() {
   const panels = [...belt.children] as HTMLElement[];
   const progressBar = root.querySelector<HTMLElement>('.featured-progress i')!;
   const media = gsap.matchMedia();
+  const publishTeamProgress = (progress: number | null) => {
+    window.dispatchEvent(new CustomEvent('lpm:team-scroll', { detail: { container: aboutContent, progress } }));
+  };
 
   media.add('(min-width: 701px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) and (forced-colors: none)', () => {
     root.dataset.enhanced = 'true';
@@ -71,7 +74,10 @@ async function initializePortfolio() {
     render(trigger.progress);
     // A separate native-scroll range acknowledges the formerly stationary hold.
     // Absolute progress makes reverse scroll, hashes and resize deterministic.
-    const renderHold = (progress: number) => aboutContent.style.setProperty('--team-scroll-progress', String(progress));
+    const renderHold = (progress: number) => {
+      aboutContent.style.setProperty('--team-scroll-progress', String(progress));
+      publishTeamProgress(progress);
+    };
     const holdTrigger = ScrollTrigger.create({
       trigger: about,
       start: () => start + distance,
@@ -135,6 +141,7 @@ async function initializePortfolio() {
       trigger.kill();
       holdTrigger.kill();
       aboutContent.style.removeProperty('--team-scroll-progress');
+      publishTeamProgress(null);
       window.removeEventListener('lpm:resolve-anchor', resolveAnchor);
       window.removeEventListener('hashchange', followHash);
       window.removeEventListener('popstate', followHash);
@@ -147,6 +154,30 @@ async function initializePortfolio() {
       stage.removeAttribute('data-featured-exited');
       lockAbout(false);
       gsap.set([belt, stage, about, progressBar, ...projects.map(p => p.firstElementChild)], { clearProps: 'transform,clipPath' });
+    };
+  });
+
+  // Phones retain the vertical portfolio, with their own native-scroll team hold.
+  media.add('(max-width: 700px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) and (forced-colors: none)', () => {
+    root.setAttribute('data-team-scroll-mobile', '');
+    const render = (progress: number) => {
+      aboutContent.style.setProperty('--team-scroll-progress', String(progress));
+      publishTeamProgress(progress);
+    };
+    const trigger = ScrollTrigger.create({
+      trigger: about,
+      start: 'top top',
+      end: () => `+=${about.offsetHeight - aboutContent.offsetHeight}`,
+      invalidateOnRefresh: true,
+      onRefresh: self => render(self.progress),
+      onUpdate: self => render(self.progress),
+    });
+    render(trigger.progress);
+    return () => {
+      trigger.kill();
+      root.removeAttribute('data-team-scroll-mobile');
+      aboutContent.style.removeProperty('--team-scroll-progress');
+      publishTeamProgress(null);
     };
   });
 

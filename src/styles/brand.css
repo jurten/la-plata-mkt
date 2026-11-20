@@ -35,11 +35,6 @@
 @keyframes approach-orbit { to { transform: translate(-50%, -50%) rotate(-360deg); } }
 @media (prefers-reduced-motion: reduce) { .alien-hero .button-text::after { animation: none; } }
 @media (forced-colors: active) { .alien-hero .button-text { border-color: LinkText; } .alien-hero .button-text::after { display: none; } }
-.television-nav .theme-switcher { padding-left: 0; border-left: 0; }
-.television-nav .theme-switcher button { width: 72px; padding: 6px 4px; background: color-mix(in srgb, var(--ink) 5%, transparent); }
-.television-nav .theme-switcher__thumb { top: 6px; width: 32px; height: 32px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
-.television-nav .theme-switcher button[aria-checked='true'] .theme-switcher__thumb { transform: translateX(32px); }
-.television-nav .theme-switcher svg { width: 18px; height: 18px; }
 .television-nav .station-toggle { border-left: 0; padding-left: 0; font-size: 15px; }
 .site-footer .footer-brand { display: inline-flex; padding-left: 0; color: var(--ink); }
 .site-footer .footer-brand:hover, .legal-header .brand:hover { color: var(--blue-text); }
@@ -52,7 +47,6 @@
   .television-nav .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
   .television-nav .brand { margin-right: 0; justify-self: start; }
   .television-nav .primary-nav { margin-left: 0; justify-self: center; }
-  .television-nav .theme-switcher { justify-self: end; }
 }
 @media (max-width: 1100px) {
   .television-nav .primary-nav { gap: 0; }

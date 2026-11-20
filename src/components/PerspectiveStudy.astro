@@ -1,12 +1,14 @@
 ---
+import { getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
 const concepts = [
-  { title: 'Publicidad', description: 'Llegá a quienes necesitan lo que ofrecés.', points: ['Campañas en Meta Ads', 'Contenido y anuncios', 'Medición y ajustes'] },
-  { title: 'Web', description: 'Presentá tu negocio y facilitá el siguiente paso.', points: ['Sitios y landing pages', 'Oferta y servicios', 'Accesos a la consulta'] },
-  { title: 'Consulta', description: 'Convertí el interés en una consulta.', points: ['Formularios de contacto', 'Pedidos y reservas', 'Datos para responder'] },
-  { title: 'Comunicación', description: 'Atendé cada consulta por el canal adecuado.', points: ['WhatsApp y correo', 'Atención de consultas', 'Continuidad del contacto'] },
-  { title: 'CRM', description: 'Registrá quién consultó y en qué quedó.', points: ['Contactos centralizados', 'Historial de consultas', 'Estado de oportunidades'] },
-  { title: 'Proceso', description: 'Dale continuidad a cada consulta.', points: ['Etapas y responsables', 'Tareas y recordatorios', 'Automatizaciones'] },
-  { title: 'Venta', description: 'Medí los resultados para entender qué mejorar.', points: ['Registro de resultados', 'Seguimiento comercial', 'Medición del recorrido'] },
+  { title: t("Publicidad"), description: t("Llegá a quienes necesitan lo que ofrecés."), points: [t("Campañas en Meta Ads"), t("Contenido y anuncios"), t("Medición y ajustes")] },
+  { title: 'Web', description: t("Presentá tu negocio y facilitá el siguiente paso."), points: [t("Sitios y landing pages"), t("Oferta y servicios"), t("Accesos a la consulta")] },
+  { title: t("Consulta"), description: t("Convertí el interés en una consulta."), points: [t("Formularios de contacto"), t("Pedidos y reservas"), t("Datos para responder")] },
+  { title: t("Comunicación"), description: t("Atendé cada consulta por el canal adecuado."), points: [t("WhatsApp y correo"), t("Atención de consultas"), t("Continuidad del contacto")] },
+  { title: 'CRM', description: t("Registrá quién consultó y en qué quedó."), points: [t("Contactos centralizados"), t("Historial de consultas"), t("Estado de oportunidades")] },
+  { title: t("Proceso"), description: t("Dale continuidad a cada consulta."), points: [t("Etapas y responsables"), t("Tareas y recordatorios"), t("Automatizaciones")] },
+  { title: t("Venta"), description: t("Medí los resultados para entender qué mejorar."), points: [t("Registro de resultados"), t("Seguimiento comercial"), t("Medición del recorrido")] },
 ];
 const blobPath = 'M0 0H1440V72C1400 70 1380 98 1320 91S1240 80 1200 83S1120 105 1080 78S1000 56 960 60S880 77 840 55S760 30 720 34S640 6 600 24S520 67 480 57S400 38 360 62S280 90 240 73S160 53 120 80S40 109 0 94Z';
 // A stable, irregular sky that needs neither a canvas nor an animation loop.
@@ -23,9 +25,9 @@ const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random(
   </svg>
   <div class="system-orbit-stage" data-orbit-stage data-draggable>
     <div class="system-orbit-center" data-orbit-center>
-      <h2 id="system-title">El sistema<br />completo</h2>
+      <h2 id="system-title">{t("El sistema")}<br />{t("completo")}</h2>
     </div>
-    <div class="circular-gallery system-circular-gallery" data-system-gallery role="region" aria-roledescription="carrusel" aria-label="Las siete etapas del sistema">
+    <div class="circular-gallery system-circular-gallery" data-system-gallery role="region" aria-roledescription={t("carrusel")} aria-label={t("Las siete etapas del sistema")}>
       <div class="system-gallery-view" data-gallery-view>
         <div class="circular-gallery-labels" aria-hidden="true"></div>
         <div class="circular-gallery-caption" hidden></div>
@@ -36,10 +38,10 @@ const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random(
       <defs><clipPath id="system-orbit-front" clipPathUnits="userSpaceOnUse"><rect data-orbit-clip /></clipPath></defs>
       <g clip-path="url(#system-orbit-front)"><path data-orbit-stroke fill="none" /></g>
     </svg>
-    <ol class="system-orbit-concepts" aria-label="Recorrido de publicidad a venta">
+    <ol class="system-orbit-concepts" aria-label={t("Recorrido de publicidad a venta")}>
       {concepts.map(({ title, description, points }, index) => (
         <li class="system-orbit-item" data-orbit-item={index}>
-          <button type="button" class="system-orbit-card" aria-label={`Traer ${title} al frente`} aria-describedby={`system-orbit-description-${index} system-orbit-points-${index}`}>
+          <button type="button" class="system-orbit-card" aria-label={t("Traer {title} al frente", { title })} aria-describedby={`system-orbit-description-${index} system-orbit-points-${index}`}>
             <span class="system-orbit-number">{String(index + 1).padStart(2, '0')}</span>
             <span class="system-orbit-copy">
               <strong>{title}</strong>
@@ -52,7 +54,7 @@ const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random(
     </ol>
   </div>
   <div class="system-orbit-footer">
-    <button type="button" data-orbit-toggle aria-pressed="false" hidden><span data-orbit-toggle-label>Pausar órbita</span></button>
+    <button type="button" data-orbit-toggle aria-pressed="false" hidden><span data-orbit-toggle-label>{t("Pausar órbita")}</span></button>
   </div>
   <svg class="system-orbit-transition system-orbit-transition-bottom" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
     <path data-orbit-blob d={blobPath} />

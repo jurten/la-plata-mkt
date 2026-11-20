@@ -203,6 +203,10 @@ components:
 
 # Design System: La Plata Marketing
 
+## Spanish and English navigation, 2026-11-19
+
+The user replaced the public light/dark control with an ESP / ENG selector. `LanguageSwitcher.astro` uses native links, local SVG flags for Argentina and the United Kingdom, explicit language names for assistive technology, a visible active state and 44px minimum touch targets. The existing saved/system appearance still resolves automatically. Shared home and privacy components render complete Spanish and English documents at `/`, `/en/`, `/privacidad/` and `/en/privacy/`, including animation controls, conceptual artwork copy, team roles, contact, metadata and language alternates. Language changes retain the current section fragment. Preserve the existing brand and all scene behavior; headings and subheadings have no final periods.
+
 ## Approved charcoal dark palette, 2026-11-19
 
 The user selected “Carbón” after comparing both proposed dark palettes side by side. The exact selected reading roles are background `#11151C`, surface `#1B2330`, primary ink `#EDF2F7`, muted ink `#ACB8CA`, and blue text `#AFC7FF`. Apply them to explicit dark mode and automatic mode with a dark system preference, including the privacy route and browser theme color. Preserve the light palette, fixed hero/system fields, cobalt artwork and existing interactions. This supersedes the previous midnight reading roles; the comparison in `artifacts/palette-comparison/` remains a historical selection artifact.

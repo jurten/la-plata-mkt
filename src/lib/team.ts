@@ -12,7 +12,7 @@ export interface TeamMember {
 // Add only confirmed employee names and their own portraits here.
 // Portrait paths are relative to public/, for example /team/maria.webp.
 export const teamMembers: TeamMember[] = [
-  { id: 'joaquin-laumann', name: 'Joaquín Laumann', role: 'Tecnología', portrait: null },
-  { id: 'santiago-laumann', name: 'Santiago Laumann', role: 'Creatividad', portrait: null },
-  { id: 'justina-guinazu', name: 'Justina Guiñazú', role: 'Marketing', portrait: null },
+  { id: 'joaquin-laumann', name: 'Joaquín Laumann', role: 'Tecnología', portrait: '/team/joaquin-laumann.webp' },
+  { id: 'santiago-laumann', name: 'Santiago Laumann', role: 'Creatividad', portrait: '/team/santiago-laumann.webp' },
+  { id: 'justina-guinazu', name: 'Justina Guiñazú', role: 'Marketing', portrait: '/team/justina-guinazu.webp' },
 ];

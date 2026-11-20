@@ -28,7 +28,7 @@ The third pillar must explain the connected offering; it must not be presented a
 
 ## Operating Context
 
-- One continuous Spanish-language website, including About, Portfolio, and Contact sections. The existing privacy page remains a supporting route.
+- A continuous bilingual website, including About, Portfolio, and Contact sections. Spanish (es-AR) lives at `/`, English at `/en/`; privacy uses `/privacidad/` and `/en/privacy/`.
 - WhatsApp is the primary contact channel, with direct email also available. On 2026-11-18 the user removed the public contact form and FAQ, moving key answers into the site journey. A future `/contact/` form is a possibility, not approved work for now.
 - Existing implementation: Astro, TypeScript, original CSS, Fontsource, Cloudflare Workers, Turnstile, and Resend.
 - Preserve working contact handling and publication controls during a visual redesign.
@@ -74,5 +74,5 @@ The current information must be preserved. Reorganizing information into the thr
 
 - No deadline was supplied.
 - No new team biography, credentials, photographs, or approved client evidence was supplied.
-- Existing language is Spanish (es-AR); no bilingual expansion was requested.
-- Preserve the existing system/light/dark appearance behavior. All appearances must retain the new blue extraterrestrial brand; a fixed black/cobalt opening is independent of the selected reading-surface appearance.
+- On 2026-11-19 the user requested a complete English version and an ESP / ENG language selector with flags in place of the light/dark control. Language links preserve the current section and have native no-JavaScript fallbacks.
+- The public appearance switch is removed. Preserve saved appearance and system-preference rendering, the approved palettes, and the fixed cobalt opening.

@@ -17,7 +17,7 @@ export const GET: APIRoute = () => {
     });
   }
 
-  const locations = [new URL('/', publicSite), new URL('/privacidad/', publicSite)];
+  const locations = ['/', '/en/', '/privacidad/', '/en/privacy/'].map(path => new URL(path, publicSite));
   const urls = locations.map((location) => `  <url><loc>${location}</loc></url>`).join('\n');
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',

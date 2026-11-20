@@ -21,6 +21,9 @@ export function initTeamRosters() {
     const settings = { speed: 60, duration: .5, stretch: .6, magnet: .25, followCursor: .4, inset: 18 };
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const forced = matchMedia('(forced-colors: active)');
+    const touchInput = matchMedia('(hover: none), (pointer: coarse)');
+    let scrollProgress: number | null = null;
+    let scrollDriven = false;
     const events = new AbortController();
     const { signal } = events;
     const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
@@ -145,6 +148,23 @@ export function initTeamRosters() {
       band.toTop=band.toBottom=band.rest;band.index=-1;cursor.y=null;
       mark();kick();
     };
+    const syncScrollSelection = () => {
+      if (!touchInput.matches || reduced.matches || scrollProgress === null) {
+        if (scrollDriven) reset();
+        scrollDriven = false;
+        return;
+      }
+      scrollDriven = true;
+      // Keep the rounded 0% and 100% positions completely still.
+      if (scrollProgress <= .005 || scrollProgress >= .995) { reset(); return; }
+      syncVisibility();
+      if (!available()) { reset(); return; }
+      const y = scrollProgress * list.offsetHeight;
+      const index = rows.findIndex(row => y >= row.top && y < row.top + row.height);
+      cursor.y = y;
+      if (index >= 0 && index !== band.index) goTo(index, 'center');
+      else kick();
+    };
     const measure = () => {
       reset();
       rows.forEach(row => {
@@ -155,6 +175,7 @@ export function initTeamRosters() {
         while(row.track.children.length>copies) row.track.lastElementChild?.remove();
         while(row.track.children.length<copies) row.track.append(first.cloneNode(true));
       });
+      syncScrollSelection();
     };
     const configure = () => {
       root.toggleAttribute('data-team-ready',!forced.matches);
@@ -170,14 +191,16 @@ export function initTeamRosters() {
         }
       });
       if (locked() && document.activeElement instanceof HTMLElement && root.contains(document.activeElement)) document.activeElement.blur();
+      syncScrollSelection();
     };
     rows.forEach((row,index) => {
-      row.choice.addEventListener('click',event=>{if(forced.matches)return;event.preventDefault();cursor.y=null;goTo(index,'center',true);},{signal});
+      row.choice.addEventListener('click',event=>{if(forced.matches)return;event.preventDefault();if(scrollDriven){syncScrollSelection();return;}cursor.y=null;goTo(index,'center',true);},{signal});
       row.choice.addEventListener('focus',()=>{
         if(locked()){row.choice.blur();return;}
+        if(scrollDriven){syncScrollSelection();return;}
         cursor.y=null;goTo(index,'top',true);
       },{signal});
-      row.choice.addEventListener('blur',event=>{if(!list.contains(event.relatedTarget as Node))release('bottom');},{signal});
+      row.choice.addEventListener('blur',event=>{if(!scrollDriven&&!list.contains(event.relatedTarget as Node))release('bottom');},{signal});
       row.choice.addEventListener('keydown',event=>{
         if(locked()||forced.matches)return;
         if(event.key===' '){event.preventDefault();goTo(index,'center',true);}
@@ -188,7 +211,7 @@ export function initTeamRosters() {
       },{signal});
     });
     document.addEventListener('pointermove',event=>{
-      if(event.pointerType==='touch')return;
+      if(event.pointerType==='touch'||scrollDriven)return;
       const moved=!pointer||pointer.x!==event.clientX||pointer.y!==event.clientY;
       pointer={x:event.clientX,y:event.clientY};
       if(!moved||!(event.target instanceof Element)||!list.contains(event.target))return;
@@ -203,21 +226,28 @@ export function initTeamRosters() {
       else kick();
     },{signal,passive:true});
     list.addEventListener('pointerleave',event=>{
-      if(event.pointerType==='touch'||rows.some(row=>row.choice.matches(':focus-visible')))return;
+      if(event.pointerType==='touch'||scrollDriven||rows.some(row=>row.choice.matches(':focus-visible')))return;
       const bounds=list.getBoundingClientRect();release(event.clientY<=bounds.top?'top':event.clientY>=bounds.bottom?'bottom':'center');
     },{signal});
     const gateObserver=new MutationObserver(configure);
+    window.addEventListener('lpm:team-scroll', event => {
+      const detail = (event as CustomEvent<{container: HTMLElement; progress: number | null}>).detail;
+      if (!detail.container.contains(root)) return;
+      scrollProgress = detail.progress;
+      syncScrollSelection();
+    }, {signal});
+    touchInput.addEventListener('change', syncScrollSelection, {signal});
     if(gate)gateObserver.observe(gate,{attributes:true,attributeFilter:['data-team-locked']});
     if(main)gateObserver.observe(main,{attributes:true,attributeFilter:['inert']});
     const visibility=new IntersectionObserver(entries=>{
       visible=entries[entries.length-1].isIntersecting;
-      if(!visible)reset();else if(available()&&band.index<0)root.dataset.teamFlowState='idle';
+      if(!visible)reset();else {syncScrollSelection();if(available()&&band.index<0)root.dataset.teamFlowState='idle';}
     });
     visibility.observe(root);
     const resize=new ResizeObserver(measure);resize.observe(list);
     reduced.addEventListener('change',()=>{configure();measure();},{signal});
     forced.addEventListener('change',()=>{configure();measure();},{signal});
-    document.addEventListener('visibilitychange',()=>reset(),{signal});
+    document.addEventListener('visibilitychange',()=>{reset();if(!document.hidden)syncScrollSelection();},{signal});
     window.addEventListener('lpm:transmission-pause',event=>{paused=(event as CustomEvent<boolean>).detail;configure();},{signal});
     window.addEventListener('pagehide',reset,{signal});
     configure();measure();
