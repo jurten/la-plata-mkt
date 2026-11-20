@@ -90,7 +90,7 @@ test('arrastre horizontal con inercia y clic para traer un concepto al frente', 
   await expect(orbit.locator('[data-orbit-toggle]')).toBeHidden();
 });
 
-for (const width of [320, 390, 768, 1250, 1280, 1440, 1920]) {
+for (const width of [320, 390, 701, 768, 820, 1024, 1250, 1280, 1440, 1920]) {
   test(`mantiene el contenido disponible a ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ reducedMotion: 'reduce' });

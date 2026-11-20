@@ -1,5 +1,35 @@
 import { expect, test } from '@playwright/test';
 
+test('en tablet el portfolio cubre la pantalla al ocultar las barras del navegador', async ({ browser, browserName }) => {
+  test.skip(browserName !== 'chromium', 'La emulación de barras usa el protocolo de Chromium');
+  const context = await browser.newContext({ viewport: { width: 820, height: 1180 }, hasTouch: true, isMobile: true });
+  const page = await context.newPage();
+  await page.goto('/#trabajo');
+  await expect(page.locator('[data-portfolio-reveal]')).toHaveAttribute('data-enhanced', 'true');
+  const cdp = await context.newCDPSession(page);
+  await cdp.send('Emulation.setSmallViewportHeightDifferenceOverride', { difference: 100 });
+  // Unlike a plain viewport resize, this reproduces 100svh < innerHeight.
+  for (const viewport of [{ width: 820, height: 1180 }, { width: 1180, height: 820 }]) {
+    await page.setViewportSize(viewport);
+    for (const rail of [.25, .75, 1.25, .5]) {
+      await page.evaluate(fraction => {
+        const section = document.getElementById('trabajo')!;
+        scrollTo({ top: section.getBoundingClientRect().top + scrollY + innerWidth * fraction, behavior: 'instant' });
+      }, rail);
+      await expect.poll(() => page.locator('.featured-stage').evaluate(el => el.getBoundingClientRect().bottom - innerHeight)).toBeGreaterThanOrEqual(-1);
+      await expect.poll(() => page.evaluate(() => Boolean(document.elementFromPoint(innerWidth / 2, innerHeight - 2)?.closest('.featured-stage')))).toBe(true);
+    }
+    await page.evaluate(() => {
+      const section = document.getElementById('trabajo')!;
+      scrollTo({ top: Math.ceil(section.getBoundingClientRect().top + scrollY + section.clientHeight - innerHeight), behavior: 'instant' });
+    });
+    await expect(page.locator('.featured-stage')).toHaveAttribute('inert');
+    await expect(page.locator('.featured-about')).not.toHaveAttribute('data-team-locked');
+    await expect(page.locator('#nosotros')).toHaveCSS('height', `${viewport.height}px`);
+  }
+  await context.close();
+});
+
 test('el recorrido horizontal termina revelando Nosotros y se puede invertir', async ({ page }) => {
   await page.goto('/#trabajo');
   const root = page.locator('[data-portfolio-reveal]');

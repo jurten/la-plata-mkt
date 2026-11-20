@@ -203,6 +203,10 @@ components:
 
 # Design System: La Plata Marketing
 
+## Circular Gallery on phones and tablets, 2026-11-19
+
+The user supplied React Bits CircularGallery and approved its integration for the complete system at widths up to 1250px. Preserve its shaders, curved open arc, right-to-left travel, drag inertia and snapping; use local textures containing all seven existing text cards in the brand fonts, with the original HTML retained for assistive technology. The user's final correction removes all visible controls, counter and hint. Retain drag and keyboard navigation, native vertical page scrolling, and hidden/offscreen suspension. Fit the full rotated cards at the bottom of the arc, reserve vertical clearance and cap card height at 460px. Reduced motion, forced colours, missing WebGL2 and no JavaScript retain the complete normal-flow cards. Desktop preserves Orbit Images. This supersedes the tablet ellipse experiment. See `docs/system-circular-gallery.md`.
+
 ## Nosotros scroll feedback, 2026-11-19
 
 The user's final clarification requires fixed capsule portraits (999px radius) without blob deformation, and rejects the zoom out. The complete team composition keeps its original size and position. The chosen https://monopo.london/ reference informs a vertical scroll ruler at the left of the team rows: 31 fine ticks, four longer major marks, and a small theme-aware cobalt triangle moving down the scale throughout the existing 250svh native-scroll hold. This replaces the horizontal bar, growing frame and background tint. The ruler starts after Trabajos has fully exited; absolute ScrollTrigger progress restores its position on reversal and resize, without input interception or an extra animation loop. Mobile, short viewports, reduced motion, forced colors and no JavaScript keep ordinary flow without the ruler. Preserve names, roles, FlowingMenu selection and complete resets when leaving the scene. See `docs/team-flowing.md`.

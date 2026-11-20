@@ -25,6 +25,12 @@ const stars = Array.from({ length: 170 }, () => ({ x: random() * 100, y: random(
     <div class="system-orbit-center" data-orbit-center>
       <h2 id="system-title">El sistema<br />completo</h2>
     </div>
+    <div class="circular-gallery system-circular-gallery" data-system-gallery role="region" aria-roledescription="carrusel" aria-label="Las siete etapas del sistema">
+      <div class="system-gallery-view" data-gallery-view>
+        <div class="circular-gallery-labels" aria-hidden="true"></div>
+        <div class="circular-gallery-caption" hidden></div>
+      </div>
+    </div>
     <svg class="system-orbit-path" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-orbit-path data-orbit-stroke fill="none" /></svg>
     <svg class="system-orbit-path system-orbit-path-front" data-orbit-svg preserveAspectRatio="none" aria-hidden="true" focusable="false">
       <defs><clipPath id="system-orbit-front" clipPathUnits="userSpaceOnUse"><rect data-orbit-clip /></clipPath></defs>
