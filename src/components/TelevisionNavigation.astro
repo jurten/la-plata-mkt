@@ -80,6 +80,10 @@ const channels = [
   <div class="tv-osd" data-tv-osd><span data-tv-osd-number>CH 01</span><span data-tv-osd-label>{t("INICIO")}</span></div>
 </div>
 <span class="tv-channel-announcement" role="status" aria-live="polite" data-channel-announcement></span>
+<div class="page-transition" data-page-transition aria-hidden="true" hidden>
+  <div class="tv-tuning"></div>
+  <div class="tv-osd"><span data-page-channel>CH 01</span><span data-page-label>LPM</span></div>
+</div>
 <script>
   import '../scripts/tv-navigation';
 </script>

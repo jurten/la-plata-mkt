@@ -4,6 +4,7 @@ import { contact } from '../lib/navigation';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
 import TelevisionNavigation from './TelevisionNavigation.astro';
+import NavigationTransitionHead from './NavigationTransitionHead.astro';
 import ContactFooter from './PageFooter.astro';
 import '../styles/fonts.css';
 import '../styles/global.css';
@@ -32,6 +33,7 @@ const { whatsappHref, whatsappDisplay } = contact;
     <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
     <meta name="theme-color" content="#EEF2FF" />
     <script is:inline src="/scripts/theme-init.js"></script>
+    <NavigationTransitionHead />
     <link rel="icon" href="/favicon.svg?v=20261110" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico?v=20261110" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
     <link rel="apple-touch-icon" href="/brand/lpm-profile.png" />

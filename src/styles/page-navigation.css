@@ -1,0 +1,9 @@
+html[data-nav-arrival='pending']::before { content: ''; position: fixed; inset: 0; z-index: 10001; background: #020307; }
+.page-transition { position: fixed; inset: 0; z-index: 10000; background: #020307; overflow: hidden; pointer-events: auto; contain: strict; }
+.page-transition[hidden] { display: none; }
+.page-transition .tv-tuning { opacity: .16; }
+.page-transition .tv-osd { top: 50%; left: 50%; width: max-content; max-width: calc(100% - 48px); transform: translate(-50%, -50%); text-align: center; align-items: center; }
+.page-transition .tv-osd > span:last-child { font-size: 14px; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) {
+  html[data-nav-arrival]::before, .page-transition { display: none; }
+}

@@ -65,7 +65,8 @@ const locale = getLocale(Astro.url.pathname);
       face.innerHTML = link.innerHTML;
       const feedback = face.animate([{ opacity: 0, transform: 'translateY(7px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: reduced.matches ? 0 : 220, easing: 'ease-out' });
       await Promise.all([feedback.finished.catch(() => {}), setOpen(false)]);
-      window.location.assign(link.href);
+      const navigation = new CustomEvent('lpm:navigate', { detail: link.href, cancelable: true });
+      if (window.dispatchEvent(navigation)) window.location.assign(link.href);
     }));
   });
   document.querySelectorAll<HTMLAnchorElement>('[data-language-switcher] a').forEach(link => {

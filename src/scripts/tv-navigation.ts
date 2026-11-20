@@ -1,5 +1,6 @@
 import { getTranslator } from '../lib/i18n';
 import { enhanceGooeyNavigation } from './gooey-navigation';
+import { enhancePageNavigation } from './page-navigation';
 
 const t = getTranslator(window.location.pathname);
 
@@ -236,8 +237,10 @@ function enhanceNavigation(header: HTMLElement) {
 
   document.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
-    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a[href]');
     if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self') || link.hash === '#contenido') return;
+    const url = new URL(link.href);
+    if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search || !url.hash) return;
     let id: string;
     try { id = decodeURIComponent(link.hash.slice(1)); } catch { return; }
     const target = document.getElementById(id);
@@ -251,17 +254,20 @@ function enhanceNavigation(header: HTMLElement) {
       if (location.hash !== link.hash) history.pushState(null, '', link.hash);
       const destination: { target: HTMLElement; top?: number } = { target };
       window.dispatchEvent(new CustomEvent('lpm:resolve-anchor', { detail: destination }));
-      if (destination.top !== undefined) window.scrollTo({ top: destination.top, behavior: 'instant' });
-      else target.scrollIntoView({ block: 'start', behavior: 'instant' });
       if (fromMenu || keyboard) {
         const focusTarget = target.querySelector<HTMLElement>('h1, h2, h3') ?? target;
         if (!focusTarget.hasAttribute('tabindex')) focusTarget.setAttribute('tabindex', '-1');
         focusTarget.focus({ preventScroll: true });
       }
+      // Resolve again after focus handlers have settled any pinned scene.
+      window.dispatchEvent(new CustomEvent('lpm:resolve-anchor', { detail: destination }));
+      const behavior = motionAllowed() ? 'smooth' : 'instant';
+      if (destination.top !== undefined) window.scrollTo({ top: destination.top, behavior });
+      else target.scrollIntoView({ block: 'start', behavior });
       document.querySelector('[data-channel-announcement]')!.textContent = t("Canal {number}: {label}.", { number: channel.number, label: channel.label });
     };
-    playTransition('channel', channel, tune);
-  });
+    tune();
+  }, { capture: true });
 
   document.addEventListener('keydown', event => {
     if (!isOpen) return;
@@ -309,7 +315,9 @@ function enhanceNavigation(header: HTMLElement) {
     bootSeen = sessionStorage.getItem('lpm-tv-boot') === 'seen';
     sessionStorage.setItem('lpm-tv-boot', 'seen');
   } catch { /* Storage may be unavailable; the fail-open timer still applies. */ }
-  if (isLanding && !location.hash && !bootSeen) playLoadingTransition(active);
+  const arriving = Boolean(root.dataset.navArrival);
+  enhancePageNavigation(motionAllowed, () => { closeMenu(); clearTransition(); });
+  if (isLanding && !location.hash && !bootSeen && !arriving) playLoadingTransition(active);
 }
 
 if (masthead) enhanceNavigation(masthead);
