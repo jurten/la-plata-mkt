@@ -10,6 +10,12 @@ import '../styles/team-roster.css';
     <p class="team-roster__hint"><span class="team-roster__pointer-hint">Pasá por un nombre</span><span class="team-roster__touch-hint">Elegí un nombre</span><Icon name="down" /></p>
   </header>
   <div class="team-roster__stage flowing-team" data-flowing-team>
+    <div class="team-roster__scroll" aria-hidden="true">
+      <div class="team-roster__scroll-ticks">
+        {Array.from({ length: 31 }, (_, index) => <i class:list={{ 'is-major': index % 10 === 0 }}></i>)}
+      </div>
+      <svg class="team-roster__scroll-cursor" viewBox="0 0 6 8" focusable="false"><path d="M0 0L6 4L0 8Z" /></svg>
+    </div>
     <ol class="flowing-team__list" aria-label="Integrantes del equipo" data-team-list>
       {teamMembers.map((member, index) => (
         <li class="flowing-team__row" data-team-row>

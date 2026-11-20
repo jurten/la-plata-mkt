@@ -57,9 +57,13 @@
 .portfolio-reveal[data-enhanced] .featured-about { position: relative; z-index: 1; margin-top: calc(-100svh - var(--featured-exit-distance)); }
 .portfolio-reveal[data-enhanced] .featured-about__content { position: sticky; top: 0; }
 .portfolio-reveal[data-enhanced] { --team-hold-distance: 250svh; }
-/* The viewport-sized team stays still for a long native-scroll interval after
-   the horizontal rail leaves. Only then does its sticky container release. */
+/* The stationary team has a Monopo-inspired vertical scroll ruler. */
 .portfolio-reveal[data-enhanced] .featured-about::after { display: block; height: calc(var(--featured-exit-distance) + var(--team-hold-distance)); content: ''; pointer-events: none; }
+.portfolio-reveal[data-enhanced] .team-roster__scroll { position: absolute; inset-block: 1px; left: calc(var(--page-gutter) * -.65); width: 18px; display: block; container-type: size; pointer-events: none; }
+.team-roster__scroll-ticks { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; height: 100%; }
+.team-roster__scroll-ticks i { display: block; flex: 0 0 1px; width: 2px; background: var(--muted); opacity: .65; }
+.team-roster__scroll-ticks .is-major { width: 7px; opacity: 1; }
+.team-roster__scroll-cursor { position: absolute; top: 0; left: 0; width: 6px; height: 8px; fill: var(--blue-text); transform: translateY(calc(var(--team-scroll-progress, 0) * 100cqh - 50%)); }
 .featured-stage[data-featured-exited], .featured-stage[data-featured-exited] * { visibility: hidden !important; pointer-events: none !important; }
 .portfolio-reveal[data-enhanced] .featured-progress { position: absolute; bottom: 26px; left: var(--page-gutter); right: var(--page-gutter); display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: 11px; color: var(--muted); }
 .featured-progress > div { width: 120px; height: 2px; background: var(--line); }

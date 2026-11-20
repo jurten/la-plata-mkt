@@ -16,7 +16,6 @@ export function initTeamRosters() {
       item, choice: item.querySelector<HTMLAnchorElement>('[data-team-choice]')!,
       band: item.querySelector<HTMLElement>('[data-team-band]')!,
       track: item.querySelector<HTMLElement>('[data-team-track]')!,
-      portraits: [] as {element: HTMLElement; width: number; height: number}[],
       top: 0, height: 0, x: 0, part: 0, spin: 0, covered: false,
     }));
     const settings = { speed: 60, duration: .5, stretch: .6, magnet: .25, followCursor: .4, inset: 18 };
@@ -28,7 +27,7 @@ export function initTeamRosters() {
     const band = { top: 0, bottom: 0, vTop: 0, vBottom: 0, toTop: 0, toBottom: 0, lead: 1, shown: false, index: -1, rest: 0 };
     const cursor = { x: 0, y: null as number | null, time: 0, vx: 0 };
     let pointer: {x: number; y: number} | undefined;
-    let raf = 0, last = 0, portraitPhase = 0, paused = false, destroyed = false;
+    let raf = 0, last = 0, paused = false, destroyed = false;
     const box = root.getBoundingClientRect();
     let visible = box.bottom > 0 && box.top < innerHeight;
     const syncVisibility = () => {
@@ -46,40 +45,24 @@ export function initTeamRosters() {
       });
     };
     const reset = () => {
-      cancelAnimationFrame(raf); raf = 0; last = 0; portraitPhase = 0;
+      cancelAnimationFrame(raf); raf = 0; last = 0;
       Object.assign(band, {top:0,bottom:0,vTop:0,vBottom:0,toTop:0,toBottom:0,lead:1,shown:false,index:-1,rest:0});
       Object.assign(cursor, {x:0,y:null,time:0,vx:0});
       rows.forEach(row => {
         row.x = row.spin = 0; row.covered = false;
         row.band.removeAttribute('style'); row.track.removeAttribute('style');
-        row.portraits.forEach(({element}) => element.removeAttribute('style'));
       });
       if (status) status.textContent='';
       mark();
       root.dataset.teamFlowState = available() ? 'idle' : 'disabled';
     };
-    // A capsule with softly breathing edges, applied only to the portrait.
-    // Measured dimensions are cached; the existing marquee frame owns motion.
-    const portraitPath = (w: number, h: number, energy: number) => {
-      const p=h*.08, r=(h-2*p)/2, right=w-p, bottom=h-p;
-      const a=h*(.025+energy*.045)*Math.sin(portraitPhase);
-      const b=h*(.025+energy*.045)*Math.cos(portraitPhase*.8);
-      return `path('M ${p+r} ${p} C ${w*.4} ${p+a} ${w*.6} ${p-a} ${right-r} ${p} C ${right-r+r*.5523} ${p} ${right} ${h/2-r*.5523} ${right} ${h/2} C ${right} ${h/2+r*.5523} ${right-r+r*.5523} ${bottom} ${right-r} ${bottom} C ${w*.6} ${bottom+b} ${w*.4} ${bottom-b} ${p+r} ${bottom} C ${p+r-r*.5523} ${bottom} ${p} ${h/2+r*.5523} ${p} ${h/2} C ${p} ${h/2-r*.5523} ${p+r-r*.5523} ${p} ${p+r} ${p} Z')`;
-    };
     const paint = () => {
-      const energy = Math.min(1, Math.abs(band.vTop-band.vBottom)/1000 + Math.abs(cursor.vx)/2000);
       rows.forEach(row => {
         const from = Math.max(band.top, row.top);
         const to = Math.min(band.bottom, row.top + row.height);
         row.covered = band.shown && to - from > row.height * .04;
         row.band.style.visibility = row.covered ? 'visible' : 'hidden';
         if (row.covered) row.band.style.clipPath = `inset(${Math.max(0,band.top-row.top)}px 0 ${Math.max(0,row.top+row.height-band.bottom)}px 0)`;
-        row.portraits.forEach(({element,width,height}) => {
-          if(row.covered && !reduced.matches){
-            element.style.borderRadius='0';
-            element.style.clipPath=portraitPath(width,height,energy);
-          }else element.removeAttribute('style');
-        });
         row.track.style.transform = `translate3d(${row.x.toFixed(2)}px,0,0)`;
       });
     };
@@ -87,7 +70,6 @@ export function initTeamRosters() {
       raf = 0;
       if (!available()) { reset(); return; }
       const elapsed = clamp((now - last) / 1000, 0, 1 / 20); last = now;
-      portraitPhase += elapsed * 1.7;
       let busy = false;
       if (band.shown) {
         const current = rows[band.index];
@@ -168,11 +150,10 @@ export function initTeamRosters() {
       rows.forEach(row => {
         row.top=row.item.offsetTop;row.height=row.item.offsetHeight;
         const first=row.track.firstElementChild as HTMLElement;
-        row.part=first?.getBoundingClientRect().width??0;
+        row.part=first?.offsetWidth??0;
         const copies=row.part>0?Math.max(2,Math.ceil(list.clientWidth/row.part)+1):3;
         while(row.track.children.length>copies) row.track.lastElementChild?.remove();
         while(row.track.children.length<copies) row.track.append(first.cloneNode(true));
-        row.portraits=[...row.track.querySelectorAll<HTMLElement>('.flowing-team__portrait')].map(element=>({element,width:element.offsetWidth,height:element.offsetHeight}));
       });
     };
     const configure = () => {
@@ -215,7 +196,8 @@ export function initTeamRosters() {
       if(!available())return;
       const now=performance.now(),gap=(now-cursor.time)/1000;
       if(gap>0&&gap<.1){const instant=(event.clientX-cursor.x)/gap;cursor.vx+=(instant-cursor.vx)*(1-Math.exp(-gap/.08));}
-      cursor.x=event.clientX;cursor.time=now;cursor.y=event.clientY-list.getBoundingClientRect().top;
+      const bounds=list.getBoundingClientRect();
+      cursor.x=event.clientX;cursor.time=now;cursor.y=(event.clientY-bounds.top)*list.offsetHeight/bounds.height;
       const index=rows.findIndex(row=>cursor.y!>=row.top&&cursor.y!<row.top+row.height);
       if(index>=0&&index!==band.index)goTo(index,cursor.y<rows[index].top+rows[index].height/2?'top':'bottom');
       else kick();

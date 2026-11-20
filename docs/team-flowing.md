@@ -1,4 +1,14 @@
-# Nosotros con Flowing Menu y retratos blob
+# Nosotros con Flowing Menu y respuesta al scroll
+
+## Respuesta al scroll y retratos sin blob
+
+Los nombres se mantienen grandes tanto en reposo como en las bandas. Los cargos de dirección se reemplazan por Tecnología (Joaquín Laumann), Creatividad (Santiago Laumann) y Marketing (Justina Guiñazú), como texto secundario y en los perfiles de respaldo. Los identificadores de los perfiles no cambian.
+
+La corrección del 19 de noviembre de 2026 elimina el contorno blob y su cálculo por frame. La aclaración posterior del usuario requiere retratos en forma de pastilla fija (`border-radius: 999px`), sin deformación. La banda y el movimiento horizontal conservan su interacción original.
+
+La permanencia de 250svh responde al scroll nativo con una regla vertical inspirada en la referencia elegida por el usuario, https://monopo.london/. En el margen izquierdo de las filas se distribuyen 31 marcas, cuatro de ellas mayores, y un pequeño triángulo azul recorre la regla según el avance. Reemplaza la barra horizontal, el marco azul y el cambio de fondo. El contenido conserva su tamaño y posición, sin zoom out. Un ScrollTrigger independiente deriva el estado de la posición absoluta, empieza después de la retirada completa de Trabajos y se revierte al subir. No consume eventos de rueda ni selecciona personas. La regla no agrega controles ni anuncios continuos al lector de pantalla.
+
+Móvil, pantallas de poca altura, movimiento reducido, colores forzados y ausencia de JavaScript mantienen el flujo normal sin permanencia ni regla. El desmontaje elimina el trigger y su variable de progreso. Esta corrección reemplaza las referencias históricas al blob que siguen debajo.
 
 La actualización del 19 de noviembre de 2026 toma como base el prompt completo de FlowingMenu (React Bits, variante JavaScript + CSS) suministrado por el usuario. Reemplaza la presentación de retrato flotante de Codrops por un menú de tres filas con banda azul compartida, nombres, cargos y retratos repetidos en movimiento horizontal. Los nombres, cargos, orden y retratos provisorios etiquetados siguen en `src/lib/team.ts`.
 

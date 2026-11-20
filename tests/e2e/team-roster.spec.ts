@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 const members = [
-  { name: 'Joaquín Laumann', role: 'Director general' },
-  { name: 'Santiago Laumann', role: 'Director creativo' },
-  { name: 'Justina Guiñazú', role: 'Directora de marketing' },
+  { name: 'Joaquín Laumann', role: 'Tecnología' },
+  { name: 'Santiago Laumann', role: 'Creatividad' },
+  { name: 'Justina Guiñazú', role: 'Marketing' },
 ];
 const arrival = async (page: import('@playwright/test').Page) => {
   await page.goto('/#nosotros');
@@ -39,7 +39,7 @@ test('teclado y foco recorren los integrantes sin desplazar la página', async (
   await choices.first().press('ArrowDown');
   await expect(choices.nth(1)).toBeFocused();
   await expect(choices.nth(1)).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('[data-team-status]')).toHaveText('Santiago Laumann, Director creativo');
+  await expect(page.locator('[data-team-status]')).toHaveText('Santiago Laumann, Creatividad');
   await choices.nth(1).press('End');
   await expect(choices.last()).toBeFocused();
   await choices.last().press(' ');
@@ -47,7 +47,7 @@ test('teclado y foco recorren los integrantes sin desplazar la página', async (
   expect(Math.abs(await page.evaluate(() => scrollY) - top)).toBeLessThan(2);
 });
 
-test('Nosotros mide una pantalla y reserva un recorrido quieto antes del footer', async ({ browser }) => {
+test('Nosotros mide una pantalla y reserva un recorrido antes del footer', async ({ browser }) => {
   for (const [width, height] of [[1920,966], [1440,1000], [1100,900], [768,900], [390,844], [320,740]]) {
     const context = await browser.newContext({ viewport: { width, height } });
     const page = await context.newPage();
@@ -76,7 +76,7 @@ test('Nosotros mide una pantalla y reserva un recorrido quieto antes del footer'
   }
 });
 
-test('hover abre una banda recta con retratos blob en forma de pastilla', async ({ page }) => {
+test('hover abre una banda recta con retratos en pastilla sin deformación blob', async ({ page }) => {
   await arrival(page);
   const choice = page.locator('[data-team-choice]').nth(1);
   await choice.hover({position:{x:200,y:70}});
@@ -85,13 +85,16 @@ test('hover abre una banda recta con retratos blob en forma de pastilla', async 
   const band = page.locator('[data-team-row]').nth(1).locator('[data-team-band]');
   await expect(band).toBeVisible();
   expect(await band.evaluate(el => getComputedStyle(el).clipPath)).toContain('inset');
-  expect(await band.locator('.flowing-team__portrait').first().evaluate(el => getComputedStyle(el).clipPath)).toContain('C');
+  const portrait = band.locator('.flowing-team__portrait').first();
+  await expect(portrait).toHaveCSS('clip-path', 'none');
+  await expect(portrait).toHaveCSS('border-radius', '999px');
+  await expect(portrait).not.toHaveAttribute('style');
   const track = page.locator('[data-team-row]').nth(1).locator('[data-team-track]');
   const transform = await track.getAttribute('style');
   await expect.poll(() => track.getAttribute('style')).not.toBe(transform);
 });
 
-test('la rueda conserva su distancia nativa mientras Nosotros permanece quieto', async ({ page }) => {
+test('la rueda conserva su distancia nativa mientras Nosotros permanece en pantalla', async ({ page }) => {
   await arrival(page);
   const roster = page.locator('[data-team-roster]');
   await page.mouse.move(700,180);
@@ -106,7 +109,7 @@ test('la rueda conserva su distancia nativa mientras Nosotros permanece quieto',
   await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin), start)).toBeLessThan(3);
 });
 
-test('la escena no se mueve durante el recorrido largo y luego sale al footer', async ({ page }) => {
+test('el scroll indica el avance sin zoom y se revierte antes de salir al footer', async ({ page }) => {
   await arrival(page);
   const roster = page.locator('[data-team-roster]');
   const start = await page.evaluate(() => scrollY);
@@ -114,18 +117,41 @@ test('la escena no se mueve durante el recorrido largo y luego sale al footer', 
   const selected = await roster.getAttribute('data-team-selected');
   await page.waitForTimeout(750);
   const initial = await page.locator('[data-team-list]').boundingBox();
+  const cursor = page.locator('.team-roster__scroll-cursor');
+  const cursorInitial = await cursor.boundingBox();
   for (let gesture = 0; gesture < 8; gesture++) await page.mouse.wheel(0,240);
   await expect.poll(() => page.evaluate(origin => Math.abs(scrollY - origin - 1920), start)).toBeLessThan(3);
   const still = await page.locator('[data-team-list]').boundingBox();
-  expect(Math.abs(still!.y - initial!.y)).toBeLessThan(1);
+  expect(Math.abs(still!.width - initial!.width)).toBeLessThan(1);
   expect(Math.abs(still!.x - initial!.x)).toBeLessThan(1);
+  expect(Math.abs(still!.y - initial!.y)).toBeLessThan(1);
+  await expect(page.locator('#nosotros > .wrap')).toHaveCSS('transform', 'none');
+  const progress = page.locator('.featured-about__content');
+  const readProgress = () => progress.evaluate(el => Number((el as HTMLElement).style.getPropertyValue('--team-scroll-progress')));
+  await expect.poll(readProgress).toBeGreaterThan(.7);
+  await expect(page.locator('.team-roster__scroll')).toBeVisible();
+  await expect(page.locator('.team-roster__scroll-ticks i')).toHaveCount(31);
+  await expect(page.locator('#nosotros')).toHaveCSS('box-shadow', 'none');
+  const cursorAdvanced = await cursor.boundingBox();
+  const ruler = await page.locator('.team-roster__scroll').boundingBox();
+  expect(cursorAdvanced!.y - cursorInitial!.y).toBeGreaterThan(ruler!.height * .7);
+  expect(cursorAdvanced!.x).toBeLessThan(initial!.x);
+  expect(cursorAdvanced!.y).toBeLessThan(ruler!.y + ruler!.height);
   expect(Math.abs(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().top))).toBeLessThan(2);
   expect(await page.locator('#contacto').evaluate(el => el.getBoundingClientRect().top)).toBeGreaterThan(1000);
   await expect(roster).toHaveAttribute('data-team-selected', selected!);
+  // Firefox caps a single wheel impulse; mirror the original eight gestures.
+  for (let gesture = 0; gesture < 8; gesture++) await page.mouse.wheel(0,-240);
+  await expect.poll(readProgress).toBeLessThan(.002);
+  const restored = await page.locator('[data-team-list]').boundingBox();
+  expect(Math.abs(restored!.width - initial!.width)).toBeLessThan(1);
+  expect(Math.abs((await cursor.boundingBox())!.y - cursorInitial!.y)).toBeLessThan(1);
+  for (let gesture = 0; gesture < 8; gesture++) await page.mouse.wheel(0,240);
+  await expect.poll(readProgress).toBeGreaterThan(.7);
   for (let gesture = 0; gesture < 6; gesture++) await page.mouse.wheel(0,240);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight - innerHeight - scrollY)).toBeLessThan(2);
   await expect(page.locator('#contact-title')).toBeInViewport();
-  // Reverse into the hold: the exact same stationary scene is restored.
+  // Reverse into the hold: the viewport-sized scene returns with its feedback.
   await page.mouse.wheel(0,-1200);
   await expect.poll(() => page.locator('#nosotros').evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(2);
   expect(await page.locator('#nosotros').evaluate(el => el.getBoundingClientRect().height)).toBe(1000);
@@ -148,6 +174,9 @@ test('el enlace al contacto omite la permanencia y el modo reducido la elimina',
   await expect(page.locator('#contact-title')).toBeInViewport();
   await page.emulateMedia({reducedMotion:'reduce'});
   await expect(page.locator('[data-portfolio-reveal]')).not.toHaveAttribute('data-enhanced');
+  await expect(page.locator('.team-roster__scroll')).toBeHidden();
+  await expect(page.locator('#nosotros > .wrap')).toHaveCSS('transform', 'none');
+  await expect(page.locator('.featured-about__content')).not.toHaveAttribute('style', /--team-scroll-progress/);
   await page.locator('[data-team-choice]').last().click();
   await expect(roster).toHaveAttribute('data-team-selected','2');
 });

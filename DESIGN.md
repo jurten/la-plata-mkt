@@ -203,6 +203,10 @@ components:
 
 # Design System: La Plata Marketing
 
+## Nosotros scroll feedback, 2026-11-19
+
+The user's final clarification requires fixed capsule portraits (999px radius) without blob deformation, and rejects the zoom out. The complete team composition keeps its original size and position. The chosen https://monopo.london/ reference informs a vertical scroll ruler at the left of the team rows: 31 fine ticks, four longer major marks, and a small theme-aware cobalt triangle moving down the scale throughout the existing 250svh native-scroll hold. This replaces the horizontal bar, growing frame and background tint. The ruler starts after Trabajos has fully exited; absolute ScrollTrigger progress restores its position on reversal and resize, without input interception or an extra animation loop. Mobile, short viewports, reduced motion, forced colors and no JavaScript keep ordinary flow without the ruler. Preserve names, roles, FlowingMenu selection and complete resets when leaving the scene. See `docs/team-flowing.md`.
+
 ## Simple contact footer, 2026-11-18
 
 The user's final direction removes the FAQ and public form. `ContactFooter.astro` is a compact three-column directory: site navigation, location/remote collaboration and direct WhatsApp/email. Contact navigation in the footer opens email; the address remains visible and selectable. WhatsApp remains the main conversation channel. Preserve the official logo, type, theme roles, native keyboard links and no-JavaScript behavior. No new social profiles or external destinations are invented.

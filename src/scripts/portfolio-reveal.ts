@@ -25,7 +25,7 @@ async function initializePortfolio() {
       aboutLocked = locked;
       about.toggleAttribute('data-team-locked', locked);
     };
-    let start = 0, travel = 0, exitDistance = 0, distance = 0;
+    let start = 0, travel = 0, exitDistance = 0, distance = 0, holdDistance = 0;
     const measure = () => {
       travel = innerWidth * 1.5;
       exitDistance = document.documentElement.clientHeight * .85;
@@ -33,6 +33,7 @@ async function initializePortfolio() {
       root.style.setProperty('--featured-distance', `${distance}px`);
       root.style.setProperty('--featured-exit-distance', `${exitDistance}px`);
       start = section.getBoundingClientRect().top + scrollY;
+      holdDistance = Math.max(1, about.offsetHeight - aboutContent.offsetHeight - exitDistance);
     };
     const render = (progress: number) => {
       const position = progress * distance;
@@ -68,6 +69,18 @@ async function initializePortfolio() {
       onUpdate: self => render(self.progress),
     });
     render(trigger.progress);
+    // A separate native-scroll range acknowledges the formerly stationary hold.
+    // Absolute progress makes reverse scroll, hashes and resize deterministic.
+    const renderHold = (progress: number) => aboutContent.style.setProperty('--team-scroll-progress', String(progress));
+    const holdTrigger = ScrollTrigger.create({
+      trigger: about,
+      start: () => start + distance,
+      end: () => start + distance + holdDistance,
+      invalidateOnRefresh: true,
+      onRefresh: self => renderHold(self.progress),
+      onUpdate: self => renderHold(self.progress),
+    });
+    renderHold(holdTrigger.progress);
     const resolveAnchor = (event: Event) => {
       const detail = (event as CustomEvent<{ target: HTMLElement; top?: number }>).detail;
       if (detail.target === section) detail.top = start;
@@ -120,6 +133,8 @@ async function initializePortfolio() {
       cancelAnimationFrame(frame);
       window.removeEventListener('load', initialArrival);
       trigger.kill();
+      holdTrigger.kill();
+      aboutContent.style.removeProperty('--team-scroll-progress');
       window.removeEventListener('lpm:resolve-anchor', resolveAnchor);
       window.removeEventListener('hashchange', followHash);
       window.removeEventListener('popstate', followHash);
