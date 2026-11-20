@@ -9,6 +9,10 @@ related_targets: ["src/pages/privacidad.astro"]
 
 Mode: Persuade. Primary route: `src/pages/index.astro`; supporting route: `src/pages/privacidad.astro`.
 
+## Approved charcoal reading surfaces, 2026-11-19
+
+The user selected the “Carbón” side-by-side proposal. Dark reading surfaces now use `#11151C` / `#1B2330`, primary text `#EDF2F7`, secondary text `#ACB8CA`, and text accents `#AFC7FF`. Explicit dark and automatic dark use the same roles across home and privacy. Light mode, fixed brand scenes, cobalt artwork and interactions remain as established. Earlier midnight reading-color descriptions are superseded by this selection.
+
 ## Full-viewport team index, 2026-11-19
 
 Latest correction: portraits must be fixed capsules (999px radius), with no organic blob deformation. The user rejected the zoom out: keep the complete composition at its original size and position. The chosen Monopo London reference informs a vertical ruler in the left margin of the team rows: 31 fine ticks, four major marks, and a small cobalt triangle following absolute progress through the 250svh native-scroll hold. Replace the horizontal progress line, growing frame and background tint with this ruler. It starts only after Trabajos has fully left and reverses on upward scroll. Static/reduced-motion layouts retain normal flow with no hold or ruler. Preserve the FlowingMenu interaction and reset behavior.

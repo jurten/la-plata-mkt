@@ -24,12 +24,12 @@
 }
 
 html[data-theme='dark'] {
-  --bg: #060917;
-  --surface: #0c142a;
-  --ink: #edf2ff;
-  --muted: #a8b6d0;
+  --bg: #11151c;
+  --surface: #1b2330;
+  --ink: #edf2f7;
+  --muted: #acb8ca;
   --blue: #254bff;
-  --blue-text: #91a5ff;
+  --blue-text: #afc7ff;
   --blue-strong: #4563ed;
   --sky: #1a285e;
   --signal: #b8f35a;
@@ -42,12 +42,12 @@ html[data-theme='dark'] {
 
 @media (prefers-color-scheme: dark) {
   html[data-theme='auto'] {
-    --bg: #060917;
-    --surface: #0c142a;
-    --ink: #edf2ff;
-    --muted: #a8b6d0;
+    --bg: #11151c;
+    --surface: #1b2330;
+    --ink: #edf2f7;
+    --muted: #acb8ca;
     --blue: #254bff;
-    --blue-text: #91a5ff;
+    --blue-text: #afc7ff;
     --blue-strong: #4563ed;
     --sky: #1a285e;
     --signal: #b8f35a;

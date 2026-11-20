@@ -23,8 +23,8 @@ test('el modo automático sigue cambios de apariencia del sistema', async ({ pag
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'auto');
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#060917');
-  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(6, 9, 23)');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#11151C');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(17, 21, 28)');
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#EEF2FF');
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 242, 255)');

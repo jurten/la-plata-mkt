@@ -20,12 +20,12 @@ colors:
   system-node: '#0c142b'
   aperture: '#102355'
   error: '#a62828'
-  dark-bg: '#060917'
-  dark-surface: '#0c142a'
-  dark-ink: '#edf2ff'
-  dark-muted: '#a8b6d0'
+  dark-bg: '#11151c'
+  dark-surface: '#1b2330'
+  dark-ink: '#edf2f7'
+  dark-muted: '#acb8ca'
   dark-blue: '#254bff'
-  dark-blue-text: '#91a5ff'
+  dark-blue-text: '#afc7ff'
   dark-blue-strong: '#4563ed'
   dark-on-night: '#edf2ff'
   dark-error: '#ff8a82'
@@ -202,6 +202,10 @@ components:
 ---
 
 # Design System: La Plata Marketing
+
+## Approved charcoal dark palette, 2026-11-19
+
+The user selected “Carbón” after comparing both proposed dark palettes side by side. The exact selected reading roles are background `#11151C`, surface `#1B2330`, primary ink `#EDF2F7`, muted ink `#ACB8CA`, and blue text `#AFC7FF`. Apply them to explicit dark mode and automatic mode with a dark system preference, including the privacy route and browser theme color. Preserve the light palette, fixed hero/system fields, cobalt artwork and existing interactions. This supersedes the previous midnight reading roles; the comparison in `artifacts/palette-comparison/` remains a historical selection artifact.
 
 ## Circular Gallery on phones and tablets, 2026-11-19
 

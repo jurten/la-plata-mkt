@@ -76,7 +76,7 @@ const applyTheme = (theme, persist = false) => {
   });
 
   const dark = resolvedTheme === 'dark';
-  if (themeMeta) themeMeta.setAttribute('content', dark ? '#060917' : '#EEF2FF');
+  if (themeMeta) themeMeta.setAttribute('content', dark ? '#11151C' : '#EEF2FF');
   if (themeLabel) {
     themeLabel.textContent = safeTheme === 'auto'
       ? `Identidad visual / Sistema ${dark ? 'oscuro' : 'claro'}`
