@@ -48,10 +48,13 @@ if (hero) {
  const fragment = `precision highp float;
  uniform vec2 res; uniform float clock;
  uniform float rippleHeight;
- uniform sampler2D flowMap;
+ uniform sampler2D flowMap; uniform sampler2D noiseMap;
  ${heroClickShader}
- float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
- float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+1.),f.x),f.y);}
+ // Avoid sin-based star hashes whose precision varies between mobile GPUs.
+ float hash(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
+ // The same stored lattice is sampled on every GPU. Hardware interpolation
+ // avoids driver-dependent hash rounding at the edges of each smoke cell.
+ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return texture2D(noiseMap,(i+f+.5)/64.).r;}
  float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.03+vec2(7.2,3.1);a*=.5;}return v;}
  vec3 field(vec2 uv){
  vec4 flowSample=texture2D(flowMap,uv);
@@ -63,11 +66,12 @@ if (hero) {
  vec3 col=mix(vec3(.008,.018,.055),vec3(.025,.13,.70),smoothstep(-.5,.85,ribbon));
  col=mix(col,vec3(.38,.61,.87),pow(smoothstep(.60,1.,ribbon),3.)*.8);
  col+=vec3(.12,.035,.24)*pow(n,3.);
- vec2 starUv=uv*vec2(res.x/res.y,1.)*95.;vec2 cell=floor(starUv),f=fract(starUv)-.5;float s=hash(cell);col+=vec3(.55,.7,1.)*smoothstep(.025,0.,length(f))*step(.987,s)*.38;
+ vec2 starUv=uv*vec2(res.x/res.y,1.)*95.;vec2 cell=floor(starUv),f=fract(starUv)-.5;float s=hash(cell);col+=vec3(.55,.7,1.)*(1.-smoothstep(0.,.025,length(f)))*step(.987,s)*.38;
  return col;}
  void main(){vec2 uv=gl_FragCoord.xy/res;gl_FragColor=vec4(field(uv),1.);}`;
  let program: WebGLProgram | null = null;
  let flowTexture: WebGLTexture | null = null;
+ let noiseTexture: WebGLTexture | null = null;
  const uniforms: Record<string, WebGLUniformLocation | null> = {};
  if (gl) {
   const shader = (type: number, source: string) => { const s = gl.createShader(type)!; gl.shaderSource(s, source); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; } return s; };
@@ -75,7 +79,18 @@ if (hero) {
   if (vs && fs) { program = gl.createProgram()!; gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program); if (!gl.getProgramParameter(program, gl.LINK_STATUS)) program = null; }
   if (program) {
    gl.useProgram(program); const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW); const p = gl.getAttribLocation(program,'p'); gl.enableVertexAttribArray(p); gl.vertexAttribPointer(p,2,gl.FLOAT,false,0,0);
-   for (const key of ['res','clock','flowMap','rippleHeight','uClicks[0]']) uniforms[key] = gl.getUniformLocation(program,key);
+   for (const key of ['res','clock','flowMap','noiseMap','rippleHeight','uClicks[0]']) uniforms[key] = gl.getUniformLocation(program,key);
+   const noise = new Uint8Array(64 * 64 * 4);
+   let seed = 0x4c504d;
+   for (let i = 0; i < noise.length; i += 4) {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    noise[i] = noise[i + 1] = noise[i + 2] = seed >>> 24;
+    noise[i + 3] = 255;
+   }
+   noiseTexture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,noiseTexture);
+   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
+   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,64,64,0,gl.RGBA,gl.UNSIGNED_BYTE,noise);
    flowTexture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -89,7 +104,9 @@ if (hero) {
   gl.uniform4fv(uniforms['uClicks[0]'],clicks);
   gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,flowTexture);
   gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,flow.width,flow.height,gl.RGBA,gl.UNSIGNED_BYTE,flow.pixels);
-  gl.uniform1i(uniforms.flowMap,0); gl.drawArrays(gl.TRIANGLES,0,6);
+  gl.uniform1i(uniforms.flowMap,0);
+  gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D,noiseTexture); gl.uniform1i(uniforms.noiseMap,1);
+  gl.drawArrays(gl.TRIANGLES,0,6);
  }
  function animate(now: number) {
   frame=0;
@@ -105,6 +122,6 @@ if (hero) {
  new ResizeObserver(() => { cssWidth=Math.max(1,canvas.clientWidth); cssHeight=Math.max(1,canvas.clientHeight); const scale=Math.min(devicePixelRatio,1.5,2200/cssWidth); canvas.width=Math.round(cssWidth*scale); canvas.height=Math.round(cssHeight*scale); releasePointer(); flow.clear(); draw(); }).observe(hero);
  new IntersectionObserver(([entry]) => {visible=entry.isIntersecting;resume();}).observe(hero);
  document.addEventListener('visibilitychange',resume); reduced.addEventListener('change',resume); forced.addEventListener('change',resume);
- canvas.addEventListener('webglcontextlost', e=>{e.preventDefault();cancelAnimationFrame(frame);program=null;});
+ canvas.addEventListener('webglcontextlost', e=>{e.preventDefault();cancelAnimationFrame(frame);program=null;canvas.hidden=true;});
  resume();
 }

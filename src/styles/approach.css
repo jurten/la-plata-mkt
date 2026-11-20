@@ -92,21 +92,24 @@
   .approach-static-art .brand-logo__symbol { width: min(60vw, 300px); }
   .approach-copy h3 { font-size: clamp(36px, 9vw, 56px); }
   .approach-copy p { margin-top: 20px; font-size: 17px; }
-  .approach-service-list { gap: 4px 14px; font-size: 12px; margin-top: 16px; }
+  .approach-service-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; font-size: 14px; margin-top: 16px; }
   .approach-services { grid-template-columns: 1fr; gap: 0; padding-bottom: 24px; }
   .approach-services .service-disclosure summary { font-size: 16px; }
   .approach-services .service-disclosure { padding-bottom: 16px; }
   [data-approach-enabled] .approach-head { top: 80px; padding-top: 20px; }
   [data-approach-enabled] .approach-playback { top: 96px; }
-  .approach-eye { top: 37%; }
+  .approach-eye { top: var(--approach-art-center, 32%); }
   [data-approach-enabled] .approach-copy,
-  [data-approach-enabled] .approach-panel--technology .approach-copy { top: 65%; left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); }
-  [data-approach-enabled] .approach-panel--method .approach-copy { top: 65%; }
+  [data-approach-enabled] .approach-panel--technology .approach-copy,
+  [data-approach-enabled] .approach-panel--method .approach-copy { top: var(--approach-copy-top, 50%); left: var(--page-gutter); width: calc(100% - var(--page-gutter) * 2); transform: none; text-align: left; }
+  [data-approach-enabled] .approach-panel--method .approach-copy p,
+  [data-approach-enabled] .approach-panel--method .approach-service-list { margin-inline: 0; }
+  [data-approach-enabled] .approach-panel--method .approach-service-list { justify-content: start; }
   [data-approach-enabled] .approach-panel--method h3 { font-size: clamp(36px, 9vw, 56px); }
-  .approach-brand { top: 37%; }
-  .approach-brand .brand-logo__symbol { width: min(65vw, 300px); }
-  [data-approach-enabled] .approach-nav { bottom: 88px; gap: 0; justify-content: space-between; }
-  .approach-nav a { font-size: 12px; }
+  .approach-brand { top: var(--approach-art-center, 32%); }
+  .approach-brand .brand-logo__symbol { width: var(--approach-eye-width, min(54vw, 280px)); }
+  [data-approach-enabled] .approach-nav { bottom: max(88px, env(safe-area-inset-bottom)); gap: 12px; justify-content: space-between; }
+  .approach-nav a { font-size: 14px; }
 }
 @media (min-width: 701px) and (max-height: 850px) {
   .approach-brand { top: 34%; }
@@ -119,9 +122,7 @@
 }
 @media (max-width: 700px) and (max-height: 800px) {
   [data-approach-enabled] .approach-playback { top: 88px; }
-  .approach-eye, .approach-brand { top: 29%; }
-  [data-approach-enabled] .approach-panel .approach-copy { top: 61%; }
-  [data-approach-enabled] .approach-nav { bottom: 80px; }
+  [data-approach-enabled] .approach-nav { bottom: max(80px, env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) { .approach-nav a::before { transition: none; } }
 @media (forced-colors: active) {

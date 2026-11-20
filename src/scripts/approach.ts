@@ -48,14 +48,28 @@ function enhanceApproach(root: HTMLElement) {
       let targetProgress = 0;
       const stops = [.1, .55, .95];
       const idleSeconds = 6;
+      const copy = panels.map(panel => panel.querySelector<HTMLElement>('.approach-copy')!);
 
       function measure() {
         width = stage.clientWidth;
         const height = stage.clientHeight;
         distance = Math.round(height * 3);
-        eyeWidth = mobile() ? Math.min(width * .62, 340) : Math.min(width * .34, height * .64, 520);
+        eyeWidth = Math.min(width * .34, height * .64, 520);
+        if (mobile()) {
+          // Reserve actual reading/control space first. Percentage-based copy
+          // centring let long panels collide with the art or the scene index.
+          const navTop = steps[0].parentElement!.offsetTop;
+          const artTop = playback.offsetTop + playback.offsetHeight + 16;
+          const copyHeight = Math.max(...copy.map(element => element.offsetHeight));
+          const gap = 28;
+          const copyTop = navTop - gap - copyHeight;
+          const artHeight = Math.max(0, copyTop - gap - artTop);
+          eyeWidth = Math.min(width * .54, artHeight / .87, 280);
+          root.style.setProperty('--approach-art-center', `${artTop + artHeight / 2}px`);
+          root.style.setProperty('--approach-copy-top', `${copyTop}px`);
+        }
         root.style.setProperty('--approach-eye-width', `${eyeWidth}px`);
-        root.style.setProperty('--approach-eye-start', `${width * (mobile() ? .40 : .265) - eyeWidth / 2}px`);
+        root.style.setProperty('--approach-eye-start', `${width * (mobile() ? .46 : .265) - eyeWidth / 2}px`);
         root.style.setProperty('--approach-distance', `${distance}px`);
         start = track.getBoundingClientRect().top + scrollY;
         root.dataset.approachStart = String(start);
@@ -65,15 +79,14 @@ function enhanceApproach(root: HTMLElement) {
       // Scroll and idle playback share one reversible composition. A short
       // catch-up tween absorbs wheel steps without changing native scrolling.
       measure();
-      const left = () => width * (mobile() ? .40 : .265) - eyeWidth / 2;
-      const right = () => width * (mobile() ? .60 : .735) - eyeWidth / 2;
+      const left = () => width * (mobile() ? .46 : .265) - eyeWidth / 2;
+      const right = () => width * (mobile() ? .54 : .735) - eyeWidth / 2;
       const center = () => (width - eyeWidth) / 2;
       const fill = eye.querySelector<HTMLElement>('.approach-eye__fill')!;
       const outline = eye.querySelector<HTMLElement>('.approach-eye__outline')!;
       const letters = eye.querySelector<HTMLElement>('.approach-eye__letters')!;
       const code = eye.querySelector<HTMLElement>('.approach-eye__code')!;
       const returnLetters = returningEye.querySelector<HTMLElement>('.approach-eye__letters')!;
-      const copy = panels.map(panel => panel.querySelector<HTMLElement>('.approach-copy')!);
       const timeline = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
       timeline
         .set(eye, { x: left, y: 0, yPercent: -50, scale: 1, rotation: -12, borderRadius: '78% 18% 78% 18%', opacity: 1 })
@@ -296,6 +309,7 @@ function enhanceApproach(root: HTMLElement) {
       stage.addEventListener('focusout', blur);
       const observer = new ResizeObserver(refresh);
       observer.observe(stage);
+      copy.forEach(element => observer.observe(element));
       const menuObserver = new MutationObserver(visibility);
       const main = root.closest('main');
       if (main) menuObserver.observe(main, { attributes: true, attributeFilter: ['inert'] });
@@ -341,6 +355,8 @@ function enhanceApproach(root: HTMLElement) {
         }
         root.style.removeProperty('--approach-eye-width');
         root.style.removeProperty('--approach-eye-start');
+        root.style.removeProperty('--approach-art-center');
+        root.style.removeProperty('--approach-copy-top');
         root.style.removeProperty('--approach-distance');
         playback.disabled = false;
         for (const key of ['approachEnabled', 'approachProgress', 'approachState', 'approachStart', 'approachEnd', 'approachMoving', 'approachPlayback', 'approachAutoplayPaused']) delete root.dataset[key];
