@@ -6,11 +6,44 @@ export function getLocale(pathname: string): Locale {
 }
 
 export function localizedPath(pathname: string, locale: Locale): string {
+  const detail = pathname.match(/^\/(?:en\/work|trabajos)\/(proyecto-(?:inmobiliario|juridico|sistema))\/?$/);
+  if (detail) return `${locale === 'en' ? '/en/work' : '/trabajos'}/${detail[1]}/`;
   return pagePath(pageId(pathname) ?? 'home', locale);
 }
 
 // Spanish is the source copy. Both routes render their complete content on the server.
 const english: Record<string, string> = {
+  'Todos': 'All',
+  'Filtrar por servicio': 'Filter by service',
+  '{count} trabajos': '{count} projects',
+  'Rubro': 'Industry',
+  'Servicios': 'Services',
+  'Proyecto': 'Project',
+  'Inmobiliario': 'Real estate',
+  'Servicios jurídicos': 'Legal services',
+  'Gestión comercial': 'Sales operations',
+  'Contenido': 'Content',
+  'Volver a trabajos': 'Back to work',
+  'En este proyecto': 'In this project',
+  'El problema': 'The challenge',
+  'La propuesta': 'The proposal',
+  'Las piezas': 'The pieces',
+  'Ver el trabajo': 'Explore the work',
+  'Todos los trabajos': 'All work',
+  'Siguiente proyecto': 'Next project',
+  'Cada negocio necesita una conexión distinta': 'Every business needs a different connection',
+  'Este estudio conceptual explora una posible respuesta, sin representar un encargo ni resultados de un cliente.': 'This concept study explores a possible response. It does not represent a client commission or achieved results.',
+  'Cómo conectar la presencia social, el ingreso de consultas y el seguimiento de oportunidades en un mismo recorrido.': 'How to connect a social presence, incoming inquiries and opportunity follow-up in one journey.',
+  'Cómo presentar la información de un estudio jurídico con claridad y abrir un camino directo hacia la consulta.': 'How to present a law firm’s information clearly and create a direct path to an inquiry.',
+  'Cómo conectar el ingreso de consultas, la organización de contactos y el seguimiento en un mismo recorrido.': 'How to connect incoming inquiries, contact organization and follow-up in one journey.',
+  'Detalle visual del estudio conceptual': 'Visual detail of the concept study',
+  'Habitar': 'Inhabit',
+  'Estudio': 'Studio',
+  'Ingreso de consultas': 'Incoming inquiries',
+  'Identidad de contenido': 'Content identity',
+  'Jerarquía web': 'Web hierarchy',
+  'Puntos de contacto': 'Contact points',
+  'Integración de canales': 'Channel integration',
   'Qué hacemos': 'What we do',
   'Una presencia social, un espacio para ordenar oportunidades y automatizaciones pensadas como partes del mismo recorrido de trabajo.': 'A social presence, a space to organize opportunities and automations designed as parts of the same workflow.',
   'Contenido, ingreso de consultas, organización y seguimiento.': 'Content, incoming inquiries, organization and follow-up.',

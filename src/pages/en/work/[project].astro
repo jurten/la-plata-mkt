@@ -1,0 +1,8 @@
+---
+import WorkDetailPage from '../../../components/WorkDetailPage.astro';
+import { projects } from '../../../lib/projects';
+export const prerender = true;
+export function getStaticPaths() { return projects.map(project => ({ params: { project: project.id }, props: { project } })); }
+const { project } = Astro.props;
+---
+<WorkDetailPage {project} />

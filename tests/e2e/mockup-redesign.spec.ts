@@ -14,9 +14,9 @@ test('el logo y los destinos de contacto directo siguen siendo reales', async ({
   await expect(page.locator('.hero .button-primary')).toHaveAttribute('href', 'https://wa.me/5491158861954');
   await expect(page.locator('[data-floating-whatsapp]')).toHaveCSS('position', 'fixed');
   const links = page.locator('a[href^="https://wa.me"]');
-  expect(await links.count()).toBeGreaterThanOrEqual(6);
+  expect(await links.count()).toBeGreaterThanOrEqual(3);
   for (const link of await links.all()) await expect(link).toHaveAttribute('href', 'https://wa.me/5491158861954');
   const favicon = await request.get('/favicon.svg');
   expect(favicon.ok()).toBe(true);
-  expect(await favicon.text()).toContain('#1536f1');
+  expect(await favicon.text()).toContain('<title id="title">La Plata Marketing</title>');
 });

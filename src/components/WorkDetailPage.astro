@@ -1,0 +1,37 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import Icon from './Icon.astro';
+import { getTranslator, getLocale } from '../lib/i18n';
+import { projects, projectDetails, projectPath, type Project } from '../lib/projects';
+import { contact } from '../lib/navigation';
+import '../styles/work-showcase.css';
+import '../styles/work-detail.css';
+interface Props { project: Project }
+const { project } = Astro.props;
+const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
+const detail = projectDetails[project.type];
+const indexHref = `${locale === 'en' ? '/en/work/' : '/trabajos/'}#${project.id}`;
+const nextProject = projects[(projects.findIndex(item => item.id === project.id) + 1) % projects.length];
+const imageSrc = `/work/${project.type}${locale === 'en' ? '.en' : ''}.png`;
+const links = [...detail.links, ...(project.url ? [{ label: 'Ver demo', url: project.url }] : [])];
+---
+<SiteLayout title={`${t(project.category)} | La Plata Marketing`} description={t(project.summary)}>
+  <article class="work-case" data-work-case>
+    <header class="work-case-opening">
+      <div class="work-case-toolbar"><a href={indexHref} class="work-back" data-work-back data-no-transition><Icon name="right" />{t('Volver a trabajos')}</a><span>{t('Estudio conceptual')}</span></div>
+      <h1>{t(project.title)}</h1>
+      <div class="work-case-intro"><p>{t(project.summary)}</p><dl><div><dt>{t('Proyecto')}</dt><dd>{t(project.category)}</dd></div><div><dt>{t('Rubro')}</dt><dd>{t(detail.industry)}</dd></div><div><dt>{t('Servicios')}</dt><dd>{detail.services.map(service => t(service)).join(' · ')}</dd></div></dl></div>
+      <p class="work-disclosure">{t('Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.')}</p>
+    </header>
+    <div class="work-case-cover" style={`view-transition-name: work-${project.type}`}><img src={imageSrc} alt={t(project.title)} width="1440" height="1080" data-work-media fetchpriority="high" /></div>
+    <nav class="work-chapters" aria-label={t('En este proyecto')}><a href="#problema">{t('El problema')}</a><a href="#propuesta">{t('La propuesta')}</a><a href="#alcance">{t('Las piezas')}</a>{links.length > 0 && <a href="#enlaces">{t('Ver el trabajo')}</a>}</nav>
+    <section class="work-case-section" id="problema"><h2>{t('El problema')}</h2><div><p class="work-case-statement">{t(detail.problem)}</p><p>{t('Este estudio conceptual explora una posible respuesta, sin representar un encargo ni resultados de un cliente.')}</p></div></section>
+    <section class="work-case-section" id="propuesta"><h2>{t('La propuesta')}</h2><div><p class="work-case-statement">{t(project.summary)}</p><p>{t(project.scope)}</p></div></section>
+    <div class="work-case-media-pair"><div><img src={imageSrc} alt={t('Detalle visual del estudio conceptual')} width="1440" height="1080" loading="lazy" data-work-media /></div><div><img src={`/work/${project.type}-type${locale === 'en' ? '.en' : ''}.png`} alt={t(project.title)} width="1440" height="1440" loading="lazy" data-work-media /></div></div>
+    <section class="work-case-section" id="alcance"><h2>{t('Las piezas')}</h2><div><p>{t(project.scope)}</p><ul class="work-piece-list">{detail.pieces.map(piece => <li>{t(piece)}<Icon name="arrow" /></li>)}</ul></div></section>
+    {links.length > 0 && <section class="work-case-section" id="enlaces"><h2>{t('Ver el trabajo')}</h2><div class="work-external-links">{links.map(link => <a href={link.url} target="_blank" rel="noopener noreferrer">{t(link.label)}<Icon name="arrow" /></a>)}</div></section>}
+    <footer class="work-case-end"><p>{t('Cada negocio necesita una conexión distinta')}</p><a class="work-case-contact" href={contact.whatsappHref}>{t('Tengo un proyecto parecido')}<Icon name="arrow" /></a><div><a href={indexHref} data-work-back data-no-transition>{t('Todos los trabajos')}<Icon name="right" /></a><a href={projectPath(nextProject, locale)} data-no-transition>{t('Siguiente proyecto')}<span>{t(nextProject.category)}</span><Icon name="right" /></a></div></footer>
+  </article>
+</SiteLayout>
+<script>import '../scripts/work-detail'; import '../scripts/work-curve';</script>

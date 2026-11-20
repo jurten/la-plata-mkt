@@ -10,14 +10,15 @@ for (const route of ['/', '/en/']) {
     await expect(page.locator('#soluciones #como-trabajamos')).toHaveCount(1);
     await expect(page.locator('[data-approach-playback-toggle]')).toHaveCount(1);
     await expect(page.locator('.featured-work [data-featured-project]')).toHaveCount(3);
+    await expect(page.locator('[data-work-list], .work-curve-canvas')).toHaveCount(0);
     await expect(page.locator('.featured-about #nosotros [data-team-roster]')).toHaveCount(1);
     await expect(page.locator('.home-work,.home-team,.conversation-cta')).toHaveCount(0);
-    await expect(page.locator('.primary-nav a')).toHaveCount(4);
+    await expect(page.locator('.primary-nav a')).toHaveCount(3);
     const work = route === '/' ? '/trabajos/' : '/en/work/';
     await expect(page.locator('.primary-nav a[data-channel-id="trabajo"]')).toHaveAttribute('href', work);
     await page.locator('.primary-nav a[data-channel-id="trabajo"]').click();
     await expect(page).toHaveURL(work);
-    await expect(page.locator('.standalone-work .project-card')).toHaveCount(3);
+    await expect(page.locator('.work-showcase--standalone [data-work-item]')).toHaveCount(3);
     expect(errors).toEqual([]);
   });
 }

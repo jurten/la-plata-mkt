@@ -1,13 +1,37 @@
 ---
-import { getTranslator } from '../lib/i18n';
-import { projects } from '../lib/projects';
-import ProjectCard from './ProjectCard.astro';
-import '../styles/portfolio-reveal.css';
+import { getTranslator, getLocale } from '../lib/i18n';
+import { projects, projectDetails, projectPath, workServices } from '../lib/projects';
+import Icon from './Icon.astro';
+import '../styles/work-showcase.css';
+interface Props { standalone?: boolean }
+const { standalone = false } = Astro.props;
 const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
 ---
-<section class="portfolio-reveal standalone-work" id="trabajo" data-portfolio-reveal aria-label={t('Trabajos')}>
-  <div class="featured-gallery wrap" role="group" aria-label={t('Trabajos')}>
-    <div class="featured-slides project-grid">{projects.map(project => <ProjectCard {project} />)}</div>
+<section class:list={['work-showcase', { 'work-showcase--standalone': standalone }]} id="trabajo" data-work-list aria-labelledby="work-title">
+  <div class="work-showcase__inner">
+    <header class="work-index-heading">
+      {standalone ? <h1 id="work-title">{t('Trabajos')}</h1> : <h2 id="work-title">{t('Trabajos')}</h2>}
+      <div class="work-filters" role="group" aria-label={t('Filtrar por servicio')} hidden>
+        {workServices.map(service => <button type="button" data-work-filter={service.id} aria-pressed={service.id === 'all'}>{t(service.label)}</button>)}
+      </div>
+    </header>
+    <p class="work-disclosure">{t('Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.')}</p>
+    <p class="visually-hidden" role="status" aria-live="polite" data-work-status data-count-label={t('{count} trabajos', { count: '{count}' })}></p>
+    <div class="work-index-grid">
+      {projects.map(project => {
+        const detail = projectDetails[project.type];
+        return <article id={project.id} class="work-index-item" data-work-item data-services={detail.filters.join(' ')}>
+          <a class="work-project-link" href={projectPath(project, locale)} data-work-link data-no-transition>
+            <div class="work-project-image" style={`view-transition-name: work-${project.type}`}><img src={`/work/${project.type}${locale === 'en' ? '.en' : ''}.png`} alt={t(project.title)} width="1440" height="1080" loading="eager" data-work-media /></div>
+            <div class="work-project-caption"><h3>{t(project.category)}</h3><Icon name="arrow" /></div>
+            <p class="work-project-title">{t(project.title)}</p>
+            <dl class="work-project-meta"><div><dt>{t('Rubro')}</dt><dd>{t(detail.industry)}</dd></div><div><dt>{t('Servicios')}</dt><dd>{detail.services.map(service => t(service)).join(' · ')}</dd></div></dl>
+            <span class="work-concept-label">{t('Estudio conceptual')}</span>
+          </a>
+        </article>;
+      })}
+    </div>
   </div>
 </section>
-<script>import '../scripts/work-gallery';</script>
+<script>import '../scripts/work-showcase'; import '../scripts/work-curve';</script>

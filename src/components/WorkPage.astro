@@ -1,12 +1,9 @@
 ---
 import SiteLayout from './SiteLayout.astro';
-import PortfolioReveal from './WorkGallery.astro';
-import ConversationCTA from './ConversationCTA.astro';
+import WorkGallery from './WorkGallery.astro';
 import { getTranslator } from '../lib/i18n';
 const t = getTranslator(Astro.url.pathname);
 ---
 <SiteLayout title={`${t('Trabajos')} | La Plata Marketing`} description={t('Explorá conexiones entre marketing y tecnología a través de nuestros estudios conceptuales.')}>
-  <header class="page-opening wrap"><h1>{t('Trabajos')}</h1><div><p>{t('Ideas que toman forma. Explorá cómo podrían conectarse las piezas de tu negocio.')}</p><p class="content-disclosure">{t('Son ejemplos ilustrativos, no proyectos de clientes ni resultados obtenidos.')}</p></div></header>
-  <PortfolioReveal />
-  <ConversationCTA />
+  <WorkGallery standalone />
 </SiteLayout>

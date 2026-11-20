@@ -10,6 +10,7 @@ export const pages = {
 export type PageId = keyof typeof pages;
 export function pageId(pathname: string): PageId | undefined {
   const normalized = pathname.replace(/\/?$/, '/');
+  if (/^\/(?:en\/work|trabajos)\/proyecto-(?:inmobiliario|juridico|sistema)\/$/.test(normalized)) return 'work';
   return (Object.keys(pages) as PageId[]).find(id => pages[id].es === normalized || pages[id].en === normalized);
 }
 export function pagePath(id: PageId, locale: Locale) { return pages[id][locale]; }
