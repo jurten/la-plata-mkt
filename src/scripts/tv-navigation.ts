@@ -6,6 +6,7 @@ const t = getTranslator(window.location.pathname);
 const masthead = document.querySelector<HTMLElement>('[data-tv-navigation]');
 
 function enhanceNavigation(header: HTMLElement) {
+  const isLanding = header.dataset.home === 'true';
   const root = document.documentElement;
   const menu = document.querySelector<HTMLElement>('[data-station-menu]')!;
   const toggle = header.querySelector<HTMLButtonElement>('.menu-toggle')!;
@@ -17,22 +18,24 @@ function enhanceNavigation(header: HTMLElement) {
   const replay = menu.querySelector<HTMLButtonElement>('[data-power-replay]')!;
   const links = [...menu.querySelectorAll<HTMLAnchorElement>('[data-station-link]')];
   const channels = links.map(link => ({
-    id: link.hash.slice(1),
+    id: link.dataset.channelId ?? link.hash.slice(1),
     number: link.dataset.channelNumber!,
     label: link.dataset.channelLabel!,
     description: link.dataset.channelDescription!,
-    section: document.getElementById(link.hash.slice(1))!,
+    section: document.getElementById(link.dataset.channelId ?? link.hash.slice(1)),
   }));
   type Channel = typeof channels[number];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const forced = matchMedia('(forced-colors: active)');
   let paused = false;
   let isOpen = false;
-  let active = channels[0];
+  let active = channels.find(channel => channel.id === header.dataset.pageChannel) ?? channels[0];
   let animations: Animation[] = [];
   let tuneTimer = 0;
   let finishTimer = 0;
   let scrollFrame = 0;
+  let previousScrollY = Math.max(0, window.scrollY);
+  let scrollDelta = 0;
   let pendingTune: (() => void) | undefined;
   let transitionCleanup = () => {};
   let inertElements: { element: HTMLElement; previous: boolean }[] = [];
@@ -165,7 +168,7 @@ function enhanceNavigation(header: HTMLElement) {
     active = channel;
     header.querySelector('[data-current-channel]')!.textContent = `CH ${channel.number}`;
     document.querySelectorAll<HTMLAnchorElement>('.primary-nav a, [data-station-link]').forEach(link => {
-      if (link.hash === `#${channel.id}`) link.setAttribute('aria-current', 'location');
+      if (header.dataset.pageChannel && (link.dataset.channelId ?? link.hash.slice(1)) === channel.id) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
   }
@@ -188,29 +191,43 @@ function enhanceNavigation(header: HTMLElement) {
     clearTransition();
     tune?.();
     isOpen = true;
+    showHeader();
     preview(active);
     toggle.setAttribute('aria-expanded', 'true');
     menu.hidden = false;
     root.dataset.stationOpen = 'true';
     inertElements = [...document.querySelectorAll<HTMLElement>('body > main, body > footer, body > .floating-whatsapp, body > .model-credit')].map(element => ({ element, previous: element.inert }));
     inertElements.forEach(({ element }) => { element.inert = true; });
-    (links.find(link => link.hash === `#${active.id}`) ?? links[0]).focus({ preventScroll: true });
+    (links.find(link => (link.dataset.channelId ?? link.hash.slice(1)) === active.id) ?? links[0]).focus({ preventScroll: true });
+  }
+
+  function showHeader() {
+    header.dataset.scrollHidden = 'false';
+    scrollDelta = 0;
   }
 
   function syncScroll() {
     scrollFrame = 0;
-    header.dataset.scrolled = String(window.scrollY > 0);
-    const line = header.getBoundingClientRect().bottom + 100;
-    const reveal = document.querySelector<HTMLElement>('[data-reveal-enabled]');
-    const inOpening = reveal && window.scrollY < Number(reveal.dataset.revealEnd);
-    const current = inOpening ? channels[0] : [...channels].reverse().find(channel => channel.section.getBoundingClientRect().top <= line) ?? channels[0];
-    if (current !== active) setActive(current);
+    // Clamp elastic overscroll so bouncing at the page edges cannot reverse direction.
+    const scrollY = Math.max(0, Math.min(window.scrollY, root.scrollHeight - window.innerHeight));
+    const delta = scrollY - previousScrollY;
+    previousScrollY = scrollY;
+    header.dataset.scrolled = String(!isLanding || scrollY > 0);
+    if (scrollY <= header.offsetHeight || isOpen || header.querySelector(':focus-visible, [aria-expanded="true"]')) {
+      showHeader();
+      return;
+    }
+    if (!delta) return;
+    scrollDelta = Math.sign(delta) === Math.sign(scrollDelta) ? scrollDelta + delta : delta;
+    // Accumulate small movements while ignoring trackpad jitter.
+    if (Math.abs(scrollDelta) >= 8) header.dataset.scrollHidden = String(scrollDelta > 0);
   }
 
   toggle.hidden = false;
   root.dataset.menuState = 'ready';
   root.dataset.tvTransitionState = 'idle';
   toggle.addEventListener('click', () => isOpen ? closeMenu(true) : openMenu());
+  header.addEventListener('focusin', showHeader);
   links.forEach((link, index) => {
     link.addEventListener('pointerenter', () => preview(channels[index]));
     link.addEventListener('focus', () => preview(channels[index]));
@@ -228,9 +245,8 @@ function enhanceNavigation(header: HTMLElement) {
     event.preventDefault();
     const fromMenu = menu.contains(link);
     const keyboard = event.detail === 0;
-    const channel = [...channels].reverse().find(item => item.section.contains(target)) ?? channels[0];
+    const channel = [...channels].reverse().find(item => item.section?.contains(target)) ?? active;
     closeMenu();
-    setActive(channel);
     const tune = () => {
       if (location.hash !== link.hash) history.pushState(null, '', link.hash);
       const destination: { target: HTMLElement; top?: number } = { target };
@@ -293,7 +309,7 @@ function enhanceNavigation(header: HTMLElement) {
     bootSeen = sessionStorage.getItem('lpm-tv-boot') === 'seen';
     sessionStorage.setItem('lpm-tv-boot', 'seen');
   } catch { /* Storage may be unavailable; the fail-open timer still applies. */ }
-  if (!location.hash && !bootSeen) playLoadingTransition(active);
+  if (isLanding && !location.hash && !bootSeen) playLoadingTransition(active);
 }
 
 if (masthead) enhanceNavigation(masthead);

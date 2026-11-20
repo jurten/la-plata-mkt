@@ -15,6 +15,17 @@ const payload: ContactPayload = {
 };
 
 describe('createResendDelivery', () => {
+  it('usa el nombre sin empresa y confirma en inglés', async () => {
+    const messages: Array<Record<string, string>> = [];
+    const delivery = createResendDelivery({ apiKey: fakeCredential, from: 'test@example.com', to: 'inbox@example.com', fetchImpl: async (_url, init) => {
+      messages.push(JSON.parse(String(init?.body)));
+      return new Response('{}', { status: 200 });
+    } });
+    await delivery({ ...payload, company: '' }, 'en');
+    expect(messages[0].subject).toBe('Nueva consulta — Ana Pérez');
+    expect(messages[1].subject).toBe('We received your inquiry — La Plata Marketing');
+    expect(messages[1].text).toContain('Hello, Ana Pérez');
+  });
   it('envía primero la notificación y luego la autorespuesta en español', async () => {
     const requests: Array<{ url: string; init: RequestInit }> = [];
     const delivery = createResendDelivery({

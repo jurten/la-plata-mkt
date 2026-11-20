@@ -2,7 +2,11 @@
 
 Sitio one-page en español para conectar marketing, tecnología y ventas, presentar caminos de solución, mostrar experiencia autorizada y recibir consultas.
 
-La dirección visual **Otra perspectiva** presenta a LPM con una presencia extraterrestre azul sobre negro: «Ideas de otro planeta. Para problemas de acá». Un retrato original, geometrías de mirada y una apertura interactiva expresan la conexión entre comunicación y marketing, tecnología, y la combinación de ambas. La página continua incluye enfoque, portfolio conceptual, nosotros, capacidades, contacto y preguntas frecuentes. WhatsApp es la acción principal; email y formulario son alternativas.
+La landing original se conserva completa, con su diseño, textos, secciones y animaciones. Trabajos, Nosotros y Contacto tienen además páginas propias. Toda la web utiliza la navbar original mediante un único componente: mismos enlaces, tipografía, logo, idioma, indicador y menú móvil. En las páginas interiores, Enfoque vuelve a su sección en Inicio. El contenido y las escenas de las páginas nuevas se mantienen separados.
+
+Rutas: `/`, `/trabajos/`, `/nosotros/`, `/contacto/` y `/privacidad/`. Sus equivalentes son `/en/`, `/en/work/`, `/en/about/`, `/en/contact/` y `/en/privacy/`. Los fragmentos originales de Inicio siguen llevando a sus secciones, sin redirecciones. El selector de idioma conserva la página y los fragmentos válidos; en Contacto traslada un borrador temporal dentro de la pestaña.
+
+El refactor y sus pendientes de contenido se documentan en `docs/navigation-refactor-implementation.md`. Para comprobarlo: `npx playwright test tests/e2e/tv-navigation.spec.ts --project=chromium`. Para generar capturas: `node scripts/navigation-audit.mjs` con el servidor local activo.
 
 El brief confirmado vive en `PRODUCT.md`, la dirección vigente en `docs/alien-redesign.md` y el sistema implementado en `DESIGN.md`. El plan anterior se conserva como registro histórico. La página de privacidad comparte tipografía, colores y controles.
 

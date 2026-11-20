@@ -1,0 +1,18 @@
+---
+import { getTranslator } from '../lib/i18n';
+import { projects } from '../lib/projects';
+import ConceptPreview from './ConceptPreview.astro';
+interface Props { project: typeof projects[number] }
+const { project } = Astro.props;
+const t = getTranslator(Astro.url.pathname);
+---
+<article id={project.id} class="project-card featured-project" data-featured-project>
+  <ConceptPreview type={project.type} />
+  <div class="concept-description">
+    <div class="concept-caption"><span>{t(project.category)}</span><span class="concept-label">{t('Estudio conceptual')}</span></div>
+    <h3>{t(project.title)}</h3>
+    <p>{t(project.summary)}</p>
+    <p class="concept-scope">{t(project.scope)}</p>
+    {project.url && <a class="inline-link" href={project.url} target="_blank" rel="noopener noreferrer">{t('Ver demo')}</a>}
+  </div>
+</article>

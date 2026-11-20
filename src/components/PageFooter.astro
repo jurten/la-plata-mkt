@@ -1,0 +1,45 @@
+---
+import { getLocale, getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
+import { pagePath, pages, type PageId } from '../lib/navigation';
+const locale = getLocale(Astro.url.pathname);
+import BrandLogo from './BrandLogo.astro';
+import Icon from './Icon.astro';
+interface Props {
+  whatsappHref: string;
+  whatsappDisplay: string;
+  contactEmail: string;
+}
+const { whatsappHref, whatsappDisplay, contactEmail } = Astro.props;
+---
+<footer class="site-footer closing-footer" id="contacto" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="footer-directory">
+      <div class="footer-direct" role="group" aria-label={t("Canales de contacto directo")}>
+        <h2 id="contact-title">{t("Hablemos")}</h2>
+        <p>{t("La primera reunión es gratuita.")}</p>
+        <a class="footer-whatsapp" href={whatsappHref} aria-label={t("Escribir a La Plata Marketing por WhatsApp al {phone}", { phone: whatsappDisplay })}>
+          <span>{t("Por WhatsApp")}<strong>{whatsappDisplay}</strong></span><Icon />
+        </a>
+        <a class="footer-email" href={`mailto:${contactEmail}`} aria-label={t("Escribir por email a {email}", { email: contactEmail })}><span>{contactEmail}</span><Icon /></a>
+      </div>
+      <div class="footer-location">
+        <h2>{t("Desde La Plata")}</h2>
+        <p>{t("Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.")}</p>
+      </div>
+      <nav class="footer-explore" aria-label={t("Explorá La Plata Marketing")}>
+        <h2>{t("Navegá")}</h2>
+        {(['home', 'work', 'about', 'contact', 'privacy'] as PageId[]).map(id => <a href={pagePath(id, locale)}>{t(pages[id].label)}</a>)}
+        <a href={`${pagePath('home', locale)}#que-hacemos`}>{t("Qu\u00e9 hacemos")}</a>
+        <a href={`${pagePath('about', locale)}#como-trabajamos`}>{t("C\u00f3mo trabajamos")}</a>
+      </nav>
+    </div>
+    <div class="footer-signoff">
+      <a class="footer-brand" href={pagePath('home', locale)} aria-label={t("La Plata Marketing, volver arriba")}><BrandLogo variant="horizontal" /></a>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 LPM / La Plata, Argentina</span>
+      <a href="#contenido">{t("Volver arriba")} <Icon name="arrow" /></a>
+    </div>
+  </div>
+</footer>

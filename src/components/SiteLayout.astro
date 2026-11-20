@@ -1,0 +1,78 @@
+---
+import { getTranslator, getLocale, localizedPath } from '../lib/i18n';
+import { contact } from '../lib/navigation';
+import { readRuntimeEnv } from '../lib/runtime-env';
+import { parsePublicSiteUrl } from '../lib/site-origin';
+import TelevisionNavigation from './TelevisionNavigation.astro';
+import ContactFooter from './PageFooter.astro';
+import '../styles/fonts.css';
+import '../styles/global.css';
+import '../styles/alien.css';
+import '../styles/retro-cursor.css';
+import '../styles/floating-whatsapp.css';
+import '../styles/brand.css';
+import '../styles/contact-footer.css';
+import '../styles/pages.css';
+interface Props { title: string; description: string; home?: boolean; floating?: boolean; noindex?: boolean; structuredData?: Record<string, unknown> }
+const { title: pageTitle, description: pageDescription, home = false, floating = true, noindex = false, structuredData = { '@context': 'https://schema.org', '@type': 'Organization', name: 'La Plata Marketing', email: contact.contactEmail } } = Astro.props;
+const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
+const publicSite = parsePublicSiteUrl(readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL));
+const canonicalUrl = publicSite && !noindex ? new URL(Astro.url.pathname, publicSite) : undefined;
+const ogImageUrl = publicSite ? new URL('/og-la-plata-marketing.png', publicSite) : undefined;
+const allowIndexing = Boolean(publicSite) && !noindex;
+const { whatsappHref, whatsappDisplay } = contact;
+---
+<!doctype html>
+<html lang={locale === 'en' ? 'en' : 'es-AR'} data-theme="auto">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
+    <meta name="theme-color" content="#EEF2FF" />
+    <script is:inline src="/scripts/theme-init.js"></script>
+    <link rel="icon" href="/favicon.svg?v=20261110" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico?v=20261110" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
+    <link rel="apple-touch-icon" href="/brand/lpm-profile.png" />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {publicSite && <>
+      <link rel="alternate" hreflang="es-AR" href={new URL(localizedPath(Astro.url.pathname, 'es'), publicSite)} />
+      <link rel="alternate" hreflang="en" href={new URL(localizedPath(Astro.url.pathname, 'en'), publicSite)} />
+      <link rel="alternate" hreflang="x-default" href={new URL(localizedPath(Astro.url.pathname, 'es'), publicSite)} />
+    </>}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'es_AR'} />
+    <meta property="og:locale:alternate" content={locale === 'en' ? 'es_AR' : 'en_US'} />
+    <meta property="og:site_name" content="La Plata Marketing" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {ogImageUrl && (
+      <>
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={t("La Plata Marketing: marketing, tecnología y ventas como un sistema")} />
+      </>
+    )}
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <title>{pageTitle}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} is:inline></script>
+  </head>
+  <body class:list={['site-home', { 'interior-page': !home }]}>
+    <a class="skip-link" href="#contenido">{t("Saltar al contenido")}</a>
+    <TelevisionNavigation />
+    <main id="contenido"><slot /></main>
+    <ContactFooter {...contact} />
+{floating && <>
+    <a class="floating-whatsapp" href={whatsappHref} aria-label={t("Escribir a La Plata Marketing por WhatsApp al {phone}", { phone: whatsappDisplay })} title={t("Escribir por WhatsApp")} data-floating-whatsapp hidden><span class="whatsapp-visual"><svg class="whatsapp-splash" viewBox="-36 -36 72 72" aria-hidden="true" focusable="false"><path data-whatsapp-contour d="M28 0A28 28 0 1 1-28 0A28 28 0 1 1 28 0Z" /></svg><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.04 3A12.92 12.92 0 0 0 5.1 22.78L3 29l6.43-2.02A12.96 12.96 0 1 0 16.04 3Zm0 2.6a10.35 10.35 0 1 1-5.99 18.8l-.47-.33-3.07.96 1-2.96-.36-.5A10.33 10.33 0 0 1 16.04 5.6Zm-4.55 4.62c-.2 0-.53.08-.81.39-.28.3-1.07 1.04-1.07 2.54s1.1 2.95 1.24 3.15c.15.2 2.14 3.43 5.3 4.68 2.62 1.04 3.16.83 3.73.78.57-.05 1.84-.75 2.1-1.48.26-.73.26-1.35.18-1.48-.07-.13-.28-.2-.59-.36-.3-.16-1.83-.91-2.12-1.01-.28-.1-.49-.16-.7.15-.2.31-.8 1.02-.98 1.22-.18.21-.36.23-.67.08-.3-.16-1.29-.48-2.46-1.52a9.2 9.2 0 0 1-1.7-2.12c-.17-.3-.01-.47.14-.62.14-.14.3-.36.46-.54.15-.18.2-.31.3-.52.11-.2.06-.39-.02-.54-.08-.16-.69-1.67-.95-2.29-.25-.6-.51-.52-.7-.53h-.65Z" /></svg></span></a>
+</>}
+    <script>import '../scripts/floating-whatsapp';</script>
+    <script is:inline src="/scripts/site.js" defer></script>
+    <script is:inline type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/52086486.js"></script>
+  </body>
+</html>

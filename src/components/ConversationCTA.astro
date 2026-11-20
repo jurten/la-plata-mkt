@@ -1,0 +1,11 @@
+---
+import { getLocale, getTranslator } from '../lib/i18n';
+import { contact, pagePath } from '../lib/navigation';
+const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
+interface Props { about?: boolean }
+---
+<section class="conversation-cta wrap">
+  <div><h2>{t(Astro.props.about ? 'Conversemos sobre tu proyecto' : 'Contanos qué querés mejorar')}</h2><p>{t('Empezamos con una conversación y un diagnóstico. La primera reunión es gratuita.')}</p></div>
+  <div class="conversation-actions"><a class="button button-primary" href={pagePath('contact', locale)}>{t('Escribir una consulta')}</a><a class="inline-link" href={contact.whatsappHref}>{t('Hablemos por WhatsApp')}</a></div>
+</section>

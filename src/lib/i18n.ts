@@ -1,3 +1,4 @@
+import { pageId, pagePath } from './navigation';
 export type Locale = 'es' | 'en';
 
 export function getLocale(pathname: string): Locale {
@@ -5,12 +6,53 @@ export function getLocale(pathname: string): Locale {
 }
 
 export function localizedPath(pathname: string, locale: Locale): string {
-  const privacy = /^\/(?:en\/privacy|privacidad)\/?$/.test(pathname);
-  return privacy ? (locale === 'en' ? '/en/privacy/' : '/privacidad/') : (locale === 'en' ? '/en/' : '/');
+  return pagePath(pageId(pathname) ?? 'home', locale);
 }
 
 // Spanish is the source copy. Both routes render their complete content on the server.
 const english: Record<string, string> = {
+  'Qué hacemos': 'What we do',
+  'Una presencia social, un espacio para ordenar oportunidades y automatizaciones pensadas como partes del mismo recorrido de trabajo.': 'A social presence, a space to organize opportunities and automations designed as parts of the same workflow.',
+  'Contenido, ingreso de consultas, organización y seguimiento.': 'Content, incoming inquiries, organization and follow-up.',
+  'Un sistema de contenidos y una experiencia web orientados a presentar información con claridad y abrir un camino directo hacia la consulta.': 'A content system and web experience designed to present information clearly and create a direct path to an inquiry.',
+  'Identidad de contenido, jerarquía web y puntos de contacto.': 'Content identity, web hierarchy and contact points.',
+  'Las piezas, conectadas': 'The pieces, connected',
+  'Trabajos seleccionados': 'Selected work',
+  'Ver todos los trabajos': 'Explore all work',
+  'Tres miradas, un equipo': 'Three perspectives, one team',
+  'Creatividad, marketing y tecnología. Tres miradas que se encuentran para conectar las piezas de tu proyecto.': 'Creativity, marketing and technology. Three perspectives come together to connect the pieces of your project.',
+  'Conversemos sobre tu proyecto': 'Let’s talk about your project',
+  'Contanos qué querés mejorar': 'Tell us what you’d like to improve',
+  'Empezamos con una conversación y un diagnóstico. La primera reunión es gratuita.': 'We start with a conversation and an assessment. The first meeting is free.',
+  'Escribir una consulta': 'Send an inquiry',
+  'Explorá conexiones entre marketing y tecnología a través de nuestros estudios conceptuales.': 'Explore connections between marketing and technology through our concept studies.',
+  'Ideas que toman forma. Explorá cómo podrían conectarse las piezas de tu negocio.': 'Ideas taking shape. Explore how the pieces of your business could connect.',
+  'Conocé a Joaquín, Santiago y Justina y cómo conectamos creatividad, marketing y tecnología.': 'Meet Joaquín, Santiago and Justina and discover how we connect creativity, marketing and technology.',
+  'Conversación inicial': 'First conversation',
+  'Empezamos por escucharte y conocer el contexto de tu negocio.': 'We start by listening and understanding your business.',
+  'Revisamos qué necesitás mejorar en tu presencia, captación u operación digital.': 'We look at what you need to improve in your digital presence, lead generation or operations.',
+  'Definición del proyecto': 'Project definition',
+  'Antes de comenzar, definimos el alcance, los tiempos y el presupuesto según lo que tu negocio necesita.': 'Before we begin, we define the scope, timeline and budget based on your business needs.',
+  'Ver perfil': 'View profile',
+  'Ver demo': 'View demo',
+  'Contanos qué querés mejorar. Escribinos una consulta o conversemos por WhatsApp.': 'Tell us what you’d like to improve. Send an inquiry or talk to us on WhatsApp.',
+  'Empezamos por escucharte. Contanos el contexto y qué te gustaría cambiar.': 'We start by listening. Tell us about your situation and what you’d like to change.',
+  'Nombre': 'Name',
+  'Empresa': 'Company',
+  'Teléfono': 'Phone',
+  'Opcional': 'Optional',
+  'Mensaje': 'Message',
+  'Contanos el contexto, qué querés mejorar y cómo podemos ayudarte. Entre 20 y 2000 caracteres.': 'Tell us about your situation, what you’d like to improve and how we can help. Between 20 and 2000 characters.',
+  'Leí y acepto la': 'I have read and accept the',
+  'política de privacidad': 'privacy policy',
+  'Verificación antispam': 'Spam verification',
+  'Enviar mensaje': 'Send message',
+  'Escribir otra consulta': 'Send another inquiry',
+  'Para usar el formulario necesitás JavaScript. También podés escribirnos por email o WhatsApp.': 'The form requires JavaScript. You can also contact us by email or WhatsApp.',
+  'El formulario solicita nombre, email, mensaje y aceptación de privacidad. Empresa y teléfono son opcionales. También recibimos los datos que decidas compartir por email o WhatsApp.': 'The form asks for your name, email, message and privacy consent. Company and phone are optional. We also receive any details you choose to share by email or WhatsApp.',
+  'Cloudflare aloja y protege el sitio; Turnstile verifica los envíos para prevenir abuso. Resend entrega la consulta y su confirmación por email cuando el envío está configurado. Google Workspace puede procesar el correo recibido. Si elegís WhatsApp, Meta y WhatsApp procesan los datos según sus propias políticas.': 'Cloudflare hosts and protects the site; Turnstile verifies submissions to prevent abuse. Resend delivers inquiries and confirmation emails when delivery is configured. Google Workspace may process received emails. If you choose WhatsApp, Meta and WhatsApp process your details under their own policies.',
+  'Borrador al cambiar de idioma': 'Draft when changing language',
+  'Solo al cambiar de idioma, el formulario guarda un borrador temporal en esta pestaña para recuperar tus datos en la página equivalente. Se elimina al recuperarlo y caduca a los treinta minutos. Este traslado no envía los datos a terceros. En modo demostración, el formulario no envía correo real.': 'Only when you change language, the form stores a temporary draft in this tab to restore your details on the equivalent page. It is removed when restored and expires after thirty minutes. This transfer does not send data to third parties. In demo mode, the form does not send real email.',
   'Deslizá para explorar o seguí bajando': 'Swipe to explore or keep scrolling',
   'Marketing, tecnología y ventas como un sistema | La Plata Marketing': 'Marketing, technology and sales as one system | La Plata Marketing',
   'La Plata Marketing conecta marketing, tecnología y ventas para que los negocios puedan crecer y organizarse.': 'La Plata Marketing connects marketing, technology and sales to help businesses grow and stay organized.',

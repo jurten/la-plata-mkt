@@ -93,11 +93,12 @@ if (floatingContact && 'IntersectionObserver' in window) {
   let pastHero = !hero || hero.getBoundingClientRect().bottom <= 0;
   const contactBounds = contactSection?.getBoundingClientRect();
   let contactVisible = !!contactBounds && contactBounds.top < innerHeight && contactBounds.bottom > 0;
+  const coveredControls = new Set();
   const syncFloatingContact = () => {
     // Reveal the contact action as soon as the hero opens its masked edge.
     const heroOpened = reveal?.hasAttribute('data-reveal-enabled')
       ? ['moving', 'complete'].includes(reveal.dataset.revealState) : pastHero;
-    const hidden = !heroOpened || contactVisible;
+    const hidden = !heroOpened || contactVisible || coveredControls.size > 0;
     if (floatingContact.hidden !== hidden) floatingContact.hidden = hidden;
   };
   const sections = new IntersectionObserver((entries) => {
@@ -109,6 +110,14 @@ if (floatingContact && 'IntersectionObserver' in window) {
   }, { threshold: 0 });
   if (hero) sections.observe(hero);
   if (contactSection) sections.observe(contactSection);
+  const controlClearance = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) coveredControls.add(entry.target);
+      else coveredControls.delete(entry.target);
+    }
+    syncFloatingContact();
+  }, { rootMargin: '-65% 0px 0px 0px' });
+  document.querySelectorAll('.interior-page .flowing-team__list, .interior-page .team-profile, .interior-page .project-card .inline-link').forEach(element => controlClearance.observe(element));
   if (reveal) new MutationObserver(syncFloatingContact).observe(reveal, {
     attributes: true, attributeFilter: ['data-reveal-enabled', 'data-reveal-state'],
   });

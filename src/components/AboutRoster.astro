@@ -1,0 +1,56 @@
+---
+import { getLocale, getTranslator } from '../lib/i18n';
+const t = getTranslator(Astro.url.pathname);
+import { pagePath } from '../lib/navigation';
+const contactHref = pagePath('contact', getLocale(Astro.url.pathname));
+import Icon from './Icon.astro';
+import portraitPlaceholder from '../assets/lpm-visitor.png';
+import { teamMembers } from '../lib/team';
+import '../styles/team-roster.css';
+---
+<section class="team-roster" aria-labelledby="team-title" data-team-roster data-no-split>
+  <header class="team-roster__header">
+    <h2 id="team-title">{t("El Equipo")}</h2>
+  </header>
+  <div class="team-roster__stage flowing-team" data-flowing-team>
+    <div class="team-roster__scroll" aria-hidden="true">
+      <div class="team-roster__scroll-ticks">
+        {Array.from({ length: 31 }, (_, index) => <i class:list={{ 'is-major': index % 10 === 0 }}></i>)}
+      </div>
+      <svg class="team-roster__scroll-cursor" viewBox="0 0 6 8" focusable="false"><path d="M0 0L6 4L0 8Z" /></svg>
+    </div>
+    <ol class="flowing-team__list" aria-label={t("Integrantes del equipo")} data-team-list>
+      {teamMembers.map((member, index) => (
+        <li class="flowing-team__row" data-team-row>
+          <h3><a class="flowing-team__choice" href={`#team-${member.id}`} data-team-choice data-team-index={index}>
+            <span class="flowing-team__name" data-team-current-name>{member.name}</span>
+            <span class="flowing-team__role" data-team-current-role>{t(member.role)}<small>{t("Ver perfil")}</small></span>
+          </a></h3>
+          <div class="flowing-team__band" data-team-band aria-hidden="true">
+            <div class="flowing-team__track" data-team-track>
+              {Array.from({length: 3}, () => (
+                <div class="flowing-team__part" data-team-part>
+                  <span class="flowing-team__marquee-name">{member.name}</span>
+                  <span class="flowing-team__portrait">
+                    <img class:list={{ 'flowing-team__portrait-placeholder': !member.portrait }} src={member.portrait ?? portraitPlaceholder.src} alt="" width="300" height="200" loading="lazy" decoding="async" style={{ 'object-position': member.portraitPosition ?? (member.portrait ? '50% 35%' : 'right'), '--team-portrait-scale': member.portraitScale }} />
+                    {!member.portrait && <span class="flowing-team__placeholder">{t("Retrato provisorio")}</span>}
+                  </span>
+                  <span class="flowing-team__marquee-role">{t(member.role)}</span>
+                  <span class="flowing-team__separator" aria-hidden="true">
+                    <svg viewBox="0 0 100 100" fill="currentColor" focusable="false"><path d="M50 2C56 36 64 44 98 50C64 56 56 64 50 98C44 64 36 56 2 50C36 44 44 36 50 2Z" /></svg>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <div class="team-roster__footer"><span>La Plata Marketing</span><a href={contactHref}>{t("Sigamos en contacto")} <Icon name="down" /></a></div>
+  <p class="team-roster__status" aria-live="polite" aria-atomic="true" data-team-status></p>
+</section>
+<script>
+  import { initTeamRosters } from '../scripts/about-roster';
+  initTeamRosters();
+</script>

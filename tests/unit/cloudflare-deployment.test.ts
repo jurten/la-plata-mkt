@@ -54,14 +54,16 @@ describe('Cloudflare Workers deployment contract', () => {
     const contactSurfaces = [
       privacy,
       readme,
-      text('src/components/HomePage.astro'),
+      text('src/lib/navigation.ts'),
       text('src/pages/api/contact.ts'),
       text('.dev.vars.example'),
     ];
 
     expect(privacy).toContain('Justina Rosa Guiñazú');
-    expect(privacy).toContain('Cloudflare y Google Workspace');
-    expect(privacy).toContain('El sitio no tiene un formulario de contacto activo.');
+    expect(privacy).toContain('Turnstile');
+    expect(privacy).toContain('Resend');
+    expect(privacy).toContain('Empresa y teléfono son opcionales');
+    expect(privacy).not.toContain('El sitio no tiene un formulario de contacto activo.');
     expect(privacy).toContain('eliminamos o anonimizamos');
     expect(privacy).not.toContain('Borrador pendiente');
     expect(privacy).not.toContain('deben incorporarse a este aviso');

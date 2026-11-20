@@ -1,10 +1,12 @@
 import { defineMiddleware } from 'astro:middleware';
 import { readRuntimeEnv } from './lib/runtime-env';
 import { isTrustedHostHeader, parsePublicSiteUrl } from './lib/site-origin';
+import { pages } from './lib/navigation';
 
 const publicSite = parsePublicSiteUrl(
   readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
 );
+const pageRoutes = new Set(Object.values(pages).flatMap(page => [page.es, page.en]).filter(path => path !== '/').map(path => path.slice(0, -1)));
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -50,5 +52,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
     );
   }
 
+  const path = context.url.pathname;
+  if (pageRoutes.has(path)) {
+    return secure(context.redirect(`${path}/${context.url.search}`, 308));
+  }
   return secure(await next());
 });

@@ -70,7 +70,11 @@ const locale = getLocale(Astro.url.pathname);
   });
   document.querySelectorAll<HTMLAnchorElement>('[data-language-switcher] a').forEach(link => {
     // The two versions share section IDs, including direct arrivals into animated scenes.
-    const syncFragment = () => { link.hash = window.location.hash; };
+    const syncFragment = () => {
+      let id = '';
+      try { id = decodeURIComponent(window.location.hash.slice(1)); } catch { /* Ignore malformed fragments. */ }
+      link.hash = id && document.getElementById(id) ? window.location.hash : '';
+    };
     syncFragment();
     window.addEventListener('hashchange', syncFragment);
     link.addEventListener('click', syncFragment);

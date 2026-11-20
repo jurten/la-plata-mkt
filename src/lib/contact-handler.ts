@@ -6,7 +6,7 @@ export type ContactDeliveryMode = 'demo' | 'live';
 export interface ContactDependencies {
   mode: ContactDeliveryMode;
   verifySpam: (token: string) => Promise<boolean>;
-  deliver: (payload: ContactPayload) => Promise<void>;
+  deliver: (payload: ContactPayload, locale?: 'es' | 'en') => Promise<void>;
 }
 
 const MAX_CONTACT_BODY_BYTES = 16_384;
@@ -79,13 +79,18 @@ export function createContactHandler(dependencies: ContactDependencies) {
     }
 
     const token = typeof body.turnstileToken === 'string' ? body.turnstileToken : '';
-    const verified = await dependencies.verifySpam(token);
+    let verified = false;
+    try { verified = await dependencies.verifySpam(token); } catch { /* Verification failures remain recoverable. */ }
 
     if (!verified) {
       return Response.json({ ok: false, error: 'spam' }, { status: 400 });
     }
 
-    await dependencies.deliver(validation.data);
+    try {
+      await dependencies.deliver(validation.data, body.locale === 'en' ? 'en' : 'es');
+    } catch {
+      return Response.json({ ok: false, error: 'delivery' }, { status: 502 });
+    }
 
     return Response.json({ ok: true, delivery: dependencies.mode });
   };

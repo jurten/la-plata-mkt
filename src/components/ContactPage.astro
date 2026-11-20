@@ -1,0 +1,31 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import { getTranslator, getLocale } from '../lib/i18n';
+import { pagePath, contact } from '../lib/navigation';
+import { readRuntimeEnv } from '../lib/runtime-env';
+const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
+const siteKey = readRuntimeEnv('PUBLIC_TURNSTILE_SITE_KEY', import.meta.env.PUBLIC_TURNSTILE_SITE_KEY) ?? '';
+---
+<SiteLayout title={`${t('Contacto')} | La Plata Marketing`} description={t('Contanos qué querés mejorar. Escribinos una consulta o conversemos por WhatsApp.')} floating={false}>
+  <section class="contact-page wrap">
+    <div class="contact-intro"><h1>{t('Contanos qué querés mejorar')}</h1><p>{t('Empezamos por escucharte. Contanos el contexto y qué te gustaría cambiar.')}</p><a class="button button-primary" href={contact.whatsappHref}>{t('Hablemos por WhatsApp')}</a><a class="contact-phone" href={contact.whatsappHref}>{contact.whatsappDisplay}</a><a class="contact-address" href={`mailto:${contact.contactEmail}`}>{contact.contactEmail}</a><p>{t('La primera reunión es gratuita.')}</p><p class="contact-location">{t('Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.')}</p></div>
+    <form class="contact-form" action="/api/contact" method="post" data-contact-form data-site-key={siteKey} novalidate>
+      <div class="form-fields">
+        <div class="form-field"><label for="contact-name">{t('Nombre')}</label><input id="contact-name" name="contactName" autocomplete="name" minlength="2" maxlength="80" required aria-describedby="error-contactName" /><span class="field-error" id="error-contactName" data-error="contactName"></span></div>
+        <div class="form-field"><label for="contact-email">Email</label><input id="contact-email" name="email" type="email" autocomplete="email" required aria-describedby="error-email" /><span class="field-error" id="error-email" data-error="email"></span></div>
+        <div class="form-field"><label for="contact-company">{t('Empresa')} <span>{t('Opcional')}</span></label><input id="contact-company" name="company" autocomplete="organization" maxlength="120" aria-describedby="error-company" /><span class="field-error" id="error-company" data-error="company"></span></div>
+        <div class="form-field"><label for="contact-phone">{t('Teléfono')} <span>{t('Opcional')}</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" aria-describedby="error-phone" /><span class="field-error" id="error-phone" data-error="phone"></span></div>
+        <div class="form-field form-field-wide"><label for="contact-message">{t('Mensaje')}</label><textarea id="contact-message" name="issue" minlength="20" maxlength="2000" required rows="7" aria-describedby="message-help error-issue"></textarea><p id="message-help" class="field-help">{t('Contanos el contexto, qué querés mejorar y cómo podemos ayudarte. Entre 20 y 2000 caracteres.')}</p><span class="field-error" id="error-issue" data-error="issue"></span></div>
+      </div>
+      <label class="form-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off" /></label>
+      <div class="privacy-field"><label><input type="checkbox" name="privacyAccepted" required aria-describedby="error-privacyAccepted" /><span>{t('Leí y acepto la')} <a href={pagePath('privacy', locale)} target="_blank" rel="noopener">{t('política de privacidad')}</a></span></label><span class="field-error" id="error-privacyAccepted" data-error="privacyAccepted"></span></div>
+      <div data-turnstile role="group" aria-label={t('Verificación antispam')}></div>
+      <p class="form-status" data-form-status role="status" aria-live="polite" tabindex="-1"></p>
+      <div class="form-buttons"><button class="button button-primary" type="submit" disabled>{t('Enviar mensaje')}</button><button class="inline-link" type="button" data-new-inquiry hidden>{t('Escribir otra consulta')}</button></div>
+      <noscript><p>{t('Para usar el formulario necesitás JavaScript. También podés escribirnos por email o WhatsApp.')}</p></noscript>
+    </form>
+    <p class="contact-location-mobile">{t('Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.')}</p>
+  </section>
+</SiteLayout>
+<script>import '../scripts/contact-form';</script>

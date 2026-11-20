@@ -38,8 +38,8 @@ export function createResendDelivery({
     }
   };
 
-  return async function deliver(payload: ContactPayload): Promise<void> {
-    const subjectCompany = payload.company.replace(/[\r\n]+/g, ' ').trim();
+  return async function deliver(payload: ContactPayload, locale: 'es' | 'en' = 'es'): Promise<void> {
+    const subjectCompany = (payload.company || payload.contactName).replace(/[\r\n]+/g, ' ').trim();
 
     await send({
       from,
@@ -49,7 +49,7 @@ export function createResendDelivery({
       text: [
         'Nueva consulta desde el sitio de La Plata Marketing',
         '',
-        `Empresa: ${payload.company}`,
+        `Empresa: ${payload.company || 'No informada'}`,
         `Contacto: ${payload.contactName}`,
         `Email: ${payload.email}`,
         `Celular: ${payload.phone || 'No informado'}`,
@@ -64,8 +64,13 @@ export function createResendDelivery({
         from,
         to: [payload.email],
         reply_to: to,
-        subject: 'Recibimos tu consulta — La Plata Marketing',
-        text: [
+        subject: locale === 'en' ? 'We received your inquiry — La Plata Marketing' : 'Recibimos tu consulta — La Plata Marketing',
+        text: locale === 'en' ? [
+          `Hello, ${payload.contactName}:`, '',
+          'Thank you for telling us what you would like to improve. We received your inquiry and will review the context you shared.', '',
+          'You can reply to this email to add more information.', '',
+          'La Plata Marketing', to,
+        ].join('\n') : [
           `Hola, ${payload.contactName}:`,
           '',
           'Gracias por contarnos qué querés mejorar. Recibimos tu consulta correctamente y vamos a revisar el contexto que compartiste.',

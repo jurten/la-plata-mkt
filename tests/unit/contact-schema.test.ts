@@ -51,10 +51,11 @@ describe('validateContactPayload', () => {
     expect(result.success).toBe(false);
   });
 
-  it('rechaza una empresa vacía', () => {
+  it('acepta una empresa vacía u omitida', () => {
     const result = validateContactPayload({ ...validPayload, company: '   ' });
 
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    expect(validateContactPayload({ ...validPayload, company: undefined }).success).toBe(true);
   });
 
   it('rechaza una descripción demasiado breve', () => {

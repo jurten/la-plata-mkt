@@ -28,8 +28,9 @@ The third pillar must explain the connected offering; it must not be presented a
 
 ## Operating Context
 
-- A continuous bilingual website, including About, Portfolio, and Contact sections. Spanish (es-AR) lives at `/`, English at `/en/`; privacy uses `/privacidad/` and `/en/privacy/`.
-- WhatsApp is the primary contact channel, with direct email also available. On 2026-11-18 the user removed the public contact form and FAQ, moving key answers into the site journey. A future `/contact/` form is a possibility, not approved work for now.
+- The original continuous bilingual landing remains intact at `/` and `/en/`. The user explicitly corrected the scope: only add the new URLs, without changing the landing's content, layout, sections, menu presentation or animations. Its existing navigation/footer links may point to the new pages. Preserve all original section fragments on the landing.
+- Additional independent pages are `/trabajos/`, `/nosotros/`, `/contacto/` and `/privacidad/`, paired with `/en/work/`, `/en/about/`, `/en/contact/` and `/en/privacy/`. Their content and scene styles stay isolated from the landing. At the user's subsequent request, all pages share the original landing navbar through TelevisionNavigation.astro, including its four destinations, language selector, eye indicator, sticky behavior and mobile television menu. Interior pages use its opaque background and route-based active state; Enfoque returns to the landing section in the current language.
+- WhatsApp and direct email remain available throughout. Contact includes the form using the existing API, Turnstile and Resend, with company and phone optional. Demo delivery must never claim that an email was sent. The working method remains on the original landing and is also available in About; no FAQ is restored.
 - Existing implementation: Astro, TypeScript, original CSS, Fontsource, Cloudflare Workers, Turnstile, and Resend.
 - Preserve working contact handling and publication controls during a visual redesign.
 

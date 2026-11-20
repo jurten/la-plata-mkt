@@ -1,0 +1,13 @@
+---
+import { getTranslator } from '../lib/i18n';
+import { projects } from '../lib/projects';
+import ProjectCard from './ProjectCard.astro';
+import '../styles/portfolio-reveal.css';
+const t = getTranslator(Astro.url.pathname);
+---
+<section class="portfolio-reveal standalone-work" id="trabajo" data-portfolio-reveal aria-label={t('Trabajos')}>
+  <div class="featured-gallery wrap" role="group" aria-label={t('Trabajos')}>
+    <div class="featured-slides project-grid">{projects.map(project => <ProjectCard {project} />)}</div>
+  </div>
+</section>
+<script>import '../scripts/work-gallery';</script>

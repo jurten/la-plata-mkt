@@ -1,0 +1,23 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import TeamRoster from './AboutRoster.astro';
+import ConversationCTA from './ConversationCTA.astro';
+import { getTranslator } from '../lib/i18n';
+import { teamMembers } from '../lib/team';
+const t = getTranslator(Astro.url.pathname);
+const steps = [
+  ['Conversación inicial', 'Empezamos por escucharte y conocer el contexto de tu negocio.'],
+  ['Diagnóstico', 'Revisamos qué necesitás mejorar en tu presencia, captación u operación digital.'],
+  ['Definición del proyecto', 'Antes de comenzar, definimos el alcance, los tiempos y el presupuesto según lo que tu negocio necesita.'],
+];
+---
+<SiteLayout title={`${t('Nosotros')} | La Plata Marketing`} description={t('Conocé a Joaquín, Santiago y Justina y cómo conectamos creatividad, marketing y tecnología.')}>
+  <header class="page-opening wrap"><h1>{t('Tres miradas, un equipo')}</h1><p>{t('Creatividad, marketing y tecnología. Tres miradas que se encuentran para conectar las piezas de tu proyecto.')}</p></header>
+  <div class="team-index-hold" data-team-hold><section id="nosotros" class="about-section"><div class="wrap"><TeamRoster /></div></section></div>
+  <section class="team-profiles wrap" aria-label={t('Integrantes del equipo')}>
+    {teamMembers.map(member => <article id={`team-${member.id}`} class="team-profile"><img src={member.portrait!} alt={t('Retrato de {name}', {name: member.name})} width="600" height="480" loading="lazy" style={{'object-position': member.portraitPosition ?? '50% 35%'}} /><div><h2>{member.name}</h2><p class="profile-role">{t(member.role)}</p>{member.description && <p>{t(member.description)}</p>}</div></article>)}
+  </section>
+  <section class="working-method wrap page-chapter" id="como-trabajamos"><h2>{t('Cómo trabajamos')}</h2><p class="chapter-description">{t('Con profesionales, empresas de servicios y PyMEs establecidas que necesitan mejorar su presencia, captación u operación digital.')}</p><ol class="method-columns">{steps.map(([title, description], index) => <li><span>{String(index + 1).padStart(2, '0')}</span><h3>{t(title)}</h3><p>{t(description)}</p></li>)}</ol><p>{t('Podés contratar una web o un servicio puntual, o contar con acompañamiento continuo.')}</p><p>{t('Trabajamos de forma remota con negocios de otras ciudades. Para proyectos locales, también podemos coordinar encuentros presenciales.')}</p></section>
+  <ConversationCTA about />
+</SiteLayout>
+<script>import '../scripts/team-hold';</script>

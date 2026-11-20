@@ -1,0 +1,11 @@
+---
+import SiteLayout from '../components/SiteLayout.astro';
+import { getLocale } from '../lib/i18n';
+import { pagePath } from '../lib/navigation';
+const locale = getLocale(Astro.url.pathname);
+const en = locale === 'en';
+Astro.response.status = 404;
+---
+<SiteLayout title={`${en ? 'Page not found' : 'Página no encontrada'} | La Plata Marketing`} description={en ? 'Find your way back to La Plata Marketing.' : 'Volvé a encontrar tu camino en La Plata Marketing.'} floating={false} noindex>
+  <section class="not-found wrap"><h1>{en ? 'We couldn’t find this page' : 'No encontramos esta página'}</h1><p>{en ? 'The address may have changed. You can continue from here.' : 'La dirección puede haber cambiado. Podés seguir desde acá.'}</p><div class="actions"><a class="button button-primary" href={pagePath('home', locale)}>{en ? 'Go to home' : 'Volver a Inicio'}</a><a class="inline-link" href={pagePath('work', locale)}>{en ? 'Explore work' : 'Ver Trabajos'}</a></div></section>
+</SiteLayout>

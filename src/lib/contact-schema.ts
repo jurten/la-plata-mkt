@@ -9,7 +9,7 @@ const optionalPhone = singleLineText.max(40).refine((value) => {
 });
 
 const contactSchema = z.object({
-  company: singleLineText.min(2).max(120),
+  company: singleLineText.max(120).optional().default(''),
   contactName: singleLineText.min(2).max(80),
   email: z.string().trim().pipe(z.email()),
   phone: optionalPhone.optional().default(''),

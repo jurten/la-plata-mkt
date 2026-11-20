@@ -1,125 +1,45 @@
 ---
-import { getTranslator, getLocale, localizedPath } from '../lib/i18n';
+import SiteLayout from './SiteLayout.astro';
+import { getTranslator, getLocale } from '../lib/i18n';
+import { pagePath } from '../lib/navigation';
 const t = getTranslator(Astro.url.pathname);
-const locale = getLocale(Astro.url.pathname);
-import '../styles/fonts.css';
-import { readRuntimeEnv } from '../lib/runtime-env';
-import { parsePublicSiteUrl } from '../lib/site-origin';
-import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import Icon from '../components/Icon.astro';
-import BrandLogo from '../components/BrandLogo.astro';
-import '../styles/global.css';
-import '../styles/alien.css';
-import '../styles/retro-cursor.css';
-import '../styles/brand.css';
-
-
-const publicSite = parsePublicSiteUrl(
-  readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
-);
-const canonicalUrl = publicSite ? new URL(localizedPath('/privacidad/', locale), publicSite) : undefined;
-const allowIndexing = Boolean(publicSite);
-const homeHref = localizedPath('/', locale);
-const contactHref = `${homeHref}#contacto`;
+const contactHref = pagePath('contact', getLocale(Astro.url.pathname));
 ---
-<!doctype html>
-<html lang={locale === 'en' ? 'en' : 'es-AR'} data-theme="auto">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content={t("Cómo La Plata Marketing recibe, utiliza y protege la información que compartís al contactarnos.")}
-    />
-    <meta name="robots" content={allowIndexing ? 'index, follow' : 'noindex, nofollow'} />
-    <meta name="theme-color" content="#EEF2FF" />
-    <script is:inline src="/scripts/theme-init.js"></script>
-    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    {publicSite && <>
-      <link rel="alternate" hreflang="es-AR" href={new URL(localizedPath(Astro.url.pathname, 'es'), publicSite)} />
-      <link rel="alternate" hreflang="en" href={new URL(localizedPath(Astro.url.pathname, 'en'), publicSite)} />
-      <link rel="alternate" hreflang="x-default" href={new URL(localizedPath(Astro.url.pathname, 'es'), publicSite)} />
-    </>}
-    <link rel="icon" href="/favicon.svg?v=20261110" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico?v=20261110" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" />
-    <link rel="apple-touch-icon" href="/brand/lpm-profile.png" />
-    <title>{t("Privacidad | La Plata Marketing")}</title>
-  </head>
-  <body class="legal-body">
-    <a class="skip-link" href="#contenido-legal">{t("Saltar al contenido")}</a>
-    <header class="legal-header">
-      <a class="brand" href={homeHref} aria-label={t("La Plata Marketing, volver al inicio")}>
-        <BrandLogo />
-      </a>
-      <LanguageSwitcher />
-      <a class="legal-back" href={contactHref}>{t("Volver a contacto")} <Icon name="right" /></a>
-    </header>
-
-    <main id="contenido-legal" class="legal-main">
-      <section class="legal-intro" aria-labelledby="privacy-title">
-
-        <h1 id="privacy-title">{t("Privacidad,")}<br /><em>{t("sin letra chica")}</em></h1>
-        <div class="legal-intro-copy">
-          <p> {t("Este aviso explica cómo Justina Rosa Guiñazú, responsable de La Plata Marketing, trata la información que compartís al contactarnos por email o WhatsApp. Lo redactamos para que sea entendible y para no pedir más datos de los necesarios.")} </p>
-          <small>{t("Última actualización: noviembre de 2026")}</small>
-        </div>
-      </section>
-
+<SiteLayout title={t('Privacidad | La Plata Marketing')} description={t('C\u00f3mo La Plata Marketing recibe, utiliza y protege la informaci\u00f3n que compart\u00eds al contactarnos.')} floating={false}>
+  <div class="wrap"><div class="legal-content"><h1>{t('Privacidad')}</h1><p>{t('Última actualización: noviembre de 2026')}</p>
       <section class="legal-sections" aria-label={t("Detalles del tratamiento de datos")}>
         <article>
-          <span>01</span>
           <h2>{t("Quién recibe la consulta")}</h2>
           <p> {t("Justina Rosa Guiñazú, responsable de La Plata Marketing, recibe y responde las consultas enviadas desde este sitio. El canal de contacto para temas de privacidad es")} <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>.
           </p>
         </article>
 
         <article>
-          <span>02</span>
           <h2>{t("Qué datos recibimos")}</h2>
-          <p> {t("Los datos que decidas compartir por email o WhatsApp, como tu nombre, empresa, email, celular y el problema o necesidad que describas. El sitio no tiene un formulario de contacto activo.")} </p>
+          <p>{t('El formulario solicita nombre, email, mensaje y aceptación de privacidad. Empresa y teléfono son opcionales. También recibimos los datos que decidas compartir por email o WhatsApp.')}</p>
         </article>
 
         <article>
-          <span>03</span>
           <h2>{t("Para qué los usamos")}</h2>
           <p> {t("Para recibir, analizar y responder tu consulta; mantener la conversación comercial que vos iniciaste; y proteger el sitio contra envíos automatizados o abusivos.")} </p>
         </article>
 
         <article>
-          <span>04</span>
           <h2>{t("Con quién pueden procesarse")}</h2>
-          <p> {t("Cloudflare y Google Workspace pueden procesar los datos únicamente para alojar y proteger el sitio y entregar los correos relacionados con tu consulta. Si elegís WhatsApp, Meta y WhatsApp procesan los datos que compartas allí según sus propias condiciones y políticas.")} </p>
+          <p>{t('Cloudflare aloja y protege el sitio; Turnstile verifica los envíos para prevenir abuso. Resend entrega la consulta y su confirmación por email cuando el envío está configurado. Google Workspace puede procesar el correo recibido. Si elegís WhatsApp, Meta y WhatsApp procesan los datos según sus propias políticas.')}</p>
         </article>
 
         <article>
-          <span>05</span>
           <h2>{t("Cuánto tiempo se conservan")}</h2>
           <p> {t("Conservamos los datos mientras resulte necesario para responder y dar seguimiento a tu consulta. Cuando ya no sean necesarios, los eliminamos o anonimizamos, salvo que una obligación legal o la necesidad de ejercer o defender derechos requiera conservarlos por más tiempo.")} </p>
         </article>
 
         <article>
-          <span>06</span>
           <h2>{t("Tus decisiones y derechos")}</h2>
           <p> {t("Podés pedir acceso, corrección o eliminación de tus datos y retirar tu consentimiento escribiendo a")} <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>{t(". Podés contactarnos directamente por email o WhatsApp.")} </p>
         </article>
       </section>
+      <article><h2>{t('Borrador al cambiar de idioma')}</h2><p>{t('Solo al cambiar de idioma, el formulario guarda un borrador temporal en esta pestaña para recuperar tus datos en la página equivalente. Se elimina al recuperarlo y caduca a los treinta minutos. Este traslado no envía los datos a terceros. En modo demostración, el formulario no envía correo real.')}</p></article>
 
-      <section class="legal-cta" aria-labelledby="legal-cta-title">
-        <h2 id="legal-cta-title">{t("Volvé a tu consulta")}<br />{t("cuando estés")} <em>{t("listo")}</em></h2>
-        <a class="button button-primary" href={contactHref}>{t("Volver a contacto")} <Icon /></a>
-      </section>
-    </main>
-
-    <footer class="legal-footer">
-      <span>© 2026 La Plata Marketing</span>
-      <a href="mailto:ceo@laplatamarketing.com">ceo@laplatamarketing.com</a>
-    </footer>
-
-    <script>import '../scripts/text-reveal';</script>
-    <script is:inline src="/scripts/site.js" defer></script>
-    <!-- Start of HubSpot Embed Code -->
-    <script is:inline type="text/javascript" id="hs-script-loader" async defer src="https://js.hs-scripts.com/52086486.js"></script>
-    <!-- End of HubSpot Embed Code -->
-
-  </body>
-</html>
+<a class="button button-primary" href={contactHref}>{t('Volver a contacto')}</a></div></div>
+</SiteLayout>

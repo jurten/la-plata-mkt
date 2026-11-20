@@ -1,6 +1,8 @@
 ---
-import { getTranslator } from '../lib/i18n';
+import { getLocale, getTranslator } from '../lib/i18n';
+import { pagePath } from '../lib/navigation';
 const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
 import BrandLogo from './BrandLogo.astro';
 import Icon from './Icon.astro';
 interface Props {
@@ -30,9 +32,9 @@ const { whatsappHref, whatsappDisplay, contactEmail, privacyHref } = Astro.props
         <h2>{t("Navegá")}</h2>
         <a href="#soluciones">{t("Nuestro enfoque")}</a>
         <a href="#como-trabajamos">{t("Cómo trabajamos")}</a>
-        <a href="#trabajo">{t("Trabajos")}</a>
-        <a href="#nosotros">{t("Nosotros")}</a>
-        <a href={`mailto:${contactEmail}`} aria-label={t("Contacto por email")}>{t("Contacto")} <Icon /></a>
+        <a href={pagePath('work', locale)}>{t("Trabajos")}</a>
+        <a href={pagePath('about', locale)}>{t("Nosotros")}</a>
+        <a href={pagePath('contact', locale)}>{t("Contacto")} <Icon /></a>
         <a href={privacyHref}>{t("Privacidad")}</a>
       </nav>
     </div>

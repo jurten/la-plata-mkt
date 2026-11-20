@@ -1,6 +1,12 @@
 ---
-import { getTranslator } from '../lib/i18n';
+import { getLocale, getTranslator } from '../lib/i18n';
+import { pageId, pagePath } from '../lib/navigation';
 const t = getTranslator(Astro.url.pathname);
+const locale = getLocale(Astro.url.pathname);
+const currentPage = pageId(Astro.url.pathname);
+const isHome = currentPage === 'home';
+const activeChannel = currentPage === 'work' ? 'trabajo' : currentPage === 'about' ? 'nosotros' : currentPage === 'contact' ? 'contacto' : '';
+const channelHref = (id: string) => id === 'trabajo' ? pagePath('work', locale) : id === 'nosotros' ? pagePath('about', locale) : id === 'contacto' ? pagePath('contact', locale) : id === 'inicio' && !isHome ? pagePath('home', locale) : `${isHome ? '' : pagePath('home', locale)}#${id}`;
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import Icon from './Icon.astro';
 import BrandLogo from './BrandLogo.astro';
@@ -8,18 +14,17 @@ import '../styles/tv-navigation.css';
 
 const channels = [
   { id: 'inicio', number: '01', label: t("Inicio"), description: t("Ideas de otro planeta. Para problemas de acá.") },
-  { id: 'soluciones', number: '02', label: t("Enfoque"), description: t("Comunicación, marketing y tecnología. Las piezas, conectadas.") },
-  { id: 'trabajo', number: '03', label: t("Trabajos"), description: t("Estudios conceptuales. Ideas que empiezan a tomar forma.") },
-  { id: 'nosotros', number: '04', label: t("Nosotros"), description: t("Otra perspectiva para entender lo que necesita tu negocio.") },
-  { id: 'contacto', number: '05', label: t("Contacto"), description: t("Contanos qué querés mejorar. Empezamos por escucharte.") },
+  { id: 'trabajo', number: '02', label: t("Trabajos"), description: t("Estudios conceptuales. Ideas que empiezan a tomar forma.") },
+  { id: 'nosotros', number: '03', label: t("Nosotros"), description: t("Otra perspectiva para entender lo que necesita tu negocio.") },
+  { id: 'contacto', number: '04', label: t("Contacto"), description: t("Contanos qué querés mejorar. Empezamos por escucharte.") },
 ];
 ---
-<header class="topbar television-nav" data-tv-navigation>
+<header class="topbar television-nav" data-tv-navigation data-home={isHome} data-page-channel={activeChannel} data-scrolled={!isHome ? 'true' : undefined}>
   <div class="nav">
-    <a class="brand" href="#inicio" aria-label={t("La Plata Marketing, ir al inicio")}><BrandLogo variant="compact" /></a>
+    <a class="brand" href={channelHref('inicio')} aria-label={t("La Plata Marketing, ir al inicio")}><BrandLogo variant="compact" /></a>
     <span class="current-channel" data-current-channel aria-hidden="true">CH 01</span>
     <nav class="primary-nav" id="primary-nav" aria-label={t("Enlaces de sección")}>
-      {channels.slice(1).map(channel => <a href={`#${channel.id}`}><span class="nav-channel-number" aria-hidden="true">{channel.number}</span>{channel.label}</a>)}
+      {channels.slice(1).map(channel => <a href={channelHref(channel.id)} data-channel-id={channel.id} aria-current={activeChannel === channel.id ? 'page' : undefined}><span class="nav-channel-number" aria-hidden="true">{channel.number}</span>{channel.label}</a>)}
     </nav>
     <LanguageSwitcher />
     <button class="menu-toggle station-toggle" type="button" aria-label={t("Menú")} aria-expanded="false" aria-controls="station-menu" hidden>
@@ -34,7 +39,7 @@ const channels = [
     <div class="station-menu-grid">
       <nav class="station-links" aria-label={t("Navegación principal")}>
         {channels.map(channel => (
-          <a href={`#${channel.id}`} data-station-link data-channel-number={channel.number} data-channel-label={channel.label} data-channel-description={channel.description}>
+          <a href={channelHref(channel.id)} data-station-link data-channel-id={channel.id} data-channel-number={channel.number} data-channel-label={channel.label} data-channel-description={channel.description} aria-current={activeChannel === channel.id ? 'page' : undefined}>
             <span class="station-number" aria-hidden="true">{channel.number}</span><span>{channel.label}</span><Icon name="right" />
           </a>
         ))}

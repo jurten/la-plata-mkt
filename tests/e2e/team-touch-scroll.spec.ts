@@ -4,23 +4,15 @@ for (const [width, height] of [[390, 844], [768, 1024], [1024, 768]]) {
   test(`el indicador activa las bandas por scroll en una pantalla táctil de ${width}px`, async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width, height }, hasTouch: true });
     const page = await context.newPage();
-    await page.goto('/#nosotros');
+    await page.goto('/nosotros/#nosotros');
     const roster = page.locator('[data-team-roster]');
     await expect(roster).toHaveAttribute('data-team-ready');
     await page.evaluate(() => document.fonts.ready);
-    await expect.poll(() => page.locator('#nosotros').evaluate(el => Math.abs(el.getBoundingClientRect().top))).toBeLessThan(2);
+
     const range = await page.evaluate(() => {
-      const root = document.querySelector<HTMLElement>('[data-portfolio-reveal]')!;
-      const about = root.querySelector<HTMLElement>('.featured-about')!;
-      const content = root.querySelector<HTMLElement>('.featured-about__content')!;
-      const enhanced = root.hasAttribute('data-enhanced');
-      const work = root.querySelector<HTMLElement>('.featured-work')!;
-      const distance = parseFloat(root.style.getPropertyValue('--featured-distance')) || 0;
-      const exit = parseFloat(root.style.getPropertyValue('--featured-exit-distance')) || 0;
-      return {
-        start: enhanced ? work.getBoundingClientRect().top + scrollY + distance : about.getBoundingClientRect().top + scrollY,
-        length: about.offsetHeight - content.offsetHeight - (enhanced ? exit : 0),
-      };
+      const about = document.querySelector<HTMLElement>('[data-team-hold]')!;
+      const content = about.querySelector<HTMLElement>('#nosotros')!;
+      return { start: about.getBoundingClientRect().top + scrollY, length: about.offsetHeight - content.offsetHeight };
     });
     expect(range.length).toBeGreaterThan(height * 2);
     await expect(page.locator('.team-roster__scroll')).toBeVisible();

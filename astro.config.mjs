@@ -27,6 +27,7 @@ const allowedDomains = publicSite
 export default defineConfig({
   site: publicSite?.origin,
   output: 'server',
+  trailingSlash: 'always',
   adapter: cloudflare({ imageService: 'compile' }),
   session: false,
   devToolbar: { enabled: false },

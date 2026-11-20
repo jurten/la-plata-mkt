@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { readRuntimeEnv } from '../lib/runtime-env';
 import { parsePublicSiteUrl } from '../lib/site-origin';
+import { pages } from '../lib/navigation';
 
 const publicSite = parsePublicSiteUrl(
   readRuntimeEnv('PUBLIC_SITE_URL', import.meta.env.PUBLIC_SITE_URL),
@@ -17,7 +18,7 @@ export const GET: APIRoute = () => {
     });
   }
 
-  const locations = ['/', '/en/', '/privacidad/', '/en/privacy/'].map(path => new URL(path, publicSite));
+  const locations = Object.values(pages).flatMap(page => [page.es, page.en]).map(path => new URL(path, publicSite));
   const urls = locations.map((location) => `  <url><loc>${location}</loc></url>`).join('\n');
   const body = [
     '<?xml version="1.0" encoding="UTF-8"?>',

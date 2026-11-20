@@ -8,6 +8,7 @@ const pageFiles = [
   { path: 'dist/client/privacidad/index.html', pathname: '/privacidad/' },
   { path: 'dist/client/en/index.html', pathname: '/en/' },
   { path: 'dist/client/en/privacy/index.html', pathname: '/en/privacy/' },
+  ...['trabajos', 'nosotros', 'contacto', 'en/work', 'en/about', 'en/contact'].map(route => ({ path: `dist/client/${route}/index.html`, pathname: `/${route}/` })),
 ];
 const localHosts = new Set(['localhost', '127.0.0.1', '[::1]']);
 const htmlNamespace = 'http://www.w3.org/1999/xhtml';

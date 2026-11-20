@@ -13,6 +13,14 @@ const validPayload = {
 };
 
 describe('createContactHandler', () => {
+  it('devuelve un fallo de entrega recuperable y propaga el idioma', async () => {
+    let locale: string | undefined;
+    const handler = createContactHandler({ mode: 'live', verifySpam: async () => true, deliver: async (_payload, language) => { locale = language; throw new Error('provider unavailable'); } });
+    const response = await handler(new Request('http://localhost/api/contact', { method: 'POST', body: JSON.stringify({ ...validPayload, locale: 'en', company: '' }) }));
+    expect(locale).toBe('en');
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ ok: false, error: 'delivery' });
+  });
   it('verifica spam, entrega una consulta normalizada y responde en modo live', async () => {
     const events: string[] = [];
     const delivered: unknown[] = [];
