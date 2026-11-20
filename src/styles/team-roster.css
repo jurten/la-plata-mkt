@@ -5,19 +5,15 @@
 .team-roster { position: relative; min-width: 0; min-height: 100svh; padding-block: clamp(112px, 14svh, 160px) clamp(24px, 5svh, 56px); color: var(--ink); }
 .team-roster__header, .team-roster__footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .team-roster__header h2 { font: 500 clamp(24px, 2.2vw, 32px)/1.1 var(--display); letter-spacing: -.025em; }
-.team-roster__hint { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 13px; }
-.team-roster__hint .icon { width: 16px; height: 16px; }
-.team-roster__touch-hint, .team-roster__scroll-hint { display: none; }
 .team-roster__stage { position: relative; min-height: 0; margin-block: 40px; }
 .flowing-team { --flowing-band-color: var(--brand-cobalt, #1536f1); --flowing-band-ink: #fff; }
 .flowing-team__list { position: relative; display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); height: 100%; min-height: 0; margin: 0; padding: 0; list-style: none; }
 .flowing-team__row { position: relative; min-width: 0; min-height: 100px; overflow: hidden; border-top: 1px solid var(--line); container-type: size; }
 .flowing-team__row:last-child { border-bottom: 1px solid var(--line); }
 .flowing-team__row h3 { height: 100%; margin: 0; }
-.flowing-team__choice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, 22%) 24px; align-items: center; gap: 24px; height: 100%; width: 100%; min-height: 120px; padding: 20px 12px; color: inherit; text-decoration: none; cursor: pointer; }
+.flowing-team__choice { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, 22%); align-items: center; gap: 24px; height: 100%; width: 100%; min-height: 120px; padding: 20px 12px; color: inherit; text-decoration: none; cursor: pointer; }
 .flowing-team__name { font: 700 clamp(36px, 5.5vw, 88px)/1.08 var(--display); letter-spacing: -.035em; }
-.flowing-team__role { max-width: 23ch; color: var(--muted); font: 400 clamp(14px, 1.1vw, 17px)/1.45 var(--body); }
-.flowing-team__arrow { display: grid; place-items: center; }
+.flowing-team__role { justify-self: end; max-width: 23ch; color: var(--muted); font: 400 clamp(14px, 1.1vw, 17px)/1.45 var(--body); text-align: right; }
 .flowing-team__choice:focus-visible { outline: 2px solid var(--blue-text); outline-offset: -5px; box-shadow: none; }
 .flowing-team__row:has(:focus-visible)::after { position: absolute; z-index: 3; inset: 4px; border: 2px solid var(--blue-text); pointer-events: none; content: ''; }
 .flowing-team__row[data-current]:has(:focus-visible)::after { border-color: #fff; }
@@ -27,7 +23,7 @@
 .flowing-team__part { display: flex; flex: 0 0 auto; align-items: center; gap: clamp(20px, 3vw, 48px); height: 100%; padding-inline: 0 clamp(20px, 3vw, 48px); }
 .flowing-team__marquee-name { font: 700 clamp(36px, 5.5vw, 88px)/1.08 var(--display); letter-spacing: -.035em; white-space: nowrap; }
 .flowing-team__portrait { position: relative; display: block; flex: 0 0 auto; height: 68cqh; aspect-ratio: 1.65; border-radius: 999px; overflow: hidden; background: #020307; }
-.flowing-team__portrait img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.flowing-team__portrait img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(var(--team-portrait-scale, 1)); transform-origin: 50% 45%; }
 .flowing-team__portrait .flowing-team__portrait-placeholder { transform: scale(1.8); transform-origin: 82% 45%; }
 .flowing-team__placeholder { position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%); max-width: 95%; padding: 2px 7px; color: #eef2ff; background: #020307; font: 400 10px/1.3 var(--body); white-space: nowrap; }
 .flowing-team__marquee-role { font: 400 clamp(36px, 5.5vw, 88px)/1.08 var(--body); letter-spacing: -.035em; white-space: nowrap; }
@@ -52,31 +48,23 @@
 @media (max-width: 1100px) {
   .team-roster { padding-top: 108px; padding-bottom: 20px; }
   .team-roster__stage { margin-block: 28px; }
-  .flowing-team__choice { grid-template-columns: minmax(0, 1fr) minmax(150px, 25%) 18px; gap: 16px; padding-inline: 8px; }
+  .flowing-team__choice { grid-template-columns: minmax(0, 1fr) minmax(150px, 25%); gap: 16px; padding-inline: 8px; }
   .flowing-team__name, .flowing-team__marquee-name, .flowing-team__marquee-role { font-size: clamp(30px, 5.2vw, 58px); }
 }
 @media (max-width: 700px) {
   .team-roster { padding-top: 96px; padding-bottom: 16px; }
   .team-roster__header h2 { font-size: 24px; }
-  .team-roster__hint { font-size: 11px; gap: 8px; }
   .team-roster__header, .team-roster__footer { gap: 12px; }
   .team-roster__stage { margin-block: 24px; }
-  .flowing-team__choice { grid-template-columns: minmax(0, 1fr) 20px; grid-template-rows: auto auto; align-content: center; gap: 10px; padding: 12px 6px; }
+  .flowing-team__choice { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; align-content: center; gap: 10px; padding: 12px 6px; }
   .flowing-team__name { grid-column: 1; font-size: clamp(26px, 7.5vw, 40px); }
   .flowing-team__role { grid-column: 1; grid-row: 2; max-width: 28ch; font-size: 13px; }
-  .flowing-team__arrow { grid-column: 2; grid-row: 1 / 3; }
   .flowing-team__marquee-name, .flowing-team__marquee-role { font-size: clamp(28px, 8vw, 42px); }
   .flowing-team__portrait { height: 54cqh; aspect-ratio: 1.8; }
   .flowing-team__part { gap: 22px; padding-inline: 0 22px; }
   .team-roster__footer { font-size: 11px; padding-inline-end: 64px; }
   .team-roster__footer > span { display: none; }
   .team-roster__profiles { grid-template-columns: 1fr; }
-}
-@media (hover: none), (pointer: coarse) {
-  .team-roster__pointer-hint { display: none; }
-  .team-roster__touch-hint { display: inline; }
-  .portfolio-reveal:is([data-enhanced], [data-team-scroll-mobile]) .team-roster__touch-hint { display: none; }
-  .portfolio-reveal:is([data-enhanced], [data-team-scroll-mobile]) .team-roster__scroll-hint { display: inline; }
 }
 @media (max-height: 600px) {
   .about-section[data-team-layout] { height: auto; min-height: 100svh; }
